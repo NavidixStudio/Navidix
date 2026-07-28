@@ -140,7 +140,7 @@
             background: radial-gradient(ellipse 80% 60% at 50% 18%, transparent 0%, rgba(0, 0, 0, 0.4) 78%);
         }
 
-        /* بخش برند: نماد جدید NAVIDIX با ترکیب‌بندی پریمیوم */
+        /* بخش برند: نماد جدید NAVIDIX */
         .brand-container {
             display: flex;
             flex-direction: column;
@@ -905,7 +905,7 @@
             </div>
 
             <div class="video-grid" id="news-container">
-                <!-- اخبار توسط JavaScript به صورت دینامیک جای‌گذاری می‌شوند -->
+                <!-- اخبار به صورت آنلاین جای‌گذاری می‌شوند -->
             </div>
         </section>
 
@@ -1008,25 +1008,28 @@
 
     <!-- Scriptها -->
     <script>
-        // ۱. خبرهای نمونه جهت نمایش اولیه (در صورت عدم وجود news.json)
+        // ۱. خبرهای نمونه جهت نمایش اولیه
         const defaultNews = [
             {
-                title: "جهش بزرگ مدل‌های استدلال هوش مصنوعی: نسل جدید عامل‌های خودکار",
-                summary: "رقابت میان غول‌های فناوری برای توسعه مدل‌هایی که قادر به حل مسائل پیچیده ریاضی، برنامه‌نویسی و استدلال منطقی هستند وارد فاز تازه‌ای شده است.",
+                title_fa: "جهش بزرگ مدل‌های استدلال هوش مصنوعی: نسل جدید عامل‌های خودکار",
+                intro_fa: "رقابت میان غول‌های فناوری برای توسعه مدل‌هایی که قادر به حل مسائل پیچیده ریاضی، برنامه‌نویسی و استدلال منطقی هستند وارد فاز تازه‌ای شده است.",
+                content_fa: "رقابت میان غول‌های فناوری برای توسعه مدل‌هایی که قادر به حل مسائل پیچیده ریاضی، برنامه‌نویسی و استدلال منطقی هستند وارد فاز تازه‌ای شده است. این مدل‌های جدید به گونه‌ای طراحی شده‌اند که می‌توانند مراحل فکر کردن و تصمیم‌گیری را مشابه انسان شبیه‌سازی کنند و کارهای پیچیده را به صورت کاملاً خودکار انجام دهند.",
                 coverImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
-                sourceUrl: "https://t.me/NavidixMedia"
+                source_name: "Navidix AI"
             },
             {
-                title: "انقلاب تراشه‌های پردازش ابری و آینده دیتاسنترهای هوش مصنوعی",
-                summary: "تقاضای بی‌سابقه‌ برای قدرتمندتر شدن سرورهای AI، نسل نوینی از نیمه‌هادی‌ها را وارد بازار کرده که مصرف انرژی را تا ۴۰ درصد کاهش می‌دهند.",
+                title_fa: "انقلاب تراشه‌های پردازش ابری و آینده دیتاسنترهای هوش مصنوعی",
+                intro_fa: "تقاضای بی‌سابقه‌ برای قدرتمندتر شدن سرورهای AI، نسل نوینی از نیمه‌هادی‌ها را وارد بازار کرده که مصرف انرژی را تا ۴۰ درصد کاهش می‌دهند.",
+                content_fa: "تقاضای بی‌سابقه‌ برای قدرتمندتر شدن سرورهای AI، نسل نوینی از نیمه‌هادی‌ها را وارد بازار کرده که مصرف انرژی را تا ۴۰ درصد کاهش می‌دهند. این تحول جدید در ساخت معماری تراشه‌ها به دیتاسنترها اجازه می‌دهد بدون افزایش شدید برق مصرفی، سرعت پردازش هوش مصنوعی را چندین برابر کنند.",
                 coverImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop",
-                sourceUrl: "https://t.me/NavidixMedia"
+                source_name: "Navidix AI"
             },
             {
-                title: "تولید ویدیوهای سینمایی واقع‌گرایانه با هوش مصنوعی",
-                summary: "ابزارهای جدید ساخت ویدیو با قابلیت درک فیزیک نور و حرکت، مرز بین واقعیت و انیمیشن‌های کامپیوتری را کاملاً از بین برده‌اند.",
+                title_fa: "تولید ویدیوهای سینمایی واقع‌گرایانه با هوش مصنوعی",
+                intro_fa: "ابزارهای جدید ساخت ویدیو با قابلیت درک فیزیک نور و حرکت، مرز بین واقعیت و انیمیشن‌های کامپیوتری را کاملاً از بین برده‌اند.",
+                content_fa: "ابزارهای جدید ساخت ویدیو با قابلیت درک فیزیک نور و حرکت، مرز بین واقعیت و انیمیشن‌های کامپیوتری را کاملاً از بین برده‌اند. هنرمندان و تولیدکنندگان محتوا اکنون می‌توانند تنها با پرامپت‌های متنی ویدیوهای ۴K با جزئیات دقیق و حرکات کاملاً طبیعی تولید کنند.",
                 coverImage: "https://images.unsplash.com/photo-1677442136019-21780efad99a?q=80&w=800&auto=format&fit=crop",
-                sourceUrl: "https://t.me/NavidixMedia"
+                source_name: "Navidix AI"
             }
         ];
 
@@ -1036,7 +1039,11 @@
             let articles = defaultNews;
 
             try {
-                const response = await fetch('news.json');
+                // تست خواندن فایل news.json یا articles.json
+                let response = await fetch('news.json');
+                if (!response.ok) {
+                    response = await fetch('articles.json');
+                }
                 if (response.ok) {
                     const fetchedArticles = await response.json();
                     if (fetchedArticles && fetchedArticles.length > 0) {
@@ -1047,23 +1054,25 @@
                 console.log("در حال استفاده از اخبار پیش‌فرض...");
             }
 
-            container.innerHTML = articles.map(item => `
+            window.currentNewsList = articles;
+
+            container.innerHTML = articles.map((item, index) => `
                 <article class="video-card news-card">
                     <div class="thumbnail-wrapper">
-                        <img src="${item.coverImage}" alt="${item.title}" loading="lazy">
+                        <img src="${item.coverImage || item.image_url || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop'}" alt="${item.title || item.title_fa}" loading="lazy">
                     </div>
                     <div class="card-content">
-                        <h3 class="video-title">${item.title}</h3>
-                        <p class="video-description">${item.summary}</p>
-                        <a href="${item.sourceUrl}" target="_blank" rel="noopener noreferrer" class="btn-watch btn-news">
+                        <h3 class="video-title">${item.title || item.title_fa}</h3>
+                        <p class="video-description">${item.summary || item.intro_fa}</p>
+                        <button onclick="openNewsModal(${index})" class="btn-watch btn-news" style="cursor:pointer; border:none; width:100%;">
                             <svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3zM5 5h6v2H5v12h12v-6h2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
                             مطالعه گزارش کامل
-                        </a>
+                        </button>
                     </div>
                 </article>
             `).join('');
 
-            // اعمال انیمیشن ظهور اخبار
+            // انیمیشن ظهور اخبار
             gsap.to('.news-card', {
                 scrollTrigger: {
                     trigger: '#news-container',
@@ -1077,7 +1086,28 @@
             });
         }
 
-        // 3. Lenis Smooth Scroll
+        // ۳. تابع باز کردن متن کامل خبر در پاپ‌آپ شیک داخل خود سایت
+        function openNewsModal(index) {
+            const item = window.currentNewsList[index];
+            if (!item) return;
+
+            const modalHtml = `
+                <div id="news-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px; direction:rtl;">
+                    <div style="background:#0f172a; color:#fff; padding:30px; border-radius:24px; max-width:650px; width:100%; max-height:85vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.15); position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.7);">
+                        <button onclick="document.getElementById('news-modal').remove()" style="position:absolute; top:18px; left:18px; background:#ef4444; color:white; border:none; padding:6px 14px; border-radius:10px; cursor:pointer; font-weight:bold;">✕ بستن</button>
+                        <h2 style="margin-bottom:20px; color:#0ea5e9; font-size:1.35rem; padding-left:50px; line-height:1.5;">${item.title || item.title_fa}</h2>
+                        <p style="line-height:2; color:#cbd5e1; font-size:1rem; text-align:justify; white-space:pre-line;">${item.content || item.content_fa || item.summary || item.intro_fa}</p>
+                        <hr style="border-color:rgba(255,255,255,0.1); margin:25px 0 15px 0;">
+                        <div style="display:flex; justify-content:space-between; color:#64748b; font-size:0.85rem;">
+                            <span>منبع: ${item.source || item.source_name || 'Navidix Media'}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        // 4. Lenis Smooth Scroll
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -1095,7 +1125,7 @@
         }
         requestAnimationFrame(raf);
 
-        // 4. Three.js Background & 3D Logo
+        // 5. Three.js Background & 3D Logo
         const canvasContainer = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2(0x030712, 0.002);
@@ -1222,7 +1252,7 @@
         }
         animate();
 
-        // 5. GSAP Animations
+        // 6. GSAP Animations
         gsap.registerPlugin(ScrollTrigger);
 
         // Hero Reveal
@@ -1309,7 +1339,7 @@
             ease: 'power3.out'
         });
 
-        // 6. Magnetic Buttons
+        // 7. Magnetic Buttons
         const magneticElements = document.querySelectorAll('.magnetic');
         magneticElements.forEach((elem) => {
             elem.addEventListener('mousemove', (e) => {
@@ -1324,7 +1354,7 @@
             });
         });
 
-        // 7. Card 3D Tilt Effect
+        // 8. Card 3D Tilt Effect
         const cards = document.querySelectorAll('.tilt-card');
         cards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
@@ -1348,7 +1378,7 @@
             });
         });
 
-        // 8. Hero Emblem Depth Parallax
+        // 9. Hero Emblem Depth Parallax
         const emblemStage = document.getElementById('emblemStage');
         const heroSectionEl = document.querySelector('.hero');
         if (emblemStage && heroSectionEl) {
