@@ -725,6 +725,28 @@
             animation: scrollLine 2s infinite ease-in-out;
         }
 
+        /* استایل‌های اختصاصی بخش بدنه مقاله در مدال */
+        .article-body-content h3 {
+            color: #38bdf8;
+            font-size: 1.25rem;
+            margin: 25px 0 12px 0;
+            border-right: 4px solid #0ea5e9;
+            padding-right: 12px;
+            font-weight: 700;
+        }
+
+        .article-body-content p {
+            margin-bottom: 15px;
+            line-height: 2.1;
+            color: #cbd5e1;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        .article-body-content strong {
+            color: #ffffff;
+        }
+
         @keyframes scrollLine {
             0% { top: -100%; }
             100% { top: 100%; }
@@ -892,7 +914,7 @@
             </div>
 
             <div class="video-grid" id="news-container">
-                <!-- اخبار به صورت آنلاین جای‌گذاری می‌شوند -->
+                <!-- اخبار آنلاین جای‌گذاری می‌شوند -->
             </div>
         </section>
 
@@ -995,51 +1017,31 @@
 
     <!-- Scriptها -->
     <script>
-        // ۱. لیست ۵ خبر استاندارد با منابع معتبر جهانی و متن تحلیلی بلند
+        // ۱. لیست اخبار پیش‌فرض چندبخشی و بلند
         const defaultNews = [
             {
-                title_fa: "جهش بی‌سابقه در مدل‌های استدلال هوش مصنوعی: رونمایی از عامل‌های خودکار نسل جدید",
-                intro_fa: "غول‌های فناوری از معماری‌های جدیدی در هوش مصنوعی رونمایی کرده‌اند که قادر به حل مسائل چندمرحله‌ای استدلال ریاضی و برنامه‌نویسی بدون مداخله انسان هستند.",
-                content_fa: "تحولی بزرگ در دنیای هوش مصنوعی در حال وقوع است. سیستم‌های جدید برخلاف مدل‌های قبلی که صرفاً به بازتولید متون بر اساس احتمالات می‌پرداختند، اکنون دارای قابلیت «زنجیره تفکر» (Chain of Thought) و تحلیل عمیق منطقی هستند.\n\nاین مدل‌ها می‌توانند پیش از ارائه پاسخ نهایی، استراتژی‌های مختلف را ارزیابی کرده و خطاهای خود را اصلاح کنند. این قابلیت، مسیر را برای اتوماسیون کامل برنامه‌نویسی، کشفیات علمی در زیست‌شناسی و تحلیل داده‌های پیچیده مالی هموار می‌سازد.\n\nکارشناسان معتقدند این گام، مهم‌ترین نقطه عطف در مسیر دستیابی به هوش عمومی مصنوعی (AGI) محسوب می‌شود.",
-                coverImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
-                source_name: "MIT Technology Review",
-                source_link: "https://www.technologyreview.com"
-            },
-            {
                 title_fa: "انقلاب در معماری تراشه‌های پردازش ابری: کاهش ۴۰ درصدی مصرف انرژی دیتاسنترها",
-                intro_fa: "تقاضای عظیم برای پردازش مدل‌های زبانی هوش مصنوعی، نیمه‌هادی‌های جدیدی را وارد صنعت کرده که کارایی انرژی را به شکلی چشمگیر افزایش داده‌اند.",
-                content_fa: "چالش بزرگ توسعه هوش مصنوعی در سال‌های اخیر، مصرف نگران‌کننده انرژی در دیتاسنترهای عظیم بوده است. شرکت‌های پیشرو نیمه‌هادی با تغییر معماری سیلیکون‌ها و استفاده از فن‌آوری‌های نوری (Photonics) به جای سیگنال‌های الکتریکی، توانسته‌اند مصرف برق را به شدت کاهش دهند.\n\nاین تراشه‌های جدید علاوه بر کاهش ۴۰ درصدی مصرف انرژی، سرعت انتقال داده بین پردازنده‌ها را تا ۳ برابر افزایش می‌دهند. این بن‌بست‌شکنی به کمپانی‌ها امکان می‌دهد سرورهای بسیار قدرتمندتری را بدون فشار به شبکه‌های برق منطقه‌ای راه‌اندازی کنند.",
-                coverImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop",
+                summary_fa: "تقاضای عظیم برای پردازش مدل‌های زبانی هوش مصنوعی، نیمه‌هادی‌های جدیدی را وارد صنعت کرده که کارایی انرژی را به شکلی چشمگیر افزایش داده‌اند.",
+                content_fa: "### ۱. مقدمه و ابعاد بحران انرژی\nچالش بزرگ توسعه هوش مصنوعی در سال‌های اخیر، مصرف نگران‌کننده انرژی در دیتاسنترهای عظیم بوده است. آموزش یک مدل زبانی بزرگ به اندازه‌ی برق مصرفی یک شهر کوچک در طول یک ماه انرژی طلب می‌کند.\n\n### ۲. کالبدشکافی فنی تراشه‌های فوتونیک\nشرکت‌های پیشرو نیمه‌هادی با تغییر معماری سیلیکون‌ها و استفاده از فناوری پردازش فوتونیک (Photonic Computing) به جای سیگنال‌های الکتریکی، توانسته‌اند این بن‌بست را بشکنند. در این تراشه‌ها، جابه‌جایی داده‌ها توسط پرتوهای لیزر صورت می‌گیرد.\n\n### ۳. تاثیرات مستقیم بر اقتصاد دیتاسنترها\nاین معماری جدید علاوه بر کاهش ۴۰ درصدی مصرف انرژی، سرعت انتقال داده بین پردازنده‌ها را تا ۳ برابر افزایش می‌دهد و هزینه‌های خنک‌سازی را به شدت کاهش می‌دهد.\n\n### ۴. چشم‌انداز آینده\nبا تجاری‌سازی این تراشه‌ها طی دو سال آینده، مانع اصلی پیش روی توسعه مدل‌های AGI برداشته خواهد شد.",
+                coverImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1200&auto=format&fit=crop",
                 source_name: "TechCrunch",
                 source_link: "https://techcrunch.com"
-            },
-            {
-                title_fa: "نسل جدید مدل‌های ویدیوساز AI: ادغام قوانین فیزیک نور و حرکت در سینمای دیجیتال",
-                intro_fa: "ابزارهای پیشرفته ساخت ویدیو اکنون قادرند شبیه‌سازی دقیق فیزیک، بازتاب نور و انیمیشن‌های چندکاراکتره را تنها از روی پرامپت متنی تولید کنند.",
-                content_fa: "مرز میان فیلم‌برداری واقعی و محتوای تولیدشده توسط هوش مصنوعی بیش از هر زمان دیگری کمرنگ شده است. مدل‌های ویدیوساز جدید نه تنها حرکات دوربین را به صورت سینمایی شبیه‌سازی می‌کنند، بلکه درک عمیقی از جاذبه، فیزیک سیالات و بازتاب نور در محیط پیدا کرده‌اند.\n\nاین فناوری به فیلم‌سازان و استودیوهای مستقل اجازه می‌دهد تیزرها و صحنه‌های جلوه‌های ویژه پیچیده را با هزینه‌ای ناچیز و کیفیتی خیره‌کننده تولید کنند. کارشناسان صنعت سینما بر این باورند که این ابزارها روند تولید فیلم و انیمیشن را برای همیشه دگرگون خواهند کرد.",
-                coverImage: "https://images.unsplash.com/photo-1677442136019-21780efad99a?q=80&w=800&auto=format&fit=crop",
-                source_name: "The Verge",
-                source_link: "https://www.theverge.com"
-            },
-            {
-                title_fa: "ورود ربات‌های انسان‌نمای هوشمند به خطوط تولید و کارخانه‌های مدرن",
-                intro_fa: "نسل جدید ربات‌های تجاری با بهره‌گیری از هوش مصنوعی چندوجهی، وظایف پیچیده انبارداری و مونتاژ صنعتی را بر عهده گرفته‌اند.",
-                content_fa: "کارخانه‌های خودروسازی و دیتاسنترهای بزرگ آزمایش ربات‌های انسان‌نما را در محیط‌های واقعی آغاز کرده‌اند. این ربات‌ها به لطف مدل‌های بینایی-زبانی (VLM) قادرند محیط اطراف خود را درک کنند، اشیاء ناآشنا را شناسایی کرده و بدون نیاز به برنامه‌ریزی قبلی، کارهای خط تولید را انجام دهند.\n\nتوانایی این ربات‌ها در حفظ تعادل، تعامل ایمن با اپراتورهای انسانی و یادگیری خودکار از طریق مشاهده، فصل جدیدی را در صنعت رباتیک و اتوماسیون صنعتی آغاز کرده است.",
-                coverImage: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800&auto=format&fit=crop",
-                source_name: "Wired",
-                source_link: "https://www.wired.com"
-            },
-            {
-                title_fa: "کشف داروها و ترکیبات شیمیایی جدید با هوش مصنوعی زیستی",
-                intro_fa: "مدل‌های جدید زیست‌شناسی محاسباتی توانسته‌اند ساختار پروتئین‌ها و ترکیبات دارویی ضد باکتری را در چند روز به جای چند سال طراحی کنند.",
-                content_fa: "هوش مصنوعی در حال ساخت انقلابی خاموش در پزشکی و داروسازی است. با استفاده از الگوریتم‌های یادگیری عمیق، دانشمندان موفق شده‌اند آنتی‌بیوتیک‌های جدیدی را برای مقابله با باکتری‌های مقاوم به دارو کشف کنند.\n\nاین مدل‌ها با تحلیل میلیاردها ترکیب مولکولی در فضای مجازی، نامزدهای دارویی بهینه را شناسایی کرده و فرآیند چندساله آزمایشگاهی را به چند هفته کاهش می‌دهند. این دستاورد می‌تواند امیدهای تازه‌ای برای درمان بیماری‌های صعب‌العلاج ایجاد کند.",
-                coverImage: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=800&auto=format&fit=crop",
-                source_name: "Nature AI",
-                source_link: "https://www.nature.com"
             }
         ];
 
-        // ۲. تابع خواندن و بارگذاری اخبار
+        // ۲. تابع پارسر اختصاصی مارک‌داون به HTML (تبدیل ### به تیتر۳ زیبا)
+        function formatArticleMarkdown(text) {
+            if (!text) return '';
+            let html = text
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+            return '<p>' + html + '</p>';
+        }
+
+        // ۳. بارگذاری اخبار
         async function loadAINews() {
             const container = document.getElementById('news-container');
             let articles = defaultNews;
@@ -1056,7 +1058,7 @@
                     }
                 }
             } catch (e) {
-                console.log("در حال استفاده از لیست اخبار اصلی پیش‌فرض...");
+                console.log("استفاده از اخبار پیش‌فرض...");
             }
 
             window.currentNewsList = articles;
@@ -1068,9 +1070,9 @@
                     </div>
                     <div class="card-content">
                         <h3 class="video-title">${item.title || item.title_fa}</h3>
-                        <p class="video-description">${item.summary || item.intro_fa || item.summary_fa}</p>
+                        <p class="video-description">${item.summary || item.summary_fa || item.intro_fa}</p>
                         <button onclick="openNewsModal(${index})" class="btn-watch btn-news" style="cursor:pointer; border:none; width:100%;">
-                            📖 مطالعه گزارش کامل
+                            📖 مطالعه مقاله تحلیلی
                         </button>
                     </div>
                 </article>
@@ -1087,45 +1089,54 @@
                 stagger: 0.15,
                 ease: 'power3.out'
             });
+
+            if (typeof ScrollTrigger !== 'undefined') {
+                ScrollTrigger.refresh();
+            }
         }
 
-        // ۳. ساخت صفحه ویژه مطالعه مقاله بلندو اختصاصی
+        // ۴. تابع باز کردن مقاله با پشتیبانی از ESC، بستن با کلیک بیرون و توقف اسکرول Lenis
         function openNewsModal(index) {
             const item = window.currentNewsList[index];
             if (!item) return;
 
             const title = item.title || item.title_fa;
-            const content = item.content || item.content_fa || item.summary || item.intro_fa;
+            const rawContent = item.content || item.content_fa || item.summary || item.summary_fa || item.intro_fa;
+            const formattedContent = formatArticleMarkdown(rawContent);
+            
             const image = item.coverImage || item.image_url || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop';
-            const sourceName = item.source || item.source_name || 'Tech Source';
-            const sourceUrl = item.sourceUrl || item.source_link || 'https://techcrunch.com';
+            const sourceName = item.source_name || item.source || 'منبع معتبر';
+            const sourceUrl = item.source_link || item.sourceUrl || '#';
+
+            // غیرفعال کردن اسکرول Lenis موقع باز شدن مدال
+            if (window.lenisApp) window.lenisApp.stop();
 
             const modalHtml = `
-                <div id="news-modal" style="position:fixed; inset:0; background:rgba(3, 7, 18, 0.95); backdrop-filter:blur(15px); display:flex; align-items:center; justify-content:center; z-index:99999; padding:20px; direction:rtl;">
-                    <div style="background:#0f172a; color:#fff; padding:0; border-radius:24px; max-width:750px; width:100%; max-height:88vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.15); position:relative; box-shadow:0 30px 80px rgba(0,0,0,0.9); display:flex; flex-direction:column;">
+                <div id="news-modal" onclick="closeModalOnBackdrop(event)" style="position:fixed; inset:0; background:rgba(3, 7, 18, 0.95); backdrop-filter:blur(15px); display:flex; align-items:center; justify-content:center; z-index:99999; padding:20px; direction:rtl;">
+                    <div data-lenis-prevent style="background:#0f172a; color:#fff; padding:0; border-radius:24px; max-width:800px; width:100%; max-height:88vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.15); position:relative; box-shadow:0 30px 80px rgba(0,0,0,0.9); display:flex; flex-direction:column;">
                         
                         <!-- کاور بالای مقاله -->
-                        <div style="position:relative; width:100%; height:280px; overflow:hidden; border-radius:24px 24px 0 0;">
+                        <div style="position:relative; width:100%; height:300px; overflow:hidden; border-radius:24px 24px 0 0; flex-shrink:0;">
                             <img src="${image}" alt="${title}" style="width:100%; height:100%; object-fit:cover;">
-                            <button onclick="document.getElementById('news-modal').remove()" style="position:absolute; top:18px; left:18px; background:rgba(239, 68, 68, 0.9); color:white; border:none; padding:8px 18px; border-radius:30px; cursor:pointer; font-weight:bold; backdrop-filter:blur(5px); box-shadow:0 4px 15px rgba(0,0,0,0.4);">✕ بستن</button>
+                            <button onclick="closeNewsModal()" style="position:absolute; top:18px; left:18px; background:rgba(239, 68, 68, 0.9); color:white; border:none; padding:8px 20px; border-radius:30px; cursor:pointer; font-weight:bold; backdrop-filter:blur(5px); box-shadow:0 4px 15px rgba(0,0,0,0.4); z-index:10;">✕ بستن مقاله</button>
                         </div>
 
                         <!-- بدنه اصلی مقاله -->
                         <div style="padding:35px;">
                             <span style="background:rgba(14, 165, 233, 0.2); color:#38bdf8; border:1px solid rgba(14, 165, 233, 0.4); padding:4px 14px; border-radius:20px; font-size:0.85rem; font-weight:bold;">گزارش اختصاصی Navidix</span>
-                            <h1 style="margin:18px 0 22px 0; color:#f8fafc; font-size:1.5rem; line-height:1.6;">${title}</h1>
+                            <h1 style="margin:18px 0 22px 0; color:#f8fafc; font-size:1.6rem; line-height:1.6; font-weight:bold;">${title}</h1>
                             
-                            <div style="line-height:2.1; color:#cbd5e1; font-size:1.05rem; text-align:justify; white-space:pre-line;">
-                                ${content}
+                            <div class="article-body-content">
+                                ${formattedContent}
                             </div>
 
                             <hr style="border-color:rgba(255,255,255,0.1); margin:35px 0 20px 0;">
 
                             <!-- ارجاع منبع تنها در انتها -->
                             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; background:rgba(255,255,255,0.03); padding:16px 22px; border-radius:16px; border:1px solid rgba(255,255,255,0.08);">
-                                <span style="color:#94a3b8; font-size:0.92rem;">منبع خبری: <strong style="color:#fff;">${sourceName}</strong></span>
+                                <span style="color:#94a3b8; font-size:0.92rem;">پوشش اولیه خبر: <strong style="color:#fff;">${sourceName}</strong></span>
                                 <a href="${sourceUrl}" target="_blank" rel="noopener noreferrer" style="background:#0ea5e9; color:white; text-decoration:none; padding:8px 18px; border-radius:12px; font-size:0.88rem; font-weight:bold; display:inline-flex; align-items:center; gap:6px;">
-                                    مطالعه در ${sourceName} ↗
+                                    مطالعه خبر در ${sourceName} ↗
                                 </a>
                             </div>
                         </div>
@@ -1134,9 +1145,34 @@
                 </div>
             `;
             document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            // اضافه کردن لیسنر کلید ESC
+            document.addEventListener('keydown', handleEscKey);
         }
 
-        // 4. Lenis Smooth Scroll
+        function closeNewsModal() {
+            const modal = document.getElementById('news-modal');
+            if (modal) {
+                modal.remove();
+                document.removeEventListener('keydown', handleEscKey);
+                // فعال‌سازی مجدد اسکرول Lenis
+                if (window.lenisApp) window.lenisApp.start();
+            }
+        }
+
+        function closeModalOnBackdrop(e) {
+            if (e.target.id === 'news-modal') {
+                closeNewsModal();
+            }
+        }
+
+        function handleEscKey(e) {
+            if (e.key === 'Escape') {
+                closeNewsModal();
+            }
+        }
+
+        // 5. Lenis Smooth Scroll
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -1148,13 +1184,15 @@
             touchMultiplier: 2,
         });
 
+        window.lenisApp = lenis;
+
         function raf(time) {
             lenis.raf(time);
             requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
 
-        // 5. Three.js Background & 3D Logo
+        // 6. Three.js Background & 3D Logo
         const canvasContainer = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2(0x030712, 0.002);
@@ -1274,7 +1312,7 @@
         }
         animate();
 
-        // 6. GSAP Animations
+        // 7. GSAP Animations
         gsap.registerPlugin(ScrollTrigger);
 
         const heroTl = gsap.timeline({ delay: 0.5 });
