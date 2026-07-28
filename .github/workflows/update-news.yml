@@ -35,8 +35,8 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           if [ -f news.json ]; then
             git add news.json
-            git commit -m "Auto-update daily AI news [skip ci]" || echo "No changes to commit"
+            git commit -m "Auto-update daily AI news" || echo "No changes to commit"
             git push
           else
-            echo "⚠️ فایل news.json ساخته نشد. کلید GEMINI_API_KEY را بررسی کنید."
+            echo "⚠️ فایل news.json ساخته نشد."
           fi
