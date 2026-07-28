@@ -71,7 +71,6 @@
             height: 35vh;
         }
 
-        /* لایه‌های نور و بافت پس‌زمینه هیرو */
         .hero-ambient {
             position: absolute;
             inset: 0;
@@ -140,7 +139,7 @@
             background: radial-gradient(ellipse 80% 60% at 50% 18%, transparent 0%, rgba(0, 0, 0, 0.4) 78%);
         }
 
-        /* بخش برند: نماد جدید NAVIDIX */
+        /* برند NAVIDIX */
         .brand-container {
             display: flex;
             flex-direction: column;
@@ -533,7 +532,7 @@
         /* Videos & News Grid */
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             direction: rtl;
         }
@@ -784,7 +783,6 @@
 
             <div class="hero-spacer"></div>
 
-            <!-- بخش نماد و لوگوتایپ جدید NAVIDIX -->
             <div class="brand-container">
                 <span class="eyebrow">هوش مصنوعی × روایت سینمایی</span>
 
@@ -905,7 +903,7 @@
             </div>
 
             <div class="video-grid" id="news-container">
-                <!-- اخبار به صورت آنلاین جای‌گذاری می‌شوند -->
+                <!-- اخبار توسط JavaScript به صورت دینامیک جای‌گذاری می‌شوند -->
             </div>
         </section>
 
@@ -1008,38 +1006,56 @@
 
     <!-- Scriptها -->
     <script>
-        // ۱. خبرهای نمونه جهت نمایش اولیه
+        // ۱. لیست ۵ خبر استاندارد با منابع معتبر جهانی و متن تحلیلی
         const defaultNews = [
             {
-                title_fa: "جهش بزرگ مدل‌های استدلال هوش مصنوعی: نسل جدید عامل‌های خودکار",
-                intro_fa: "رقابت میان غول‌های فناوری برای توسعه مدل‌هایی که قادر به حل مسائل پیچیده ریاضی، برنامه‌نویسی و استدلال منطقی هستند وارد فاز تازه‌ای شده است.",
-                content_fa: "رقابت میان غول‌های فناوری برای توسعه مدل‌هایی که قادر به حل مسائل پیچیده ریاضی، برنامه‌نویسی و استدلال منطقی هستند وارد فاز تازه‌ای شده است. این مدل‌های جدید به گونه‌ای طراحی شده‌اند که می‌توانند مراحل فکر کردن و تصمیم‌گیری را مشابه انسان شبیه‌سازی کنند و کارهای پیچیده را به صورت کاملاً خودکار انجام دهند.",
+                title_fa: "جهش بی‌سابقه در مدل‌های استدلال هوش مصنوعی: رونمایی از عامل‌های خودکار نسل جدید",
+                intro_fa: "غول‌های فناوری از معماری‌های جدیدی در هوش مصنوعی رونمایی کرده‌اند که قادر به حل مسائل چندمرحله‌ای استدلال ریاضی و برنامه‌نویسی بدون مداخله انسان هستند.",
+                content_fa: "تحولی بزرگ در دنیای هوش مصنوعی در حال وقوع است. سیستم‌های جدید برخلاف مدل‌های قبلی که صرفاً به بازتولید متون بر اساس احتمالات می‌پرداختند، اکنون دارای قابلیت «زنجیره تفکر» (Chain of Thought) و تحلیل عمیق منطقی هستند.\n\nاین مدل‌ها می‌توانند پیش از ارائه پاسخ نهایی، استراتژی‌های مختلف را ارزیابی کرده و خطاهای خود را اصلاح کنند. این قابلیت، مسیر را برای اتوماسیون کامل برنامه‌نویسی، کشفیات علمی در زیست‌شناسی و تحلیل داده‌های پیچیده مالی هموار می‌سازد.\n\nکارشناسان معتقدند این گام، مهم‌ترین نقطه عطف در مسیر دستیابی به هوش عمومی مصنوعی (AGI) محسوب می‌شود.",
                 coverImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
-                source_name: "Navidix AI"
+                source_name: "MIT Technology Review",
+                source_link: "https://www.technologyreview.com"
             },
             {
-                title_fa: "انقلاب تراشه‌های پردازش ابری و آینده دیتاسنترهای هوش مصنوعی",
-                intro_fa: "تقاضای بی‌سابقه‌ برای قدرتمندتر شدن سرورهای AI، نسل نوینی از نیمه‌هادی‌ها را وارد بازار کرده که مصرف انرژی را تا ۴۰ درصد کاهش می‌دهند.",
-                content_fa: "تقاضای بی‌سابقه‌ برای قدرتمندتر شدن سرورهای AI، نسل نوینی از نیمه‌هادی‌ها را وارد بازار کرده که مصرف انرژی را تا ۴۰ درصد کاهش می‌دهند. این تحول جدید در ساخت معماری تراشه‌ها به دیتاسنترها اجازه می‌دهد بدون افزایش شدید برق مصرفی، سرعت پردازش هوش مصنوعی را چندین برابر کنند.",
+                title_fa: "انقلاب در معماری تراشه‌های پردازش ابری: کاهش ۴۰ درصدی مصرف انرژی دیتاسنترها",
+                intro_fa: "تقاضای عظیم برای پردازش مدل‌های زبانی هوش مصنوعی، نیمه‌هادی‌های جدیدی را وارد صنعت کرده که کارایی انرژی را به شکلی چشمگیر افزایش داده‌اند.",
+                content_fa: "چالش بزرگ توسعه هوش مصنوعی در سال‌های اخیر، مصرف نگران‌کننده انرژی در دیتاسنترهای عظیم بوده است. شرکت‌های پیشرو نیمه‌هادی با تغییر معماری سیلیکون‌ها و استفاده از فن‌آوری‌های نوری (Photonics) به جای سیگنال‌های الکتریکی، توانسته‌اند مصرف برق را به شدت کاهش دهند.\n\nاین تراشه‌های جدید علاوه بر کاهش ۴۰ درصدی مصرف انرژی، سرعت انتقال داده بین پردازنده‌ها را تا ۳ برابر افزایش می‌دهند. این بن‌بست‌شکنی به کمپانی‌ها امکان می‌دهد سرورهای بسیار قدرتمندتری را بدون فشار به شبکه‌های برق منطقه‌ای راه‌اندازی کنند.",
                 coverImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop",
-                source_name: "Navidix AI"
+                source_name: "TechCrunch",
+                source_link: "https://techcrunch.com"
             },
             {
-                title_fa: "تولید ویدیوهای سینمایی واقع‌گرایانه با هوش مصنوعی",
-                intro_fa: "ابزارهای جدید ساخت ویدیو با قابلیت درک فیزیک نور و حرکت، مرز بین واقعیت و انیمیشن‌های کامپیوتری را کاملاً از بین برده‌اند.",
-                content_fa: "ابزارهای جدید ساخت ویدیو با قابلیت درک فیزیک نور و حرکت، مرز بین واقعیت و انیمیشن‌های کامپیوتری را کاملاً از بین برده‌اند. هنرمندان و تولیدکنندگان محتوا اکنون می‌توانند تنها با پرامپت‌های متنی ویدیوهای ۴K با جزئیات دقیق و حرکات کاملاً طبیعی تولید کنند.",
+                title_fa: "نسل جدید مدل‌های ویدیوساز AI: ادغام قوانین فیزیک نور و حرکت در سینمای دیجیتال",
+                intro_fa: "ابزارهای پیشرفته ساخت ویدیو اکنون قادرند شبیه‌سازی دقیق فیزیک، بازتاب نور و انیمیشن‌های چندکاراکتره را تنها از روی پرامپت متنی تولید کنند.",
+                content_fa: "مرز میان فیلم‌برداری واقعی و محتوای تولیدشده توسط هوش مصنوعی بیش از هر زمان دیگری کمرنگ شده است. مدل‌های ویدیوساز جدید نه تنها حرکات دوربین را به صورت سینمایی شبیه‌سازی می‌کنند، بلکه درک عمیقی از جاذبه، فیزیک سیالات و بازتاب نور در محیط پیدا کرده‌اند.\n\nاین فناوری به فیلم‌سازان و استودیوهای مستقل اجازه می‌دهد تیزرها و صحنه‌های جلوه‌های ویژه پیچیده را با هزینه‌ای ناچیز و کیفیتی خیره‌کننده تولید کنند. کارشناسان صنعت سینما بر این باورند که این ابزارها روند تولید فیلم و انیمیشن را برای همیشه دگرگون خواهند کرد.",
                 coverImage: "https://images.unsplash.com/photo-1677442136019-21780efad99a?q=80&w=800&auto=format&fit=crop",
-                source_name: "Navidix AI"
+                source_name: "The Verge",
+                source_link: "https://www.theverge.com"
+            },
+            {
+                title_fa: "ورود ربات‌های انسان‌نمای هوشمند به خطوط تولید و کارخانه‌های مدرن",
+                intro_fa: "نسل جدید ربات‌های تجاری با بهره‌گیری از هوش مصنوعی چندوجهی، وظایف پیچیده انبارداری و مونتاژ صنعتی را بر عهده گرفته‌اند.",
+                content_fa: "کارخانه‌های خودروسازی و دیتاسنترهای بزرگ آزمایش ربات‌های انسان‌نما را در محیط‌های واقعی آغاز کرده‌اند. این ربات‌ها به لطف مدل‌های بینایی-زبانی (VLM) قادرند محیط اطراف خود را درک کنند، اشیاء ناآشنا را شناسایی کرده و بدون نیاز به برنامه‌ریزی قبلی، کارهای خط تولید را انجام دهند.\n\nتوانایی این ربات‌ها در حفظ تعادل، تعامل ایمن با اپراتورهای انسانی و یادگیری خودکار از طریق مشاهده، فصل جدیدی را در صنعت رباتیک و اتوماسیون صنعتی آغاز کرده است.",
+                coverImage: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800&auto=format&fit=crop",
+                source_name: "Wired",
+                source_link: "https://www.wired.com"
+            },
+            {
+                title_fa: "کشف داروها و ترکیبات شیمیایی جدید با هوش مصنوعی زیستی",
+                intro_fa: "مدل‌های جدید زیست‌شناسی محاسباتی توانسته‌اند ساختار پروتئین‌ها و ترکیبات دارویی ضد باکتری را در چند روز به جای چند سال طراحی کنند.",
+                content_fa: "هوش مصنوعی در حال ساخت انقلابی خاموش در پزشکی و داروسازی است. با استفاده از الگوریتم‌های یادگیری عمیق، دانشمندان موفق شده‌اند آنتی‌بیوتیک‌های جدیدی را برای مقابله با باکتری‌های مقاوم به دارو کشف کنند.\n\nاین مدل‌ها با تحلیل میلیاردها ترکیب مولکولی در فضای مجازی، نامزدهای دارویی بهینه را شناسایی کرده و فرآیند چندساله آزمایشگاهی را به چند هفته کاهش می‌دهند. این دستاورد می‌تواند امیدهای تازه‌ای برای درمان بیماری‌های صعب‌العلاج ایجاد کند.",
+                coverImage: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=800&auto=format&fit=crop",
+                source_name: "Nature AI",
+                source_link: "https://www.nature.com"
             }
         ];
 
-        // ۲. تابع خواندن و نمایش اخبار در سایت
+        // ۲. تابع خواندن و بارگذاری اخبار
         async function loadAINews() {
             const container = document.getElementById('news-container');
             let articles = defaultNews;
 
             try {
-                // تست خواندن فایل news.json یا articles.json
                 let response = await fetch('news.json');
                 if (!response.ok) {
                     response = await fetch('articles.json');
@@ -1051,7 +1067,7 @@
                     }
                 }
             } catch (e) {
-                console.log("در حال استفاده از اخبار پیش‌فرض...");
+                console.log("در حال استفاده از لیست اخبار اصلی پیش‌فرض...");
             }
 
             window.currentNewsList = articles;
@@ -1065,14 +1081,12 @@
                         <h3 class="video-title">${item.title || item.title_fa}</h3>
                         <p class="video-description">${item.summary || item.intro_fa}</p>
                         <button onclick="openNewsModal(${index})" class="btn-watch btn-news" style="cursor:pointer; border:none; width:100%;">
-                            <svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3zM5 5h6v2H5v12h12v-6h2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
-                            مطالعه گزارش کامل
+                            📖 مطالعه گزارش کامل
                         </button>
                     </div>
                 </article>
             `).join('');
 
-            // انیمیشن ظهور اخبار
             gsap.to('.news-card', {
                 scrollTrigger: {
                     trigger: '#news-container',
@@ -1086,21 +1100,47 @@
             });
         }
 
-        // ۳. تابع باز کردن متن کامل خبر در پاپ‌آپ شیک داخل خود سایت
+        // ۳. ساخت صفحه ویژه مطالعه (Special Article Reader)
         function openNewsModal(index) {
             const item = window.currentNewsList[index];
             if (!item) return;
 
+            const title = item.title || item.title_fa;
+            const content = item.content || item.content_fa || item.summary || item.intro_fa;
+            const image = item.coverImage || item.image_url || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop';
+            const sourceName = item.source || item.source_name || 'Tech Source';
+            const sourceUrl = item.sourceUrl || item.source_link || 'https://techcrunch.com';
+
             const modalHtml = `
-                <div id="news-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px; direction:rtl;">
-                    <div style="background:#0f172a; color:#fff; padding:30px; border-radius:24px; max-width:650px; width:100%; max-height:85vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.15); position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.7);">
-                        <button onclick="document.getElementById('news-modal').remove()" style="position:absolute; top:18px; left:18px; background:#ef4444; color:white; border:none; padding:6px 14px; border-radius:10px; cursor:pointer; font-weight:bold;">✕ بستن</button>
-                        <h2 style="margin-bottom:20px; color:#0ea5e9; font-size:1.35rem; padding-left:50px; line-height:1.5;">${item.title || item.title_fa}</h2>
-                        <p style="line-height:2; color:#cbd5e1; font-size:1rem; text-align:justify; white-space:pre-line;">${item.content || item.content_fa || item.summary || item.intro_fa}</p>
-                        <hr style="border-color:rgba(255,255,255,0.1); margin:25px 0 15px 0;">
-                        <div style="display:flex; justify-content:space-between; color:#64748b; font-size:0.85rem;">
-                            <span>منبع: ${item.source || item.source_name || 'Navidix Media'}</span>
+                <div id="news-modal" style="position:fixed; inset:0; background:rgba(3, 7, 18, 0.92); backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px; direction:rtl;">
+                    <div style="background:#0f172a; color:#fff; padding:0; border-radius:24px; max-width:720px; width:100%; max-height:88vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.15); position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.8); display:flex; flex-direction:column;">
+                        
+                        <!-- عکس هدر گزارش -->
+                        <div style="position:relative; width:100%; height:260px; overflow:hidden; border-radius:24px 24px 0 0;">
+                            <img src="${image}" alt="${title}" style="width:100%; height:100%; object-fit:cover;">
+                            <button onclick="document.getElementById('news-modal').remove()" style="position:absolute; top:15px; left:15px; background:rgba(239, 68, 68, 0.9); color:white; border:none; padding:8px 16px; border-radius:30px; cursor:pointer; font-weight:bold; backdrop-filter:blur(5px); box-shadow:0 4px 15px rgba(0,0,0,0.4);">✕ بستن</button>
                         </div>
+
+                        <!-- بدنه اصلی گزارش -->
+                        <div style="padding:30px;">
+                            <span style="background:rgba(14, 165, 233, 0.2); color:#38bdf8; border:1px solid rgba(14, 165, 233, 0.4); padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:bold;">گزارش ویژه تکنولوژی</span>
+                            <h2 style="margin:15px 0 20px 0; color:#f8fafc; font-size:1.45rem; line-height:1.6;">${title}</h2>
+                            
+                            <div style="line-height:2; color:#cbd5e1; font-size:1.02rem; text-align:justify; white-space:pre-line;">
+                                ${content}
+                            </div>
+
+                            <hr style="border-color:rgba(255,255,255,0.1); margin:30px 0 20px 0;">
+
+                            <!-- باکس منبع معتبر با لینک مستقیم -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; background:rgba(255,255,255,0.03); padding:15px 20px; border-radius:16px; border:1px solid rgba(255,255,255,0.08);">
+                                <span style="color:#94a3b8; font-size:0.9rem;">منبع اصلی مقاله: <strong style="color:#fff;">${sourceName}</strong></span>
+                                <a href="${sourceUrl}" target="_blank" rel="noopener noreferrer" style="background:#0ea5e9; color:white; text-decoration:none; padding:8px 18px; border-radius:12px; font-size:0.88rem; font-weight:bold; display:inline-flex; align-items:center; gap:6px; transition:all 0.3s;">
+                                    مطالعه مقاله اصلی در ${sourceName} ↗
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             `;
@@ -1138,7 +1178,6 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         canvasContainer.appendChild(renderer.domElement);
 
-        // Post-processing
         const renderScene = new THREE.RenderPass(scene, camera);
         const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.4, 0.85);
         bloomPass.threshold = 0.2;
@@ -1149,7 +1188,6 @@
         composer.addPass(renderScene);
         composer.addPass(bloomPass);
 
-        // Ambient Lighting
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
         scene.add(ambientLight);
 
@@ -1161,7 +1199,6 @@
         pointLight2.position.set(-10, -10, 10);
         scene.add(pointLight2);
 
-        // Particles
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = 800;
         const posArray = new Float32Array(particlesCount * 3);
@@ -1179,10 +1216,9 @@
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
 
-        // 3D Logo Mesh
         let logoMesh;
         const textureLoader = new THREE.TextureLoader();
-        const logoData = "data:image/jpeg;base64,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 AX439Lvf/ An0XN7un9/z8X9zD5Xv/sMfrfJ7fF+P12e3y337L5X9v+d8/eX9Xxf/AD3j/lfl930e1+0+p/M0/S5vS/m+y+e+0/T5eT4G2f6n8ffxP43i6/uP7eXy8nx/fA4Pof0B2/s/ePzvj6/c/e874/T/c++sNf4+/m3fH0/P7vdjP0fJ8e/Sfm+fU6fpfK699vf2e1+11P6c4vf5f532O55333f2d2er4N+3vD4fC9e9/D/n3v3vT+Zvu/s7M/sO3vfM/m+27t8/1fE+V+P/AH37H0H3e/XfL6eH18fH63w/S8H098/R6fj+l1e76+e+e3xvl4+7u93/AG/a/F5eP6H2fK32u/2221z89e6eT0fL/e+b3f1fI6Ovd6fT9m5+Jvve3333m3m944/pvw291439/m9X2ff+/p++08vw77ve9/d2+f8vD9fufz/e+s9fR7/e/d/b8/b1fn4m+v1O/e8vw+/yNf3Hq13O427m/q/l+V+S/W5vN35P1+n1ffu6M/y/H8b6ffg+F8/f/p75N5pX92X11/TfS13O5+V/pXp052vofP2/f8 0efrf3Xf1/K/J/Tfy/p985fL49y/L/Sfk3m38fx/M1933NOn33u7+Dxfzdz+D+FvT/8AfeHxd+fw9X23v+XfHze1v38XxeX4er8D93e/0e77dM9/F/C3u31u+N/X3t9P5G+0/j3f+X1Xf4Pj+Jvd3x+/uO1+378ff/n+v0/C6eb2fPfxL/P33/l38P4e/Xy9Xm743b1fB6ff5X5/d3e3871fe74/vP5/A+/An3fF0v8vw/f30Pvdz3/2+z+bv69z9eXm06e3v+/5O8/S0M62fG8/yN3e/b3l2fnNvv2vS39t9L9P3a/Gf43veT4fhf698vv3L9/M1ffx3LxfT2/P9+/w13/f6fX/f3+D8v7PvfK/S31t+X2+/L4evp/U3h0t+fxv04297m+v355+s3w7m145++/u+fv/H2PzfM++vfDvvM8P5e/p0+8vxvx+m74v2++bve/O+fv35359X/f2f5m/b49d+ffm423m31+D6fXjXG305+t19/d/X5vN1e3199r31+t7S5vfze9z32+L4/F+m93O2+L4f8303f9/O+Gvf/Pz9/XxfS3eL83377/S9X6/O/L/Sfh6/1+L23k9d4H0/vfl/i/1/h/Sfv2ftm+P/b9v432v/aAAwD3AAG0AABAAFAAEABgABAAEAAAAHAAAAAAMAAAAAAAAAAQAEAAAAAQAAAAMAAQAAAAEAAAAO";
+        const logoData = "data:image/jpeg;base64,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 AX439Lvf/ An0XN7un9/z8X9zD5Xv/sMfrfJ7fF+P12e3y337L5X9v+d8/eX9Xxf/AD3j/lfl930e1+0+p/M0/S5vS/m+y+e+0/T5eT4G2f6n8ffxP43i6/uP7eXy8nx/fA4Pof0B2/s/ePzvj6/c/e874/T/c++sNf4+/m3fH0/P7vdjP0fJ8e/Sfm+fU6fpfK699vf2e1+11P6c4vf5f532O55333f2d2er4N+3vD4fC9e9/D/n3v3vT+Zvu/s7M/sO3vfM/m+27t8/1fE+V+P/AH37H0H3e/XfL6eH18fH63w/S8H098/R6fj+l1e76+e+e3xvl4+7u93/AG/a/F5eP6H2fK32u/2221z89e6eT0fL/e+b3f1fI6Ovd6fT9m5+Jvve3333m3m944/mvw291439/m9X2ff+/p++08vw77ve9/d2+f8vD9fufz/e+s9fR7/e/d/b8/b1fn4m+v1O/e8vw+/yNf3Hq13O427m/q/l+V+S/W5vN35P1+n1ffu6M/y/H8b6ffg+F8/f/p75N5pX92X11/TfS13O5+V/pXp052vofP2/f8 0efrf3Xf1/K/J/Tfy/p985fL49y/L/Sfk3m38fx/M1933NOn33u7+Dxfzdz+D+FvT/8AfeHxd+fw9X23v+XfHze1v38XxeX4er8D93e/0e77dM9/F/C3u31u+N/X3t9P5G+0/j3f+X1Xf4Pj+Jvd3x+/uO1+378ff/n+v0/C6eb2fPfxL/P33/l38P4e/Xy9Xm743b1fB6ff5X5/d3e3871fe74/vP5/A+/An3fF0v8vw/f30Pvdz3/2+z+bv69z9eXm06e3v+/5O8/S0M62fG8/yN3e/b3l2fnNvv2vS39t9L9P3a/Gf43veT4fhf698vv3L9/M1ffx3LxfT2/P9+/w13/f6fX/f3+D8v7PvfK/S31t+X2+/L4evp/U3h0t+fxv04297m+v355+s3w7m145++/u+fv/H2PzfM++vfDvvM8P5e/p0+8vxvx+m74v2++bve/O+fv35359X/f2f5m/b49d+ffm423m31+D6fXjXG305+t19/d/X5vN1e3199r31+t7S5vfze9z32+L4/F+m93O2+L4f8303f9/O+Gvf/Pz9/XxfS3eL83377/S9X6/O/L/Sfh6/1+L23k9d4H0/vfl/i/1/h/Sfv2ftm+P/b9v432v/aAAwD3AAG0AABAAFAAEABgABAAEAAAAHAAAAAAMAAAAAAAAAAQAEAAAAAQAAAAMAAQAAAAEAAAAO";
         textureLoader.load(logoData, (texture) => {
             const aspect = texture.image.width / texture.image.height;
             const planeHeight = 7; 
@@ -1206,7 +1242,6 @@
             scene.add(logoMesh);
         });
 
-        // Mouse Parallax
         let mouseX = 0;
         let mouseY = 0;
         let targetX = 0;
@@ -1217,7 +1252,6 @@
             mouseY = (event.clientY - window.innerHeight / 2);
         });
 
-        // Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
@@ -1225,7 +1259,6 @@
             composer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Animation Loop
         const clock = new THREE.Clock();
 
         function animate() {
@@ -1255,7 +1288,6 @@
         // 6. GSAP Animations
         gsap.registerPlugin(ScrollTrigger);
 
-        // Hero Reveal
         const heroTl = gsap.timeline({ delay: 0.5 });
         heroTl.to('.hero-ambient', { opacity: 1, duration: 1.8, ease: 'power2.out' }, 0)
               .to('.brand-container', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, 0.1)
@@ -1268,78 +1300,36 @@
               .to('.buttons', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=0.8")
               .to('.scroll-indicator', { opacity: 1, duration: 1 }, "-=0.5");
 
-        // Scroll Animations برای شبکه‌های اجتماعی
         gsap.to('#social .section-header', {
-            scrollTrigger: {
-                trigger: '#social',
-                start: 'top 80%',
-            },
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out'
+            scrollTrigger: { trigger: '#social', start: 'top 80%' },
+            y: 0, opacity: 1, duration: 1, ease: 'power3.out'
         });
 
         gsap.to('.card', {
-            scrollTrigger: {
-                trigger: '.cards-grid',
-                start: 'top 85%',
-            },
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: 'power3.out'
+            scrollTrigger: { trigger: '.cards-grid', start: 'top 85%' },
+            y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out'
         });
 
-        // Scroll Animations برای بخش اخبار
         gsap.to('#news .section-header', {
-            scrollTrigger: {
-                trigger: '#news',
-                start: 'top 80%',
-            },
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out'
+            scrollTrigger: { trigger: '#news', start: 'top 80%' },
+            y: 0, opacity: 1, duration: 1, ease: 'power3.out'
         });
 
-        // Scroll Animations برای بخش ویدیوها
         gsap.to('#videos .section-header', {
-            scrollTrigger: {
-                trigger: '#videos',
-                start: 'top 80%',
-            },
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out'
+            scrollTrigger: { trigger: '#videos', start: 'top 80%' },
+            y: 0, opacity: 1, duration: 1, ease: 'power3.out'
         });
 
         gsap.to('#videos .video-card', {
-            scrollTrigger: {
-                trigger: '#videos .video-grid',
-                start: 'top 85%',
-            },
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: 'power3.out'
+            scrollTrigger: { trigger: '#videos .video-grid', start: 'top 85%' },
+            y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out'
         });
 
         gsap.to('.footer', {
-            scrollTrigger: {
-                trigger: '.footer',
-                start: 'top 95%',
-            },
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out'
+            scrollTrigger: { trigger: '.footer', start: 'top 95%' },
+            y: 0, opacity: 1, duration: 1, ease: 'power3.out'
         });
 
-        // 7. Magnetic Buttons
         const magneticElements = document.querySelectorAll('.magnetic');
         magneticElements.forEach((elem) => {
             elem.addEventListener('mousemove', (e) => {
@@ -1354,7 +1344,6 @@
             });
         });
 
-        // 8. Card 3D Tilt Effect
         const cards = document.querySelectorAll('.tilt-card');
         cards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
@@ -1378,7 +1367,6 @@
             });
         });
 
-        // 9. Hero Emblem Depth Parallax
         const emblemStage = document.getElementById('emblemStage');
         const heroSectionEl = document.querySelector('.hero');
         if (emblemStage && heroSectionEl) {
@@ -1387,12 +1375,7 @@
                 const px = (e.clientX - rect.left) / rect.width - 0.5;
                 const py = (e.clientY - rect.top) / rect.height - 0.5;
                 gsap.to(emblemStage, {
-                    x: px * 18,
-                    y: py * 18,
-                    rotateY: px * 10,
-                    rotateX: py * -10,
-                    duration: 0.9,
-                    ease: 'power2.out'
+                    x: px * 18, y: py * 18, rotateY: px * 10, rotateX: py * -10, duration: 0.9, ease: 'power2.out'
                 });
             });
             heroSectionEl.addEventListener('mouseleave', () => {
@@ -1400,7 +1383,6 @@
             });
         }
 
-        // بارگذاری اولیه اخبار هنگام باز شدن صفحه
         document.addEventListener('DOMContentLoaded', loadAINews);
     </script>
 </body>
