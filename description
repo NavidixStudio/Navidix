@@ -1,0 +1,55 @@
+// مقالات نمونه (بعداً به صورت خودکار آپدیت می‌شوند)
+const articles = [
+    {
+        category: "هوش مصنوعی",
+        title: "رونمایی از مدل جدید هوش مصنوعی هوشمندتر",
+        : "مدل جدید هوش مصنوعی توانایی حل مسائل پیچیده ریاضی و برنامه‌نویسی را به دست آورده است."
+    },
+    {
+        category: "رباتیک",
+        title: "پیشرفت جدید در ساخت ربات‌های انسان‌نما",
+        description: "ربات‌های جدید می‌توانند کارهای خانه و کارهای سخت صنعتی را با دقت بالا انجام دهند."
+    },
+    {
+        category: "تکنولوژی",
+        title: "نسل جدید پردازنده‌ها با مصرف انرژی کمتر",
+        description: "تراشه‌های جدید سرعت پردازش گوشی‌ها و لپ‌تاپ‌ها را تا دو برابر افزایش می‌دهند."
+    },
+    {
+        category: "هوش مصنوعی",
+        title: "ابزار جدید ساخت ویدیو با متن",
+        description: "تنها با نوشتن متن می‌توانید ویدیوهای سینمایی با کیفیت فوق‌العاده تولید کنید."
+    }
+];
+
+// ویدیوهای نمونه یوتیوب
+const videos = [
+    { title: "ویدیو جدید کانال Navidix", id: "dQw4w9WgXcQ" },
+    { title: "آموزش کامل کار با هوش مصنوعی", id: "dQw4w9WgXcQ" }
+];
+
+// بارگذاری مقالات در صفحه
+document.addEventListener("DOMContentLoaded", () => {
+    const articlesContainer = document.getElementById("articles-container");
+    const youtubeContainer = document.getElementById("youtube-container");
+
+    // رندر مقالات افقی
+    articlesContainer.innerHTML = articles.map(art => `
+        <div class="card">
+            <div>
+                <tag>${art.category}</tag>
+                <h3>${art.title}</h3>
+                <p>${art.description}</p>
+            </div>
+            <small style="color: #64748b;">مطالعه کامل →</small>
+        </div>
+    `).join('');
+
+    // رندر ویدیوهای یوتیوب
+    youtubeContainer.innerHTML = videos.map(vid => `
+        <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/${vid.id}" allowfullscreen></iframe>
+            <h4>${vid.title}</h4>
+        </div>
+    `).join('');
+});
