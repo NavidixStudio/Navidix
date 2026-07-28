@@ -139,7 +139,6 @@
             background: radial-gradient(ellipse 80% 60% at 50% 18%, transparent 0%, rgba(0, 0, 0, 0.4) 78%);
         }
 
-        /* برند NAVIDIX */
         .brand-container {
             display: flex;
             flex-direction: column;
@@ -375,9 +374,7 @@
             transition: left 0.5s ease;
         }
 
-        .btn:hover::before {
-            left: 100%;
-        }
+        .btn:hover::before { left: 100%; }
 
         .btn:hover {
             border-color: rgba(255,255,255,0.3);
@@ -401,7 +398,6 @@
             50% { box-shadow: 0 0 22px rgba(14, 165, 233, 0.35); }
         }
 
-        /* Sections General */
         .social-section {
             padding: 5rem 2rem;
             max-width: 1200px;
@@ -435,7 +431,6 @@
             direction: ltr;
         }
 
-        /* Social Cards Grid */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -474,10 +469,7 @@
             pointer-events: none;
         }
 
-        .card:hover::after {
-            opacity: 1;
-        }
-
+        .card:hover::after { opacity: 1; }
         .card:hover {
             box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.2);
             border-color: rgba(255,255,255,0.2);
@@ -529,7 +521,6 @@
             color: black;
         }
 
-        /* Videos & News Grid */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -576,9 +567,7 @@
             transition: transform 0.4s ease;
         }
 
-        .video-card:hover .thumbnail-wrapper img {
-            transform: scale(1.05);
-        }
+        .video-card:hover .thumbnail-wrapper img { transform: scale(1.05); }
 
         .play-overlay {
             position: absolute;
@@ -662,13 +651,16 @@
 
         .btn-news {
             background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         .btn-news:hover {
             box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
         }
 
-        /* Footer */
         .footer {
             padding: 4rem 2rem;
             border-top: 1px solid var(--glass-border);
@@ -689,10 +681,7 @@
             letter-spacing: 0.05em;
         }
 
-        .footer-tags span {
-            position: relative;
-        }
-
+        .footer-tags span { position: relative; }
         .footer-tags span:not(:last-child)::after {
             content: '•';
             position: absolute;
@@ -903,7 +892,7 @@
             </div>
 
             <div class="video-grid" id="news-container">
-                <!-- اخبار توسط JavaScript به صورت دینامیک جای‌گذاری می‌شوند -->
+                <!-- اخبار به صورت آنلاین جای‌گذاری می‌شوند -->
             </div>
         </section>
 
@@ -1006,7 +995,7 @@
 
     <!-- Scriptها -->
     <script>
-        // ۱. لیست ۵ خبر استاندارد با منابع معتبر جهانی و متن تحلیلی
+        // ۱. لیست ۵ خبر استاندارد با منابع معتبر جهانی و متن تحلیلی بلند
         const defaultNews = [
             {
                 title_fa: "جهش بی‌سابقه در مدل‌های استدلال هوش مصنوعی: رونمایی از عامل‌های خودکار نسل جدید",
@@ -1079,7 +1068,7 @@
                     </div>
                     <div class="card-content">
                         <h3 class="video-title">${item.title || item.title_fa}</h3>
-                        <p class="video-description">${item.summary || item.intro_fa}</p>
+                        <p class="video-description">${item.summary || item.intro_fa || item.summary_fa}</p>
                         <button onclick="openNewsModal(${index})" class="btn-watch btn-news" style="cursor:pointer; border:none; width:100%;">
                             📖 مطالعه گزارش کامل
                         </button>
@@ -1100,7 +1089,7 @@
             });
         }
 
-        // ۳. ساخت صفحه ویژه مطالعه (Special Article Reader)
+        // ۳. ساخت صفحه ویژه مطالعه مقاله بلندو اختصاصی
         function openNewsModal(index) {
             const item = window.currentNewsList[index];
             if (!item) return;
@@ -1112,31 +1101,31 @@
             const sourceUrl = item.sourceUrl || item.source_link || 'https://techcrunch.com';
 
             const modalHtml = `
-                <div id="news-modal" style="position:fixed; inset:0; background:rgba(3, 7, 18, 0.92); backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px; direction:rtl;">
-                    <div style="background:#0f172a; color:#fff; padding:0; border-radius:24px; max-width:720px; width:100%; max-height:88vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.15); position:relative; box-shadow:0 25px 60px rgba(0,0,0,0.8); display:flex; flex-direction:column;">
+                <div id="news-modal" style="position:fixed; inset:0; background:rgba(3, 7, 18, 0.95); backdrop-filter:blur(15px); display:flex; align-items:center; justify-content:center; z-index:99999; padding:20px; direction:rtl;">
+                    <div style="background:#0f172a; color:#fff; padding:0; border-radius:24px; max-width:750px; width:100%; max-height:88vh; overflow-y:auto; border:1px solid rgba(255,255,255,0.15); position:relative; box-shadow:0 30px 80px rgba(0,0,0,0.9); display:flex; flex-direction:column;">
                         
-                        <!-- عکس هدر گزارش -->
-                        <div style="position:relative; width:100%; height:260px; overflow:hidden; border-radius:24px 24px 0 0;">
+                        <!-- کاور بالای مقاله -->
+                        <div style="position:relative; width:100%; height:280px; overflow:hidden; border-radius:24px 24px 0 0;">
                             <img src="${image}" alt="${title}" style="width:100%; height:100%; object-fit:cover;">
-                            <button onclick="document.getElementById('news-modal').remove()" style="position:absolute; top:15px; left:15px; background:rgba(239, 68, 68, 0.9); color:white; border:none; padding:8px 16px; border-radius:30px; cursor:pointer; font-weight:bold; backdrop-filter:blur(5px); box-shadow:0 4px 15px rgba(0,0,0,0.4);">✕ بستن</button>
+                            <button onclick="document.getElementById('news-modal').remove()" style="position:absolute; top:18px; left:18px; background:rgba(239, 68, 68, 0.9); color:white; border:none; padding:8px 18px; border-radius:30px; cursor:pointer; font-weight:bold; backdrop-filter:blur(5px); box-shadow:0 4px 15px rgba(0,0,0,0.4);">✕ بستن</button>
                         </div>
 
-                        <!-- بدنه اصلی گزارش -->
-                        <div style="padding:30px;">
-                            <span style="background:rgba(14, 165, 233, 0.2); color:#38bdf8; border:1px solid rgba(14, 165, 233, 0.4); padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:bold;">گزارش ویژه تکنولوژی</span>
-                            <h2 style="margin:15px 0 20px 0; color:#f8fafc; font-size:1.45rem; line-height:1.6;">${title}</h2>
+                        <!-- بدنه اصلی مقاله -->
+                        <div style="padding:35px;">
+                            <span style="background:rgba(14, 165, 233, 0.2); color:#38bdf8; border:1px solid rgba(14, 165, 233, 0.4); padding:4px 14px; border-radius:20px; font-size:0.85rem; font-weight:bold;">گزارش اختصاصی Navidix</span>
+                            <h1 style="margin:18px 0 22px 0; color:#f8fafc; font-size:1.5rem; line-height:1.6;">${title}</h1>
                             
-                            <div style="line-height:2; color:#cbd5e1; font-size:1.02rem; text-align:justify; white-space:pre-line;">
+                            <div style="line-height:2.1; color:#cbd5e1; font-size:1.05rem; text-align:justify; white-space:pre-line;">
                                 ${content}
                             </div>
 
-                            <hr style="border-color:rgba(255,255,255,0.1); margin:30px 0 20px 0;">
+                            <hr style="border-color:rgba(255,255,255,0.1); margin:35px 0 20px 0;">
 
-                            <!-- باکس منبع معتبر با لینک مستقیم -->
-                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; background:rgba(255,255,255,0.03); padding:15px 20px; border-radius:16px; border:1px solid rgba(255,255,255,0.08);">
-                                <span style="color:#94a3b8; font-size:0.9rem;">منبع اصلی مقاله: <strong style="color:#fff;">${sourceName}</strong></span>
-                                <a href="${sourceUrl}" target="_blank" rel="noopener noreferrer" style="background:#0ea5e9; color:white; text-decoration:none; padding:8px 18px; border-radius:12px; font-size:0.88rem; font-weight:bold; display:inline-flex; align-items:center; gap:6px; transition:all 0.3s;">
-                                    مطالعه مقاله اصلی در ${sourceName} ↗
+                            <!-- ارجاع منبع تنها در انتها -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; background:rgba(255,255,255,0.03); padding:16px 22px; border-radius:16px; border:1px solid rgba(255,255,255,0.08);">
+                                <span style="color:#94a3b8; font-size:0.92rem;">منبع خبری: <strong style="color:#fff;">${sourceName}</strong></span>
+                                <a href="${sourceUrl}" target="_blank" rel="noopener noreferrer" style="background:#0ea5e9; color:white; text-decoration:none; padding:8px 18px; border-radius:12px; font-size:0.88rem; font-weight:bold; display:inline-flex; align-items:center; gap:6px;">
+                                    مطالعه در ${sourceName} ↗
                                 </a>
                             </div>
                         </div>
