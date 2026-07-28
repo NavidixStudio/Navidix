@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navidix | Mohammad Navidi</title>
+    <!-- فونت وزیرمتن برای زیبایی متون فارسی -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root {
+            --bg-color: #030712;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --accent-blue: #0ea5e9;
+            --accent-red: #ef4444;
+            --glass-bg: rgba(15, 23, 42, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(to bottom, #000000, #0a0a1a, #050510);
+            color: var(--text-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: rgba(14, 165, 233, 0.3);
+            color: white;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            direction: ltr;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero-spacer {
+            height: 35vh;
+        }
+
+        /* لایه‌های نور و بافت پس‌زمینه هیرو */
+        .hero-ambient {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .hero-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(85px);
+            opacity: 0.6;
+            animation: heroGlowPulse 6s ease-in-out infinite;
+        }
+
+        .hero-glow-blue {
+            width: 48vw;
+            height: 48vw;
+            max-width: 640px;
+            max-height: 640px;
+            top: 3%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.45) 0%, rgba(14, 165, 233, 0) 70%);
+        }
+
+        .hero-glow-red {
+            width: 32vw;
+            height: 32vw;
+            max-width: 480px;
+            max-height: 480px;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, rgba(239, 68, 68, 0) 70%);
+            animation-delay: -2.4s;
+        }
+
+        @keyframes heroGlowPulse {
+            0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.85; transform: translateX(-50%) scale(1.12); }
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: -10%;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 56px 56px;
+            mask-image: radial-gradient(ellipse 60% 55% at 50% 28%, #000 0%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 28%, #000 0%, transparent 75%);
+            animation: heroGridDrift 18s ease-in-out infinite;
+        }
+
+        @keyframes heroGridDrift {
+            0%, 100% { background-position: 0 0, 0 0; }
+            50% { background-position: 10px 14px, 10px 14px; }
+        }
+
+        .hero-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 18%, transparent 0%, rgba(0, 0, 0, 0.4) 78%);
+        }
+
+        /* بخش برند: نماد جدید NAVIDIX با ترکیب‌بندی پریمیوم */
+        .brand-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.15rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            perspective: 900px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: #c7ccd6;
+            direction: rtl;
+            opacity: 0;
+            transform: translateY(14px);
+            margin-bottom: 0.4rem;
+        }
+
+        .eyebrow::before,
+        .eyebrow::after {
+            content: '';
+            width: 26px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.9));
+        }
+
+        .eyebrow::after {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.9), transparent);
+        }
+
+        .emblem-stage {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0.25rem 0 0.5rem;
+            opacity: 0;
+            transform: scale(0.85);
+            transform-style: preserve-3d;
+        }
+
+        .emblem-halo {
+            position: absolute;
+            inset: -34%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.5) 0%, rgba(239, 68, 68, 0.12) 45%, transparent 72%);
+            filter: blur(16px);
+            animation: emblemBreathe 3.6s ease-in-out infinite;
+        }
+
+        .emblem-ring {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            border: 1px solid transparent;
+        }
+
+        .emblem-ring-1 {
+            inset: -16%;
+            border-top-color: rgba(14, 165, 233, 0.75);
+            border-right-color: rgba(14, 165, 233, 0.2);
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            animation: emblemSpin 16s linear infinite;
+        }
+
+        .emblem-ring-2 {
+            inset: -32%;
+            border-color: rgba(255, 255, 255, 0.1);
+            border-top-color: rgba(239, 68, 68, 0.35);
+            animation: emblemSpin 26s linear infinite reverse;
+        }
+
+        @keyframes emblemSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes emblemBreathe {
+            0%, 100% { opacity: 0.75; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .brand-logo {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 0 34px rgba(239, 68, 68, 0.6)) brightness(1.08) contrast(1.05);
+            animation: emblemFloat 5s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        @keyframes emblemFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .brand-logotype {
+            width: clamp(220px, 22vw, 300px);
+            max-width: 100%;
+            height: auto;
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.6)) brightness(1.12);
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(14px);
+            display: block;
+        }
+
+        .brand-logotype-wrap {
+            position: relative;
+            display: inline-block;
+            margin-top: 0.9rem;
+        }
+
+        .brand-logotype-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%);
+            background-size: 250% 100%;
+            mix-blend-mode: overlay;
+            animation: logoShimmer 5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes logoShimmer {
+            0% { background-position: 200% 0; }
+            55%, 100% { background-position: -60% 0; }
+        }
+
+        .title {
+            font-size: clamp(2.3rem, 4.6vw, 4.2rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-top: 0.5rem;
+            margin-bottom: 0.4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            background: linear-gradient(to right, #fff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+            font-weight: 400;
+            color: var(--accent-blue);
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .description {
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .desc-en {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #b6bcc9;
+            margin-bottom: 1.5rem;
+            direction: ltr;
+        }
+
+        .desc-fa {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: #e2e5eb;
+            direction: rtl;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1.2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            flex-wrap: wrap;
+            justify-content: center;
+            direction: ltr;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: rgba(14, 165, 233, 0.15);
+            border-color: rgba(14, 165, 233, 0.4);
+            animation: btnPulse 3.2s ease-in-out infinite;
+        }
+
+        .btn-primary:hover {
+            background: rgba(14, 165, 233, 0.3);
+            box-shadow: 0 0 25px rgba(14, 165, 233, 0.5);
+        }
+
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 0 0 rgba(14, 165, 233, 0); }
+            50% { box-shadow: 0 0 22px rgba(14, 165, 233, 0.35); }
+        }
+
+        /* Sections General */
+        .social-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            direction: rtl;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            direction: rtl;
+        }
+
+        .section-subtitle-en {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            opacity: 0.7;
+            direction: ltr;
+        }
+
+        /* Social Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            direction: ltr;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            opacity: 0;
+            transform: translateY(30px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        .card:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .card-yt:hover { box-shadow: 0 20px 40px rgba(239, 68, 68, 0.15), inset 0 0 0 1px rgba(239, 68, 68, 0.3); border-color: rgba(239, 68, 68, 0.3); }
+        .card-ig:hover { box-shadow: 0 20px 40px rgba(217, 70, 239, 0.15), inset 0 0 0 1px rgba(217, 70, 239, 0.3); border-color: rgba(217, 70, 239, 0.3); }
+        .card-in:hover { box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15), inset 0 0 0 1px rgba(14, 165, 233, 0.3); border-color: rgba(14, 165, 233, 0.3); }
+        .card-tg:hover { box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15), inset 0 0 0 1px rgba(56, 189, 248, 0.3); border-color: rgba(56, 189, 248, 0.3); }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            transform: translateZ(30px);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            transform: translateZ(20px);
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            transform: translateZ(15px);
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .card-btn {
+            margin-top: auto;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            transform: translateZ(25px);
+        }
+
+        .card:hover .card-btn {
+            background: white;
+            color: black;
+        }
+
+        /* Videos & News Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            direction: rtl;
+        }
+
+        .video-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .video-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(14, 165, 233, 0.4);
+            box-shadow: 0 12px 30px rgba(14, 165, 233, 0.15);
+        }
+
+        .thumbnail-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            overflow: hidden;
+            background: #000;
+            display: block;
+        }
+
+        .thumbnail-wrapper img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .video-card:hover .thumbnail-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 52px;
+            height: 52px;
+            background: rgba(239, 68, 68, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .play-overlay svg {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff;
+            margin-right: -2px;
+        }
+
+        .video-card:hover .play-overlay {
+            background: var(--accent-red);
+            transform: translate(-50%, -50%) scale(1.12);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .video-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .btn-watch {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-watch:hover {
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-watch svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .btn-news {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+        }
+
+        .btn-news:hover {
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            direction: ltr;
+        }
+
+        .footer-tags {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-tags span {
+            position: relative;
+        }
+
+        .footer-tags span:not(:last-child)::after {
+            content: '•';
+            position: absolute;
+            right: -1rem;
+            opacity: 0.3;
+        }
+
+        .copyright {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-line::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-blue);
+            animation: scrollLine 2s infinite ease-in-out;
+        }
+
+        @keyframes scrollLine {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-spacer { height: 20vh; }
+            .title { font-size: 2.2rem; }
+            .subtitle { font-size: 1rem; }
+            .cards-grid, .video-grid { grid-template-columns: 1fr; }
+            .social-section { padding: 3.5rem 1.2rem; }
+            .emblem-stage { width: 150px; height: 150px; }
+            .brand-logotype { max-width: 220px; }
+            .eyebrow { letter-spacing: 0.22em; font-size: 0.7rem; }
+        }
+    </style>
+
+    <!-- Three.js and Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div id="content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-ambient" aria-hidden="true">
+                <div class="hero-glow hero-glow-blue"></div>
+                <div class="hero-glow hero-glow-red"></div>
+                <div class="hero-grid"></div>
+                <div class="hero-vignette"></div>
+            </div>
+
+            <div class="hero-spacer"></div>
+
+            <!-- بخش نماد و لوگوتایپ جدید NAVIDIX -->
+            <div class="brand-container">
+                <span class="eyebrow">هوش مصنوعی × روایت سینمایی</span>
+
+                <div class="emblem-stage" id="emblemStage">
+                    <div class="emblem-halo"></div>
+                    <div class="emblem-ring emblem-ring-1"></div>
+                    <div class="emblem-ring emblem-ring-2"></div>
+                    <img src="navidix-emblem.png" alt="Navidix Emblem" class="brand-logo">
+                </div>
+
+                <div class="brand-logotype-wrap">
+                    <img src="navidix-logotype.png" alt="Navidix Logotype" class="brand-logotype">
+                </div>
+            </div>
+
+            <h1 class="title">Mohammad Navidi</h1>
+            <h2 class="subtitle">Founder of Navidix</h2>
+
+            <div class="description">
+                <div class="desc-en">
+                    AI Creator • Cinematic Visual Designer • Technology Storyteller • Digital Artist<br>
+                    Building immersive digital experiences powered by Artificial Intelligence.
+                </div>
+                <div class="desc-fa">
+                    محمد نویدی<br>
+                    خالق تیزرهای سینمایی، محتوای علمی، فناوری و هوش مصنوعی<br>
+                    طراحی تجربه‌های دیجیتال آینده
+                </div>
+            </div>
+
+            <div class="buttons">
+                <a href="#news" class="btn btn-primary magnetic" data-strength="20">⚡ اخبار و مقالات AI</a>
+                <a href="#social" class="btn magnetic" data-strength="20">Explore Navidix</a>
+                <a href="#videos" class="btn magnetic" data-strength="20">Featured Videos</a>
+            </div>
+
+            <div class="scroll-indicator">
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- ۱. بخش شبکه‌های اجتماعی -->
+        <section id="social" class="social-section">
+            <div class="section-header">
+                <h2 class="section-title">شبکه‌های اجتماعی محمد نویدی</h2>
+                <div class="section-subtitle">تمام راه‌های ارتباط با برند Navidix در یک صفحه</div>
+                <div class="section-subtitle-en">Connect with me across all official platforms.</div>
+            </div>
+
+            <div class="cards-grid">
+                <!-- YouTube -->
+                <a href="https://youtube.com/@navidix" target="_blank" class="card card-yt tilt-card">
+                    <div class="card-icon" style="color: #ef4444;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </div>
+                    <div class="card-title">YouTube</div>
+                    <div class="card-desc">
+                        <span>Persian documentaries</span>
+                        <span>Artificial Intelligence</span>
+                        <span>Technology & Science</span>
+                        <span>Future</span>
+                    </div>
+                    <div class="card-btn">Subscribe</div>
+                </a>
+
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/navidi__ai" target="_blank" class="card card-ig tilt-card">
+                    <div class="card-icon" style="color: #d946ef;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </div>
+                    <div class="card-title">Instagram</div>
+                    <div class="card-desc">
+                        <span>Personal Portfolio</span>
+                        <span>Cinematic Teasers</span>
+                        <span>AI Art</span>
+                        <span>Creative Visuals</span>
+                    </div>
+                    <div class="card-btn">Follow</div>
+                </a>
+
+                <!-- LinkedIn -->
+                <a href="https://www.linkedin.com/in/mohammad-navidi-7b8b75381" target="_blank" class="card card-in tilt-card">
+                    <div class="card-icon" style="color: #0ea5e9;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </div>
+                    <div class="card-title">LinkedIn</div>
+                    <div class="card-desc">
+                        <span>Professional Profile</span>
+                        <span>Career</span>
+                        <span>Collaborations</span>
+                        <span>Projects</span>
+                    </div>
+                    <div class="card-btn">Connect</div>
+                </a>
+
+                <!-- Telegram -->
+                <a href="https://t.me/NavidixMedia" target="_blank" class="card card-tg tilt-card">
+                    <div class="card-icon" style="color: #38bdf8;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.94z"/></svg>
+                    </div>
+                    <div class="card-title">Telegram</div>
+                    <div class="card-desc">
+                        <span>Latest Updates</span>
+                        <span>Exclusive Content</span>
+                        <span>Direct Access</span>
+                    </div>
+                    <div class="card-btn">Join Channel</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ۲. بخش اخبار و مقالات هوش مصنوعی -->
+        <section id="news" class="social-section" style="padding-top: 1rem;">
+            <div class="section-header">
+                <h2 class="section-title">اخبار و تحلیلی‌های هوش مصنوعی</h2>
+                <div class="section-subtitle">پوشش روزانه جدیدترین تحولات دنیای تکنولوژی به زبان فارسی</div>
+                <div class="section-subtitle-en">Daily AI News & Analysis</div>
+            </div>
+
+            <div class="video-grid" id="news-container">
+                <!-- اخبار توسط JavaScript به صورت دینامیک جای‌گذاری می‌شوند -->
+            </div>
+        </section>
+
+        <!-- ۳. بخش ویدیوهای منتخب یوتیوب -->
+        <section id="videos" class="social-section" style="padding-top: 1rem;">
+            <div class="section-header">
+                <h2 class="section-title">ویدیوهای منتخب یوتیوب</h2>
+                <div class="section-subtitle">جدیدترین مستندها و تحلیلی‌های کانال Navidix</div>
+                <div class="section-subtitle-en">Featured Videos & Documentaries</div>
+            </div>
+
+            <div class="video-grid">
+                <!-- ویدیو ۱ -->
+                <article class="video-card">
+                    <a href="https://youtu.be/kiqO7QZs6X0" target="_blank" rel="noopener noreferrer" class="thumbnail-wrapper">
+                        <img src="https://img.youtube.com/vi/kiqO7QZs6X0/hqdefault.jpg" alt="چهار میلیارد سال فرگشت">
+                        <div class="play-overlay">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </a>
+                    <div class="card-content">
+                        <h3 class="video-title">چهار میلیارد سال فرگشت (تکامل): از زمینِ مذاب تا پیدایش انسان خردمند (مستند سینمایی)</h3>
+                        <p class="video-description">شما واقعاً از کجا آمده‌اید؟ این سفری است به ۴ میلیارد سال پیش؛ از زمانی که زمین تکه‌ای سنگ مذاب و آتشین در فضا بود تا لحظه‌ای که انسان خردمند اولین قدم‌های خود را روی این سیاره گذاشت.</p>
+                        <a href="https://youtu.be/kiqO7QZs6X0" target="_blank" rel="noopener noreferrer" class="btn-watch">
+                            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            تماشا در یوتیوب
+                        </a>
+                    </div>
+                </article>
+
+                <!-- ویدیو ۲ -->
+                <article class="video-card">
+                    <a href="https://www.youtube.com/watch?v=WT81llGaYdc" target="_blank" rel="noopener noreferrer" class="thumbnail-wrapper">
+                        <img src="https://img.youtube.com/vi/WT81llGaYdc/hqdefault.jpg" alt="انحصار تریلیون دلاری هوش مصنوعی">
+                        <div class="play-overlay">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </a>
+                    <div class="card-content">
+                        <h3 class="video-title">انحصار تریلیون دلاری، چرا آینده هوش مصنوعی در دست دو شرکت است؟</h3>
+                        <p class="video-description">صنعت نیمه‌هادی به‌سرعت به‌سمت درآمد سالانه یک تریلیون دلاری حرکت می‌کند؛ صنعتی که نه‌تنها آینده هوش مصنوعی، بلکه اقتصاد دیجیتال، دیتاسنترها و فناوری‌های مدرن به آن وابسته‌اند.</p>
+                        <a href="https://www.youtube.com/watch?v=WT81llGaYdc" target="_blank" rel="noopener noreferrer" class="btn-watch">
+                            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            تماشا در یوتیوب
+                        </a>
+                    </div>
+                </article>
+
+                <!-- ویدیو ۳ -->
+                <article class="video-card">
+                    <a href="https://www.youtube.com/watch?v=PuDzaBwam4k" target="_blank" rel="noopener noreferrer" class="thumbnail-wrapper">
+                        <img src="https://img.youtube.com/vi/PuDzaBwam4k/hqdefault.jpg" alt="ناو Gerald R. Ford">
+                        <div class="play-overlay">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </a>
+                    <div class="card-content">
+                        <h3 class="video-title">غول ۱۳ میلیارد دلاری نیروی دریایی آمریکا: ناو Gerald R. Ford</h3>
+                        <p class="video-description">در این ویدیو وارد دنیای بزرگ‌ترین ناو هواپیمابر هسته‌ای جهان می‌شویم؛ ناو Gerald R. Ford، غولی ۱۳ میلیارد دلاری که قلب نیروی دریایی آمریکا محسوب می‌شود.</p>
+                        <a href="https://www.youtube.com/watch?v=PuDzaBwam4k" target="_blank" rel="noopener noreferrer" class="btn-watch">
+                            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            تماشا در یوتیوب
+                        </a>
+                    </div>
+                </article>
+
+                <!-- ویدیو ۴ -->
+                <article class="video-card">
+                    <a href="https://www.youtube.com/watch?v=Z4uSg7hwuXE" target="_blank" rel="noopener noreferrer" class="thumbnail-wrapper">
+                        <img src="https://img.youtube.com/vi/Z4uSg7hwuXE/hqdefault.jpg" alt="انقلاب هوش مصنوعی در جنگ">
+                        <div class="play-overlay">
+                            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </a>
+                    <div class="card-content">
+                        <h3 class="video-title">انقلاب هوش مصنوعی در جنگ و کالبدشکافی تحولات نظامی</h3>
+                        <p class="video-description">در این ویدیو، به کالبدشکافی یکی از بزرگترین تحولات نظامی تاریخ، یعنی «انقلاب هوش مصنوعی در جنگ» می‌پردازیم. امروز بحث بر سر سرعت، پردازش داده‌ها و حذف انسان است.</p>
+                        <a href="https://www.youtube.com/watch?v=Z4uSg7hwuXE" target="_blank" rel="noopener noreferrer" class="btn-watch">
+                            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            تماشا در یوتیوب
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-tags">
+                <span>Mohammad Navidi</span>
+                <span>Navidix</span>
+                <span>AI</span>
+                <span>Technology</span>
+                <span>Creativity</span>
+                <span>Future</span>
+            </div>
+            <div class="copyright">Copyright &copy; 2026</div>
+        </footer>
+    </div>
+
+    <!-- Scriptها -->
+    <script>
+        // ۱. خبرهای نمونه جهت نمایش اولیه (در صورت عدم وجود news.json)
+        const defaultNews = [
+            {
+                title: "جهش بزرگ مدل‌های استدلال هوش مصنوعی: نسل جدید عامل‌های خودکار",
+                summary: "رقابت میان غول‌های فناوری برای توسعه مدل‌هایی که قادر به حل مسائل پیچیده ریاضی، برنامه‌نویسی و استدلال منطقی هستند وارد فاز تازه‌ای شده است.",
+                coverImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
+                sourceUrl: "https://t.me/NavidixMedia"
+            },
+            {
+                title: "انقلاب تراشه‌های پردازش ابری و آینده دیتاسنترهای هوش مصنوعی",
+                summary: "تقاضای بی‌سابقه‌ برای قدرتمندتر شدن سرورهای AI، نسل نوینی از نیمه‌هادی‌ها را وارد بازار کرده که مصرف انرژی را تا ۴۰ درصد کاهش می‌دهند.",
+                coverImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop",
+                sourceUrl: "https://t.me/NavidixMedia"
+            },
+            {
+                title: "تولید ویدیوهای سینمایی واقع‌گرایانه با هوش مصنوعی",
+                summary: "ابزارهای جدید ساخت ویدیو با قابلیت درک فیزیک نور و حرکت، مرز بین واقعیت و انیمیشن‌های کامپیوتری را کاملاً از بین برده‌اند.",
+                coverImage: "https://images.unsplash.com/photo-1677442136019-21780efad99a?q=80&w=800&auto=format&fit=crop",
+                sourceUrl: "https://t.me/NavidixMedia"
+            }
+        ];
+
+        // ۲. تابع خواندن و نمایش اخبار در سایت
+        async function loadAINews() {
+            const container = document.getElementById('news-container');
+            let articles = defaultNews;
+
+            try {
+                const response = await fetch('news.json');
+                if (response.ok) {
+                    const fetchedArticles = await response.json();
+                    if (fetchedArticles && fetchedArticles.length > 0) {
+                        articles = fetchedArticles;
+                    }
+                }
+            } catch (e) {
+                console.log("در حال استفاده از اخبار پیش‌فرض...");
+            }
+
+            container.innerHTML = articles.map(item => `
+                <article class="video-card news-card">
+                    <div class="thumbnail-wrapper">
+                        <img src="${item.coverImage}" alt="${item.title}" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="video-title">${item.title}</h3>
+                        <p class="video-description">${item.summary}</p>
+                        <a href="${item.sourceUrl}" target="_blank" rel="noopener noreferrer" class="btn-watch btn-news">
+                            <svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3zM5 5h6v2H5v12h12v-6h2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
+                            مطالعه گزارش کامل
+                        </a>
+                    </div>
+                </article>
+            `).join('');
+
+            // اعمال انیمیشن ظهور اخبار
+            gsap.to('.news-card', {
+                scrollTrigger: {
+                    trigger: '#news-container',
+                    start: 'top 85%',
+                },
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: 'power3.out'
+            });
+        }
+
+        // 3. Lenis Smooth Scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // 4. Three.js Background & 3D Logo
+        const canvasContainer = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x030712, 0.002);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        canvasContainer.appendChild(renderer.domElement);
+
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.2, 0.4, 0.85);
+        bloomPass.threshold = 0.2;
+        bloomPass.strength = 0.8;
+        bloomPass.radius = 0.5;
+
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // Ambient Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+
+        const pointLight1 = new THREE.PointLight(0x0ea5e9, 1, 100);
+        pointLight1.position.set(10, 10, 10);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0xef4444, 0.8, 100);
+        pointLight2.position.set(-10, -10, 10);
+        scene.add(pointLight2);
+
+        // Particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 800;
+        const posArray = new Float32Array(particlesCount * 3);
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 100;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            color: 0x0ea5e9,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        // 3D Logo Mesh
+        let logoMesh;
+        const textureLoader = new THREE.TextureLoader();
+        const logoData = "data:image/jpeg;base64,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 AX439Lvf/ An0XN7un9/z8X9zD5Xv/sMfrfJ7fF+P12e3y337L5X9v+d8/eX9Xxf/AD3j/lfl930e1+0+p/M0/S5vS/m+y+e+0/T5eT4G2f6n8ffxP43i6/uP7eXy8nx/fA4Pof0B2/s/ePzvj6/c/e874/T/c++sNf4+/m3fH0/P7vdjP0fJ8e/Sfm+fU6fpfK699vf2e1+11P6c4vf5f532O55333f2d2er4N+3vD4fC9e9/D/n3v3vT+Zvu/s7M/sO3vfM/m+27t8/1fE+V+P/AH37H0H3e/XfL6eH18fH63w/S8H098/R6fj+l1e76+e+e3xvl4+7u93/AG/a/F5eP6H2fK32u/2221z89e6eT0fL/e+b3f1fI6Ovd6fT9m5+Jvve3333m3m944/pvw291439/m9X2ff+/p++08vw77ve9/d2+f8vD9fufz/e+s9fR7/e/d/b8/b1fn4m+v1O/e8vw+/yNf3Hq13O427m/q/l+V+S/W5vN35P1+n1ffu6M/y/H8b6ffg+F8/f/p75N5pX92X11/TfS13O5+V/pXp052vofP2/f8 0efrf3Xf1/K/J/Tfy/p985fL49y/L/Sfk3m38fx/M1933NOn33u7+Dxfzdz+D+FvT/8AfeHxd+fw9X23v+XfHze1v38XxeX4er8D93e/0e77dM9/F/C3u31u+N/X3t9P5G+0/j3f+X1Xf4Pj+Jvd3x+/uO1+378ff/n+v0/C6eb2fPfxL/P33/l38P4e/Xy9Xm743b1fB6ff5X5/d3e3871fe74/vP5/A+/An3fF0v8vw/f30Pvdz3/2+z+bv69z9eXm06e3v+/5O8/S0M62fG8/yN3e/b3l2fnNvv2vS39t9L9P3a/Gf43veT4fhf698vv3L9/M1ffx3LxfT2/P9+/w13/f6fX/f3+D8v7PvfK/S31t+X2+/L4evp/U3h0t+fxv04297m+v355+s3w7m145++/u+fv/H2PzfM++vfDvvM8P5e/p0+8vxvx+m74v2++bve/O+fv35359X/f2f5m/b49d+ffm423m31+D6fXjXG305+t19/d/X5vN1e3199r31+t7S5vfze9z32+L4/F+m93O2+L4f8303f9/O+Gvf/Pz9/XxfS3eL83377/S9X6/O/L/Sfh6/1+L23k9d4H0/vfl/i/1/h/Sfv2ftm+P/b9v432v/aAAwD3AAG0AABAAFAAEABgABAAEAAAAHAAAAAAMAAAAAAAAAAQAEAAAAAQAAAAMAAQAAAAEAAAAO";
+        textureLoader.load(logoData, (texture) => {
+            const aspect = texture.image.width / texture.image.height;
+            const planeHeight = 7; 
+            const geometry = new THREE.PlaneGeometry(planeHeight * aspect, planeHeight);
+
+            const material = new THREE.MeshStandardMaterial({ 
+                map: texture,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                roughness: 0.1,
+                metalness: 0.5,
+                emissive: new THREE.Color(0xffffff),
+                emissiveMap: texture,
+                emissiveIntensity: 0.2,
+                side: THREE.DoubleSide
+            });
+
+            logoMesh = new THREE.Mesh(geometry, material);
+            logoMesh.position.y = 10;
+            logoMesh.position.z = 0;
+            scene.add(logoMesh);
+        });
+
+        // Mouse Parallax
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - window.innerWidth / 2);
+            mouseY = (event.clientY - window.innerHeight / 2);
+        });
+
+        // Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            const elapsedTime = clock.getElapsedTime();
+
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+
+            camera.position.x += 0.05 * (targetX - camera.position.x);
+            camera.position.y += 0.05 * (-targetY - camera.position.y);
+            camera.lookAt(scene.position);
+
+            particlesMesh.rotation.y = elapsedTime * 0.02;
+            particlesMesh.rotation.x = elapsedTime * 0.01;
+
+            if(logoMesh) {
+                logoMesh.position.y = 8 + Math.sin(elapsedTime * 1.5) * 0.5;
+                logoMesh.rotation.y = Math.sin(elapsedTime * 0.5) * 0.2 + (mouseX * 0.0005);
+                logoMesh.rotation.x = Math.sin(elapsedTime * 0.3) * 0.1 + (mouseY * 0.0005);
+            }
+
+            composer.render();
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // 5. GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Reveal
+        const heroTl = gsap.timeline({ delay: 0.5 });
+        heroTl.to('.hero-ambient', { opacity: 1, duration: 1.8, ease: 'power2.out' }, 0)
+              .to('.brand-container', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, 0.1)
+              .to('.eyebrow', { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }, 0.2)
+              .to('.emblem-stage', { scale: 1, opacity: 1, duration: 1.1, ease: 'power3.out' }, 0.3)
+              .to('.brand-logotype', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=0.6")
+              .to('.title', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=0.8")
+              .to('.subtitle', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=0.8")
+              .to('.description', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=0.8")
+              .to('.buttons', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=0.8")
+              .to('.scroll-indicator', { opacity: 1, duration: 1 }, "-=0.5");
+
+        // Scroll Animations برای شبکه‌های اجتماعی
+        gsap.to('#social .section-header', {
+            scrollTrigger: {
+                trigger: '#social',
+                start: 'top 80%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out'
+        });
+
+        gsap.to('.card', {
+            scrollTrigger: {
+                trigger: '.cards-grid',
+                start: 'top 85%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: 'power3.out'
+        });
+
+        // Scroll Animations برای بخش اخبار
+        gsap.to('#news .section-header', {
+            scrollTrigger: {
+                trigger: '#news',
+                start: 'top 80%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out'
+        });
+
+        // Scroll Animations برای بخش ویدیوها
+        gsap.to('#videos .section-header', {
+            scrollTrigger: {
+                trigger: '#videos',
+                start: 'top 80%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out'
+        });
+
+        gsap.to('#videos .video-card', {
+            scrollTrigger: {
+                trigger: '#videos .video-grid',
+                start: 'top 85%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: 'power3.out'
+        });
+
+        gsap.to('.footer', {
+            scrollTrigger: {
+                trigger: '.footer',
+                start: 'top 95%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out'
+        });
+
+        // 6. Magnetic Buttons
+        const magneticElements = document.querySelectorAll('.magnetic');
+        magneticElements.forEach((elem) => {
+            elem.addEventListener('mousemove', (e) => {
+                const bound = elem.getBoundingClientRect();
+                const strength = elem.dataset.strength || 20;
+                const tx = ((e.clientX - bound.left) / bound.width - 0.5) * strength;
+                const ty = ((e.clientY - bound.top) / bound.height - 0.5) * strength;
+                gsap.to(elem, { x: tx, y: ty, duration: 0.5, ease: 'power2.out' });
+            });
+            elem.addEventListener('mouseleave', () => {
+                gsap.to(elem, { x: 0, y: 0, duration: 0.5, ease: 'power2.out' });
+            });
+        });
+
+        // 7. Card 3D Tilt Effect
+        const cards = document.querySelectorAll('.tilt-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
+
+        // 8. Hero Emblem Depth Parallax
+        const emblemStage = document.getElementById('emblemStage');
+        const heroSectionEl = document.querySelector('.hero');
+        if (emblemStage && heroSectionEl) {
+            heroSectionEl.addEventListener('mousemove', (e) => {
+                const rect = heroSectionEl.getBoundingClientRect();
+                const px = (e.clientX - rect.left) / rect.width - 0.5;
+                const py = (e.clientY - rect.top) / rect.height - 0.5;
+                gsap.to(emblemStage, {
+                    x: px * 18,
+                    y: py * 18,
+                    rotateY: px * 10,
+                    rotateX: py * -10,
+                    duration: 0.9,
+                    ease: 'power2.out'
+                });
+            });
+            heroSectionEl.addEventListener('mouseleave', () => {
+                gsap.to(emblemStage, { x: 0, y: 0, rotateX: 0, rotateY: 0, duration: 0.9, ease: 'power2.out' });
+            });
+        }
+
+        // بارگذاری اولیه اخبار هنگام باز شدن صفحه
+        document.addEventListener('DOMContentLoaded', loadAINews);
+    </script>
+</body>
+</html>
