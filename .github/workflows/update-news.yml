@@ -1,36 +1,35 @@
-name: Auto Update AI News
+name: Daily Auto AI News
 
 on:
   schedule:
-    # اجرا هر روز ساعت 08:00 صبح
-    - cron: '0 8 * * *'
-  workflow_dispatch: # امکان اجرای دستی از داخل گیت‌هاب
+    - cron: '0 6 * * *' # اجرای خودکار هر روز صبح
+  workflow_dispatch: # امکان اجرای دستی
 
 jobs:
   build:
-    runs-runs-on: ubuntu-latest
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: '18'
+          python-version: '3.10'
 
-      - name: Install Dependencies
-        run: npm install @google/genai rss-parser
+      - name: Install dependencies
+        run: |
+          pip install google-generativeai
 
-      - name: Run News Generator
+      - name: Run news generator
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: node generate_news.mjs
-
-      - name: Commit and Push news.json
         run: |
-          git config --global user.name "Navidix Bot"
-          git config --global user.email "bot@navidix.com"
+          python generate_news.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add news.json
-          git commit -m "Auto-update AI news [skip ci]" || exit 0
+          git commit -m "Auto-update daily AI news [skip ci]" || echo "No changes"
           git push
