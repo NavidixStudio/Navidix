@@ -35,7 +35,7 @@ def fetch_rss_news():
         except Exception as e:
             print(f"خطا در دریافت RSS از {source['name']}: {e}")
             
-    return news_items[:5]
+    return news_items[:4]
 
 def clean_json_string(text):
     match = re.search(r'\{.*\}', text, re.DOTALL)
@@ -84,20 +84,24 @@ for item in raw_news:
     if article:
         new_generated_articles.append(article)
 
-# خواندن مقالات قبلی از news.json جهت اضافه کردن (Append) اخبار جدید
+# خواندن مقالات قبلی از news.js اگر وجود داشته باشد
 existing_articles = []
-if os.path.exists('news.json'):
+if os.path.exists('news.js'):
     try:
-        with open('news.json', 'r', encoding='utf-8') as f:
-            existing_articles = json.load(f)
+        with open('news.js', 'r', encoding='utf-8') as f:
+            content = f.read()
+            # استخراج آرایه جی‌اسون از داخل فایل news.js
+            match = re.search(r'window\.dynamicNews\s*=\s*(\[.*?\]);', content, re.DOTALL)
+            if match:
+                existing_articles = json.loads(match.group(1))
     except Exception as e:
-        print(f"خطا در خواندن news.json قبلی: {e}")
+        print(f"خطا در خواندن news.js قبلی: {e}")
 
-# ترکیب اخبار جدید در ابتدا + اخبار قدیمی در ادامه (حداکثر ۲۰ مقاله در آرشیو)
 all_articles = new_generated_articles + existing_articles
-all_articles = all_articles[:20]
+all_articles = all_articles[:15]
 
 if all_articles:
-    with open('news.json', 'w', encoding='utf-8') as f:
-        json.dump(all_articles, f, ensure_ascii=False, indent=4)
-    print(f"✅ با موفقیت مجموعاً {len(all_articles)} مقاله در آرشیو ذخیره شد.")
+    js_content = f"window.dynamicNews = {json.dumps(all_articles, ensure_ascii=False, indent=4)};"
+    with open('news.js', 'w', encoding='utf-8') as f:
+        f.write(js_content)
+    print(f"✅ با موفقیت مجموعاً {len(all_articles)} مقاله در news.js ذخیره شد.")
