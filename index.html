@@ -777,6 +777,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <!-- لود فایل جاوااسکریپت اخبار پویا -->
+    <script src="news.js"></script>
 </head>
 <body>
 
@@ -1057,7 +1060,7 @@
             },
             {
                 title_fa: "انقلاب هوش مصنوعی در زیست‌شناسی محاسباتی: کشف آنتی‌بیوتیک‌های جدید ظرف چند روز",
-                summary_fa: "دانشمندان با الگوریتم‌های یادگیری عمیق موفق شدند ساختار مولکولی داروی جدیدی برای مقابله با باکتری‌های مقاوم طراحی کنند.",
+                summary_fa: "دانشمندان با الگوریتম‌های یادگیری عمیق موفق شدند ساختار مولکولی داروی جدیدی برای مقابله با باکتری‌های مقاوم طراحی کنند.",
                 content_fa: "### ۱. تهدید بزرگ باکتری‌های مقاوم به دارو در پزشکی مدرن\nیکی از خطرات جدی سلامت جهانی در قرن ۲۱، ظهور باکتری‌های جهش‌یافته و مقاوم در برابر آنتی‌بیوتیک‌ها است. فرآیند سنتی کشف و توسعه یک داروی جدید معمولاً بیش از ۱۰ سال زمان و میلیاردها دلار سرمایه‌گذاری آزمایشگاهی نیاز دارد.\n\n### ۲. شبیه‌سازی مولکولی با الگوریتم‌های یادگیری عمیق\nمدل‌های پیشرفته هوش مصنوعی زیستی پس از آنالیز و اسکن بیش از چند میلیارد ترکیب شیمیایی فرضی در فضای مجازی، موفق شدند ظرف کمتر از ۷۲ ساعت ساختار مولکولی سه آنتی‌بیوتیک کاملاً جدید را طراحی نمایند.\n\n### ۳. نتایج شگفت‌انگیز در آزمایش‌های بالینی\nدر تست‌های آزمایشگاهی اولیه، این داروهای ساخت هوش مصنوعی موفق شده‌اند تمام باکتری‌های مقاوم به درمان‌های موجود را به طور کامل نابود سازند، بدون آنکه به سلول‌های سالم بدن انسان زیانی وارد کنند.\n\n### ۴. عصری تازه در درمان بیماری‌های صعب‌العلاج\nاین دستاورد درخشان سرآغاز عصری تازه در زیست‌شناسی محاسباتی و ساخت سریع دارو برای بیماری‌های نوظهور و ناشناخته خواهد بود.",
                 coverImage: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop",
                 image_url: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop",
@@ -1096,25 +1099,14 @@
             return '<p>' + html + '</p>';
         }
 
-        // ۳. بارگذاری اخبار با ترکیب اخبار ربات پایتون + اخبار پیش‌فرض
+        // ۳. بارگذاری اخبار با ترکیب فایل news.js و مقالات پیش‌فرض
         async function loadAINews() {
             const container = document.getElementById('news-container');
             let articles = defaultNews;
 
-            try {
-                let response = await fetch('news.json?v=' + Date.now());
-                if (!response.ok) {
-                    response = await fetch('articles.json?v=' + Date.now());
-                }
-                if (response.ok) {
-                    const fetchedArticles = await response.json();
-                    if (fetchedArticles && fetchedArticles.length > 0) {
-                        // ترکیب اخبار روزانه جدید در ابتدا + اخبار پیش‌فرض
-                        articles = [...fetchedArticles, ...defaultNews];
-                    }
-                }
-            } catch (e) {
-                console.log("در حال بارگذاری لیست کامل مقالات تحلیلی...");
+            // اگر متغیر dynamicNews از فایل news.js لود شده بود، آن را با پیش‌فرض ترکیب کن
+            if (window.dynamicNews && window.dynamicNews.length > 0) {
+                articles = [...window.dynamicNews, ...defaultNews];
             }
 
             window.currentNewsList = articles;
@@ -1141,15 +1133,8 @@
             }).join('');
 
             gsap.to('.news-card', {
-                scrollTrigger: {
-                    trigger: '#news-container',
-                    start: 'top 85%',
-                },
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                stagger: 0.15,
-                ease: 'power3.out'
+                scrollTrigger: { trigger: '#news-container', start: 'top 85%' },
+                y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out'
             });
 
             if (typeof ScrollTrigger !== 'undefined') {
