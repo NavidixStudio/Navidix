@@ -144,20 +144,27 @@ html[lang="fa"] .tagline{
   letter-spacing:.02em; text-transform:none;
 }
 
-/* three lines, three degrees of emphasis — the eye lands on the conclusion */
-.creed{
-  list-style:none; margin:clamp(18px,3.2vh,34px) 0 0; padding:0;
-  display:flex; flex-direction:column; gap:clamp(8px,1.4vh,14px);
-}
-.creed li{
-  margin:0; opacity:0;
+/* one line that says what is sold, then the only two actions that matter */
+.pitch{
+  margin:clamp(18px,3.2vh,34px) 0 0; max-width:34ch; opacity:0;
   font-family:var(--f-display); font-weight:200;
-  font-size:clamp(14px,1.45vw,21px); line-height:1.5; letter-spacing:.004em;
-  color:rgba(237,242,250,.68);
+  font-size:clamp(15px,1.6vw,23px); line-height:1.55; letter-spacing:-.004em;
+  color:rgba(237,242,250,.9); text-wrap:balance;
 }
-.creed li:nth-child(2){ color:rgba(237,242,250,.82); }
-.creed li:nth-child(3){ color:var(--paper); }
-html[lang="fa"] .creed li{ font-family:var(--f-fa); font-weight:300; letter-spacing:0; line-height:1.75; }
+html[lang="fa"] .pitch{ font-family:var(--f-fa); font-weight:300; letter-spacing:0; line-height:1.95; }
+.cta-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:clamp(20px,3.4vh,34px); }
+.hcta{
+  opacity:0; display:inline-flex; align-items:center; gap:9px;
+  padding:12px 22px; border-radius:999px; text-decoration:none; color:var(--paper);
+  border:1px solid var(--glass-edge); background:rgba(140,170,220,.06);
+  font-family:var(--f-ui); font-size:11px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
+  transition:background .45s var(--ease), border-color .45s var(--ease), box-shadow .45s var(--ease);
+}
+html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0; text-transform:none; }
+.hcta:hover{ border-color:rgba(180,215,255,.5); background:rgba(140,170,220,.13); }
+.hcta--main{ border-color:rgba(227,27,35,.55); background:rgba(227,27,35,.12); }
+.hcta--main:hover{ border-color:rgba(255,120,110,.8); background:rgba(227,27,35,.22); box-shadow:0 0 40px -10px rgba(227,27,35,.7); }
+.hcta:focus-visible{ outline:1px solid var(--ion); outline-offset:3px; }
 
 .hairline{
   margin-top:clamp(16px,2.8vh,30px);
@@ -208,14 +215,16 @@ html[lang="fa"] .creed li{ font-family:var(--f-fa); font-weight:300; letter-spac
 }
 /* the glass itself never moves — only the light inside it does, so each
    portal still breathes without resampling the blur under it */
-.panel{ grid-column:span 3; }
-.panel:nth-child(5){ grid-column:1 / -1; }
+.panel{ grid-column:span 2; }
+.panel:nth-child(4), .panel:nth-child(5){ grid-column:span 3; }
+.panel:nth-child(6){ grid-column:1 / -1; }
 
 .panel:nth-child(1) .panel__aura{ animation-duration:29s; animation-delay:-4s; }
 .panel:nth-child(2) .panel__aura{ animation-duration:36s; animation-delay:-11s; }
 .panel:nth-child(3) .panel__aura{ animation-duration:31s; animation-delay:-19s; }
 .panel:nth-child(4) .panel__aura{ animation-duration:41s; animation-delay:-7s; }
 .panel:nth-child(5) .panel__aura{ animation-duration:33s; animation-delay:-24s; }
+.panel:nth-child(6) .panel__aura{ animation-duration:39s; animation-delay:-9s; }
 .panel:nth-child(6) .panel__aura{ animation-duration:38s; animation-delay:-14s; }
 
 .panel__aura{
@@ -530,8 +539,8 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
 /* ---------- responsive ---------- */
 @media (max-width:1100px){
   .deck{ grid-template-columns:repeat(2,1fr); }
-  .panel{ grid-column:span 1; }
-  .panel:nth-child(5){ grid-column:1 / -1; }
+  .panel, .panel:nth-child(4), .panel:nth-child(5){ grid-column:span 1; }
+  .panel:nth-child(6){ grid-column:1 / -1; }
 }
 /* phones: backdrop blur over a live canvas and a full-screen grain layer are
    the two things that actually cost frames. Both are dropped, and the panels
@@ -554,7 +563,8 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
 @media (max-width:520px){
   .tagline{ font-size:9px; letter-spacing:.24em; }
   html[lang="fa"] .tagline{ font-size:11px; }
-  .creed li{ font-size:13.5px; }
+  .pitch{ font-size:14.5px; }
+  .hcta{ padding:11px 18px; }
   .panel__title{ font-size:16px; }
 }
 @media (prefers-reduced-motion:reduce){
@@ -582,7 +592,11 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
       <div class="plate"><img id="wordmark" class="wordmark" alt="NAVIDIX" /></div>
       <p class="tagline" id="tagline"></p>
       <div class="hairline" id="hairline"></div>
-      <ul class="creed" id="creed"><li></li><li></li><li></li></ul>
+      <p class="pitch" data-copy2="pitch"></p>
+      <div class="cta-row">
+        <a class="hcta hcta--main" href="system.html" data-copy2="ctaMain"></a>
+        <a class="hcta" href="https://t.me/NavidixStudio" target="_blank" rel="noopener" data-copy2="ctaTalk"></a>
+      </div>
     </div>
     <div class="cue" id="cue" aria-hidden="true"><span></span></div>
   </section>
@@ -662,11 +676,16 @@ const NAVIDIX = (() => {
     lang: 'en',
     copy: {
       en: { tagline:'Independent science & technology media',
-            creed:['Question everything.','Verify everything.','Think independently.'] },
+            pitch:'I build AI content production systems for brands — not one video, a production line.',
+            ctaMain:'How the system works', ctaTalk:'Start a conversation' },
       fa: { tagline:'رسانه مستقل علم و فناوری',
-            creed:['همه‌چیز را زیر سؤال ببر.','همه‌چیز را راستی‌آزمایی کن.','مستقل فکر کن.'] }
+            pitch:'برای برندها سیستم تولید محتوا با هوش مصنوعی می‌سازم — نه یک ویدیو، یک خط تولید.',
+            ctaMain:'سیستم چطور کار می‌کند', ctaTalk:'شروع گفت‌وگو' }
     },
     nav: [
+      { id:'system',
+        en:{ t:'The System',              d:'AI content production systems for brands — built once, run by your own team.' },
+        fa:{ t:'سیستم تولید محتوا',        d:'ساخت سیستم تولید محتوا با هوش مصنوعی برای برندها — یک بار ساخته می‌شود، تیم خودت اجرا می‌کند.' } },
       { id:'training',
         en:{ t:'Applied AI Training',    d:'Field notes and protocols for using AI in real production work.' },
         fa:{ t:'آموزش هوش مصنوعی کاربردی', d:'یادداشت‌ها و پروتکل‌های عملی برای به‌کارگیری هوش مصنوعی در تولید واقعی.' } },
@@ -1269,7 +1288,7 @@ const Lang = (() => {
 
     const copy = config.copy[l];
     document.getElementById('tagline').textContent = copy.tagline;
-    [...document.querySelectorAll('#creed li')].forEach((li,i) => { li.textContent = copy.creed[i]; });
+    document.querySelectorAll('[data-copy2]').forEach(el => { el.textContent = copy[el.dataset.copy2]; });
 
     const B = config.band[l];
     document.querySelectorAll('[data-copy]').forEach(el => { el.textContent = B[el.dataset.copy]; });
@@ -1296,8 +1315,8 @@ const Lang = (() => {
     });
 
     if (animate && !NAVIDIX.state.reduced){
-      gsap.fromTo('#creed li', { opacity:0, y:10, filter:'blur(6px)' },
-        { opacity:(i)=>[.68,.82,1][i], y:0, filter:'blur(0px)', duration:.8, ease:'power3.out', stagger:.07, clearProps:'filter' });
+      gsap.fromTo('.pitch, .hcta', { opacity:0, y:8, filter:'blur(6px)' },
+        { opacity:1, y:0, filter:'blur(0px)', duration:.8, ease:'power3.out', stagger:.05, clearProps:'filter' });
       gsap.fromTo('#tagline', { opacity:0 }, { opacity:1, duration:.8, ease:'power2.out' });
       gsap.fromTo(panels.map(p => p.querySelector('.panel__title')),
         { opacity:0, y:8, filter:'blur(6px)' },
@@ -1395,7 +1414,7 @@ function buildDeck(){
   const frag = document.createDocumentFragment();
   NAVIDIX.config.nav.forEach(item => {
     const a = document.createElement('a');
-    const EXTERNAL = { training:'training.html' };
+    const EXTERNAL = { system:'system.html', training:'training.html' };
     a.className = 'panel';
     a.href = EXTERNAL[item.id] || ('#' + item.id);
     a.dataset.section = item.id;
@@ -1677,8 +1696,10 @@ const Views = (() => {
       { opacity:1, y:0, filter:'blur(0px)', duration:1.8, ease:'power3.out', clearProps:'filter' }, 1.95);
     tl.fromTo('#tagline', { opacity:0, y:12 }, { opacity:1, y:0, duration:1.3, ease:'power3.out' }, 2.35);
     tl.to('#hairline', { scaleX:1, duration:1.6, ease:'power3.out' }, 2.55);
-    tl.fromTo('#creed li', { opacity:0, y:14, filter:'blur(10px)' },
-      { opacity:(i)=>[.68,.82,1][i], y:0, filter:'blur(0px)', duration:1.3, ease:'power3.out', stagger:.16, clearProps:'filter' }, 2.8);
+    tl.fromTo('.pitch', { opacity:0, y:14, filter:'blur(10px)' },
+      { opacity:1, y:0, filter:'blur(0px)', duration:1.3, ease:'power3.out', clearProps:'filter' }, 2.8);
+    tl.fromTo('.hcta', { opacity:0, y:16 },
+      { opacity:1, y:0, duration:1.1, ease:'power3.out', stagger:.1 }, 3.05);
     tl.to('#lang', { opacity:1, duration:1.2, ease:'power2.out' }, 2.5);
 
     tl.to('#cue', { opacity:1, duration:1.2, ease:'power2.out' }, 3.3);
