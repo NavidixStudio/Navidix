@@ -80,10 +80,14 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
 #stage canvas{ display:block; width:100%; height:100%; }
 
 .grade{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+/* the vignette used to close to solid black at the corners, which meant the
+   sky only existed in the middle third of the screen. Softened so the field
+   survives out to the edges — the frame still falls off, it just no longer
+   erases what is behind it. */
 .grade--vignette{
   background:
-    radial-gradient(118% 82% at 50% 34%, transparent 40%, rgba(0,0,0,.62) 76%, #000 100%),
-    linear-gradient(to bottom, rgba(0,0,0,.5) 0%, transparent 20%);
+    radial-gradient(124% 88% at 50% 34%, transparent 46%, rgba(0,0,0,.34) 78%, rgba(0,0,0,.72) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,.42) 0%, transparent 20%);
 }
 .grade--grain{
   opacity:.10; mix-blend-mode:overlay;
@@ -956,23 +960,25 @@ function buildStarfield(scene){
        colour when it is the exception. About one star in twenty is a
        saturated ember, one in twenty a deep blue; the rest run from warm
        white through the pale ion tone. */
+    /* roughly one star in eight is a saturated ember, one in eight a deep
+       blue. The rest run warm white through the pale ion tone, so colour
+       still reads as the exception rather than the rule. */
     const t = Math.random();
     let tinted = false;
-    if      (t > .952){ tmp.copy(cRed).lerp(cWarm, .10); tinted = true; }   // ember
-    else if (t > .904){ tmp.copy(cBlue);                 tinted = true; }   // deep blue
-    else if (t > .836)  tmp.copy(cWarm);
-    else if (t > .480)  tmp.copy(cIon);
+    if      (t > .875){ tmp.copy(cRed).lerp(cWarm, .06); tinted = true; }   // ember
+    else if (t > .750){ tmp.copy(cBlue);                 tinted = true; }   // deep blue
+    else if (t > .690)  tmp.copy(cWarm);
+    else if (t > .380)  tmp.copy(cIon);
     else                tmp.copy(cBlue).lerp(cIon, .35 + Math.random()*.65);
     col[i*3]=tmp.r; col[i*3+1]=tmp.g; col[i*3+2]=tmp.b;
 
-    let bright = Math.pow(Math.random(), 9);             // very few anchors
+    let bright = Math.pow(Math.random(), 7.0);           // few anchors
     /* Point size is divided by distance in the shader, so anything under
-       about aSize 4 lands sub-pixel out here and its hue never survives to
-       the screen. Rather than lift every tinted star — which would only add
-       coloured noise — roughly one in six is promoted into the visible band
-       and the rest stay as faint as their neighbours. That leaves a handful
-       of ember and blue anchors in view at any moment, not a field of them. */
-    if (tinted && Math.random() < .17) bright = .40 + Math.random() * .45;
+       about aSize 4 lands sub-pixel out here and its hue never reaches the
+       screen at all. Half of the tinted stars are lifted into the band where
+       they actually render as colour; the other half stay faint so the sky
+       keeps its depth instead of flattening into an even sheet of dots. */
+    if (tinted && Math.random() < .50) bright = .42 + Math.random() * .58;
     siz[i] = 0.5 + bright*10.0;
     spk[i] = bright > .34 ? Math.min(1, (bright-.34)*2.6) : 0.0;
     twk[i] = .12 + Math.random()*.85;
