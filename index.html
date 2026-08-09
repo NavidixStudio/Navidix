@@ -368,7 +368,10 @@ html[dir="rtl"] .band__rule{ background:linear-gradient(to left, rgba(227,27,35,
 }
 
 /* ---------- documentaries ---------- */
-.films{ display:grid; grid-template-columns:repeat(2,1fr); gap:clamp(16px,2vw,32px); max-width:1240px; margin:0 auto; }
+.films{
+  display:grid; grid-template-columns:repeat(2,1fr); gap:clamp(16px,2vw,32px); max-width:1240px; margin:0 auto;
+  perspective:1500px; perspective-origin:50% 50%;
+}
 .film__cover{ position:relative; aspect-ratio:16/9; overflow:hidden; background:#04060c; display:block; }
 .film__cover img{
   width:100%; height:100%; object-fit:cover; display:block;
@@ -377,6 +380,10 @@ html[dir="rtl"] .band__rule{ background:linear-gradient(to left, rgba(227,27,35,
   transition:transform 1.4s var(--ease), filter 1s var(--ease);
 }
 .film:hover .film__cover img{ transform:scale(1.06); filter:saturate(1) contrast(1.05) brightness(1); }
+/* once the turn is attached the cover is driven per-frame, so the long
+   transform easing has to come off or every pointer reading would arrive
+   1.4s late. the filter keeps its own. */
+.film.is-turning .film__cover img{ transition:filter 1s var(--ease); }
 .film__scrim{
   position:absolute; inset:0;
   background:linear-gradient(to top, rgba(0,0,0,.86) 0%, rgba(0,0,0,.18) 46%, rgba(0,0,0,0) 78%),
@@ -413,6 +420,27 @@ html[lang="fa"] .film__title{ font-family:var(--f-fa); font-weight:400; letter-s
 }
 html[lang="fa"] .film__desc{ font-family:var(--f-fa); font-size:clamp(12px,.9vw,14px); line-height:1.95; }
 
+/* ---------- depth ----------
+   the cards join the nav deck's space: a shared vanishing point, a turn
+   toward the cursor, and a specular that slides across the pane. the
+   sprite is a fixed circle that is only ever translated, so tracking the
+   cursor costs a composite and never a repaint. */
+.glare{
+  position:absolute; inset:0; z-index:3; overflow:hidden;
+  opacity:0; pointer-events:none;
+  transition:opacity .55s var(--ease);
+}
+.glare i{
+  position:absolute; top:0; left:0; width:58%; aspect-ratio:1/1; margin:-29% 0 0 -29%;
+  background:radial-gradient(circle,
+    rgba(205,230,255,.17) 0%, rgba(143,219,255,.075) 38%, transparent 68%);
+}
+.card:hover .glare, .card:focus-within .glare{ opacity:1; }
+
+/* the play mark arrives with the turn rather than just fading up */
+.film__play i{ transform:scale(.84); transition:transform .55s var(--ease); }
+.film:hover .film__play i, .film:focus-within .film__play i{ transform:scale(1); }
+
 .collection{ max-width:1240px; margin:0 auto; }
 .collection__head{
   display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
@@ -444,7 +472,10 @@ html[lang="fa"] .cta{ font-family:var(--f-fa); font-size:12px; letter-spacing:.0
 html[dir="rtl"] .cta::after{ transform:scaleX(-1); }
 
 /* ---------- social ---------- */
-.socials{ display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(14px,1.7vw,26px); max-width:1240px; margin:0 auto; }
+.socials{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(14px,1.7vw,26px); max-width:1240px; margin:0 auto;
+  perspective:1500px; perspective-origin:50% 50%;
+}
 .social{ display:flex; flex-direction:column; padding:clamp(20px,1.9vw,30px); }
 .social__icon{ width:30px; height:30px; color:var(--paper); opacity:.9; margin-bottom:clamp(16px,1.8vh,26px); }
 .social__icon svg{ width:100%; height:100%; display:block; }
@@ -1389,6 +1420,105 @@ function revealOnScroll(nodes, step){
   nodes.forEach(n => io.observe(n));
 }
 
+/* =====================================================================
+   POINTER DEPTH
+   The nav portals already turn toward the cursor. This puts the cards in
+   the same space, from one attach, so the films, the curated set and the
+   channels all read as panes of a single sheet of glass.
+
+   Three rules keep it honest on a slow machine:
+     · the box is measured once on enter, while the card is at rest.
+       Measuring mid-turn would feed the card's own movement back into the
+       next reading — the loop that reads as a shake.
+     · every pointer reading collapses into one write per frame.
+     · only transform is ever written, and will-change is held just for
+       the hover, so a card is promoted to its own layer while it moves
+       and handed back afterwards.
+
+   Coarse pointers and reduced-motion never reach any of it — phones keep
+   the flat card and pay nothing for this.
+   ===================================================================== */
+function attachTilt(cards, opt){
+  if (typeof gsap === 'undefined') return;
+  if (NAVIDIX.state.reduced || !matchMedia('(hover:hover)').matches) return;
+
+  const turn = (opt && opt.turn) || 7;
+  const lift = (opt && opt.lift) || 6;
+
+  cards.forEach(card => {
+    const spark = card.querySelector('.glare i');
+    const body  = card.querySelector('.film__body');
+    const cover = card.querySelector('.film__cover img');
+    const to    = (el, p, d) => gsap.quickTo(el, p, { duration:d, ease:'power3.out' });
+    if (cover) card.classList.add('is-turning');
+
+    /* quickTo resolves the property by its exact name, and GSAP registers
+       the rotations as rotationX/rotationY. The rotateX/rotateY spelling is
+       an alias gsap.to() understands but quickTo silently drops. */
+    const set = {
+      rY: to(card, 'rotationY', .55),
+      rX: to(card, 'rotationX', .55),
+      y:  to(card, 'y',         .55),
+      gx: spark && to(spark, 'x', .5),
+      gy: spark && to(spark, 'y', .5),
+      bx: body  && to(body,  'x', .6),
+      by: body  && to(body,  'y', .6),
+      ix: cover && to(cover, 'x', .7),
+      iy: cover && to(cover, 'y', .7)
+    };
+
+    let box = null, queued = false, mx = 0, my = 0;
+
+    const apply = () => {
+      queued = false;
+      if (!box) return;
+      const dx = (mx - box.left) / box.width  - .5;
+      const dy = (my - box.top)  / box.height - .5;
+
+      set.rY(dx * turn);
+      set.rX(-dy * turn * .78);
+      set.y(-lift + dy * 3);
+
+      if (spark){ set.gx(mx - box.left); set.gy(my - box.top); }
+      /* three planes at three depths, and the gap between them is the whole
+         illusion: the still leans into the cursor, the text leans away. the
+         cover is held at 1.06 so there is overscan to slide inside without
+         ever exposing an edge. */
+      if (cover){ set.ix(dx * 13); set.iy(dy * 9); }
+      if (body){ set.bx(dx * -7); set.by(dy * -4); }
+    };
+
+    const read = e => {
+      mx = e.clientX; my = e.clientY;
+      if (!queued){ queued = true; requestAnimationFrame(apply); }
+    };
+
+    card.addEventListener('pointerenter', e => {
+      box = card.getBoundingClientRect();        // measured while at rest
+      card.style.willChange = 'transform';
+      if (cover) gsap.to(cover, { scale:1.06, duration:.9, ease:'power3.out' });
+      read(e);
+    });
+    card.addEventListener('pointermove', read);
+
+    /* the reset only ever names the properties it is putting back, and never
+       takes overwrite:'auto' — that would kill the quickTo tweens outright
+       and the card would come to rest for good after its first hover. */
+    card.addEventListener('pointerleave', () => {
+      box = null;
+      card.style.willChange = '';
+      set.rY(0); set.rX(0); set.y(0);
+      if (body){ set.bx(0); set.by(0); }   // the specular is left where it is
+                                           // and simply fades, so re-entering
+                                           // never snaps it across the pane
+      if (cover){
+        set.ix(0); set.iy(0);
+        gsap.to(cover, { scale:1.015, duration:1.1, ease:'power3.out' });
+      }
+    });
+  });
+}
+
 function buildBands(){
   const { config } = NAVIDIX;
 
@@ -1409,9 +1539,13 @@ function buildBands(){
       '<div class="film__body">' +
         '<h3 class="film__title"></h3><p class="film__desc"></p>' +
         '<a class="cta" href="https://www.youtube.com/watch?v=' + f.id + '" target="_blank" rel="noopener"></a>' +
-      '</div>';
+      '</div>' +
+      '<span class="glare"><i></i></span>';
     films.appendChild(el);
-  }); revealOnScroll([...films.children], 2); }
+  }); revealOnScroll([...films.children], 2);
+     attachTilt([...films.children]); }        // the grid is rebuilt when the
+                                               // channel feed lands, so the
+                                               // turn is re-attached with it
   NAVIDIX.renderFilms = renderFilms;
 
   /* the curated set uses the same card as the documentaries */
@@ -1429,11 +1563,13 @@ function buildBands(){
       '<div class="film__body">' +
         '<h3 class="film__title"></h3>' +
         '<a class="cta" href="https://www.youtube.com/watch?v=' + c.id + '" target="_blank" rel="noopener"></a>' +
-      '</div>';
+      '</div>' +
+      '<span class="glare"><i></i></span>';
     el.querySelector('.film__title').textContent = c.t;
     coll.appendChild(el);
   });
   revealOnScroll([...coll.children], 2);
+  attachTilt([...coll.children]);
 
   const socials = document.getElementById('socialGrid');
   config.social.forEach(sn => {
@@ -1444,11 +1580,14 @@ function buildBands(){
       '<h3 class="social__name">' + sn.name + '</h3>' +
       '<p class="social__handle">' + sn.handle + '</p>' +
       '<p class="social__desc"></p>' +
-      '<a class="cta" href="' + sn.url + '" target="_blank" rel="noopener"></a>';
+      '<a class="cta" href="' + sn.url + '" target="_blank" rel="noopener"></a>' +
+      '<span class="glare"><i></i></span>';
     socials.appendChild(el);
   });
 
   revealOnScroll([...socials.children], 4);
+  /* the channel tiles are smaller, so the same turn would read as a wobble */
+  attachTilt([...socials.children], { turn:5, lift:4 });
   return { films:[...films.children], socials:[...socials.children] };
 }
 
@@ -1497,11 +1636,14 @@ function buildDeck(){
      into one write per animation frame. */
   if (!NAVIDIX.state.reduced && matchMedia('(hover:hover)').matches){
     panels.forEach(p => {
+      /* rotationX/rotationY, not rotateX/rotateY: quickTo looks the property
+         up by its exact registered name, so the alias resolves to nothing and
+         the portal would translate without ever turning. */
       const set = {
-        x:  gsap.quickTo(p, 'x',       { duration:.55, ease:'power3.out' }),
-        y:  gsap.quickTo(p, 'y',       { duration:.55, ease:'power3.out' }),
-        rY: gsap.quickTo(p, 'rotateY', { duration:.55, ease:'power3.out' }),
-        rX: gsap.quickTo(p, 'rotateX', { duration:.55, ease:'power3.out' })
+        x:  gsap.quickTo(p, 'x',         { duration:.55, ease:'power3.out' }),
+        y:  gsap.quickTo(p, 'y',         { duration:.55, ease:'power3.out' }),
+        rY: gsap.quickTo(p, 'rotationY', { duration:.55, ease:'power3.out' }),
+        rX: gsap.quickTo(p, 'rotationX', { duration:.55, ease:'power3.out' })
       };
       let box = null, queued = false, mx = 0, my = 0;
 
@@ -1525,9 +1667,12 @@ function buildDeck(){
         mx = e.clientX; my = e.clientY;
         if (!queued){ queued = true; requestAnimationFrame(apply); }
       });
+      /* driven back through the same quickTo functions. A separate tween with
+         overwrite:'auto' would kill them on the way out, and the portal would
+         hold still from its second hover onward. */
       p.addEventListener('pointerleave', () => {
         box = null;
-        gsap.to(p, { x:0, y:0, rotateY:0, rotateX:0, duration:1.1, ease:'power3.out', overwrite:'auto' });
+        set.x(0); set.y(0); set.rY(0); set.rX(0);
       });
     });
   }
