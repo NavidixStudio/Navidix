@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -413,6 +413,17 @@ html[lang="fa"] .film__title{ font-family:var(--f-fa); font-weight:400; letter-s
 }
 html[lang="fa"] .film__desc{ font-family:var(--f-fa); font-size:clamp(12px,.9vw,14px); line-height:1.95; }
 
+.collection{ max-width:1240px; margin:0 auto; }
+.collection__head{
+  display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
+  margin-bottom:clamp(16px,2.4vh,26px);
+}
+.collection__head h3{
+  margin:0; font-family:var(--f-display); font-weight:300;
+  font-size:clamp(16px,1.5vw,23px); letter-spacing:-.014em;
+}
+html[lang="fa"] .collection__head h3{ font-family:var(--f-fa); font-weight:400; letter-spacing:0; }
+
 /* ---------- call to action ---------- */
 .cta{
   display:inline-flex; align-items:center; gap:9px;
@@ -647,10 +658,12 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
             <p class="band__sub" data-copy="collections.sub"></p>
             <div class="band__rule"></div>
           </header>
-          <div class="empty">
-            <svg class="empty__glyph" viewBox="0 0 60 68" aria-hidden="true"><path d="M30 2 57 17.5v33L30 66 3 50.5v-33z" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>
-            <p class="empty__text" data-copy="collections.empty"></p>
-            <a class="cta" data-cta="collections" target="_blank" rel="noopener"></a>
+          <div class="collection">
+            <div class="collection__head">
+              <h3 data-copy="collections.set1"></h3>
+              <a class="cta" href="https://www.youtube.com/playlist?list=PL3zymT0LJaw0M3so975uaSt4mcmn3fV9O" target="_blank" rel="noopener" data-copy="collections.playlist"></a>
+            </div>
+            <div class="films" id="collectionGrid"></div>
           </div>
         </section>
       </div>
@@ -735,6 +748,14 @@ const NAVIDIX = (() => {
              d:'چگونه سامانه‌های خودمختار و پردازش داده در مقیاس بزرگ، راهبرد نظامی را بازتعریف می‌کنند.' } }
     ],
 
+    /* a curated set — titles are pulled from YouTube at run time so they
+       stay in sync with the channel */
+    collections: [
+      { id:'imbh6f6kAqA', t:'Epic AI Music Video — What If Shahnameh Became a Movie?' },
+      { id:'Fg2dXuiQpUQ', t:'گلادیاتور ایرانی — موزیک ویدیو رسمی | Iranian Gladiator' },
+      { id:'k35mzpMopyg', t:'امپراتوری خورشید — موزیک ویدیو حماسی | Empire of the Sun' }
+    ],
+
     social: [
       { key:'youtube',   name:'YouTube',   handle:'@navidix',      url:'https://youtube.com/@navidix',
         en:'Persian documentaries on artificial intelligence, science, technology, space and defence.',
@@ -752,8 +773,7 @@ const NAVIDIX = (() => {
 
 
     stubs: {
-      gallery:     { url:'https://www.instagram.com/navidi__ai',     ch:'Instagram' },
-      collections: { url:'https://youtube.com/@navidix',             ch:'YouTube' }
+      gallery: { url:'https://www.instagram.com/navidi__ai', ch:'Instagram' }
     },
 
     band: {
@@ -762,8 +782,9 @@ const NAVIDIX = (() => {
            'gallery.sub':'Cinematic AI artwork, concept art and posters from the studio.',
            'gallery.empty':'The gallery is being assembled. New visuals are published on Instagram as they are finished.',
            'collections.title':'Featured Collections',
-           'collections.sub':'Themed sets drawn from across the archive.',
-           'collections.empty':'Collections are curated as the archive grows. The full library lives on YouTube for now.',
+           'collections.sub':'Themed sets drawn from across the archive — each one built as a single piece of work, not a folder of uploads.',
+           'collections.set1':'Epic Historical Music Videos',
+           'collections.playlist':'Open the playlist',
            'films.title':'Featured Documentaries',
            'films.sub':'Long-form, research-led films. Each one is written, produced and narrated in-house.',
            'socials.title':'Official Channels',
@@ -774,8 +795,9 @@ const NAVIDIX = (() => {
            'gallery.sub':'آثار سینمایی هوش مصنوعی، کانسپت‌آرت و پوسترهای استودیو.',
            'gallery.empty':'گالری در حال گردآوری است. تصاویر تازه به‌محض آماده شدن در اینستاگرام منتشر می‌شوند.',
            'collections.title':'کالکشن‌های ویژه',
-           'collections.sub':'مجموعه‌های موضوعی برگزیده از سراسر آرشیو.',
-           'collections.empty':'کالکشن‌ها همراه با رشد آرشیو گردآوری می‌شوند. فعلاً کتابخانه کامل در یوتیوب است.',
+           'collections.sub':'مجموعه‌های موضوعی برگزیده از آرشیو — هر کالکشن یک اثر واحد است، نه پوشه‌ای از ویدیو.',
+           'collections.set1':'ویدیوهای تاریخی حماسی',
+           'collections.playlist':'مشاهده پلی‌لیست',
            'films.title':'مستندهای برگزیده',
            'films.sub':'فیلم‌های بلندِ پژوهش‌محور. هر کدام در همین استودیو نوشته، تولید و روایت شده‌اند.',
            'socials.title':'کانال‌های رسمی',
@@ -1303,6 +1325,10 @@ const Lang = (() => {
       el.querySelector('.film__desc').textContent  = f.d;
       el.querySelector('.film__body .cta').textContent = B.watch;
     });
+    document.querySelectorAll('#collectionGrid .film').forEach((el,i) => {
+      el.querySelector('.film__title').textContent = config.collections[i].t;
+      el.querySelector('.cta').textContent = B.watch;
+    });
     document.querySelectorAll('#socialGrid .social').forEach((el,i) => {
       el.querySelector('.social__desc').textContent = config.social[i][l];
       el.querySelector('.cta').textContent = B.visit;
@@ -1329,8 +1355,7 @@ const Lang = (() => {
   return {
     init(p){
       panels = p;
-      const saved = (navigator.language || '').toLowerCase().startsWith('fa') ? 'fa' : 'en';
-      apply(saved, false);
+      apply('fa', false);          // Persian is the default; EN is opt-in
       document.querySelectorAll('#lang button').forEach(b =>
         b.addEventListener('click', () => { if (b.dataset.lang !== config.lang) apply(b.dataset.lang, true); }));
     },
@@ -1388,6 +1413,27 @@ function buildBands(){
     films.appendChild(el);
   }); revealOnScroll([...films.children], 2); }
   NAVIDIX.renderFilms = renderFilms;
+
+  /* the curated set uses the same card as the documentaries */
+  const coll = document.getElementById('collectionGrid');
+  config.collections.forEach(c => {
+    const el = document.createElement('article');
+    el.className = 'card film';
+    el.dataset.vid = c.id;
+    el.innerHTML =
+      '<a class="film__cover" href="https://www.youtube.com/watch?v=' + c.id + '" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">' +
+        '<img alt="" loading="lazy" src="https://img.youtube.com/vi/' + c.id + '/maxresdefault.jpg" ' +
+             'onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/' + c.id + '/hqdefault.jpg\'">' +
+        '<span class="film__scrim"></span><span class="film__play"><i></i></span>' +
+      '</a>' +
+      '<div class="film__body">' +
+        '<h3 class="film__title"></h3>' +
+        '<a class="cta" href="https://www.youtube.com/watch?v=' + c.id + '" target="_blank" rel="noopener"></a>' +
+      '</div>';
+    el.querySelector('.film__title').textContent = c.t;
+    coll.appendChild(el);
+  });
+  revealOnScroll([...coll.children], 2);
 
   const socials = document.getElementById('socialGrid');
   config.social.forEach(sn => {
@@ -1574,7 +1620,7 @@ const Views = (() => {
   const scroll = document.getElementById('viewScroll');
   let current = null, opener = null;
 
-  function open(sectionId, fromEl){
+  function open(sectionId, fromEl, push){
     const target = routes[sectionId];
     if (!target || current === sectionId) return;
     opener = fromEl || null;
@@ -1585,7 +1631,9 @@ const Views = (() => {
     NAVIDIX.state.viewOpen = true;
     document.body.classList.add('view-open');
     scroll.scrollTop = 0;
-    history.replaceState(null, '', '#' + sectionId);
+    /* a real history entry, so the phone's Back gesture closes the portal
+       rather than leaving the site */
+    if (push !== false) history.pushState({ nvx:sectionId }, '', '#' + sectionId);
 
     if (NAVIDIX.state.reduced) return;
     gsap.fromTo('.view__scrim', { opacity:0 }, { opacity:1, duration:.5, ease:'power2.out' });
@@ -1595,14 +1643,13 @@ const Views = (() => {
       { opacity:1, scale:1, duration:.6, ease:'back.out(2)', delay:.15 });
   }
 
-  function close(){
+  function hide(){
     if (!current) return;
     const done = () => {
       root.hidden = true;
       NAVIDIX.state.viewOpen = false;
       document.body.classList.remove('view-open');
       current = null;
-      history.replaceState(null, '', location.pathname + location.search);
       if (opener) { opener.focus({ preventScroll:true }); opener = null; }
     };
     if (NAVIDIX.state.reduced) return done();
@@ -1610,11 +1657,24 @@ const Views = (() => {
     gsap.to('.view__scrim', { opacity:0, duration:.4, ease:'power2.in', onComplete:done });
   }
 
+  /* closing by button or Esc walks history back, so Back and the × agree */
+  function close(){
+    if (!current) return;
+    if (history.state && history.state.nvx) history.back();
+    else { hide(); history.replaceState(null, '', location.pathname + location.search); }
+  }
+
+  addEventListener('popstate', () => {
+    const id = location.hash.replace('#','');
+    if (current && id !== current) hide();
+    if (!current && routes[id]) open(id, null, false);
+  });
+
   root.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
   addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
   return { open, close, has: id => !!routes[id],
-    fromHash(){ const id = location.hash.replace('#',''); if (routes[id]) open(id); } };
+    fromHash(){ const id = location.hash.replace('#',''); if (routes[id]) open(id, null, false); } };
 })();
 
 /* =====================================================================
