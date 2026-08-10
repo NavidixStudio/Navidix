@@ -285,7 +285,15 @@ html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0
   -webkit-text-stroke-color:rgba(255,138,138,.42);
   transform:translateY(-6px); opacity:1;
 }
-@media (max-width:640px){ .panel__index{ font-size:56px; } }
+/* Below this the deck drops to one or two columns and the copy fills the
+   card edge to edge — there is no empty half left for the index to sit in,
+   and it just crowds the text. The device that has the room gets the
+   numeral; the one that doesn't, doesn't. */
+@media (max-width:900px){ .panel__index{ display:none; } }
+
+.hcta--tube{ display:inline-flex; align-items:center; gap:9px; }
+.hcta--tube svg{ width:19px; height:19px; flex:none; color:#FF0033; }
+.hcta--tube:hover svg{ color:#FF3355; }
 
 /* the marker is the brand's own hexagon, not a generic dot */
 .panel__mark{
@@ -544,9 +552,13 @@ html[lang="fa"] .social__desc{ font-family:var(--f-fa); font-size:clamp(12px,.9v
 /* ---------- portal view: a panel opens into its own screen ---------- */
 .view{ position:fixed; inset:0; z-index:20; display:flex; }
 .view[hidden]{ display:none; }
+/* An opened band has to actually cover the deck behind it. At .7 the panel
+   titles underneath stayed legible through the scrim and collided with the
+   band's own headings — worse since the vignette was lightened, because the
+   deck it sits over is brighter now. */
 .view__scrim{
-  position:absolute; inset:0; background:rgba(0,0,0,.7);
-  -webkit-backdrop-filter:blur(11px) saturate(120%); backdrop-filter:blur(11px) saturate(120%);
+  position:absolute; inset:0; background:rgba(3,4,7,.88);
+  -webkit-backdrop-filter:blur(16px) saturate(120%); backdrop-filter:blur(16px) saturate(120%);
 }
 .view__panel{
   position:relative; margin:auto; width:min(1340px,100%); height:100%;
@@ -628,7 +640,11 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
   .panel--social{ background:linear-gradient(100deg, rgba(140,30,38,.26) 0%, rgba(16,22,38,.52) 50%, rgba(3,5,11,.7) 100%); }
   .panel__aura{ display:none; }
   .grade--grain{ display:none; }
-  .view__scrim{ -webkit-backdrop-filter:none; backdrop-filter:none; background:rgba(0,0,0,.9); }
+  /* no blur to lean on here, so the scrim goes fully opaque. On desktop the
+     16px blur scrambles the deck into unreadable smear and the translucency
+     is worth keeping; on a phone there is nothing to gain from the last few
+     percent except the deck's headings ghosting behind the band's own. */
+  .view__scrim{ -webkit-backdrop-filter:none; backdrop-filter:none; background:#03040A; }
 }
 @media (max-width:640px){
   .deck{ grid-template-columns:1fr; perspective:none; gap:12px; }
@@ -670,7 +686,11 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
       <p class="pitch" data-copy2="pitch"></p>
       <div class="cta-row">
         <a class="hcta hcta--main" href="system.html" data-copy2="ctaMain"></a>
-        <a class="hcta" href="https://t.me/NavidixStudio" target="_blank" rel="noopener" data-copy2="ctaTalk"></a>
+        <a class="hcta" href="https://t.me/NavidixMedia" target="_blank" rel="noopener" data-copy2="ctaTalk"></a>
+        <a class="hcta hcta--tube" href="https://youtube.com/@navidix?sub_confirmation=1" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23 12s0-3.9-.5-5.8a3 3 0 0 0-2.1-2.1C18.5 3.6 12 3.6 12 3.6s-6.5 0-8.4.5A3 3 0 0 0 1.5 6.2C1 8.1 1 12 1 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 8.4.5 8.4.5s6.5 0 8.4-.5a3 3 0 0 0 2.1-2.1C23 15.9 23 12 23 12z" fill="currentColor"/><path d="M9.8 15.5V8.5l6 3.5-6 3.5z" fill="#08090B"/></svg>
+          <span data-copy2="ctaTube"></span>
+        </a>
       </div>
     </div>
     <div class="cue" id="cue" aria-hidden="true"><span></span></div>
@@ -754,10 +774,10 @@ const NAVIDIX = (() => {
     copy: {
       en: { tagline:'Independent science & technology media',
             pitch:'Navidix Studio — where research, cinema and artificial intelligence meet.',
-            ctaMain:'Studio services', ctaTalk:'Start a conversation' },
+            ctaMain:'Studio services', ctaTalk:'Start a conversation', ctaTube:'Subscribe on YouTube' },
       fa: { tagline:'رسانه مستقل علم و فناوری',
             pitch:'استودیو نویدیکس — تلاقی پژوهش، سینما و هوش مصنوعی.',
-            ctaMain:'خدمات استودیو', ctaTalk:'شروع گفت‌وگو' }
+            ctaMain:'خدمات استودیو', ctaTalk:'عضویت در کانال', ctaTube:'سابسکرایب یوتیوب' }
     },
     nav: [
       { id:'system',
