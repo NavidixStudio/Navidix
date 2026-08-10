@@ -400,6 +400,8 @@ body{ margin:0; }
   <p class="sub">هر کارت یک سبک است: پرامپت آماده‌ی کپی، و توضیح اینکه چطور <b>هر سوژه‌ای</b> را در همان سبک بسازی. جای <code>{SUBJECT}</code> سوژه‌ی خودت را بگذار — بقیه‌ی پرامپت سبک را نگه می‌دارد.</p>
   <p class="sub" style="margin-bottom:clamp(20px,3vh,30px)">پرامپت‌ها انگلیسی‌اند و این عمدی است: مدل‌های تصویرسازی روی داده‌ی انگلیسی آموزش دیده‌اند و همان جمله به فارسی، خروجی ضعیف‌تری می‌دهد. توضیح‌ها فارسی‌اند تا بدانی <em>چرا</em> هر تکه آنجاست.</p>
 
+  <p class="sub" style="margin-bottom:clamp(20px,3vh,30px)">تصویر بالای هر کارت، <b>نمونه‌ی خروجی آن پرامپت نیست</b> — یک لوح است که پالت، جهت نور و جنس قلم همان سبک را نشان می‌دهد. عمداً انتزاعی است تا با نتیجه‌ی واقعی اشتباه گرفته نشود.</p>
+
   <div class="bar" id="bar">
     <label class="bar__box">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -424,7 +426,8 @@ body{ margin:0; }
       <div class="cards2">
         <article class="pc" id="oil" data-cat="paint" data-tags="اویل نقاشی رنگ‌روغن کلاسیک رامبراند بوم قلم‌مو oil painting impasto canvas classical">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 28% 22%, #E8C88A 0%, #8A5A2B 38%, transparent 72%),linear-gradient(155deg, #8A5A2B 0%, #3B2A1C 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/oil.jpg" alt="نمونه‌ی بصری سبک رنگ روغن کلاسیک" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Classical Oil Painting</span>
           </div>
           <div class="pc__body">
@@ -438,7 +441,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="watercolor" data-cat="paint" data-tags="آبرنگ واترکالر کاغذ آبرنگی لطیف واش watercolour aquarelle paper wash">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 62% 26%, #D98C9B 0%, #8FC7D8 38%, transparent 72%),linear-gradient(155deg, #8FC7D8 0%, #F2EFE6 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/watercolor.jpg" alt="نمونه‌ی بصری سبک آبرنگ" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Watercolour</span>
           </div>
           <div class="pc__body">
@@ -452,7 +456,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="gouache" data-cat="paint" data-tags="گواش پوستر رترو مینیمال تخت چاپ ریسو gouache poster retro flat halftone risograph">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 30% 70%, #2B4162 0%, #F4D35E 38%, transparent 72%),linear-gradient(155deg, #F4D35E 0%, #E4572E 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/gouache.jpg" alt="نمونه‌ی بصری سبک گواش و پوستر رترو" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Gouache / Retro Poster</span>
           </div>
           <div class="pc__body">
@@ -466,7 +471,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="impressionist" data-cat="paint" data-tags="امپرسیونیسم مونه نور طبیعی ضربه‌قلم impressionist monet plein air broken colour">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 70% 20%, #C98BA0 0%, #EBD9A0 38%, transparent 72%),linear-gradient(155deg, #EBD9A0 0%, #7FA5C4 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/impressionist.jpg" alt="نمونه‌ی بصری سبک امپرسیونیسم" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Impressionist</span>
           </div>
           <div class="pc__body">
@@ -480,7 +486,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="miniature" data-cat="paint" data-tags="مینیاتور ایرانی نگارگری صفوی تذهیب لاجورد نسخه خطی persian miniature safavid gold leaf">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 50% 18%, #8C2F39 0%, #C9A227 38%, transparent 72%),linear-gradient(155deg, #C9A227 0%, #1E5B70 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/miniature.jpg" alt="نمونه‌ی بصری سبک مینیاتور ایرانی" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Persian Miniature</span>
           </div>
           <div class="pc__body">
@@ -494,7 +501,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="concept" data-cat="paint" data-tags="کنسپت آرت سینمایی مت‌پینتینگ فضاسازی عظمت concept art matte painting cinematic scale">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 52% 44%, #F0A868 0%, #3E6C8E 38%, transparent 72%),linear-gradient(155deg, #3E6C8E 0%, #141A22 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/concept.jpg" alt="نمونه‌ی بصری سبک کنسپت‌آرت سینمایی" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Cinematic Concept Art</span>
           </div>
           <div class="pc__body">
@@ -508,7 +516,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="graphite" data-cat="paint" data-tags="مداد طراحی اتود سیاه‌قلم اسکچ graphite pencil sketch hatching monochrome">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 40% 30%, #2A2A2A 0%, #8B8B8B 38%, transparent 72%),linear-gradient(155deg, #8B8B8B 0%, #EDEBE7 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/graphite.jpg" alt="نمونه‌ی بصری سبک طراحی با مداد" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Graphite Sketch</span>
           </div>
           <div class="pc__body">
@@ -528,7 +537,8 @@ body{ margin:0; }
       <div class="cards2">
         <article class="pc" id="studio" data-cat="real" data-tags="پرتره استودیو سافت‌باکس لنز بوکه پوست portrait studio softbox 85mm bokeh headshot">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 36% 26%, #EADFD2 0%, #6E6A66 38%, transparent 72%),linear-gradient(155deg, #6E6A66 0%, #1A1A1D 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/studio.jpg" alt="نمونه‌ی بصری سبک پرتره‌ی استودیویی" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Studio Portrait</span>
           </div>
           <div class="pc__body">
@@ -542,7 +552,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="doc" data-cat="real" data-tags="مستند خیابانی فتوژورنالیسم کاندید گرین documentary street candid photojournalism grain">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 66% 34%, #D6D2CA 0%, #9C8C74 38%, transparent 72%),linear-gradient(155deg, #9C8C74 0%, #3A3B38 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/doc.jpg" alt="نمونه‌ی بصری سبک عکاسی مستند و خیابانی" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Documentary / Street</span>
           </div>
           <div class="pc__body">
@@ -556,7 +567,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="film35" data-cat="real" data-tags="سینمایی فیلم آنالوگ آنامورفیک گرید کداک cinematic 35mm anamorphic halation film grain">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 58% 40%, #E0A26B 0%, #2F5D6B 38%, transparent 72%),linear-gradient(155deg, #2F5D6B 0%, #101820 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/film35.jpg" alt="نمونه‌ی بصری سبک سینمایی ۳۵ میلی‌متری" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Cinematic 35mm Film</span>
           </div>
           <div class="pc__body">
@@ -570,7 +582,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="product" data-cat="real" data-tags="محصول تبلیغاتی ماکرو بازتاب استودیو product macro commercial specular focus stacking">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 48% 20%, #F5F7FA 0%, #4C5A66 38%, transparent 72%),linear-gradient(155deg, #4C5A66 0%, #0E0F12 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/product.jpg" alt="نمونه‌ی بصری سبک ماکرو محصول" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Product Macro</span>
           </div>
           <div class="pc__body">
@@ -590,7 +603,8 @@ body{ margin:0; }
       <div class="cards2">
         <article class="pc" id="golden" data-cat="light" data-tags="گلدن آور نور طلایی غروب کنتره گرم golden hour warm sunset backlight haze flare">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 80% 62%, #FFD9A0 0%, #C9743B 38%, transparent 72%),linear-gradient(155deg, #C9743B 0%, #2A1B14 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/golden.jpg" alt="نمونه‌ی بصری سبک نور طلایی (گلدن آور)" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Golden Hour</span>
           </div>
           <div class="pc__body">
@@ -604,7 +618,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="chiaro" data-cat="light" data-tags="کیاروسکورو کاراواجو نور تک منبع کنتراست سایه chiaroscuro caravaggio rembrandt hard light">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 24% 18%, #F0DDBC 0%, #5E4632 38%, transparent 72%),linear-gradient(155deg, #5E4632 0%, #0A0A0C 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/chiaro.jpg" alt="نمونه‌ی بصری سبک کیاروسکورو (نور تک‌منبع)" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Chiaroscuro</span>
           </div>
           <div class="pc__body">
@@ -618,7 +633,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="neon" data-cat="light" data-tags="نئون شب سایبرپانک بازتاب مه رنگ مکمل neon night cyberpunk reflection fog magenta cyan">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 66% 46%, #22D3EE 0%, #FF2E63 38%, transparent 72%),linear-gradient(155deg, #FF2E63 0%, #0B0F1A 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/neon.jpg" alt="نمونه‌ی بصری سبک نئون شبانه" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Neon Night</span>
           </div>
           <div class="pc__body">
@@ -632,7 +648,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="window" data-cat="light" data-tags="نور پنجره نرم روزانه ورمیر آرام window light soft daylight vermeer bounce fill">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 22% 30%, #4A4E52 0%, #A8B2B8 38%, transparent 72%),linear-gradient(155deg, #A8B2B8 0%, #E8E4DC 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/window.jpg" alt="نمونه‌ی بصری سبک نور نرم پنجره" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Soft Window Light</span>
           </div>
           <div class="pc__body">
@@ -646,7 +663,8 @@ body{ margin:0; }
         </article>
         <article class="pc" id="rim" data-cat="light" data-tags="بک‌لایت کنتره سیلوئت نور لبه جداسازی rim light backlight silhouette separation haze">
           <div class="pc__sw">
-            <span class="paint" style="background:radial-gradient(58% 62% at 50% 74%, #BFE3FF 0%, #1F3A4D 38%, transparent 72%),linear-gradient(155deg, #1F3A4D 0%, #08090C 62%, #05060A 100%)"></span><span class="grain"></span>
+            <img src="prompts/rim.jpg" alt="نمونه‌ی بصری سبک بک‌لایت و نور لبه" width="800" height="500" loading="lazy" decoding="async" />
+            <span class="grain"></span>
             <span class="pc__tag">Rim / Backlight</span>
           </div>
           <div class="pc__body">
@@ -667,8 +685,9 @@ body{ margin:0; }
   </div>
 
   <div class="join">
-    <h2>سبک‌های تازه هر هفته اضافه می‌شود</h2>
-    <p>این کتابخانه قرار است بزرگ شود. اگر می‌خواهی هر بار که سبک تازه‌ای اضافه شد خبردار شوی — و پرامپت‌های کاملِ پروژه‌های واقعی استودیو را ببینی — از این دو راه دنبال کن. کانال تلگرام برای پرامپت و اطلاعیه، یوتیوب برای دیدن همان سبک‌ها در کار واقعی.</p>
+    <h2>دنبال کردن ادامه‌ی کار</h2>
+    <p>این کتابخانه قرار است بزرگ شود. <b>کانال تلگرام</b> جایی است که سبک‌های تازه، پرامپت‌ها و اطلاعیه‌ها اعلام می‌شود — اگر می‌خواهی از اضافه‌شدن‌ها خبردار شوی، همان‌جا دنبال کن.</p>
+    <p><b>کانال یوتیوب</b> چیز دیگری است: مستند و فیلم کوتاهِ علمی، هنری و آموزشی. جایی که این ابزارها در یک کار تمام‌شده به کار می‌روند، نه به‌صورت تکه‌تکه.</p>
     <div class="join__row">
       <a class="jbtn jbtn--tg" href="https://t.me/NavidixMedia" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.9 4.3 18.9 19c-.2 1-.8 1.3-1.7.8l-4.6-3.4-2.2 2.1c-.3.3-.5.5-1 .5l.4-4.9 8.9-8c.4-.3-.1-.5-.6-.2L7 11.3 2.5 9.9c-1-.3-1-1 .2-1.5l17.7-6.8c.8-.3 1.5.2 1.5 1.2z"/></svg>
