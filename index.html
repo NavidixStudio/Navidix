@@ -264,37 +264,6 @@ html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0
   transform:scaleX(.18); opacity:.35;
   transition:transform .7s var(--ease), opacity .7s var(--ease);
 }
-/* Each portal was a wide card with everything crowded onto one edge and the
-   far half left empty. The lessons already number their sections (لایه ۰۱),
-   so the deck borrows the same device: an oversized index sunk into the dead
-   space, low enough to read as texture until the portal is hovered. */
-.panel__index{
-  position:absolute; z-index:1; pointer-events:none; user-select:none;
-  /* inline-end, because the copy is set to the inline-start edge and this
-     belongs in the half it leaves empty */
-  inset-inline-end:clamp(18px,2vw,30px); bottom:clamp(10px,1.2vw,18px);
-  /* the Persian stack, not the display face — the latter has no ۰ and the
-     leading zero came through as tofu */
-  font-family:var(--f-fa); font-weight:300; font-variant-numeric:tabular-nums;
-  font-size:clamp(58px,6.2vw,100px); line-height:.8; letter-spacing:-.02em;
-  color:transparent; -webkit-text-stroke:1px rgba(196,222,255,.22);
-  transition:-webkit-text-stroke-color .6s var(--ease), transform .8s var(--ease), opacity .6s var(--ease);
-  opacity:.85;
-}
-.panel:hover .panel__index, .panel:focus-visible .panel__index{
-  -webkit-text-stroke-color:rgba(255,138,138,.42);
-  transform:translateY(-6px); opacity:1;
-}
-/* Below this the deck drops to one or two columns and the copy fills the
-   card edge to edge — there is no empty half left for the index to sit in,
-   and it just crowds the text. The device that has the room gets the
-   numeral; the one that doesn't, doesn't. */
-@media (max-width:900px){ .panel__index{ display:none; } }
-
-.hcta--tube{ display:inline-flex; align-items:center; gap:9px; }
-.hcta--tube svg{ width:19px; height:19px; flex:none; color:#FF0033; }
-.hcta--tube:hover svg{ color:#FF3355; }
-
 /* the marker is the brand's own hexagon, not a generic dot */
 .panel__mark{
   z-index:2;
@@ -662,6 +631,15 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
   *{ animation-duration:.001ms !important; transition-duration:.12s !important; }
 }
 
+
+/* Persian is a joined script: positive tracking pulls the letters apart, so a
+   word set in a tracked label stops reading as a word. Latin runs keep their
+   tracking through .lat; digit-only labels keep theirs by being more specific. */
+.eyebrow, .lesson .eyebrow, .idx .eyebrow, .lib .eyebrow, .slate-num, .lesson .slate-num, .pager small,
+.lesson footer h3, .lesson .swap th, .lesson .tag, .lesson .fbody dt,
+.lesson .cbtn span, .lesson .funnel-read .count small, .feat__tag,
+.no, .cards .no, .dna dt, .lang button[data-fa]{ letter-spacing:normal; }
+.lat{ letter-spacing:.24em; }
 </style>
 </head>
 
@@ -1665,9 +1643,7 @@ function buildBands(){
 function buildDeck(){
   const deck = document.getElementById('deck');
   const frag = document.createDocumentFragment();
-  /* zero-padded, in Persian digits, so the deck numbers the way the lessons do */
-  const fa2 = n => String(n).padStart(2,'0').replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
-  NAVIDIX.config.nav.forEach((item, idx) => {
+  NAVIDIX.config.nav.forEach(item => {
     const a = document.createElement('a');
     const EXTERNAL = { system:'system.html', training:'training.html' };
     a.className = 'panel';
@@ -1678,8 +1654,6 @@ function buildDeck(){
       '<span class="panel__aura"></span><span class="panel__sheen"></span><span class="panel__glow"></span>' +
       '<span class="panel__edge"></span><span class="panel__mark"></span>' +
       '<span class="panel__rule"></span>' +
-      (item.id === 'social' ? '' :        // the channels rail is not a chapter
-        '<span class="panel__index" aria-hidden="true">' + fa2(idx + 1) + '</span>') +
       (item.id === 'social'
         ? '<span class="panel__copy"><h2 class="panel__title"></h2><p class="panel__desc"></p></span>' +
           '<span class="panel__icons">' +
