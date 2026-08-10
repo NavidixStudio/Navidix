@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from styles import CATS, STYLES
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE = 'https://navidixstudio.github.io/Navidix/'
+BASE = 'https://navidixstudio.com/'
 src  = open(f'{REPO}/brand-content.html', encoding='utf-8').read().split('\n')
 HEAD_ASSETS = '\n'.join(src[25:30])
 SHELL_CSS   = '\n'.join(src[33:286])
