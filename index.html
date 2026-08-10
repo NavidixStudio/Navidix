@@ -140,16 +140,14 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
 }
 /* the wordmark sits on a plate of light — a title card, not a floating image */
 .plate{ position:relative; display:flex; justify-content:center; width:100%; }
-.plate::before{
-  content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:min(820px,96vw); height:min(260px,34vh); pointer-events:none;
-  background:
-    radial-gradient(52% 46% at 50% 50%, rgba(143,219,255,.11), transparent 72%),
-    radial-gradient(30% 30% at 50% 62%, rgba(227,27,35,.09), transparent 74%);
-}
+/* The wordmark used to sit on a plate of light. Against deep black a lit
+   rectangle reads as a box behind the logotype rather than as light, so the
+   plate is gone and the type sits on the dark. */
+.plate::before{ content:none; }
 .wordmark{
-  position:relative; display:block; width:min(378px,60vw); height:auto; opacity:0;
-  filter:drop-shadow(0 1px 0 rgba(255,255,255,.18)) drop-shadow(0 0 46px rgba(143,219,255,.2));
+  position:relative; display:block; width:min(402px,62vw); height:auto; opacity:0;
+  /* a contact shadow so it sits on the black, and nothing that glows */
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.16)) drop-shadow(9px 15px 20px rgba(0,0,0,.82));
 }
 .tagline{
   margin:clamp(14px,2.2vh,22px) 0 0;

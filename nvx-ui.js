@@ -28,9 +28,11 @@
     '.nvx-veil{position:fixed;inset:0;z-index:9999;pointer-events:none;background:#08090B;',
     '  opacity:0;transition:opacity .32s cubic-bezier(.4,0,1,1)}',
     '.nvx-veil.on{opacity:1}',
-    '.nvx-enter{animation:nvxEnter .62s cubic-bezier(.16,1,.3,1) both}',
-    '@keyframes nvxEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}',
-    '@media (prefers-reduced-motion:reduce){.nvx-ring,.nvx-veil,.nvx-enter{animation:none;transition:none}}'
+    '.nvx-enter{animation:nvxFade .62s cubic-bezier(.16,1,.3,1) both}',
+    '.nvx-enter-lift{animation:nvxRise .62s cubic-bezier(.16,1,.3,1) both}',
+    '@keyframes nvxFade{from{opacity:0}to{opacity:1}}',
+    '@keyframes nvxRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}',
+    '@media (prefers-reduced-motion:reduce){.nvx-ring,.nvx-veil,.nvx-enter,.nvx-enter-lift{animation:none;transition:none}}'
   ].join('');
   document.head.appendChild(css);
 
@@ -56,10 +58,19 @@
     setTimeout(function () { r.remove(); }, 620);
   }, { passive: true });
 
-  /* ---- 2. the page arrives instead of appearing ---- */
+  /* ---- 2. the page arrives instead of appearing ----
+     A transform on an ancestor makes it the containing block for every
+     position:fixed descendant inside it, which silently re-anchors overlays
+     to the page instead of the viewport. The homepage keeps its portals in
+     a fixed overlay inside <main>, so that container fades and does not
+     move; containers known to hold nothing fixed get the small lift too. */
   if (!REDUCED) {
-    var main = document.querySelector('.lesson__main, .lib, .sd, #shell, main');
-    if (main) main.classList.add('nvx-enter');
+    var lift = document.querySelector('.lesson__main, .lib, .sd');
+    if (lift) lift.classList.add('nvx-enter-lift');
+    else {
+      var main = document.querySelector('#shell, main');
+      if (main) main.classList.add('nvx-enter');
+    }
   }
 
   /* ---- 3. and leaves instead of cutting ----
