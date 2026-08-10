@@ -8,14 +8,15 @@ BASE = 'https://navidixstudio.com/'
 
 src   = open(SRC, encoding='utf-8').read().split('\n')
 head_assets = '\n'.join(src[25:30])
-style       = '\n'.join(src[33:286])
+_i = src.index('<style>'); _j = src.index('</style>')
+style = '\n'.join(src[_i:_j])   # by marker, not by line number
 
 TITLE = 'از کجا شروع کنم؟ راهنمای صفرِ صفر هوش مصنوعی | آموزش هوش مصنوعی کاربردی — قسمت ۱'
 DESC  = ('راهنمای کاملاً مبتدی هوش مصنوعی به فارسی: هوش مصنوعی واقعاً چیست و چه نیست، کدام ابزار را '
          'انتخاب کنی، چت‌جی‌پی‌تی و کلود و جمینای و نوت‌بوک‌ال‌ام چه فرقی دارند، چه چیزی رایگان است، '
          'و چطور هوش مصنوعی را با رشته و کار خودت ترکیب کنی. رایگان، از استودیو نویدیکس.')
 URL   = BASE + 'ai-start.html'
-IMG   = BASE + 'og-prompts.png'
+IMG   = BASE + 'og-start.png'
 
 LD = ('{"@context":"https://schema.org","@type":"LearningResource","name":"از کجا شروع کنم؟ راهنمای صفرِ صفر هوش مصنوعی",'
       '"description":"راهنمای مبتدی هوش مصنوعی به فارسی: انتخاب ابزار، تفاوت مدل‌ها، هزینه‌ها، و ترکیب هوش مصنوعی با رشته‌ی خودت.",'
@@ -49,6 +50,7 @@ head = f'''<!DOCTYPE html>
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="{IMG}" />
 {head_assets}
+<script src="nvx-ui.js" defer></script>
 <script type="application/ld+json">
 {LD}
 </script>
@@ -389,6 +391,7 @@ BODY = '''<body>
       <div>نوشته و تدریس: <b>محمد نویدی</b> — متخصص هوش مصنوعی کاربردی · استودیو نویدیکس</div>
       <div class="brand"><img class="mark" src="navidix-mark.png" alt="Navidix" width="26" height="26" /><span class="wordmark">NAVIDIX</span></div>
     </div>
+      <p class="legal">© ۱۴۰۵ <b>استودیو نویدیکس</b> — تمام حقوق محفوظ است. متن، تصویر و ساختار این درس‌ها حاصل کار همین استودیوست؛ بازنشرشان با ذکر منبع آزاد است، فروششان نه.</p>
   </div>
 </footer>
 

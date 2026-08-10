@@ -27,6 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="../nvx-ui.js" defer></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"TechArticle","name":"باروک — پرامپت و شناسنامه‌ی سبک | Navidix","description":"پرامپت آماده‌ی باروک (Baroque) برای تصویر و ویدیو، همراه با شناسنامه‌ی سبک: قرمز عمیق، طلایی خاموش، قهوه‌ای سوخته؛ تنبریسم — نور تند از یک سو، بقیه در سیاهی. و توضیح اینکه چطور هر سوژه‌ای را در همین سبک بسازی.","inLanguage":"fa-IR","author":{"@type":"Person","name":"محمد نویدی"},"publisher":{"@type":"Organization","name":"Navidix","logo":{"@type":"ImageObject","url":"https://navidixstudio.com/navidix-mark.png"}},"image":"https://navidixstudio.com/og-prompts.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://navidixstudio.com/style/baroque.html"}}
 </script>
@@ -283,7 +284,61 @@ body{ margin:0; }
 .lesson{ background:transparent; }
 .lesson .topbar{ display:none; }
 .sitebar .home .navmark{ width:24px; height:24px; display:block; object-fit:contain; }
+.lesson .brand .mark, .brand img.mark{ width:26px; height:26px; display:block; object-fit:contain; }
 
+/* Persian is a joined script: positive tracking pulls the letters apart, so a
+   word set in a tracked label stops reading as a word. Latin runs keep their
+   tracking through .lat; digit-only labels keep theirs by being more specific. */
+.eyebrow, .lesson .eyebrow, .idx .eyebrow, .lib .eyebrow, .slate-num, .lesson .slate-num, .pager small,
+.lesson footer h3, .lesson .swap th, .lesson .tag, .lesson .fbody dt,
+.lesson .cbtn span, .lesson .funnel-read .count small, .feat__tag,
+.no, .cards .no, .dna dt, .lang button[data-fa]{ letter-spacing:normal; }
+.lat{ letter-spacing:.24em; }
+
+/* ---- tables: on a narrow screen two columns collide into each other, so
+   each row becomes a small stacked card instead. The dividers carry a faint
+   turquoise so the eye can find the row boundary without a heavy line. ---- */
+.lesson .swap th{ border-bottom-color:rgba(94,206,196,.34); }
+.lesson .swap td{ border-bottom-color:rgba(94,206,196,.15); }
+@media (max-width:700px){
+  .lesson .swap, .lesson .swap tbody, .lesson .swap tr, .lesson .swap td{ display:block; width:auto; }
+  .lesson .swap thead{ display:none; }
+  .lesson .swap tr{ padding:15px 0 16px; border-bottom:1px solid rgba(94,206,196,.15); }
+  .lesson .swap tr:last-child{ border-bottom:0; }
+  .lesson .swap td{ padding:0 0 9px; border:0; }
+  .lesson .swap td:first-child{
+    width:auto; padding-inline-end:0; font-weight:700; color:#7FDBD2;
+  }
+  .lesson .swap td:first-child .en{ color:var(--bone-dim); font-weight:400; }
+  .lesson .swap td:last-child{ padding-bottom:0; color:var(--bone); }
+}
+
+/* ---- a hairline to breathe between the parts of a long argument ---- */
+.lesson .hr{
+  height:1px; border:0; margin:clamp(30px,5vh,48px) auto;
+  width:min(340px,60%);
+  background:linear-gradient(to left, transparent,
+    rgba(227,32,42,.5) 26%, rgba(227,32,42,.5) 74%, transparent);
+}
+.lesson .hr--cool{
+  background:linear-gradient(to left, transparent,
+    rgba(94,206,196,.42) 26%, rgba(94,206,196,.42) 74%, transparent);
+}
+
+/* ---- the line every site owes its reader ---- */
+.lesson .legal{
+  margin-top:clamp(26px,4vh,40px); padding-top:18px;
+  border-top:1px solid var(--line);
+  font-size:12px; line-height:2; color:#6B7280;
+}
+.lesson .legal b{ color:#8C939B; font-weight:500; }
+
+/* the line every site owes its reader */
+.colophon{ max-width:1120px; margin:0 auto; padding:clamp(28px,4.5vh,46px) 22px clamp(34px,5vh,58px);
+  text-align:center; border-top:1px solid rgba(140,170,220,.10); }
+.colophon p{ margin:0 auto; max-width:62ch; font-size:12px; line-height:2.1; color:#6B7280; }
+.colophon b{ color:#9AA3AD; font-weight:500; }
+.colophon .mk{ color:#8C939B; }
 .lib{ max-width:1120px; margin:0 auto; padding:clamp(48px,8vh,92px) 22px 80px; color:#D7DEE7; }
 .lib h1{ font-size:clamp(26px,4.4vw,42px); line-height:1.4; margin:0 0 14px; font-weight:800; letter-spacing:-.01em; color:#F2F6FB; }
 .lib .sub{ color:#8C939B; font-size:clamp(14px,2vw,17px); line-height:2; max-width:66ch; margin:0 0 16px; }

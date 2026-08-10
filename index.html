@@ -696,7 +696,21 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
 .lesson .cbtn span, .lesson .funnel-read .count small, .feat__tag,
 .no, .cards .no, .dna dt, .lang button[data-fa]{ letter-spacing:normal; }
 .lat{ letter-spacing:.24em; }
+
+/* the line every site owes its reader — quiet, and the last thing there is */
+.colophon{
+  position:relative; z-index:2;
+  padding:clamp(30px,5vh,52px) var(--gutter) clamp(34px,5vh,56px);
+  text-align:center; border-top:1px solid rgba(140,170,220,.10);
+}
+.colophon p{
+  margin:0 auto; max-width:62ch;
+  font-family:var(--f-fa); font-size:12px; line-height:2.1; color:#6B7280;
+}
+.colophon b{ color:#9AA3AD; font-weight:500; }
+.colophon .mk{ color:#8C939B; }
 </style>
+<script src="nvx-ui.js" defer></script>
 </head>
 
 <body>
@@ -790,6 +804,10 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
 
 </main>
 
+<div class="colophon">
+  <p><span class="mk">©</span> ۱۴۰۵ <b>استودیو نویدیکس</b> — ساخته‌ی <b>محمد نویدی</b>. تمام حقوق محفوظ است.<br />هر فیلم، هر درس و هر خط از این سایت اینجا نوشته شده؛ بردنش با نام ما آزاد، بی‌نام نه.</p>
+</div>
+
 <div id="curtain"><div class="bar"><i id="curtainBar"></i></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -814,9 +832,6 @@ const NAVIDIX = (() => {
             ctaMain:'خدمات استودیو', ctaTalk:'عضویت در کانال', ctaTube:'سابسکرایب یوتیوب' }
     },
     nav: [
-      { id:'system',
-        en:{ t:'The System',              d:'AI content production systems for brands — built once, run by your own team.' },
-        fa:{ t:'سیستم تولید محتوا',        d:'ساخت سیستم تولید محتوا با هوش مصنوعی برای برندها — یک بار ساخته می‌شود، تیم خودت اجرا می‌کند.' } },
       { id:'training',
         en:{ t:'Applied AI Training',    d:'Field notes and protocols for using AI in real production work.' },
         fa:{ t:'آموزش هوش مصنوعی کاربردی', d:'یادداشت‌ها و پروتکل‌های عملی برای به‌کارگیری هوش مصنوعی در تولید واقعی.' } },
@@ -829,6 +844,9 @@ const NAVIDIX = (() => {
       { id:'gallery',
         en:{ t:'AI Gallery',             d:'Cinematic AI artwork, concept art and posters from the Navidix studio.' },
         fa:{ t:'گالری هوش مصنوعی',        d:'آثار سینمایی هوش مصنوعی، کانسپت‌آرت و پوسترهای استودیوی Navidix.' } },
+      { id:'system',
+        en:{ t:'Navidix Studio Services', d:'What the studio builds for brands — starting with a content production system your own team can run.' },
+        fa:{ t:'خدمات استودیو نویدیکس',    d:'آنچه استودیو برای برندها می‌سازد — از سیستم تولید محتوا با هوش مصنوعی که یک بار ساخته می‌شود و تیم خودت اجرایش می‌کند.' } },
       { id:'social',
         en:{ t:'Social Media',           d:'Every official Navidix channel, gathered in one place.' },
         fa:{ t:'شبکه‌های اجتماعی',         d:'همه کانال‌های رسمی Navidix، یک‌جا.' } }
@@ -926,7 +944,7 @@ const NAVIDIX = (() => {
     color: { void:0x000000, deep:0x08132b, glow:0x2b6cff, ion:0x8fdbff, ember:0xe31b23 },
 
     camZ: 620,                     // layout math uses this, not the live camera
-    quality: { stars:16000, dust:900, dpr:1.75, nebulae:3, streaks:2, octaves:5 }
+    quality: { stars:21000, dust:900, dpr:1.75, nebulae:3, streaks:2, octaves:5 }
   };
 
   const state = {
@@ -1375,7 +1393,7 @@ function buildMark(scene){
   pulse.position.z = -20; pulse.renderOrder = -1; group.add(pulse);
 
   const H = 150;                       // intrinsic height at scale 1
-  const api = { group, core, bloom, bloomInner, well, W:H, H, squeeze:1, spin:0, spinV:0, dragging:false, fades:[] };
+  const api = { group, core, bloom, bloomInner, well, W:H, H, squeeze:1, spin:0, spinTarget:0, spinV:0, dragging:false, fades:[] };
 
   function fit(){
     const vp = Stage.viewport(group.position.z);
@@ -1470,7 +1488,7 @@ function buildMark(scene){
 
   NAVIDIX.register('mark', Object.assign(api, {
     layout: fit,
-    update(t){
+    update(t, dt){
       /* It turns all the way round, but not at a constant rate: the mark
          dwells on each face and swings quickly through profile, where it is
          only a slab and the logo cannot be read. Same period either way —
@@ -1481,10 +1499,11 @@ function buildMark(scene){
         /* decay per second, not per frame — otherwise the glide is twice as
            short on a 120Hz screen as on a 60Hz one */
         if (!api.dragging){
-          api.spin  += api.spinV;
-          api.spinV *= Math.pow(0.96, Math.min(dt || 0.016, .05) * 60);
+          api.spinTarget += api.spinV;
+          api.spinV *= Math.pow(0.94, Math.min(dt || 0.016, .05) * 60);
           if (Math.abs(api.spinV) < 1e-5) api.spinV = 0;
         }
+        api.spin += (api.spinTarget - api.spin) * (1 - Math.pow(0.0001, Math.min(dt || .016, .05)));
         const w = t * 0.185 + api.spin;
         core.rotation.y = w - Math.sin(w * 2) * 0.45;
         core.rotation.x = Math.sin(t*0.161 + 1.3) * 0.045;   // square to camera
@@ -2003,13 +2022,23 @@ const Views = (() => {
     if (push !== false) history.pushState({ nvx:sectionId }, '', '#' + sectionId);
 
     if (NAVIDIX.state.reduced) return;
-    /* Longer, softer, and no overshoot. A panel that snaps into place reads
-       as a jump cut; easing out of a short travel reads as it settling. */
-    gsap.fromTo('.view__scrim', { opacity:0 }, { opacity:1, duration:.78, ease:'power2.out' });
-    gsap.fromTo('#viewScroll', { opacity:0, y:24, scale:.988, filter:'blur(9px)' },
-      { opacity:1, y:0, scale:1, filter:'blur(0px)', duration:1.15, ease:'expo.out', clearProps:'filter,scale' });
-    gsap.fromTo('.view__close', { opacity:0, scale:.9 },
-      { opacity:1, scale:1, duration:.7, ease:'power3.out', delay:.22 });
+
+    /* Unhiding the panel paints it whole for one frame before any tween can
+       start, and that single frame is what read as a snap. Set the opening
+       state synchronously first, then let it rise. The frame itself moves
+       too — animating only the contents left the container popping. */
+    gsap.set('.view__scrim', { opacity:0 });
+    gsap.set('.view__panel', { opacity:0, y:22, scale:.992 });
+    gsap.set('#viewScroll',  { opacity:0, y:20, filter:'blur(8px)' });
+    gsap.set('.view__close', { opacity:0, scale:.9 });
+
+    var tl = gsap.timeline();
+    tl.to('.view__scrim', { opacity:1, duration:.62, ease:'power2.out' }, 0)
+      .to('.view__panel', { opacity:1, y:0, scale:1, duration:.92, ease:'expo.out',
+                            clearProps:'scale,transform' }, .06)
+      .to('#viewScroll',  { opacity:1, y:0, filter:'blur(0px)', duration:1.0,
+                            ease:'expo.out', clearProps:'filter' }, .14)
+      .to('.view__close', { opacity:1, scale:1, duration:.6, ease:'power3.out' }, .34);
   }
 
   function hide(){
@@ -2022,8 +2051,10 @@ const Views = (() => {
       if (opener) { opener.focus({ preventScroll:true }); opener = null; }
     };
     if (NAVIDIX.state.reduced) return done();
-    gsap.to('#viewScroll', { opacity:0, y:16, scale:.994, duration:.5, ease:'power2.inOut' });
-    gsap.to('.view__scrim', { opacity:0, duration:.58, ease:'power2.inOut', onComplete:done });
+    gsap.to('#viewScroll',  { opacity:0, y:12, duration:.34, ease:'power2.in' });
+    gsap.to('.view__panel', { opacity:0, y:16, scale:.994, duration:.44, ease:'power2.in' });
+    gsap.to('.view__scrim', { opacity:0, duration:.52, ease:'power2.inOut', delay:.06,
+                              onComplete:done });
   }
 
   /* closing by button or Esc walks history back, so Back and the × agree */
@@ -2119,7 +2150,7 @@ const Views = (() => {
       }
       const d = (e.clientX - lastX) * 0.0058;
       lastX = e.clientX;
-      mark.spin += d; mark.spinV = d;               // carried on after release
+      mark.spinTarget += d; mark.spinV = d;         // carried on after release
       e.preventDefault();
     }, { passive:false });
 
@@ -2181,8 +2212,8 @@ const Views = (() => {
       { x:mark.scale*.7, y:mark.scale*.7, z:mark.scale*.7 },
       { x:mark.scale, y:mark.scale, z:mark.scale, duration:2.1, ease:'power3.out' }, 1.15);
     mark.bloomBase = 0;
-    tl.to(mark, { bloomBase:.30, duration:2.2, ease:'power2.out' }, 1.2);
-    tl.to(mark.bloomInner.material, { opacity:.46, duration:2.2, ease:'power2.out' }, 1.2);
+    tl.to(mark, { bloomBase:0, duration:.1 }, 1.2);   /* deep black behind the mark */
+    tl.to(mark.bloomInner.material, { opacity:.30, duration:2.2, ease:'power2.out' }, 1.2);
 
     tl.fromTo('#wordmark', { opacity:0, y:22, filter:'blur(16px)' },
       { opacity:1, y:0, filter:'blur(0px)', duration:1.8, ease:'power3.out', clearProps:'filter' }, 1.95);

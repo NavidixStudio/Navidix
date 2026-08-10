@@ -14,13 +14,14 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = 'https://navidixstudio.com/'
 src  = open(f'{REPO}/brand-content.html', encoding='utf-8').read().split('\n')
 HEAD_ASSETS = '\n'.join(src[25:30])
-SHELL_CSS   = '\n'.join(src[33:286])
+_i = src.index('<style>'); _j = src.index('</style>')
+SHELL_CSS = '\n'.join(src[_i:_j])   # by marker, not by line number
 
 CATNAME = {c[0]: c[1] for c in CATS}
 FA_DIGITS = str.maketrans('0123456789', '۰۱۲۳۴۵۶۷۸۹')
 fa = lambda n: str(n).translate(FA_DIGITS)
 
-def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None):
+def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth=''):
     ld = jsonld or (
         '{"@context":"https://schema.org","@type":"%s","name":"%s","description":"%s","inLanguage":"fa-IR",'
         '"author":{"@type":"Person","name":"محمد نویدی"},'
@@ -51,6 +52,7 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None):
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="{img}" />
 {HEAD_ASSETS}
+<script src="{depth}nvx-ui.js" defer></script>
 <script type="application/ld+json">
 {ld}
 </script>
@@ -70,6 +72,12 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None):
 </style>'''
 
 LIB_CSS = '''
+/* the line every site owes its reader */
+.colophon{ max-width:1120px; margin:0 auto; padding:clamp(28px,4.5vh,46px) 22px clamp(34px,5vh,58px);
+  text-align:center; border-top:1px solid rgba(140,170,220,.10); }
+.colophon p{ margin:0 auto; max-width:62ch; font-size:12px; line-height:2.1; color:#6B7280; }
+.colophon b{ color:#9AA3AD; font-weight:500; }
+.colophon .mk{ color:#8C939B; }
 .lib{ max-width:1120px; margin:0 auto; padding:clamp(48px,8vh,92px) 22px 80px; color:#D7DEE7; }
 .lib h1{ font-size:clamp(26px,4.4vw,42px); line-height:1.4; margin:0 0 14px; font-weight:800; letter-spacing:-.01em; color:#F2F6FB; }
 .lib .sub{ color:#8C939B; font-size:clamp(14px,2vw,17px); line-height:2; max-width:66ch; margin:0 0 16px; }
@@ -346,7 +354,7 @@ for s in STYLES:
 </html>
 '''
     open(f'{REPO}/style/{s["id"]}.html', 'w', encoding='utf-8').write(
-        head(title, desc, url, BASE + 'og-prompts.png', DETAIL_CSS, 'TechArticle') + body)
+        head(title, desc, url, BASE + 'og-prompts.png', DETAIL_CSS, 'TechArticle', depth='../') + body)
 
 # ── index ─────────────────────────────────────────────────────────────────
 groups = ''
@@ -468,6 +476,7 @@ index_body = f'''
 {join_block()}
 </main>
 
+<div class="colophon"><p><span class="mk">&copy;</span> ۱۴۰۵ <b>استودیو نویدیکس</b> — ساخته‌ی <b>محمد نویدی</b>. تمام حقوق محفوظ است.<br />بازنشر با ذکر منبع آزاد است، فروشش نه.</p></div>
 <nav class="pager"><a href="camera-language.html"><small>مرتبط</small><b>زبان دوربین: زاویه، اندازه‌ی نما و حرکت</b></a><a href="training.html"><small>فهرست</small><b>همه‌ی قسمت‌های آموزش هوش مصنوعی کاربردی</b></a></nav>
 
 <script>{INDEX_JS}</script>
