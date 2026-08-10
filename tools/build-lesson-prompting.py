@@ -58,7 +58,7 @@ head = f'''<!DOCTYPE html>
 .lesson .forge{{ display:grid; gap:14px; margin:24px 0 18px; }}
 .lesson .forge label{{ display:block; }}
 .lesson .forge .lab{{
-  display:block; font-size:12.5px; letter-spacing:.02em; color:#B49CFF;
+  display:block; font-size:12.5px; letter-spacing:.02em; color:#7FB8FF;
   margin-bottom:7px; font-weight:600;
 }}
 .lesson .forge .lab i{{ font-style:normal; color:var(--bone-dim); font-weight:400; }}
@@ -70,7 +70,7 @@ head = f'''<!DOCTYPE html>
 }}
 .lesson .forge textarea{{ resize:vertical; min-height:64px; }}
 .lesson .forge input:focus, .lesson .forge textarea:focus, .lesson .forge select:focus{{
-  outline:none; border-color:#9B7CFF; background:#0D1116;
+  outline:none; border-color:#5A96F0; background:#0D1116;
 }}
 .lesson .forge .two{{ display:grid; gap:14px; grid-template-columns:1fr 1fr; }}
 @media (max-width:640px){{ .lesson .forge .two{{ grid-template-columns:1fr; }} }}
@@ -97,7 +97,7 @@ head = f'''<!DOCTYPE html>
   background:var(--ink-2); border:1px solid var(--line);
   transition:all .35s ease;
 }}
-.lesson .flip button[aria-pressed="true"]{{ color:#08090B; background:#B49CFF; border-color:#B49CFF; }}
+.lesson .flip button[aria-pressed="true"]{{ color:#08090B; background:#7FB8FF; border-color:#7FB8FF; }}
 .lesson .demo{{ border:1px solid var(--line); border-radius:4px; background:var(--ink-2);
   padding:20px 22px; }}
 .lesson .demo h4{{ margin:0 0 10px; font-size:14px; color:var(--amber); }}
