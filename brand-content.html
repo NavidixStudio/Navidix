@@ -55,14 +55,14 @@ body{ margin:0; }
   font-family:"Vazirmatn","IRANSans",Tahoma,sans-serif; color:#E4E7EA; }
 .idx h1{ font-size:clamp(28px,5vw,46px); line-height:1.4; margin:0 0 16px; font-weight:800; letter-spacing:-.01em; }
 .idx .sub{ color:#8C939B; font-size:clamp(14px,2vw,17px); line-height:2; max-width:64ch; margin:0 0 clamp(34px,6vh,60px); }
-.idx .eyebrow{ font-family:ui-monospace,Menlo,monospace; font-size:11.5px; letter-spacing:.24em; color:#B9C0C8;
+.idx .eyebrow{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px; letter-spacing:.24em; color:#B9C0C8;
   text-transform:uppercase; margin-bottom:20px; }
 .cards{ display:grid; gap:16px; }
 .cards a{ display:block; text-decoration:none; color:inherit; border:1px solid #262A31; border-radius:4px;
   background:#101216; padding:clamp(22px,3vw,32px);
   transition:border-color .35s ease, background .35s ease, transform .35s ease; }
 .cards a:hover{ border-color:rgba(229,32,42,.55); background:#12151a; transform:translateY(-2px); }
-.cards .no{ font-family:ui-monospace,Menlo,monospace; font-size:11.5px; letter-spacing:.2em; color:#E5202A; }
+.cards .no{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px; letter-spacing:.2em; color:#E5202A; }
 .cards h2{ font-size:clamp(17px,2.4vw,23px); line-height:1.6; margin:10px 0 10px; font-weight:700; }
 .cards p{ color:#8C939B; font-size:14px; line-height:2; margin:0; }
 .cards .soon{ opacity:.45; }
@@ -80,7 +80,9 @@ body{ margin:0; }
     --amber:#E5202A;      /* Navidix neon red — accent, craft */
     --teal:#B9C0C8;       /* brushed steel — data, measurement */
     --rust:#B01620;       /* deep crimson — warning */
-    --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, Vazirmatn, monospace; /* Persian glyphs are absent from every mono face, so name the Persian one
+       before the generic keyword — otherwise the browser picks a fallback
+       that does not shape Persian properly. */
     --fa: "Vazirmatn", "IRANSans", Tahoma, "Segoe UI", sans-serif;
     --maxw: 980px;
   }
@@ -283,6 +285,15 @@ body{ margin:0; }
 .lesson .topbar{ display:none; }
 .sitebar .home .navmark{ width:24px; height:24px; display:block; object-fit:contain; }
 .lesson .brand .mark, .brand img.mark{ width:26px; height:26px; display:block; object-fit:contain; }
+
+/* Persian is a joined script: positive tracking pulls the letters apart, so a
+   word set in a tracked label stops reading as a word. Latin runs keep their
+   tracking through .lat; digit-only labels keep theirs by being more specific. */
+.eyebrow, .lesson .eyebrow, .idx .eyebrow, .lib .eyebrow, .slate-num, .lesson .slate-num, .pager small,
+.lesson footer h3, .lesson .swap th, .lesson .tag, .lesson .fbody dt,
+.lesson .cbtn span, .lesson .funnel-read .count small, .feat__tag,
+.no, .cards .no, .dna dt, .lang button[data-fa]{ letter-spacing:normal; }
+.lat{ letter-spacing:.24em; }
 </style>
 </head>
 <body>
