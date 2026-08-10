@@ -1265,7 +1265,8 @@ function studioEnvironment(renderer){
   const c = document.createElement('canvas'); c.width = 512; c.height = 256;
   const g = c.getContext('2d');
   const sky = g.createLinearGradient(0, 0, 0, 256);
-  sky.addColorStop(0, '#0d1826'); sky.addColorStop(.5, '#05080e'); sky.addColorStop(1, '#010203');
+  sky.addColorStop(0, '#0a121c'); sky.addColorStop(.42, '#06090f');
+  sky.addColorStop(.62, '#05070b'); sky.addColorStop(1, '#010203');
   g.fillStyle = sky; g.fillRect(0, 0, 512, 256);
   const blob = (x, y, rx, ry, rgb, a) => {
     const grd = g.createRadialGradient(x, y, 0, x, y, Math.max(rx, ry));
@@ -1275,10 +1276,11 @@ function studioEnvironment(renderer){
     g.save(); g.translate(x, y); g.scale(1, ry / Math.max(rx, ry)); g.translate(-x, -y);
     g.fillStyle = grd; g.fillRect(0, 0, 512, 256); g.restore();
   };
-  blob(120,  52, 120,  58, '236,246,255', 1.00);   // key
-  blob(352,  70, 126,  58, '132,178,238', 0.30);   // cool fill
-  blob(298, 178, 140,  56, '227,27,35',   0.30);   // ember kiss
-  blob(180, 212, 150,  42, '146,176,214', 0.12);   // floor bounce
+  blob(128,  60, 168,  84, '255,58,52',   0.95);   // ember key, broad
+  blob(122,  54,  30,  17, '255,238,228', 0.62);   // white-hot core inside it
+  blob(352,  84, 132,  62, '196,44,40',   0.42);   // ember fill, opposite
+  blob(240, 196, 190,  54, '255,72,60',   0.30);   // the floor, lit red
+  blob(452, 104,  80,  46, '150,182,220', 0.10);   // one cool note, for separation
   const tex = new THREE.CanvasTexture(c);
   tex.mapping = THREE.EquirectangularReflectionMapping;
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -1286,6 +1288,33 @@ function studioEnvironment(renderer){
   const env = pmrem.fromEquirectangular(tex).texture;
   tex.dispose(); pmrem.dispose();
   return env;
+}
+
+/* The horizontal flare that crosses the mark in the brand's motion: a wide,
+   very thin bar with a white core bleeding out to ember. It is a lens
+   artefact rather than part of the object, so it hangs on the outer group
+   and never turns with the plaque. */
+function streakSprite(){
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 64;
+  const g = c.getContext('2d');
+  const grd = g.createLinearGradient(0, 0, 1024, 0);
+  grd.addColorStop(0,    'rgba(227,27,35,0)');
+  grd.addColorStop(.30,  'rgba(227,27,35,.34)');
+  grd.addColorStop(.455, 'rgba(255,120,96,.85)');
+  grd.addColorStop(.5,   'rgba(255,242,232,1)');
+  grd.addColorStop(.545, 'rgba(255,120,96,.85)');
+  grd.addColorStop(.70,  'rgba(227,27,35,.34)');
+  grd.addColorStop(1,    'rgba(227,27,35,0)');
+  g.fillStyle = grd;
+  /* a tight vertical falloff, so the bar stays a line and not a smear */
+  for (let y = 0; y < 64; y++){
+    g.globalAlpha = Math.pow(1 - Math.abs(y - 31.5) / 32, 5.5);
+    g.fillRect(0, y, 1024, 1);
+  }
+  return new THREE.Sprite(new THREE.SpriteMaterial({
+    map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false,
+    depthTest: false, blending: THREE.AdditiveBlending, opacity: 0
+  }));
 }
 
 function buildMark(scene){
@@ -1296,9 +1325,9 @@ function buildMark(scene){
   scene.environment = studioEnvironment(Stage.renderer);
   const core = new THREE.Group(); group.add(core);
 
-  group.add(new THREE.AmbientLight(config.color.deep, 1.8));
-  const key = new THREE.PointLight(0xcfeaff, 2.6, 1000, 2); key.position.set(-160,130,240);
-  const rim = new THREE.PointLight(config.color.ember, 3.0, 850, 2); rim.position.set(190,-70,-170);
+  group.add(new THREE.AmbientLight(0x101722, 1.1));
+  const key = new THREE.PointLight(0xffe4d6, 1.15, 1000, 2); key.position.set(-160,130,240);
+  const rim = new THREE.PointLight(config.color.ember, 2.2, 850, 2); rim.position.set(190,-70,-170);
   group.add(key, rim);
 
   /* legibility: a soft black well behind the mark so it never fights the stars */
@@ -1315,8 +1344,11 @@ function buildMark(scene){
   }));
   pulse.position.z = -20; pulse.renderOrder = -1; group.add(pulse);
 
+  const streak = streakSprite();
+  streak.position.z = 26; streak.renderOrder = 3; group.add(streak);
+
   const H = 150;                       // intrinsic height at scale 1
-  const api = { group, core, bloom, bloomInner, well, W:H, H, squeeze:1, fades:[] };
+  const api = { group, core, bloom, bloomInner, well, streak, W:H, H, squeeze:1, fades:[] };
 
   function fit(){
     const vp = Stage.viewport(group.position.z);
@@ -1334,6 +1366,7 @@ function buildMark(scene){
     const px = (1 - (bottom.y*0.5 + 0.5)) * innerHeight;
     document.documentElement.style.setProperty('--logo-bottom', Math.max(0, px) + 'px');
     api.scale = s;
+    streak.scale.set(api.H * 7.2, api.H * 0.30, 1);
   }
   api.fit = fit;
 
@@ -1358,23 +1391,46 @@ function buildMark(scene){
     tex.anisotropy = Stage.renderer.capabilities.getMaxAnisotropy();
     tex.needsUpdate = true;
 
-    /* a real hexagonal prism: the mark has thickness, so the 360° turn
-       shows machined metal instead of collapsing into nothing */
+    /* The body has to be the logo's own hexagon, not an approximation of it.
+       Measured off the artwork: a regular pointy-top hexagon, circumradius
+       190px inside a 512px square, centred — so in local units the
+       circumradius is 190/512 of the plane's height. A cylinder standing in
+       for it was both the wrong size and the wrong rotation, which is why a
+       dark disc kept showing from behind the mark as it turned. */
+    const R = H * (190 / 512), DEPTH = 24, BEV = 2.2;
+    const hex = new THREE.Shape();
+    for (let i = 0; i < 6; i++){
+      const a = Math.PI / 2 + i * Math.PI / 3;            // vertex at the top
+      const x = Math.cos(a) * (R - BEV), y = Math.sin(a) * (R - BEV);
+      i ? hex.lineTo(x, y) : hex.moveTo(x, y);
+    }
+    hex.closePath();
+
+    const bodyGeo = new THREE.ExtrudeGeometry(hex, {
+      depth: DEPTH, bevelEnabled: true, bevelSize: BEV,
+      bevelThickness: BEV, bevelSegments: 2, curveSegments: 1
+    });
+    bodyGeo.translate(0, 0, -DEPTH / 2);                  // turn about its middle
+
+    /* dark machined metal with an ember filament in it, the way the edge
+       glows in the brand's own motion */
     const bodyMat = new THREE.MeshStandardMaterial({
-      color:0x59636f, metalness:1.0, roughness:.19, envMapIntensity:1.5,
-      emissive:new THREE.Color(0x1a0407), emissiveIntensity:1.0,
+      color:0x24272c, metalness:1.0, roughness:.46, envMapIntensity:0.85,
+      emissive:new THREE.Color(0x36060a), emissiveIntensity:1.0,
       transparent:true, opacity:0
     });
-    const body = new THREE.Mesh(new THREE.CylinderGeometry(H*.292, H*.292, 15.0, 6), bodyMat);
-    body.rotation.x = Math.PI/2; body.rotation.y = Math.PI/2;
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
 
+    /* both faces carry the same artwork at the same strength — the back is
+       turned to face outward, so it reads the right way round, not mirrored */
+    const faceZ   = DEPTH / 2 + BEV + 0.2;
     const faceMat = new THREE.MeshBasicMaterial({ map:tex, transparent:true, opacity:0, toneMapped:false });
     const backMat = faceMat.clone();
-    const front = new THREE.Mesh(new THREE.PlaneGeometry(W,H), faceMat); front.position.z =  7.8;
-    const back  = new THREE.Mesh(new THREE.PlaneGeometry(W,H), backMat); back.position.z  = -7.8; back.rotation.y = Math.PI;
+    const front = new THREE.Mesh(new THREE.PlaneGeometry(W,H), faceMat); front.position.z =  faceZ;
+    const back  = new THREE.Mesh(new THREE.PlaneGeometry(W,H), backMat); back.position.z  = -faceZ; back.rotation.y = Math.PI;
 
     core.add(body, front, back);
-    api.fades = [{ m:bodyMat, o:1 }, { m:faceMat, o:1 }, { m:backMat, o:.92 }];
+    api.fades = [{ m:bodyMat, o:1 }, { m:faceMat, o:1 }, { m:backMat, o:1 }];
     fit();
   }
 
@@ -1410,6 +1466,7 @@ function buildMark(scene){
       key.position.z = 200 + Math.sin(t*0.22) * 160;
 
       bloom.material.opacity = (api.bloomBase||0) * (0.86 + 0.14*Math.sin(t*0.6));
+      streak.material.opacity = (api.streakBase||0) * (0.82 + 0.18*Math.sin(t*0.41 + 2.0));
 
       const cyc = (t % 11.0) / 2.8;
       if (cyc <= 1 && api.bloomBase){
@@ -2025,6 +2082,11 @@ const Views = (() => {
     tl.fromTo(mark.group.scale,
       { x:mark.scale*.7, y:mark.scale*.7, z:mark.scale*.7 },
       { x:mark.scale, y:mark.scale, z:mark.scale, duration:2.1, ease:'power3.out' }, 1.15);
+    mark.streakBase = 0;
+    tl.fromTo(mark.streak.scale, { x: mark.H * 0.6 },
+      { x: mark.H * 7.2, duration: 2.4, ease:'power3.out' }, 1.15);
+    tl.to(mark, { streakBase:.44, duration: 1.6, ease:'power2.out' }, 1.15);
+
     mark.bloomBase = 0;
     tl.to(mark, { bloomBase:.30, duration:2.2, ease:'power2.out' }, 1.2);
     tl.to(mark.bloomInner.material, { opacity:.46, duration:2.2, ease:'power2.out' }, 1.2);
