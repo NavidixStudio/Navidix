@@ -135,7 +135,7 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
   display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
   text-align:center;
   /* JS measures where the 3D mark ends and hands the number back here */
-  padding-top:calc(var(--logo-bottom) + clamp(38px,7.5vh,104px));
+  padding-top:calc(var(--logo-bottom) + clamp(18px,3.2vh,46px));
   padding-bottom:clamp(24px,5vh,64px);
 }
 /* the wordmark sits on a plate of light — a title card, not a floating image */
@@ -144,19 +144,31 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
   content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
   width:min(820px,96vw); height:min(260px,34vh); pointer-events:none;
   background:
-    radial-gradient(52% 46% at 50% 50%, rgba(143,219,255,.11), transparent 72%),
-    radial-gradient(30% 30% at 50% 62%, rgba(227,27,35,.09), transparent 74%);
+    radial-gradient(46% 40% at 50% 48%, rgba(143,219,255,.10), transparent 70%),
+    radial-gradient(24% 26% at 50% 64%, rgba(227,27,35,.075), transparent 72%);
 }
 .wordmark{
-  position:relative; display:block; width:min(378px,60vw); height:auto; opacity:0;
-  filter:drop-shadow(0 1px 0 rgba(255,255,255,.18)) drop-shadow(0 0 46px rgba(143,219,255,.2));
+  position:relative; display:block; width:min(402px,62vw); height:auto; opacity:0;
+  /* a thrown shadow away from the key, a tight contact shadow under it, and
+     only as much bloom as a lit surface would actually give back */
+  filter:
+    drop-shadow(0 1px 0 rgba(255,255,255,.20))
+    drop-shadow(14px 20px 26px rgba(0,0,0,.72))
+    drop-shadow(0 0 52px rgba(143,219,255,.16));
 }
 .tagline{
-  margin:clamp(14px,2.2vh,22px) 0 0;
+  margin:clamp(15px,2.4vh,24px) 0 0;
+  display:flex; align-items:center; justify-content:center; gap:clamp(12px,2vw,20px);
   font-family:var(--f-ui);
   font-size:9.5px; font-weight:500; letter-spacing:.42em; text-transform:uppercase;
   color:var(--paper-dim); opacity:0;
 }
+/* two rules turn a line of text into a caption plate */
+.tagline::before, .tagline::after{
+  content:''; display:block; width:clamp(26px,6vw,64px); height:1px;
+  background:linear-gradient(to right, transparent, rgba(180,205,235,.34));
+}
+.tagline::after{ transform:scaleX(-1); }
 html[lang="fa"] .tagline{
   font-family:var(--f-fa); font-size:12.5px; font-weight:400;
   letter-spacing:.02em; text-transform:none;
@@ -164,25 +176,63 @@ html[lang="fa"] .tagline{
 
 /* one line that says what is sold, then the only two actions that matter */
 .pitch{
-  margin:clamp(18px,3.2vh,34px) 0 0; max-width:34ch; opacity:0;
+  margin:clamp(20px,3.4vh,36px) 0 0; max-width:32ch; opacity:0;
   font-family:var(--f-display); font-weight:200;
-  font-size:clamp(15px,1.6vw,23px); line-height:1.55; letter-spacing:-.004em;
-  color:rgba(237,242,250,.9); text-wrap:balance;
+  font-size:clamp(16px,1.75vw,26px); line-height:1.5; letter-spacing:-.006em;
+  color:rgba(240,245,252,.92); text-wrap:balance;
 }
 html[lang="fa"] .pitch{ font-family:var(--f-fa); font-weight:300; letter-spacing:0; line-height:1.95; }
 .cta-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:clamp(20px,3.4vh,34px); }
+/* Glass, not paint: the scene shows through, a hairline catches the key
+   along the top edge, and hover lifts the pane a single pixel. */
 .hcta{
-  opacity:0; display:inline-flex; align-items:center; gap:9px;
-  padding:12px 22px; border-radius:999px; text-decoration:none; color:var(--paper);
-  border:1px solid var(--glass-edge); background:rgba(140,170,220,.06);
+  opacity:0; position:relative; isolation:isolate;
+  display:inline-flex; align-items:center; gap:9px;
+  padding:13px 24px; border-radius:999px; text-decoration:none; color:var(--paper);
+  white-space:nowrap;              /* a tracked label must never break mid-phrase */
+  border:1px solid rgba(178,200,228,.20);
+  background:linear-gradient(180deg, rgba(190,214,244,.10), rgba(150,176,210,.035));
+  -webkit-backdrop-filter:blur(9px) saturate(1.15); backdrop-filter:blur(9px) saturate(1.15);
+  box-shadow:inset 0 1px 0 rgba(226,238,255,.16), 0 10px 26px -18px rgba(0,0,0,.9);
   font-family:var(--f-ui); font-size:11px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
-  transition:background .45s var(--ease), border-color .45s var(--ease), box-shadow .45s var(--ease);
+  transition:border-color .5s var(--ease), background .5s var(--ease),
+             box-shadow .5s var(--ease), transform .5s var(--ease);
 }
+.hcta::before{                      /* the specular running along the top rim */
+  content:''; position:absolute; inset:0 22% auto; height:1px; z-index:-1;
+  background:linear-gradient(to right, transparent, rgba(233,244,255,.5), transparent);
+  opacity:.55; transition:opacity .5s var(--ease);
+}
+/* An inline svg with only a viewBox has no intrinsic size: in a flex row it
+   either blows up to 300×150 or collapses to nothing, depending on how much
+   room the label leaves. Give it both dimensions and take it out of the
+   shrink calculation. */
+.hcta svg{ flex:0 0 auto; display:block; width:17px; height:17px;
+           color:rgba(233,242,252,.82); transition:color .5s var(--ease); }
+.hcta--tube svg{ width:20px; height:20px; }
+.hcta:hover svg{ color:#fff; }
 html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0; text-transform:none; }
-.hcta:hover{ border-color:rgba(180,215,255,.5); background:rgba(140,170,220,.13); }
-.hcta--main{ border-color:rgba(227,27,35,.55); background:rgba(227,27,35,.12); }
-.hcta--main:hover{ border-color:rgba(255,120,110,.8); background:rgba(227,27,35,.22); box-shadow:0 0 40px -10px rgba(227,27,35,.7); }
+.hcta:hover{
+  transform:translateY(-1px);
+  border-color:rgba(196,222,255,.42);
+  background:linear-gradient(180deg, rgba(200,222,250,.16), rgba(150,176,210,.06));
+  box-shadow:inset 0 1px 0 rgba(233,244,255,.26), 0 16px 34px -20px rgba(0,0,0,.95);
+}
+.hcta:hover::before{ opacity:1; }
+.hcta--main{
+  border-color:rgba(227,27,35,.42);
+  background:linear-gradient(180deg, rgba(227,27,35,.20), rgba(150,18,24,.07));
+  box-shadow:inset 0 1px 0 rgba(255,190,186,.20), 0 10px 26px -18px rgba(0,0,0,.9);
+}
+.hcta--main::before{ background:linear-gradient(to right, transparent, rgba(255,196,190,.62), transparent); }
+.hcta--main:hover{
+  border-color:rgba(255,116,106,.62);
+  background:linear-gradient(180deg, rgba(227,27,35,.30), rgba(150,18,24,.11));
+  box-shadow:inset 0 1px 0 rgba(255,205,200,.30), 0 18px 40px -22px rgba(227,27,35,.65);
+}
+.hcta:active{ transform:translateY(0); }
 .hcta:focus-visible{ outline:1px solid var(--ion); outline-offset:3px; }
+@media (prefers-reduced-motion:reduce){ .hcta, .hcta:hover{ transform:none; } }
 
 .hairline{
   margin-top:clamp(16px,2.8vh,30px);
@@ -201,6 +251,8 @@ html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0
   animation:cueFall 3.4s ease-in-out infinite;
 }
 @keyframes cueFall{ 0%,100%{ opacity:.15; transform:scaleY(.4); } 50%{ opacity:1; transform:scaleY(1); } }
+/* on a short screen the cue is the first thing to go — the buttons are not */
+@media (max-height:700px){ .cue{ display:none; } }
 
 /* ---------- navigation portals ---------- */
 .portals{
@@ -1320,8 +1372,12 @@ function buildFlow(scene){
     material: mat,
     layout(){
       const vp = Stage.viewport(0), portrait = innerWidth < 900;
+      const mk = NAVIDIX.find('mark');
       pts.scale.set(vp.w / 1500, 1, 1);
-      u.uHole.value   = portrait ? vp.h * 0.20 : vp.h * 0.26;
+      /* clear the whole instrument, not just the plaque — particles crossing
+         the leaves is the one thing that makes the rig look pasted on */
+      const rig = mk ? (mk.reach || mk.H*0.5) * (mk.scale || 1) : 0;
+      u.uHole.value   = Math.max(rig * 1.16, portrait ? vp.h*0.20 : vp.h*0.26);
       u.uRadius.value = portrait ? 170 : 250;
     },
     update(t){
@@ -1434,9 +1490,9 @@ function buildMark(scene){
   group.add(key, rim);
 
   /* legibility: a soft black well behind the mark so it never fights the stars */
-  const well = radialSprite(0x000000, 700, 0, THREE.NormalBlending);
+  const well = radialSprite(0x000000, 380, 0, THREE.NormalBlending);
   well.position.z = -60; well.renderOrder = -2; group.add(well);
-  const bloom      = radialSprite(config.color.glow, 760, 0); bloom.position.z=-30; bloom.renderOrder=-1; group.add(bloom);
+  const bloom      = radialSprite(config.color.glow, 560, 0); bloom.position.z=-30; bloom.renderOrder=-1; group.add(bloom);
   const bloomInner = radialSprite(config.color.ember, 270, 0); bloomInner.position.z=-14; bloomInner.renderOrder=-1; group.add(bloomInner);
 
   /* every eleven seconds the mark sends one ring outward — the only
@@ -1448,21 +1504,43 @@ function buildMark(scene){
   pulse.position.z = -20; pulse.renderOrder = -1; group.add(pulse);
 
   const H = 150;                       // intrinsic height at scale 1
-  const api = { group, core, bloom, bloomInner, well, W:H, H, fades:[] };
+  const api = { group, core, bloom, bloomInner, well, W:H, H, reach:0, squeeze:1, fades:[] };
 
   function fit(){
     const vp = Stage.viewport(group.position.z);
     const portrait = innerWidth < 900;
-    let s = (vp.h * (portrait ? 0.21 : 0.27)) / api.H;
+    /* the plaque gives up some of the frame once the aperture is around it —
+       the composition is the instrument, and the mark is its focus */
+    const framed = api.reach > 0;
+    let s = (vp.h * (portrait ? (framed ? .166 : .21) : (framed ? .215 : .27))) / api.H;
     const maxW = vp.w * (portrait ? 0.68 : 0.30);
     if (api.W * s > maxW) s = maxW / api.W;
+    if (framed) s = Math.min(s, (vp.w * 0.42) / api.reach, (vp.h * 0.250) / api.reach);
+    s *= api.squeeze || 1;
     group.scale.setScalar(s);
-    api.baseY = vp.h * 0.215;
+    api.baseY = vp.h * (framed ? 0.185 : 0.215);
     group.position.y = api.baseY;
 
-    /* hand the mark's screen-space bottom edge to the layout */
-    const bottom = new THREE.Vector3(0, api.baseY - (api.H*s)/2, group.position.z).project(Stage.camera);
-    const px = (1 - (bottom.y*0.5 + 0.5)) * innerHeight;
+    /* Hand the assembly's screen-space bottom edge to the layout. The rig is
+       a circle, so the space either side of its lowest point is empty and the
+       wordmark can tuck up into it — measuring to the full radius would leave
+       a hole and push the buttons off a laptop screen. */
+    const reach = framed ? api.reach * 0.78 : api.H * 0.5;
+    const bottomPx = sc => {
+      const v = new THREE.Vector3(0, api.baseY - reach*sc, group.position.z).project(Stage.camera);
+      return (1 - (v.y*0.5 + 0.5)) * innerHeight;
+    };
+
+    /* The copy below needs a roughly fixed number of pixels whatever the
+       screen. On a short laptop the rig has to give way to it — a hero the
+       user cannot press a button in is not a hero. */
+    const budget = innerHeight - (portrait ? 338 : 330);
+    let px = bottomPx(s);
+    if (budget > 120 && px > budget){
+      s *= Math.max(0.5, budget / px);
+      group.scale.setScalar(s);
+      px = bottomPx(s);
+    }
     document.documentElement.style.setProperty('--logo-bottom', Math.max(0, px) + 'px');
     api.scale = s;
   }
@@ -1533,8 +1611,8 @@ function buildMark(scene){
 
       /* the key light travels a wide arc so the metal edge keeps catching
          a highlight — that sweep is what now reads as three-dimensional */
-      key.position.x = Math.cos(t*0.22) * 300;
-      key.position.y = 120 + Math.sin(t*0.15) * 90;
+      key.position.x = Math.cos(t*0.22) * 240 + state.pointer.x * 260;
+      key.position.y = 120 + Math.sin(t*0.15) * 70 - state.pointer.y * 190;
       key.position.z = 200 + Math.sin(t*0.22) * 160;
 
       bloom.material.opacity = (api.bloomBase||0) * (0.86 + 0.14*Math.sin(t*0.6));
@@ -1549,6 +1627,241 @@ function buildMark(scene){
     }
   }));
   return api;
+}
+
+/* =====================================================================
+   APERTURE — the instrument the mark sits at the focus of.
+
+   A camera iris is the one piece of precision engineering this studio
+   actually lives inside, so the hero is built as one: an outer armature,
+   a ring of machined leaves, an engraved index collar, and a faint lattice
+   holding it in space. Everything is concentric on the mark and parented to
+   it, which means it inherits the mark's fit, float and pointer parallax
+   for free and can never drift out of register with it.
+
+   Four instanced or merged draws for the whole assembly, and a small
+   procedural environment does the reflections rather than a light rig.
+   ===================================================================== */
+
+/* A studio in a 512×256 equirect: one broad key over the left shoulder, a
+   cool fill opposite, one ember kiss low and right, and a dark floor. Metal
+   reflects the room it is in, so building the room is cheaper and far more
+   convincing than adding lights until it looks lit. */
+function studioEnvironment(renderer){
+  const c = document.createElement('canvas'); c.width = 512; c.height = 256;
+  const g = c.getContext('2d');
+
+  const sky = g.createLinearGradient(0, 0, 0, 256);
+  sky.addColorStop(0,   '#0d1826');
+  sky.addColorStop(.46, '#070c14');
+  sky.addColorStop(.54, '#04060a');
+  sky.addColorStop(1,   '#010203');
+  g.fillStyle = sky; g.fillRect(0, 0, 512, 256);
+
+  const blob = (x, y, rx, ry, rgb, a) => {
+    const grd = g.createRadialGradient(x, y, 0, x, y, Math.max(rx, ry));
+    grd.addColorStop(0, `rgba(${rgb},${a})`);
+    grd.addColorStop(.55, `rgba(${rgb},${a * .28})`);
+    grd.addColorStop(1, `rgba(${rgb},0)`);
+    g.save(); g.translate(x, y); g.scale(1, ry / Math.max(rx, ry)); g.translate(-x, -y);
+    g.fillStyle = grd; g.fillRect(0, 0, 512, 256); g.restore();
+  };
+  blob(120,  52, 118,  58, '236,246,255', 1.00);   // key, tight and hot
+  blob(352,  70, 126,  58, '132,178,238', 0.30);   // cool fill, opposite
+  blob(298, 178, 140,  56, '227,27,35',   0.34);   // ember kiss
+  blob( 56, 168, 112,  48, '110,150,200', 0.13);   // low wrap
+  blob(470, 120, 104,  64, '150,186,230', 0.12);   // seam wrap, so the ring
+  blob(  6, 120, 104,  64, '150,186,230', 0.12);   // never turns to nothing
+  blob(180, 212, 150,  42, '146,176,214', 0.14);   // floor bounce
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.mapping = THREE.EquirectangularReflectionMapping;
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  pmrem.compileEquirectangularShader();
+  const env = pmrem.fromEquirectangular(tex).texture;
+  tex.dispose(); pmrem.dispose();
+  return env;
+}
+
+function buildAperture(mark){
+  const { config, state } = NAVIDIX;
+  const lite = state.lite;
+  const rig  = new THREE.Group();
+  mark.group.add(rig);                        // inherits fit, float and parallax
+
+  const env = studioEnvironment(Stage.renderer);
+  Stage.scene.environment = env;              // the mark's own metal gains from it too
+
+  const R_COLLAR = 118, R_LEAF = 176, R_ARM = 232, REACH = 252;
+  const LEAVES   = lite ? 22 : 24;
+  const TICKS    = lite ? 40 : 80;
+  const parts    = [];
+  const track    = (obj, o) => { parts.push({ m:obj.material, o }); return obj; };
+
+  const steel = (color, metalness, roughness, ei) => new THREE.MeshStandardMaterial({
+    color, metalness, roughness,
+    emissive: new THREE.Color(0x101a28), emissiveIntensity: ei || 0,
+    envMapIntensity: 1.6, transparent: true, opacity: 0
+  });
+
+  /* ---- armature: a rail pair, the way a real barrel is machined ---- */
+  const armGroup = new THREE.Group(); rig.add(armGroup);
+  const armMat = steel(0x8e9baa, 1.0, 0.18);
+  [R_ARM, R_ARM + 8].forEach((r, i) => {
+    const m = new THREE.Mesh(new THREE.TorusGeometry(r, i ? 0.9 : 1.7, 8, lite ? 96 : 180), armMat);
+    armGroup.add(m);
+  });
+  parts.push({ m:armMat, o:0.9 });
+
+  /* ---- iris leaves: one geometry, one draw, heavy overlap ---- */
+  const leaf = new THREE.Shape();
+  leaf.moveTo(-5.0, 0);
+  leaf.quadraticCurveTo(-7.4, 46, -2.6, 94);
+  leaf.lineTo(2.4, 96);
+  leaf.quadraticCurveTo(6.8, 46, 4.4, 0);
+  leaf.closePath();
+  const leafGeo = new THREE.ExtrudeGeometry(leaf, {
+    depth: 3.4, bevelEnabled: !lite, bevelSize: .6, bevelThickness: .6,
+    bevelSegments: 1, curveSegments: lite ? 4 : 10
+  });
+  leafGeo.translate(0, -48, -1.7);            // pivot at the leaf's middle
+
+  const leafMat = steel(0x77828f, 1.0, 0.17);
+  const leaves  = new THREE.InstancedMesh(leafGeo, leafMat, LEAVES);
+  const dummy   = new THREE.Object3D();
+  for (let i = 0; i < LEAVES; i++){
+    const a = (i / LEAVES) * Math.PI * 2;
+    dummy.position.set(Math.cos(a) * R_LEAF, Math.sin(a) * R_LEAF, (i % 2) * 2.2 - 1.1);
+    /* set well across the radius so the leaves lap over one another and the
+       ring closes — a blade pointing straight out reads as a splinter */
+    /* Cant that varies smoothly around the ring rather than alternating.
+       Coplanar leaves all reflect the same part of the room, which is why an
+       evenly built iris comes out looking like a printed diagram; sweeping
+       the cant through a couple of cycles is what makes the highlight travel
+       around the ring instead. */
+    dummy.rotation.set(Math.sin(a*2 + .6) * 0.26,
+                       Math.cos(a*2 + .6) * 0.20,
+                       a + Math.PI / 2 - 1.02);
+    dummy.updateMatrix();
+    leaves.setMatrixAt(i, dummy.matrix);
+  }
+  parts.push({ m:leafMat, o:0.95 }); rig.add(leaves);
+
+  /* ---- index collar: an engraved scale, every fifth mark long ---- */
+  const tickMat = steel(0xdce8f7, .8, .26, .5);
+  const ticks   = new THREE.InstancedMesh(new THREE.BoxGeometry(1.0, 1, 1.8), tickMat, TICKS);
+  for (let i = 0; i < TICKS; i++){
+    const a = (i / TICKS) * Math.PI * 2, long = i % 5 === 0;
+    dummy.position.set(Math.cos(a) * R_COLLAR, Math.sin(a) * R_COLLAR, 0);
+    dummy.rotation.set(0, 0, a);
+    dummy.scale.set(1, long ? 8.5 : 3.6, 1);
+    dummy.updateMatrix();
+    ticks.setMatrixAt(i, dummy.matrix);
+  }
+  dummy.scale.set(1, 1, 1);
+  parts.push({ m:tickMat, o:0.9 }); rig.add(ticks);
+
+  const collarMat = steel(0x69747f, 1.0, 0.3);
+  const collar = new THREE.Mesh(
+    new THREE.TorusGeometry(R_COLLAR - 9, 0.75, 6, lite ? 80 : 140), collarMat);
+  parts.push({ m:collarMat, o:0.75 }); rig.add(collar);
+
+  /* ---- engraving: broken arcs and mounting lugs, kept in the annulus.
+     Nothing crosses the centre — a line over the mark reads as a scratch. ---- */
+  if (!lite){
+    const pos = [], col = [];
+    const cIon = new THREE.Color(config.color.ion), cEm = new THREE.Color(config.color.ember);
+    const seg = (r, a0, a1, t, steps) => {
+      let prev = null;
+      for (let k = 0; k <= steps; k++){
+        const a = a0 + (a1 - a0) * (k / steps);
+        const v = new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0);
+        if (prev){
+          pos.push(prev.x, prev.y, prev.z, v.x, v.y, v.z);
+          const c = cIon.clone().lerp(cEm, t);
+          for (let n = 0; n < 2; n++) col.push(c.r, c.g, c.b);
+        }
+        prev = v;
+      }
+    };
+    /* three broken arcs, each interrupted like a scale on a lens barrel */
+    [[R_COLLAR + 22, .10], [R_ARM - 26, .55], [R_ARM - 12, .08]].forEach(([r, tint], ring) => {
+      const cuts = 5 + ring * 2;
+      for (let i = 0; i < cuts; i++){
+        const a0 = (i / cuts) * Math.PI * 2 + ring * .3;
+        seg(r, a0, a0 + (Math.PI * 2 / cuts) * .62, tint, 9);
+      }
+    });
+    /* mounting lugs, outside the rail pair */
+    for (let i = 0; i < 12; i++){
+      const a = (i / 12) * Math.PI * 2 + .13;
+      const c = cIon.clone().lerp(cEm, i % 4 === 0 ? .8 : .06);
+      pos.push(Math.cos(a) * (R_ARM + 9), Math.sin(a) * (R_ARM + 9), 0,
+               Math.cos(a) * REACH,       Math.sin(a) * REACH,       0);
+      for (let n = 0; n < 2; n++) col.push(c.r, c.g, c.b);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('color',    new THREE.Float32BufferAttribute(col, 3));
+    const lat = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({
+      vertexColors: true, transparent: true, opacity: 0,
+      blending: THREE.AdditiveBlending, depthWrite: false }));
+    parts.push({ m:lat.material, o:0.55 }); rig.add(lat);
+  }
+
+  /* the assembly, not the plaque, is what the page has to make room for */
+  mark.reach = REACH;
+  mark.fit();
+
+  return NAVIDIX.register('aperture', {
+    parts,
+    update(t){
+      if (state.reduced) return;
+      armGroup.rotation.z =  t * 0.026;
+      leaves.rotation.z   = -t * 0.048;
+      ticks.rotation.z    =  t * 0.098;
+      collar.rotation.z   = -t * 0.098;
+      rig.rotation.x    = Math.sin(t * 0.13) * 0.05;
+      rig.rotation.y    = Math.sin(t * 0.09 + 1.1) * 0.07;
+    },
+    dispose(){
+      rig.traverse(o => { o.geometry && o.geometry.dispose(); o.material && o.material.dispose(); });
+      env.dispose(); Stage.scene.environment = null;
+      mark.group.remove(rig);
+    }
+  });
+}
+
+/* =====================================================================
+   BALANCE — the rig gives way to the copy, measured rather than guessed.
+
+   How tall the text block runs depends on the language, the wrap and the
+   font that actually loaded, so no constant can predict it. This reads the
+   real geometry after layout and shrinks the assembly until the last call
+   to action is on screen. It runs on resize, not per frame.
+   ===================================================================== */
+function buildBalance(mark){
+  const MARGIN = 16, MIN = 0.45;
+  function run(){
+    const cta = document.querySelector('.cta-row');
+    if (!cta) return;
+    mark.squeeze = 1; mark.fit();
+    for (let pass = 0; pass < 6; pass++){
+      const over = cta.getBoundingClientRect().bottom - (innerHeight - MARGIN);
+      if (over <= 0) break;
+      const lb = parseFloat(getComputedStyle(document.documentElement)
+                   .getPropertyValue('--logo-bottom')) || 0;
+      if (lb <= 60 || mark.squeeze <= MIN) break;
+      mark.squeeze = Math.max(MIN, mark.squeeze * Math.max(.45, (lb - over) / lb));
+      mark.fit();
+    }
+  }
+  /* the Persian face changes how the copy wraps, so measuring before it
+     lands gives an answer that is wrong by a line */
+  if (document.fonts && document.fonts.ready)
+    document.fonts.ready.then(() => requestAnimationFrame(run));
+
+  return NAVIDIX.register('balance', { layout: run, run });
 }
 
 /* =====================================================================
@@ -1568,6 +1881,8 @@ const Lang = (() => {
     const copy = config.copy[l];
     document.getElementById('tagline').textContent = copy.tagline;
     document.querySelectorAll('[data-copy2]').forEach(el => { el.textContent = copy[el.dataset.copy2]; });
+    const bal = NAVIDIX.find('balance');
+    if (bal) requestAnimationFrame(bal.run);      // the copy just changed height
 
     const B = config.band[l];
     document.querySelectorAll('[data-copy]').forEach(el => { el.textContent = B[el.dataset.copy]; });
@@ -2061,6 +2376,8 @@ const Views = (() => {
   buildDust(scene);
   buildStreaks(scene);
   const mark = buildMark(scene);
+  buildAperture(mark);
+  const balance = buildBalance(mark);
   const panels = buildDeck();
   buildBands();
   Lang.init(panels);
@@ -2074,6 +2391,7 @@ const Views = (() => {
     state.pointer.ty = (e.clientY/innerHeight - .5)*2;
   }, { passive:true });
 
+  let played = false;
   let frame = 0;
   function tick(){
     requestAnimationFrame(tick);
@@ -2092,16 +2410,22 @@ const Views = (() => {
       const c = Stage.camera;
       c.position.x += (state.pointer.x*40 - c.position.x)*.02;
       c.position.y += (-state.pointer.y*24 - c.position.y)*.02;
+      /* scrolling walks the camera back out of the instrument rather than
+         simply sliding the page over a still picture */
+      if (played){
+        const depth = Math.min(1, (scrollY || 0) / Math.max(320, innerHeight * 0.9));
+        const want  = config.camZ + Math.pow(depth, 1.35) * 300;
+        c.position.z += (want - c.position.z) * .07;
+      }
       c.lookAt(0, mark.baseY*0.35 || 0, 0);
     }
     Stage.render();
   }
   tick();
 
-  let played = false;
   function play(){
     if (played) return; played = true;
-    mark.fit();
+    balance.run();
     const stars = NAVIDIX.find('starfield'), neb = NAVIDIX.find('nebulae'),
           dust  = NAVIDIX.find('dust'),      flow = NAVIDIX.find('flow');
     flow.layout && flow.layout();
@@ -2116,9 +2440,14 @@ const Views = (() => {
     if (!state.reduced) tl.to(Stage.camera.position, { z:config.camZ, duration:3.4, ease:'power3.out' }, 0);
     neb.layers.forEach((l,i)=> tl.to(l.mat.uniforms.uOpacity, { value:l.target, duration:3.2, ease:'power2.out' }, .25+i*.22));
     tl.to(dust.material.uniforms.uOpacity, { value:1, duration:2.4, ease:'power2.out' }, .9);
-    tl.to(flow.material.uniforms.uOpacity, { value:1, duration:3.0, ease:'power2.out' }, .55);
+    tl.to(flow.material.uniforms.uOpacity, { value:.62, duration:3.0, ease:'power2.out' }, .55);
 
-    tl.to(mark.well.material,  { opacity:.80, duration:1.8, ease:'power2.out' }, 1.0);
+    const ap = NAVIDIX.find('aperture');
+    ap.parts.forEach(({m,o}, i) =>
+      tl.to(m, { opacity:o, duration:2.4, ease:'power2.out' }, .8 + i*0.12));
+    tl.fromTo(mark.group.rotation, { y:-0.5 }, { y:0, duration:3.6, ease:'power3.out' }, .8);
+
+    tl.to(mark.well.material,  { opacity:.52, duration:1.8, ease:'power2.out' }, 1.0);
     mark.fades.forEach(({m,o}) => tl.to(m, { opacity:o, duration:1.6, ease:'power2.out' }, 1.15));
     tl.fromTo(mark.group.scale,
       { x:mark.scale*.7, y:mark.scale*.7, z:mark.scale*.7 },
