@@ -16,7 +16,7 @@ plate = (mark-making, lighting, palette) and drives the generated artwork.
 # are real output of each style's own prompt. Only the caption under the image
 # depends on it, and that caption is a claim about what you are looking at —
 # so it moves when the pictures do. plates-import.py flips it.
-PLATES_ARE_SAMPLES = False
+PLATES_ARE_SAMPLES = True
 
 CATS = [
     ('real',    'واقع‌گرایی و عکاسی',  'عکاسی و رئالیسم — از پرتره‌ی استودیویی تا قاب سینمایی.'),
