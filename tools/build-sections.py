@@ -16,8 +16,15 @@ SRC  = '/home/user/Navidix/brand-content.html'
 BASE = 'https://navidixstudio.com/'
 OUT  = '/home/user/Navidix/'
 
+# The shell's head is sliced for the icons and the font links. Slicing it by
+# line number breaks silently every time that head grows — most recently it
+# started pulling in the shell's own twitter:image, so thirty-one pages ended
+# up advertising the wrong cover. Bounded by what is actually wanted instead.
 src = open(SRC, encoding='utf-8').read().split('\n')
-head_assets = '\n'.join(src[25:30])
+_a = next(i for i, l in enumerate(src) if l.startswith('<link rel="icon"'))
+_b = next(i for i, l in enumerate(src)
+         if l.startswith('<link href="https://fonts.googleapis.com/css2'))
+head_assets = '\n'.join(src[_a:_b + 1])
 _i = src.index('<style>'); _j = src.index('</style>')
 style = '\n'.join(src[_i:_j])
 

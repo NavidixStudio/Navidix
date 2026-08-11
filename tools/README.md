@@ -40,3 +40,23 @@ node    tools/style-plates.mjs     # prompts/<id>.jpg   (npm i playwright)
 تصویر بالای هر سبک، نمونه‌ی خروجی پرامپت نیست و نباید وانمود کند که هست: یک
 لوح انتزاعی است که همان پالت، همان جهت نور و همان جنس قلم را نشان می‌دهد.
 با کد ساخته می‌شود، پس نه حق‌کپی دارد و نه به شبکه وابسته است.
+
+## ساختن دوباره‌ی همه‌چیز
+
+```bash
+python3 tools/build-library.py            # prompts.html + style/*.html
+python3 tools/build-sections.py           # documentaries / collections / gallery / channels
+python3 tools/build-lesson-start.py       # قسمت ۱
+python3 tools/build-lesson-prompting.py   # قسمت ۲
+python3 tools/build-lesson-image-sound.py # قسمت ۳
+python3 tools/build-lesson-systems.py     # قسمت ۴
+python3 tools/normalise-share.py          # تگ‌های اشتراک‌گذاری را یکدست می‌کند
+```
+
+`normalise-share.py` را آخر از همه اجرا کن. کاری که می‌کند این است: هر صفحه‌ای
+که تگ‌های کاورش ناقص باشد، از روی همان چیزی که خودش دارد کاملش می‌کند. دو بار
+اجرا کردنش هیچ فرقی نمی‌کند، پس بی‌خطر است.
+
+همه‌ی سازنده‌ها پوسته را با **نشانه** برش می‌زنند نه با شماره‌ی خط. اگر روزی
+دوباره وسوسه شدی `src[25:30]` بنویسی: همین کار باعث شد سی‌ویک صفحه کاور اشتباه
+تبلیغ کنند، چون سرِ پوسته بلندتر شد و برش، تگ‌های خودِ پوسته را برداشت.

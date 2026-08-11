@@ -13,7 +13,14 @@ from styles import CATS, STYLES
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = 'https://navidixstudio.com/'
 src  = open(f'{REPO}/brand-content.html', encoding='utf-8').read().split('\n')
-HEAD_ASSETS = '\n'.join(src[25:30])
+# Bounded by what is wanted, not by line number: slicing the shell's head by
+# number breaks silently whenever that head grows, and it did — it began
+# pulling in the shell's own twitter:image, so every page here advertised
+# the wrong cover.
+_a = next(i for i, l in enumerate(src) if l.startswith('<link rel="icon"'))
+_b = next(i for i, l in enumerate(src)
+         if l.startswith('<link href="https://fonts.googleapis.com/css2'))
+HEAD_ASSETS = '\n'.join(src[_a:_b + 1])
 _i = src.index('<style>'); _j = src.index('</style>')
 SHELL_CSS = '\n'.join(src[_i:_j])   # by marker, not by line number
 
@@ -49,8 +56,12 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="{title}" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{title}" />
+<meta name="twitter:description" content="{desc}" />
 <meta name="twitter:image" content="{img}" />
+<meta name="twitter:image:alt" content="{title}" />
 {HEAD_ASSETS}
 <script src="{depth}nvx-ui.js" defer></script>
 <script type="application/ld+json">

@@ -6,8 +6,15 @@ SRC  = '/home/user/Navidix/brand-content.html'
 OUT  = '/home/user/Navidix/ai-start.html'
 BASE = 'https://navidixstudio.com/'
 
-src   = open(SRC, encoding='utf-8').read().split('\n')
-head_assets = '\n'.join(src[25:30])
+# The shell's head is sliced for the icons and the font links. Slicing it by
+# line number breaks silently every time that head grows — most recently it
+# started pulling in the shell's own twitter:image, so thirty-one pages ended
+# up advertising the wrong cover. Bounded by what is actually wanted instead.
+src = open(SRC, encoding='utf-8').read().split('\n')
+_a = next(i for i, l in enumerate(src) if l.startswith('<link rel="icon"'))
+_b = next(i for i, l in enumerate(src)
+         if l.startswith('<link href="https://fonts.googleapis.com/css2'))
+head_assets = '\n'.join(src[_a:_b + 1])
 _i = src.index('<style>'); _j = src.index('</style>')
 style = '\n'.join(src[_i:_j])   # by marker, not by line number
 
@@ -45,10 +52,16 @@ head = f'''<!DOCTYPE html>
 <meta property="og:description" content="{DESC}" />
 <meta property="og:url" content="{URL}" />
 <meta property="og:image" content="{IMG}" />
+<meta property="og:image:secure_url" content="{IMG}" />
+<meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="از کجا شروع کنم؟ راهنمای صفرِ صفر هوش مصنوعی" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="از کجا شروع کنم؟ راهنمای صفرِ صفر هوش مصنوعی" />
+<meta name="twitter:description" content="{DESC}" />
 <meta name="twitter:image" content="{IMG}" />
+<meta name="twitter:image:alt" content="از کجا شروع کنم؟ راهنمای صفرِ صفر هوش مصنوعی" />
 {head_assets}
 <script src="nvx-ui.js" defer></script>
 <script type="application/ld+json">
