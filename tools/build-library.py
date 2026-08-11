@@ -501,15 +501,50 @@ INDEX_JS = r'''
     tally.textContent=(!q&&cat==='all') ? items.length+' سبک در کتابخانه'
       : (hits===0 ? 'نتیجه‌ای پیدا نشد' : hits+' نتیجه');
   }
-  input.addEventListener('input', apply);
+  /* ---- put the reader back on the results ----
+     Picking a category cuts the list from twenty-seven cards to four, and the
+     document loses most of its height in one frame. The browser answers that
+     by clamping the scroll position to the new maximum, which drops the reader
+     *past the end* of the very results they asked for — measured at 161px
+     above the viewport on a desktop and as much as 1560px on a phone. The
+     filter had worked perfectly; it just left you staring at the footer, which
+     is indistinguishable from a button that does nothing.
+
+     So after a deliberate pick, the first surviving group is brought to rest
+     just under the bar. The measurement is taken from that group, never from
+     the bar: the bar is sticky, and a stuck element reports where it is stuck
+     rather than where it lives, so anything derived from it reads back as
+     "already in view" precisely when the reader has scrolled away from it. */
+  function reveal(){
+    /* after the layout the newly hidden cards just caused, not before it */
+    requestAnimationFrame(function(){
+      var target=null, i;
+      for(i=0;i<groups.length;i++){ if(!groups[i].hidden){ target=groups[i]; break; } }
+      if(!target) target=lib.querySelector('.empty2') || lib;
+
+      var r=target.getBoundingClientRect(),
+          barH=bar.getBoundingClientRect().height,
+          rest=barH+14;                    /* where the group should come to sit */
+      if(Math.abs(r.top-rest)<24) return;  /* close enough; do not nudge */
+
+      var top=window.pageYOffset+r.top-rest;
+      if(top<0) top=0;
+      var soft=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+      try{ window.scrollTo({ top:top, behavior:soft?'smooth':'auto' }); }
+      catch(_){ window.scrollTo(0, top); }
+    });
+  }
+
+  input.addEventListener('input', apply);   /* never moves the page mid-keystroke */
   input.addEventListener('keydown', function(e){ if(e.key==='Escape'){ input.value=''; apply(); } });
   clear.addEventListener('click', function(){ input.value=''; input.focus(); apply(); });
   chips.forEach(function(c){ c.addEventListener('click', function(){
-    cat=c.dataset.cat; chips.forEach(function(o){ o.setAttribute('aria-pressed', String(o===c)); }); apply(); }); });
+    cat=c.dataset.cat; chips.forEach(function(o){ o.setAttribute('aria-pressed', String(o===c)); });
+    apply(); reveal(); }); });
   document.getElementById('reset2').addEventListener('click', function(){
     input.value=''; cat='all';
     chips.forEach(function(o){ o.setAttribute('aria-pressed', String(o.dataset.cat==='all')); });
-    apply(); input.focus(); });
+    apply(); reveal(); input.focus(); });
   document.addEventListener('keydown', function(e){
     if(e.key==='/' && document.activeElement!==input){ e.preventDefault(); input.focus(); } });
   apply();
