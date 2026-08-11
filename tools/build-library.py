@@ -167,7 +167,9 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
 .pc{ display:flex; flex-direction:column; border:1px solid #262A31; border-radius:5px; background:#0d1015;
   overflow:hidden; text-decoration:none; color:inherit;
   transition:border-color .25s ease, transform .25s ease; }
-.pc:hover{ border-color:rgba(229,32,42,.45); transform:translateY(-2px); }
+.pc{ box-shadow:inset 0 1px 0 rgba(196,216,244,.055), 0 18px 40px -30px rgba(0,0,0,.9); }
+.pc:hover{ border-color:rgba(229,32,42,.45); transform:translateY(-2px);
+  box-shadow:inset 0 1px 0 rgba(220,234,255,.1), 0 26px 56px -32px rgba(120,16,22,.55); }
 .pc:focus-visible{ outline:1px solid #5BD6C0; outline-offset:3px; }
 .pc[hidden]{ display:none; }
 .pc__sw{ position:relative; aspect-ratio:16/10; }
@@ -180,8 +182,33 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
 .pc__en{ display:block; font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11px;
   letter-spacing:.05em; color:#7C848D; margin-top:3px; }
 .pc__hint{ margin:0; font-size:12.5px; line-height:1.9; color:#8C939B; }
+/* ---- the affordance ----
+   This line is the only thing on a card that says the card opens. It was
+   static text with the arrow baked into the string, which reads as a caption
+   rather than a control. Now it answers the cursor: the label lifts to full
+   strength, a rule draws itself underneath from the trailing edge, and the
+   arrow travels — leftward, because the page is Persian and left is forward
+   here. Two transforms and an opacity; nothing measured, nothing reflowed. */
 .pc__go{ margin-top:auto; padding-top:9px; font-size:12px; color:#E5202A; display:flex;
-  align-items:center; gap:6px; }
+  align-items:center; gap:7px; opacity:.78;
+  transition:opacity .45s cubic-bezier(.16,1,.3,1); }
+.pc__go > span{ position:relative; }
+.pc__go > span::after{
+  content:''; position:absolute; inset-inline:0; bottom:-3px; height:1px;
+  background:currentColor; opacity:.55;
+  transform:scaleX(0); transform-origin:right center;
+  transition:transform .55s cubic-bezier(.16,1,.3,1); }
+.pc__go i{ font-style:normal; display:block; will-change:transform;
+  transition:transform .45s cubic-bezier(.16,1,.3,1); }
+.pc:hover .pc__go, .pc:focus-visible .pc__go{ opacity:1; }
+.pc:hover .pc__go > span::after, .pc:focus-visible .pc__go > span::after{ transform:scaleX(1); }
+.pc:hover .pc__go i, .pc:focus-visible .pc__go i{ transform:translateX(-5px); }
+/* a reader who asked for stillness gets the state change without the travel */
+@media (prefers-reduced-motion:reduce){
+  .pc__go i{ transition:none; }
+  .pc:hover .pc__go i, .pc:focus-visible .pc__go i{ transform:none; }
+  .pc__go > span::after{ transition:none; }
+}
 
 .empty2{ display:none; border:1px dashed #262A31; border-radius:4px; padding:32px 22px;
   text-align:center; color:#8C939B; font-size:14px; line-height:2; }
@@ -411,7 +438,7 @@ for i, (cid, cname, cdesc) in enumerate(CATS, 1):
           <span class="pc__body">
             <h3 class="pc__title">{s['fa']}<span class="pc__en">{s['en']}</span></h3>
             <p class="pc__hint">{s['dna']['light']}</p>
-            <span class="pc__go">باز کردن سبک ←</span>
+            <span class="pc__go"><span>باز کردن سبک</span><i aria-hidden="true">←</i></span>
           </span>
         </a>\n'''
     groups += f'''

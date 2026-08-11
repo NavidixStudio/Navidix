@@ -47,8 +47,29 @@
 <style>
 
 
-html{ background:#08090B; }
+/* The ground lifts a shade off absolute black, so the ambient light below has
+   something to sit on rather than a hole to fall into. */
+html{ background:#0A0C10; }
 body{ margin:0; }
+
+/* ---- ambient light ----
+   These pages were a flat #08090B from edge to edge: every surface sat at the
+   same depth, so a card only read as a card because of its 1px border. This
+   puts a room around them. Three pools of light — cool over the shoulder,
+   a second one low and opposite, and the brand ember barely present near the
+   fold — all at single-digit alpha, so nothing here is a colour you can name.
+   It only separates the layers.
+
+   One fixed painted element, no filter, no animation, no repaint on scroll:
+   the cheapest way to buy depth. It sits behind everything and eats no
+   pointer events. */
+body::before{
+  content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(58% 44% at 18% 0%,   rgba(43,108,255,.085), transparent 72%),
+    radial-gradient(50% 38% at 88% 22%,  rgba(120,170,255,.05),  transparent 70%),
+    radial-gradient(66% 46% at 50% 104%, rgba(227,27,35,.055),  transparent 72%);
+}
 .sitebar{ position:sticky; top:0; z-index:30; background:rgba(8,9,11,.9); border-bottom:1px solid #262A31;
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
 .sitebar .row{ max-width:980px; margin:0 auto; padding:11px 22px; display:flex; align-items:center;
@@ -75,6 +96,22 @@ body{ margin:0; }
   background:#101216; padding:clamp(22px,3vw,32px);
   transition:border-color .35s ease, background .35s ease, transform .35s ease; }
 .cards a:hover{ border-color:rgba(229,32,42,.55); background:#12151a; transform:translateY(-2px); }
+
+/* ---- depth ----
+   A border alone puts a card at the same depth as the page. A hairline of key
+   along the top edge and a shadow underneath give it a near side and a far
+   one, which is what makes it read as sitting *on* the light rather than
+   being cut out of it. Costs one box-shadow per surface and nothing per frame. */
+.cards a, .pager a{
+  box-shadow:
+    inset 0 1px 0 rgba(196,216,244,.055),
+    0 18px 40px -30px rgba(0,0,0,.9);
+}
+.cards a:hover, .pager a:hover{
+  box-shadow:
+    inset 0 1px 0 rgba(220,234,255,.1),
+    0 26px 56px -32px rgba(120,16,22,.55);
+}
 .cards .no{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px; letter-spacing:.2em; color:#E5202A; }
 .cards h2{ font-size:clamp(17px,2.4vw,23px); line-height:1.6; margin:10px 0 10px; font-weight:700; }
 .cards p{ color:#8C939B; font-size:14px; line-height:2; margin:0; }
