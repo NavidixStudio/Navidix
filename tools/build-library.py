@@ -8,7 +8,16 @@ and the sitemap line all follow.
 """
 import json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from styles import CATS, STYLES
+from styles import CATS, STYLES, PLATES_ARE_SAMPLES
+
+# What the picture over a style actually is. The abstract plate has to disclaim
+# being a sample; a real one has to say which subject it was run on, otherwise
+# the reader assumes the style alone produced the framing.
+PLATE_CAP = ('این تصویر خروجی واقعی همین پرامپت است — با سوژه‌ی نمونه اجرا شده؛ '
+             'سوژه را عوض کن، سبک سر جایش می‌ماند.'
+             if PLATES_ARE_SAMPLES else
+             'این لوح نمونه‌ی خروجی پرامپت نیست — از روی پالت، جهت نور و جنس '
+             'قلمِ همین سبک ساخته شده تا زبان بصری‌اش را نشان دهد.')
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = 'https://navidixstudio.com/'
@@ -328,7 +337,7 @@ for s in STYLES:
   <div class="sd__meta"><span>{CATNAME[s['cat']]}</span><span>{s['period']}</span></div>
 
   <div class="sd__stage"><div class="sd__hero"><img src="../prompts/{s['id']}.jpg" alt="لوح بصری سبک {s['fa']}" width="800" height="500" /></div></div>
-  <p class="sd__cap">این لوح نمونه‌ی خروجی پرامپت نیست — از روی پالت، جهت نور و جنس قلمِ همین سبک ساخته شده تا زبان بصری‌اش را نشان دهد.</p>
+  <p class="sd__cap">{PLATE_CAP}</p>
 
   <h2><span class="n">۰۱</span>شناسنامه‌ی سبک</h2>
   <p>هر سبک را می‌شود به چند مؤلفه شکست. فایده‌اش این است که بعد می‌توانی مؤلفه‌ها را <b>جدا جدا</b> با سبک دیگری ترکیب کنی — مثلاً پالت این یکی با نور آن یکی.</p>

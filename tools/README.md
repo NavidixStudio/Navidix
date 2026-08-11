@@ -13,6 +13,7 @@ S(id='cyanotype', cat='tech', fa='سیانوتایپ', en='Cyanotype', period='�
   plate=('wash','flat',['#0B2E4F','#1E5B8C','#E8E4D6']),
   dna=dict(medium='…', brush='…', light='…', palette='…',
            texture='…', comp='…', mood='…'),
+  subject='…',              # سوژه‌ی نمونه، فقط برای ساختن تصویر سبک
   img='…{SUBJECT}…',        # پرامپت تصویر
   vid='…{SUBJECT}…',        # پرامپت ویدیو
   neg='…',                  # پرامپت منفی، مخصوص همین سبک
@@ -29,7 +30,7 @@ S(id='cyanotype', cat='tech', fa='سیانوتایپ', en='Cyanotype', period='�
 
 ```bash
 python3 tools/build-library.py     # prompts.html + style/*.html + tools/styles.json
-node    tools/style-plates.mjs     # prompts/<id>.jpg   (npm i playwright)
+node    tools/style-plates.mjs     # لوح انتزاعی: prompts/<id>.jpg   (npm i playwright)
 ```
 
 بعدش صفحه‌ی تازه را دستی به `sitemap.xml` اضافه کن — همان الگوی
@@ -37,9 +38,38 @@ node    tools/style-plates.mjs     # prompts/<id>.jpg   (npm i playwright)
 
 ## درباره‌ی تصویرها
 
-تصویر بالای هر سبک، نمونه‌ی خروجی پرامپت نیست و نباید وانمود کند که هست: یک
-لوح انتزاعی است که همان پالت، همان جهت نور و همان جنس قلم را نشان می‌دهد.
-با کد ساخته می‌شود، پس نه حق‌کپی دارد و نه به شبکه وابسته است.
+دو جور تصویر ممکن است در `prompts/` باشد، و متن زیر عکس باید بگوید کدام است.
+این را پرچم `PLATES_ARE_SAMPLES` در `styles.py` تعیین می‌کند و
+`build-library.py` از رویش کپشن را انتخاب می‌کند.
+
+**لوح انتزاعی** (`False`، حالت پیش‌فرض قدیمی): با `style-plates.mjs` و فقط با کد
+ساخته می‌شود — همان پالت، همان جهت نور، همان جنس قلم. نه حق‌کپی دارد و نه به
+شبکه وابسته است، ولی نمونه‌ی خروجی پرامپت نیست و نباید وانمود کند هست.
+
+**خروجی واقعی** (`True`): همان `img` خودِ سبک، با `subject` خودش به جای
+`{SUBJECT}`، اجرا شده روی یک مدل تصویر. یعنی عکسِ بالای صفحه دقیقاً همان چیزی
+است که پرامپتِ پایین صفحه می‌سازد. تنها چیزی که اضافه می‌شود یک جمله است، برای
+همه یکسان: «بدون متن و امضا» — چون مدل‌ها دوست دارند روی پوستر امضا بگذارند و
+آن حروفِ بی‌معنی ربطی به سبک ندارد.
+
+```bash
+python3 tools/plate-prompts.py                     # ۲۷ پرامپت آماده
+python3 tools/plate-prompts.py --json              # همان‌ها برای API
+
+# بعد از ساختن تصویرها، یکی از این دو:
+python3 tools/plates-import.py --from-dir ~/Downloads/plates
+python3 tools/plates-import.py --fetch             # از URLهای plates.json
+python3 tools/build-library.py                     # کپشن‌ها را درست می‌کند
+```
+
+`plates.json` می‌گوید هر لوح با کدام مدل و کدام job ساخته شده و فایلش کجاست.
+`plates-import.py` تصویر را از مرکز به نسبت ۸:۵ می‌بُرد، یک‌بار به ۸۰۰×۵۰۰
+می‌رساند و JPEG می‌نویسد؛ اگر حتی یکی از ۲۷ تا کم باشد هیچ پرچمی را جابه‌جا
+نمی‌کند و می‌گوید کدام‌ها نیامدند.
+
+`--fetch` فقط جایی کار می‌کند که دامنه‌ی CDN از فیلتر شبکه رد شود. اگر ۴۰۳
+گرفتی، فایل‌ها را دستی از حساب Higgsfield بگیر، با نام `<id>.png` در یک پوشه
+بریز و `--from-dir` را بزن.
 
 ## ساختن دوباره‌ی همه‌چیز
 
