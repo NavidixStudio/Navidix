@@ -123,6 +123,23 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
    sky only existed in the middle third of the screen. Softened so the field
    survives out to the edges — the frame still falls off, it just no longer
    erases what is behind it. */
+/* ---- ambient light, under the frame ----
+   The vignette below deliberately darkens the corners, and with a sky that is
+   mostly empty out there the result was pure black down both sides of a wide
+   screen — the hero read as a narrow column floating in nothing. This lays
+   light *under* that frame: a cool wash off the top left, a colder one
+   opposite, and the brand ember low and central where the page turns into
+   content. Alphas in the low single digits, so it is felt as depth rather than
+   seen as colour, and the corners still fall off exactly as before.
+
+   Sits below the vignette on purpose. Putting it above would flatten the
+   frame; underneath, the two read as one lit room. */
+.grade--ambient{
+  background:
+    radial-gradient(62% 46% at 12% 4%,   rgba(43,108,255,.13),  transparent 74%),
+    radial-gradient(54% 40% at 92% 16%,  rgba(120,170,255,.075), transparent 72%),
+    radial-gradient(80% 42% at 50% 100%, rgba(227,27,35,.075),  transparent 70%);
+}
 .grade--vignette{
   background:
     radial-gradient(124% 88% at 50% 34%, transparent 46%, rgba(0,0,0,.34) 78%, rgba(0,0,0,.72) 100%),
@@ -791,6 +808,7 @@ picture{ display:contents; }
 <body>
 
 <div id="stage" aria-hidden="true"></div>
+<div class="grade grade--ambient"></div>
 <div class="grade grade--vignette"></div>
 <div class="grade grade--grain"></div>
 
