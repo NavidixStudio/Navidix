@@ -62,7 +62,7 @@
    degraded page — the same page, without the canvas behind it. */
 html.nostage .lang, html.nostage .wordmark, html.nostage .tagline,
 html.nostage .pitch, html.nostage .hcta, html.nostage .cue,
-html.nostage .panel{ opacity:1; animation:nvxIn .7s cubic-bezier(.16,1,.3,1) both; }
+html.nostage .rail, html.nostage .panel{ opacity:1; animation:nvxIn .7s cubic-bezier(.16,1,.3,1) both; }
 html.nostage .panel{ animation-delay:.06s; }
 @keyframes nvxIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
 html.nostage #curtain{ display:none; }
@@ -521,6 +521,150 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
 }
 .panel:hover::before{ opacity:1; }
 
+/* =====================================================================
+   THE HERO, ON A WIDE SCREEN
+
+   What was wrong was not the lighting. Measured at 1440: the wordmark, the
+   tagline, the rule, the pitch and the buttons all sat at centre-offset +0 —
+   five elements on one axis — and the widest of them was 456px, so 68% of the
+   screen was margin. The mark did not compose with the type either; it was
+   projected to screen space and its bottom edge became the type's top padding,
+   which means the two queued rather than related. A column of centred text in
+   an empty field reads as simple because it is simple, and no amount of glow
+   argues with that.
+
+   So: below 1100px nothing here applies and the stacked hero stays exactly as
+   it was — a single centred column is right on a phone. Above it the frame
+   splits. The mark moves off-axis into its own half (in three.js, not CSS),
+   the type takes the opposite half and stops being centred, and the margin
+   picks up a rule and the studio's three disciplines. Two masses in tension
+   instead of one stack in a void.
+   ===================================================================== */
+@media (min-width:1100px){
+  .landing{ position:relative; }
+  .hero{
+    /* the mark no longer pushes the type down the page, so the padding that
+       cleared it goes — that single line is what made this a queue */
+    padding-top:0; padding-bottom:0;
+    display:grid; align-items:center;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    max-width:1500px; width:100%; margin:0 auto;
+    padding-inline:clamp(48px,6vw,110px);
+  }
+  /* the type takes the reading-side half; the mark has the other, and is put
+     there by the scene itself */
+  .hero__col{
+    grid-column:1; justify-self:start; text-align:start;
+    display:flex; flex-direction:column; align-items:flex-start;
+    max-width:34rem;
+  }
+  .plate{ justify-content:flex-start; width:auto; }
+  .wordmark{ width:min(430px,30vw); }
+  .tagline{ margin-top:clamp(12px,1.8vh,20px); }
+  .hairline{
+    margin-top:clamp(18px,2.6vh,28px);
+    width:min(240px,26vw);
+    /* it starts at the reading edge now rather than fading in from both */
+    background:linear-gradient(to left, var(--ember) 0%, rgba(227,27,35,.5) 34%, var(--glass-edge) 70%, transparent 100%);
+    transform-origin:right center;
+  }
+  html[lang="en"] .hairline{
+    background:linear-gradient(to right, var(--ember) 0%, rgba(227,27,35,.5) 34%, var(--glass-edge) 70%, transparent 100%);
+    transform-origin:left center;
+  }
+  .pitch{
+    margin-top:clamp(20px,2.8vh,30px);
+    max-width:26ch; font-size:clamp(20px,1.85vw,29px); line-height:1.42;
+  }
+  html[lang="fa"] .pitch{ line-height:1.8; font-size:clamp(19px,1.7vw,27px); }
+  .cta-row{ justify-content:flex-start; margin-top:clamp(24px,3.4vh,40px); }
+
+  /* ---- the frame ---- */
+  .frame{ position:absolute; inset:0; pointer-events:none; z-index:1; }
+  .frame__v{
+    position:absolute; top:12vh; bottom:12vh; width:1px;
+    background:linear-gradient(to bottom, transparent, rgba(150,180,225,.14) 22%,
+               rgba(150,180,225,.14) 78%, transparent);
+  }
+  .frame__v--s{ inset-inline-start:clamp(24px,3vw,54px); }
+  .frame__v--e{ inset-inline-end:clamp(24px,3vw,54px); }
+  .frame__tick{
+    position:absolute; width:9px; height:9px;
+    border:1px solid rgba(150,180,225,.3); opacity:.75;
+  }
+  .frame__tick--ts{ top:calc(12vh - 4px); inset-inline-start:calc(clamp(24px,3vw,54px) - 4px);
+                    border-inline-end:0; border-bottom:0; }
+  .frame__tick--te{ top:calc(12vh - 4px); inset-inline-end:calc(clamp(24px,3vw,54px) - 4px);
+                    border-inline-start:0; border-bottom:0; }
+  .frame__tick--bs{ bottom:calc(12vh - 4px); inset-inline-start:calc(clamp(24px,3vw,54px) - 4px);
+                    border-inline-end:0; border-top:0; }
+  .frame__tick--be{ bottom:calc(12vh - 4px); inset-inline-end:calc(clamp(24px,3vw,54px) - 4px);
+                    border-inline-start:0; border-top:0; }
+
+  /* ---- the margin rail ----
+     Set down the far margin, reading upward, the way a masthead runs its
+     credits. It is the one piece of the composition that is pure structure,
+     so it is also the quietest thing on the screen. */
+  /* Positioned with physical left/right on purpose. writing-mode:vertical-rl
+     rotates the logical axes with the text, so inset-inline-end stops meaning
+     "the far side" and starts meaning "the bottom" — which pinned the rail to
+     the wrong edge and pushed it off the frame. Physical sides, flipped by
+     language, are unambiguous here. It hangs in the margin on the mark's side,
+     so it never crowds the type. */
+  .rail{
+    position:absolute; z-index:2; margin:0;
+    left:calc(clamp(24px,3vw,54px) + 13px); bottom:12vh;
+    writing-mode:vertical-rl; transform:rotate(180deg); transform-origin:center;
+    display:flex; align-items:center; gap:15px;
+    font-family:var(--f-ui); font-size:9.5px; font-weight:500;
+    letter-spacing:.3em; text-transform:uppercase;
+    color:rgba(237,242,250,.34); white-space:nowrap;
+    opacity:0;                       /* the opening timeline brings it in */
+  }
+  html[lang="fa"] .rail{ font-family:var(--f-fa); font-size:12px; letter-spacing:.04em; text-transform:none; }
+  /* in English the type column moves to the left, so the margin swaps too */
+  html[lang="en"] .rail{ left:auto; right:calc(clamp(24px,3vw,54px) + 13px); }
+  .rail i{ display:block; width:1px; height:16px; background:currentColor; opacity:.5; }
+
+  /* ---- depth ----
+     Three planes that answer the cursor at different rates, written by one
+     rAF from a single pointer reading. Only transform is touched. The scene
+     behind them moves too, on its own camera, so the parallax is continuous
+     from the type all the way back to the stars. */
+  .hero__col{ transform:translate3d(calc(var(--px,0) * -7px), calc(var(--py,0) * -5px), 0); }
+  .rail, .frame{ transform-box:view-box; }
+  .frame{ transform:translate3d(calc(var(--px,0) * -3px), calc(var(--py,0) * -2px), 0); }
+  @media (prefers-reduced-motion:reduce){
+    .hero__col, .frame{ transform:none; }
+  }
+}
+/* the rail belongs to the wide composition only */
+@media (max-width:1099px){
+  .rail, .frame{ display:none; }
+}
+/* ---- and if the galaxy never arrives ----
+   The split composition gives one half of the frame to the mark, and the mark
+   is drawn by three.js. With no canvas there is nothing in that half, so a
+   wide screen would show a column of type against a large and unexplained
+   emptiness. The hero goes back to the centred stack, which needs no scene to
+   make sense. The frame and the rail stay: they are CSS, and they are what
+   keeps the plain page from looking unfinished. */
+@media (min-width:1100px){
+  html.nostage .hero{
+    grid-template-columns:1fr; place-items:center;
+    padding-top:clamp(40px,9vh,110px); padding-bottom:clamp(30px,6vh,70px);
+  }
+  html.nostage .hero__col{
+    justify-self:center; text-align:center; align-items:center; max-width:38rem;
+  }
+  html.nostage .plate{ justify-content:center; }
+  html.nostage .cta-row{ justify-content:center; }
+  html.nostage .hairline{
+    background:linear-gradient(to right, transparent, var(--glass-edge) 20%,
+               rgba(227,27,35,.55) 50%, var(--glass-edge) 80%, transparent);
+  }
+}
+
 /* ---------- the bar that arrives after the hero ----------
    Hidden until the landing has been scrolled past, then it stays. Driven by
    one IntersectionObserver on the landing itself: no scroll listener, no
@@ -841,7 +985,30 @@ picture{ display:contents; }
 
 <main id="shell">
   <section class="landing">
+    <!-- The frame. Two hairlines and four corner ticks that inset the whole
+         composition, so the hero reads as a shot with edges rather than a
+         column of type adrift in black. Purely structural, so it is hidden
+         from the reader of a screen reader and never intercepts a pointer. -->
+    <div class="frame" aria-hidden="true">
+      <span class="frame__v frame__v--s"></span>
+      <span class="frame__v frame__v--e"></span>
+      <span class="frame__tick frame__tick--ts"></span>
+      <span class="frame__tick frame__tick--te"></span>
+      <span class="frame__tick frame__tick--bs"></span>
+      <span class="frame__tick frame__tick--be"></span>
+    </div>
+
+    <!-- The disciplines, set down the margin the way a masthead sets them.
+         These are the three words already in the pitch — not invented
+         telemetry — so the marginalia says something true. -->
+    <p class="rail" aria-hidden="true">
+      <span data-copy2="railA"></span><i></i>
+      <span data-copy2="railB"></span><i></i>
+      <span data-copy2="railC"></span>
+    </p>
+
     <div class="hero">
+     <div class="hero__col">
       <div class="plate"><img id="wordmark" class="wordmark" alt="NAVIDIX" /></div>
       <p class="tagline" id="tagline"></p>
       <div class="hairline" id="hairline"></div>
@@ -854,6 +1021,7 @@ picture{ display:contents; }
           <span data-copy2="ctaTube"></span>
         </a>
       </div>
+     </div>
     </div>
     <div class="cue" id="cue" aria-hidden="true"><span></span></div>
   </section>
@@ -1038,7 +1206,8 @@ const NAVIDIX = (() => {
             seeCta:'Explore the library',
             filmEyebrow:'Documentaries', filmTitle:'Long-form, research-led films',
             filmSub:'Written, produced and narrated in-house.',
-            filmCta:'All documentaries' },
+            filmCta:'All documentaries',
+            railA:'Research', railB:'Cinema', railC:'Artificial intelligence' },
       fa: { tagline:'رسانه مستقل علم و فناوری',
             pitch:'استودیو نویدیکس — تلاقی پژوهش، سینما و هوش مصنوعی.',
             ctaMain:'خدمات استودیو', ctaTalk:'عضویت در کانال', ctaTube:'سابسکرایب یوتیوب',
@@ -1050,7 +1219,8 @@ const NAVIDIX = (() => {
             seeCta:'کاوش کتابخانه',
             filmEyebrow:'مستندها', filmTitle:'فیلم‌های بلندِ پژوهش‌محور',
             filmSub:'نوشته، تولید و روایت‌شده در خود استودیو.',
-            filmCta:'همه‌ی مستندها' }
+            filmCta:'همه‌ی مستندها',
+            railA:'پژوهش', railB:'سینما', railC:'هوش مصنوعی' }
     },
     nav: [
       { id:'training',
@@ -1699,16 +1869,28 @@ function buildMark(scene){
   function fit(){
     const vp = Stage.viewport(group.position.z);
     const portrait = innerWidth < 900;
-    let s = (vp.h * (portrait ? 0.31 : 0.40)) / api.H;
-    const maxW = vp.w * (portrait ? 0.82 : 0.42);
+    /* Above 1100 the frame is split: the mark takes one half and the type the
+       other, so it can be bigger and it sits on the axis of its own half
+       rather than in the middle of the screen. This is the whole reason the
+       hero stops reading as a stack — the two masses finally have a side
+       each. Below that width nothing changes: a single centred column is the
+       right answer on a phone, and it stays exactly as it was. */
+    const split = innerWidth >= 1100;
+    let s = (vp.h * (portrait ? 0.31 : split ? 0.52 : 0.40)) / api.H;
+    const maxW = vp.w * (portrait ? 0.82 : split ? 0.34 : 0.42);
     if (api.W * s > maxW) s = maxW / api.W;
     s *= api.squeeze || 1;
     group.scale.setScalar(s);
-    api.baseY = vp.h * 0.235;
+    api.split = split;
+    /* the type column takes the reading side, so the mark takes the other */
+    const rtl = document.documentElement.dir !== 'ltr';
+    api.baseX = split ? (rtl ? -1 : 1) * vp.w * 0.235 : 0;
+    group.position.x = api.baseX;
+    api.baseY = split ? vp.h * 0.045 : vp.h * 0.235;
     group.position.y = api.baseY;
 
     /* hand the mark's screen-space bottom edge to the layout */
-    const bottom = new THREE.Vector3(0, api.baseY - (api.H*s)/2, group.position.z).project(Stage.camera);
+    const bottom = new THREE.Vector3(api.baseX, api.baseY - (api.H*s)/2, group.position.z).project(Stage.camera);
     const px = (1 - (bottom.y*0.5 + 0.5)) * innerHeight;
     document.documentElement.style.setProperty('--logo-bottom', Math.max(0, px) + 'px');
     api.scale = s;
@@ -1871,6 +2053,12 @@ function buildBalance(mark){
     const cta = document.querySelector('.cta-row');
     if (!cta) return;
     mark.squeeze = 1; mark.fit();
+    /* This shrinks the mark when the copy below it would push the buttons off
+       the bottom of the screen. In the split composition there is nothing
+       below the mark — the copy is beside it — so measuring the two against
+       each other would shrink the mark to answer a collision that cannot
+       happen. */
+    if (mark.split) return;
     for (let pass = 0; pass < 6; pass++){
       const over = cta.getBoundingClientRect().bottom - (innerHeight - MARGIN);
       if (over <= 0) break;
@@ -2224,7 +2412,7 @@ setTimeout(function () {
     }, { rootMargin:'200px' }).observe(landing);
   })();
 
-  let drawn = 0;
+  let drawn = 0, lastPX = null, lastPY = null;
   function tick(now){
     requestAnimationFrame(tick);
     if (!state.running || !onStage) return;
@@ -2247,6 +2435,21 @@ setTimeout(function () {
       c.position.x += (state.pointer.x*40 - c.position.x)*.02;
       c.position.y += (-state.pointer.y*24 - c.position.y)*.02;
       c.lookAt(0, mark.baseY*0.35 || 0, 0);
+
+      /* The DOM planes ride the same smoothed pointer the camera does, so the
+         parallax is continuous from the type in front all the way back to the
+         stars instead of the page and the scene drifting on two clocks. Two
+         custom-property writes, only when the value actually changed, and only
+         in the split composition where those planes exist. */
+      if (mark.split){
+        const px = Math.round(state.pointer.x*50)/50,
+              py = Math.round(state.pointer.y*50)/50;
+        if (px !== lastPX || py !== lastPY){
+          lastPX = px; lastPY = py;
+          const rs = document.documentElement.style;
+          rs.setProperty('--px', px); rs.setProperty('--py', py);
+        }
+      }
     }
     Stage.render();
   }
@@ -2297,6 +2500,7 @@ setTimeout(function () {
     tl.fromTo('.hcta', { opacity:0, y:16 },
       { opacity:1, y:0, duration:.95, ease:'power3.out', stagger:.08 }, 1.9);
     tl.to('#lang', { opacity:1, duration:1, ease:'power2.out' }, 1.2);
+    tl.to('.rail', { opacity:1, duration:1.1, ease:'power2.out' }, 1.75);
 
     tl.to('#cue', { opacity:1, duration:1, ease:'power2.out' }, 2.4);
   }
