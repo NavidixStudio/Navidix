@@ -75,7 +75,6 @@
   --ease: cubic-bezier(.16,1,.3,1);
   --logo-bottom: 46vh;
 }
-
 *,*::before,*::after{ box-sizing:border-box; }
 html,body{ height:100%; }
 body{
@@ -85,11 +84,9 @@ body{
   overflow-x:hidden;
 }
 html[lang="fa"] body{ font-family:var(--f-fa); }
-
 /* ---------- layers ---------- */
 #stage{ position:fixed; inset:0; z-index:0; }
 #stage canvas{ display:block; width:100%; height:100%; }
-
 .grade{ position:fixed; inset:0; z-index:1; pointer-events:none; }
 /* the vignette used to close to solid black at the corners, which meant the
    sky only existed in the middle third of the screen. Softened so the field
@@ -104,7 +101,6 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
   opacity:.10; mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.5'/></svg>");
 }
-
 /* ---------- shell ---------- */
 #shell{ position:relative; z-index:2; }
 .landing{
@@ -112,7 +108,6 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
   display:flex; flex-direction:column;
   padding:0 var(--gutter) clamp(20px,3.4vh,42px);
 }
-
 /* ---------- language switch ---------- */
 .lang{
   position:fixed; top:clamp(16px,2.4vh,30px); inset-inline-end:var(--gutter);
@@ -131,7 +126,6 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
 .lang button[aria-current="true"]{ color:var(--paper); }
 .lang .sep{ width:1px; height:11px; background:var(--paper-ghost); }
 .lang button:focus-visible{ outline:1px solid var(--ion); outline-offset:4px; }
-
 /* ---------- hero ---------- */
 .hero{
   flex:1;
@@ -162,7 +156,6 @@ html[lang="fa"] .tagline{
   font-family:var(--f-fa); font-size:12.5px; font-weight:400;
   letter-spacing:.02em; text-transform:none;
 }
-
 /* one line that says what is sold, then the only two actions that matter */
 .pitch{
   margin:clamp(18px,3.2vh,34px) 0 0; max-width:34ch; opacity:0;
@@ -191,14 +184,12 @@ html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0
 .hcta--main{ border-color:rgba(227,27,35,.55); background:rgba(227,27,35,.12); }
 .hcta--main:hover{ border-color:rgba(255,120,110,.8); background:rgba(227,27,35,.22); box-shadow:0 0 40px -10px rgba(227,27,35,.7); }
 .hcta:focus-visible{ outline:1px solid var(--ion); outline-offset:3px; }
-
 .hairline{
   margin-top:clamp(16px,2.8vh,30px);
   width:min(300px,46vw); height:1px;
   background:linear-gradient(to right, transparent, var(--glass-edge) 20%, rgba(227,27,35,.55) 50%, var(--glass-edge) 80%, transparent);
   transform:scaleX(0);
 }
-
 /* ---------- surfaces that answer the cursor ----------
    Glass rather than paint: the sky shows through, a hairline catches the key
    along the top edge, and hover lifts the pane a single pixel. */
@@ -226,20 +217,16 @@ html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0
    either blows up or collapses depending on the room the label leaves */
 .hcta svg{ flex:0 0 auto; display:block; width:17px; height:17px; }
 .hcta--tube svg{ width:20px; height:20px; }
-
 .panel{ transition:border-color .5s var(--ease), box-shadow .6s var(--ease),
                    background .6s var(--ease), transform .6s var(--ease); }
 .panel:hover, .panel:focus-visible{ transform:translateY(-2px); }
 .panel:active{ transform:translateY(0) scale(.995); }
-
 /* the mark says it can be turned, and says when it is being turned */
 body.is-grabbable{ cursor:grab; }
 body.is-grabbing, body.is-grabbing *{ cursor:grabbing !important; user-select:none; }
-
 @media (prefers-reduced-motion:reduce){
   .hcta, .hcta:hover, .panel, .panel:hover{ transform:none; }
 }
-
 /* ---------- scroll cue ---------- */
 .cue{
   height:clamp(46px,7vh,74px); display:flex; align-items:center; justify-content:center; opacity:0;
@@ -250,7 +237,6 @@ body.is-grabbing, body.is-grabbing *{ cursor:grabbing !important; user-select:no
   animation:cueFall 3.4s ease-in-out infinite;
 }
 @keyframes cueFall{ 0%,100%{ opacity:.15; transform:scaleY(.4); } 50%{ opacity:1; transform:scaleY(1); } }
-
 /* ---------- navigation portals ---------- */
 .portals{
   padding:clamp(46px,9vh,110px) var(--gutter) clamp(60px,12vh,140px);
@@ -285,7 +271,6 @@ body.is-grabbing, body.is-grabbing *{ cursor:grabbing !important; user-select:no
 .panel{ grid-column:span 2; }
 .panel:nth-child(4), .panel:nth-child(5){ grid-column:span 3; }
 .panel:nth-child(6){ grid-column:1 / -1; }
-
 .panel:nth-child(1) .panel__aura{ animation-duration:29s; animation-delay:-4s; }
 .panel:nth-child(2) .panel__aura{ animation-duration:36s; animation-delay:-11s; }
 .panel:nth-child(3) .panel__aura{ animation-duration:31s; animation-delay:-19s; }
@@ -293,7 +278,6 @@ body.is-grabbing, body.is-grabbing *{ cursor:grabbing !important; user-select:no
 .panel:nth-child(5) .panel__aura{ animation-duration:33s; animation-delay:-24s; }
 .panel:nth-child(6) .panel__aura{ animation-duration:39s; animation-delay:-9s; }
 .panel:nth-child(6) .panel__aura{ animation-duration:38s; animation-delay:-14s; }
-
 .panel__aura{
   position:absolute; inset:-50%; z-index:0; opacity:.5;
   background:conic-gradient(from 0deg,
@@ -351,7 +335,6 @@ body.is-grabbing, body.is-grabbing *{ cursor:grabbing !important; user-select:no
 }
 html[lang="fa"] .panel__title{ font-family:var(--f-fa); font-weight:400; letter-spacing:0; line-height:1.45; }
 html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92vw,14px); line-height:1.95; }
-
 .panel:hover,.panel:focus-visible{
   border-color:rgba(255,150,150,.34);
   background:linear-gradient(180deg, rgba(185,215,255,.13) 0%, rgba(120,60,70,.04) 42%, rgba(0,0,0,.36) 100%);
@@ -370,8 +353,6 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
   background:var(--ember); filter:drop-shadow(0 0 12px rgba(227,27,35,.9));
 }
 .panel:focus-visible{ outline:1px solid var(--ion); outline-offset:3px; }
-
-
 /* ---------- the channels bar: the final portal reads as a rail, not a card ---------- */
 .panel--social{
   min-height:0; flex-direction:row; align-items:center; justify-content:space-between;
@@ -397,173 +378,9 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
 @media (max-width:640px){
   .panel--social{ flex-direction:column; align-items:flex-start; gap:16px; }
 }
-
-/* ---------- content bands ---------- */
-.band{ padding:clamp(48px,9vh,116px) var(--gutter); }
-.band__head{ max-width:1240px; margin:0 auto clamp(26px,4.6vh,54px); }
-.band__title{
-  font-family:var(--f-display); font-weight:200;
-  font-size:clamp(24px,3.1vw,44px); line-height:1.12; letter-spacing:-.022em; margin:0;
-}
-html[lang="fa"] .band__title{ font-family:var(--f-fa); font-weight:300; letter-spacing:0; line-height:1.4; }
-.band__sub{
-  margin:11px 0 0; max-width:56ch;
-  font-family:var(--f-ui); font-size:clamp(12px,.92vw,14.5px); line-height:1.7; color:var(--paper-dim);
-}
-html[lang="fa"] .band__sub{ font-family:var(--f-fa); line-height:2; }
-.band__rule{
-  margin-top:clamp(18px,3vh,30px); width:100%; max-width:1240px; height:1px;
-  background:linear-gradient(to right, rgba(227,27,35,.6), rgba(143,219,255,.14) 30%, transparent 72%);
-}
-html[dir="rtl"] .band__rule{ background:linear-gradient(to left, rgba(227,27,35,.6), rgba(143,219,255,.14) 30%, transparent 72%); }
-
-/* ---------- glass surface, shared ---------- */
-.card{
-  position:relative; isolation:isolate; overflow:hidden;
-  border:1px solid var(--glass-edge); border-radius:18px;
-  background:linear-gradient(180deg, rgba(150,190,255,.08) 0%, rgba(90,130,200,.014) 42%, rgba(0,0,0,.44) 100%);
-  -webkit-backdrop-filter:blur(20px) saturate(140%); backdrop-filter:blur(20px) saturate(140%);
-  box-shadow:inset 0 1px 0 rgba(215,235,255,.18), 0 26px 60px -34px rgba(0,0,0,1);
-  color:var(--paper); text-decoration:none; opacity:0;
-  transition:border-color .5s var(--ease), box-shadow .6s var(--ease), transform .7s var(--ease);
-}
-.card:hover, .card:focus-within{
-  border-color:rgba(255,150,150,.32);
-  box-shadow:inset 0 1px 0 rgba(230,244,255,.28),
-             inset 0 -30px 60px -30px rgba(227,27,35,.34),
-             0 44px 96px -38px rgba(140,18,24,.5);
-}
-
-/* ---------- documentaries ---------- */
-.films{
-  display:grid; grid-template-columns:repeat(2,1fr); gap:clamp(16px,2vw,32px); max-width:1240px; margin:0 auto;
-  perspective:1500px; perspective-origin:50% 50%;
-}
-.film__cover{ position:relative; aspect-ratio:16/9; overflow:hidden; background:#04060c; display:block; }
-.film__cover img{
-  width:100%; height:100%; object-fit:cover; display:block;
-  filter:saturate(.92) contrast(1.04) brightness(.92);
-  transform:scale(1.015);
-  transition:transform 1.4s var(--ease), filter 1s var(--ease);
-}
-.film:hover .film__cover img{ transform:scale(1.06); filter:saturate(1) contrast(1.05) brightness(1); }
 /* once the turn is attached the cover is driven per-frame, so the long
    transform easing has to come off or every pointer reading would arrive
    1.4s late. the filter keeps its own. */
-.film.is-turning .film__cover img{ transition:filter 1s var(--ease); }
-.film__scrim{
-  position:absolute; inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,.86) 0%, rgba(0,0,0,.18) 46%, rgba(0,0,0,0) 78%),
-             radial-gradient(120% 80% at 50% 110%, rgba(227,27,35,.18), transparent 60%);
-}
-.film__time{
-  position:absolute; bottom:12px; inset-inline-end:12px;
-  font-family:var(--f-ui); font-size:10.5px; letter-spacing:.1em; font-variant-numeric:tabular-nums;
-  padding:4px 9px; border-radius:5px; color:var(--paper);
-  background:rgba(0,0,0,.62); border:1px solid rgba(255,255,255,.14);
-}
-.film__play{ position:absolute; inset:0; display:grid; place-items:center; opacity:0; transition:opacity .55s var(--ease); }
-.film:hover .film__play{ opacity:1; }
-.film__play i{
-  width:58px; height:58px; border-radius:50%;
-  border:1px solid rgba(255,255,255,.38); background:rgba(0,0,0,.28);
-  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
-  display:grid; place-items:center;
-}
-.film__play i::after{
-  content:''; width:0; height:0; margin-inline-start:4px;
-  border-left:13px solid var(--paper); border-top:8px solid transparent; border-bottom:8px solid transparent;
-}
-html[dir="rtl"] .film__play i::after{ transform:scaleX(-1); }
-.film__body{ padding:clamp(18px,1.8vw,28px); }
-.film__title{
-  font-family:var(--f-display); font-weight:300;
-  font-size:clamp(15px,1.28vw,21px); line-height:1.34; letter-spacing:-.014em; margin:0 0 10px; text-wrap:balance;
-}
-html[lang="fa"] .film__title{ font-family:var(--f-fa); font-weight:400; letter-spacing:0; line-height:1.55; }
-.film__desc{
-  font-family:var(--f-ui); font-weight:300;
-  font-size:clamp(11.5px,.86vw,13.5px); line-height:1.68; color:var(--paper-dim); margin:0 0 clamp(16px,1.6vw,22px);
-}
-html[lang="fa"] .film__desc{ font-family:var(--f-fa); font-size:clamp(12px,.9vw,14px); line-height:1.95; }
-
-/* ---------- depth ----------
-   the cards join the nav deck's space: a shared vanishing point, a turn
-   toward the cursor, and a specular that slides across the pane. the
-   sprite is a fixed circle that is only ever translated, so tracking the
-   cursor costs a composite and never a repaint. */
-.glare{
-  position:absolute; inset:0; z-index:3; overflow:hidden;
-  opacity:0; pointer-events:none;
-  transition:opacity .55s var(--ease);
-}
-.glare i{
-  position:absolute; top:0; left:0; width:58%; aspect-ratio:1/1; margin:-29% 0 0 -29%;
-  background:radial-gradient(circle,
-    rgba(205,230,255,.17) 0%, rgba(143,219,255,.075) 38%, transparent 68%);
-}
-.card:hover .glare, .card:focus-within .glare{ opacity:1; }
-
-/* the play mark arrives with the turn rather than just fading up */
-.film__play i{ transform:scale(.84); transition:transform .55s var(--ease); }
-.film:hover .film__play i, .film:focus-within .film__play i{ transform:scale(1); }
-
-.collection{ max-width:1240px; margin:0 auto; }
-.collection__head{
-  display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
-  margin-bottom:clamp(16px,2.4vh,26px);
-}
-.collection__head h3{
-  margin:0; font-family:var(--f-display); font-weight:300;
-  font-size:clamp(16px,1.5vw,23px); letter-spacing:-.014em;
-}
-html[lang="fa"] .collection__head h3{ font-family:var(--f-fa); font-weight:400; letter-spacing:0; }
-
-/* ---------- call to action ---------- */
-.cta{
-  display:inline-flex; align-items:center; gap:9px;
-  padding:9px 16px; border-radius:999px;
-  border:1px solid rgba(227,27,35,.42); background:rgba(227,27,35,.07);
-  color:var(--paper); text-decoration:none;
-  font-family:var(--f-ui); font-size:10.5px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
-  transition:background .45s var(--ease), border-color .45s var(--ease), box-shadow .45s var(--ease);
-}
-html[lang="fa"] .cta{ font-family:var(--f-fa); font-size:12px; letter-spacing:.02em; text-transform:none; }
-.cta::after{
-  content:''; width:14px; height:1px; background:currentColor; opacity:.55;
-  transition:width .45s var(--ease);
-}
-.cta:hover{ background:rgba(227,27,35,.2); border-color:rgba(255,120,110,.75); box-shadow:0 0 30px -6px rgba(227,27,35,.5); }
-.cta:hover::after{ width:26px; }
-.cta:focus-visible{ outline:1px solid var(--ion); outline-offset:3px; }
-html[dir="rtl"] .cta::after{ transform:scaleX(-1); }
-
-/* ---------- social ---------- */
-.socials{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(14px,1.7vw,26px); max-width:1240px; margin:0 auto;
-  perspective:1500px; perspective-origin:50% 50%;
-}
-.social{ display:flex; flex-direction:column; padding:clamp(20px,1.9vw,30px); }
-.social__icon{ width:30px; height:30px; color:var(--paper); opacity:.9; margin-bottom:clamp(16px,1.8vh,26px); }
-.social__icon svg{ width:100%; height:100%; display:block; }
-.social:hover .social__icon{ color:var(--ember-soft); }
-.social__icon{ transition:color .5s var(--ease); }
-.social__name{
-  font-family:var(--f-display); font-weight:300; font-size:clamp(15px,1.15vw,19px);
-  letter-spacing:-.01em; margin:0 0 4px;
-}
-.social__handle{
-  font-family:var(--f-ui); font-size:10.5px; letter-spacing:.14em; text-transform:lowercase;
-  color:rgba(227,27,35,.9); margin:0 0 12px;
-}
-.social__desc{
-  font-family:var(--f-ui); font-weight:300; font-size:clamp(11.5px,.84vw,13px); line-height:1.66;
-  color:var(--paper-dim); margin:0 0 clamp(16px,1.8vw,24px);
-}
-html[lang="fa"] .social__name{ font-family:var(--f-fa); font-weight:400; }
-html[lang="fa"] .social__desc{ font-family:var(--f-fa); font-size:clamp(12px,.9vw,13.5px); line-height:1.95; }
-.social .cta{ margin-top:auto; align-self:flex-start; }
-
 @media (max-width:1100px){
   .socials{ grid-template-columns:repeat(2,1fr); }
 }
@@ -573,82 +390,15 @@ html[lang="fa"] .social__desc{ font-family:var(--f-fa); font-size:clamp(12px,.9v
 @media (max-width:520px){
   .socials{ grid-template-columns:1fr; }
 }
-
-
-/* ---------- portal view: a panel opens into its own screen ---------- */
-.view{ position:fixed; inset:0; z-index:20; display:flex; }
-.view[hidden]{ display:none; }
-/* An opened band has to actually cover the deck behind it. At .7 the panel
-   titles underneath stayed legible through the scrim and collided with the
-   band's own headings — worse since the vignette was lightened, because the
-   deck it sits over is brighter now. */
-.view__scrim{
-  position:absolute; inset:0; background:rgba(3,4,7,.88);
-  -webkit-backdrop-filter:blur(16px) saturate(120%); backdrop-filter:blur(16px) saturate(120%);
-}
-.view__panel{
-  position:relative; margin:auto; width:min(1340px,100%); height:100%;
-  display:flex; flex-direction:column;
-}
-.view__scroll{
-  height:100%; overflow-y:auto; overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch;
-  padding:clamp(58px,9vh,104px) 0 clamp(44px,8vh,96px);
-}
-.view__scroll::-webkit-scrollbar{ width:2px; }
-.view__scroll::-webkit-scrollbar-thumb{ background:rgba(227,27,35,.5); }
-.view__close{
-  position:absolute; top:clamp(14px,2.2vh,26px); inset-inline-end:clamp(16px,3.6vw,44px); z-index:3;
-  width:44px; height:44px; border-radius:50%; cursor:pointer; padding:0;
-  border:1px solid var(--glass-edge); background:rgba(0,0,0,.42);
-  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
-  display:grid; place-items:center;
-  transition:border-color .45s var(--ease), background .45s var(--ease), transform .5s var(--ease);
-}
-.view__close::before,.view__close::after{
-  content:''; position:absolute; width:15px; height:1px; background:var(--paper);
-}
-.view__close::before{ transform:rotate(45deg); }
-.view__close::after{ transform:rotate(-45deg); }
-.view__close:hover{ border-color:rgba(255,120,110,.75); background:rgba(227,27,35,.2); transform:rotate(90deg); }
-.view__close:focus-visible{ outline:1px solid var(--ion); outline-offset:3px; }
-.band[hidden]{ display:none; }
-body.view-open{ overflow:hidden; }
-
 /* portals with nothing behind them yet read as dormant, not broken */
-.panel--soon{ cursor:default; }
-.panel--soon .panel__mark{ opacity:.35; }
-.panel--soon:hover .panel__mark{ background:var(--paper-ghost); filter:none; }
-
-
-
-
-/* ---------- empty state: an invitation, not an apology ---------- */
-.empty{
-  max-width:1240px; margin:0 auto; padding:clamp(40px,8vh,96px) 0;
-  display:flex; flex-direction:column; align-items:center; text-align:center;
-}
-.empty__glyph{
-  width:52px; height:59px; color:rgba(227,27,35,.55); margin-bottom:clamp(22px,3.4vh,36px);
-  animation:glyphPulse 6s ease-in-out infinite;
-}
 @keyframes glyphPulse{ 0%,100%{ opacity:.45; } 50%{ opacity:1; } }
-.empty__text{
-  margin:0 0 clamp(24px,3.6vh,38px); max-width:44ch;
-  font-family:var(--f-ui); font-weight:300;
-  font-size:clamp(13px,1.05vw,16px); line-height:1.8; color:var(--paper-dim);
-}
-html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
-
 /* ---------- future section mount ---------- */
 #sections:empty{ display:none; }
 #sections > .section{ padding:clamp(80px,14vh,180px) 0; }
-
 /* ---------- boot curtain ---------- */
 #curtain{ position:fixed; inset:0; z-index:50; background:#000; display:flex; align-items:center; justify-content:center; }
 #curtain .bar{ width:min(180px,38vw); height:1px; background:rgba(237,242,250,.10); overflow:hidden; }
 #curtain .bar i{ display:block; height:100%; width:0%; background:linear-gradient(to right, transparent, var(--ember)); }
-
 /* ---------- responsive ---------- */
 @media (max-width:1100px){
   .deck{ grid-template-columns:repeat(2,1fr); }
@@ -666,11 +416,6 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
   .panel--social{ background:linear-gradient(100deg, rgba(140,30,38,.26) 0%, rgba(16,22,38,.52) 50%, rgba(3,5,11,.7) 100%); }
   .panel__aura{ display:none; }
   .grade--grain{ display:none; }
-  /* no blur to lean on here, so the scrim goes fully opaque. On desktop the
-     16px blur scrambles the deck into unreadable smear and the translucency
-     is worth keeping; on a phone there is nothing to gain from the last few
-     percent except the deck's headings ghosting behind the band's own. */
-  .view__scrim{ -webkit-backdrop-filter:none; backdrop-filter:none; background:#03040A; }
 }
 @media (max-width:640px){
   .deck{ grid-template-columns:1fr; perspective:none; gap:12px; }
@@ -687,8 +432,6 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
 @media (prefers-reduced-motion:reduce){
   *{ animation-duration:.001ms !important; transition-duration:.12s !important; }
 }
-
-
 /* Persian is a joined script: positive tracking pulls the letters apart, so a
    word set in a tracked label stops reading as a word. Latin runs keep their
    tracking through .lat; digit-only labels keep theirs by being more specific. */
@@ -697,7 +440,6 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
 .lesson .cbtn span, .lesson .funnel-read .count small, .feat__tag,
 .no, .cards .no, .dna dt, .lang button[data-fa]{ letter-spacing:normal; }
 .lat{ letter-spacing:.24em; }
-
 /* the line every site owes its reader — quiet, and the last thing there is */
 .colophon{
   position:relative; z-index:2;
@@ -710,6 +452,20 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
 }
 .colophon b{ color:#9AA3AD; font-weight:500; }
 .colophon .mk{ color:#8C939B; }
+
+/* ---- the studio's one recurring gesture ----
+   A hairline running from red into blue along a top edge — the only place the
+   two brand colours touch, and what makes a card here read as the same object
+   as a card three pages away. Applied in CSS rather than markup so the
+   filtering and the builders never have to know about it. */
+.panel{ position:relative; overflow:hidden; }
+.panel::before{
+  content:''; position:absolute; inset:0 0 auto; height:1px; z-index:2;
+  background:linear-gradient(to left, transparent, rgba(227,32,42,.7) 30%,
+             rgba(110,170,255,.52) 70%, transparent);
+  opacity:.62; transition:opacity .45s cubic-bezier(.16,1,.3,1);
+}
+.panel:hover::before{ opacity:1; }
 </style>
 <script src="nvx-ui.js" defer></script>
 </head>
@@ -751,57 +507,6 @@ html[lang="fa"] .empty__text{ font-family:var(--f-fa); line-height:2.1; }
 
   <div id="sections"></div>
 
-  <div id="view" class="view" role="dialog" aria-modal="true" hidden>
-    <div class="view__scrim" data-close></div>
-    <div class="view__panel">
-      <button class="view__close" type="button" data-close aria-label="Close"></button>
-      <div class="view__scroll" id="viewScroll">
-  <section class="band" id="films" hidden>
-    <header class="band__head">
-      <h2 class="band__title" data-copy="films.title"></h2>
-      <p class="band__sub" data-copy="films.sub"></p>
-      <div class="band__rule"></div>
-    </header>
-    <div class="films" id="filmGrid"></div>
-  </section>
-
-  <section class="band" id="socials" hidden>
-    <header class="band__head">
-      <h2 class="band__title" data-copy="socials.title"></h2>
-      <p class="band__sub" data-copy="socials.sub"></p>
-      <div class="band__rule"></div>
-    </header>
-    <div class="socials" id="socialGrid"></div>
-  </section>
-        <section class="band" id="gallery" hidden>
-          <header class="band__head">
-            <h2 class="band__title" data-copy="gallery.title"></h2>
-            <p class="band__sub" data-copy="gallery.sub"></p>
-            <div class="band__rule"></div>
-          </header>
-          <div class="empty">
-            <svg class="empty__glyph" viewBox="0 0 60 68" aria-hidden="true"><path d="M30 2 57 17.5v33L30 66 3 50.5v-33z" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>
-            <p class="empty__text" data-copy="gallery.empty"></p>
-            <a class="cta" data-cta="gallery" target="_blank" rel="noopener"></a>
-          </div>
-        </section>
-        <section class="band" id="collections" hidden>
-          <header class="band__head">
-            <h2 class="band__title" data-copy="collections.title"></h2>
-            <p class="band__sub" data-copy="collections.sub"></p>
-            <div class="band__rule"></div>
-          </header>
-          <div class="collection">
-            <div class="collection__head">
-              <h3 data-copy="collections.set1"></h3>
-              <a class="cta" href="https://www.youtube.com/playlist?list=PL3zymT0LJaw0M3so975uaSt4mcmn3fV9O" target="_blank" rel="noopener" data-copy="collections.playlist"></a>
-            </div>
-            <div class="films" id="collectionGrid"></div>
-          </div>
-        </section>
-      </div>
-    </div>
-  </div>
 
 </main>
 
@@ -950,7 +655,6 @@ const NAVIDIX = (() => {
 
   const state = {
     reduced: matchMedia('(prefers-reduced-motion: reduce)').matches,
-    viewOpen: false,
     lite: Math.min(innerWidth, innerHeight) < 700,
     pointer: { x:0, y:0, tx:0, ty:0 },
     clock:null, running:true
@@ -1666,28 +1370,6 @@ const Lang = (() => {
     const bal = NAVIDIX.find('balance');
     if (bal) requestAnimationFrame(bal.run);      // the copy just changed height
 
-    const B = config.band[l];
-    document.querySelectorAll('[data-copy]').forEach(el => { el.textContent = B[el.dataset.copy]; });
-    document.querySelectorAll('[data-cta]').forEach(el => {
-      const st = config.stubs[el.dataset.cta];
-      el.href = st.url;
-      el.textContent = B.visit + ' · ' + st.ch;
-    });
-    document.querySelectorAll('#filmGrid .film').forEach((el,i) => {
-      const f = config.films[i][l];
-      el.querySelector('.film__title').textContent = f.t;
-      el.querySelector('.film__desc').textContent  = f.d;
-      el.querySelector('.film__body .cta').textContent = B.watch;
-    });
-    document.querySelectorAll('#collectionGrid .film').forEach((el,i) => {
-      el.querySelector('.film__title').textContent = config.collections[i].t;
-      el.querySelector('.cta').textContent = B.watch;
-    });
-    document.querySelectorAll('#socialGrid .social').forEach((el,i) => {
-      el.querySelector('.social__desc').textContent = config.social[i][l];
-      el.querySelector('.cta').textContent = B.visit;
-    });
-
     panels.forEach((p,i) => {
       const item = config.nav[i][l];
       p.querySelector('.panel__title').textContent = item.t;
@@ -1728,20 +1410,6 @@ const ICONS = {
   telegram:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.9 19c-.22 1-.83 1.25-1.67.78l-4.6-3.4-2.22 2.14c-.25.25-.45.45-.92.45l.33-4.7 8.5-7.67c.37-.33-.08-.52-.57-.19L7.26 13.1l-4.53-1.42c-.98-.3-1-.98.2-1.45L20.6 2.9c.82-.3 1.53.2 1.3 1.4z"/></svg>'
 };
 
-/* reveal on entry — same rhythm as the portals */
-function revealOnScroll(nodes, step){
-  if (!('IntersectionObserver' in window)) { gsap.set(nodes, { opacity:1 }); return; }
-  const io = new IntersectionObserver(es => {
-    es.forEach(en => {
-      if (!en.isIntersecting) return;
-      io.unobserve(en.target);
-      gsap.fromTo(en.target, { opacity:0, y:46, filter:'blur(12px)' },
-        { opacity:1, y:0, filter:'blur(0px)', duration:1.3, ease:'power3.out',
-          delay:(nodes.indexOf(en.target) % (step||2)) * .1, clearProps:'filter,transform' });
-    });
-  }, { threshold:.15, rootMargin:'0px 0px -6% 0px' });
-  nodes.forEach(n => io.observe(n));
-}
 
 /* =====================================================================
    POINTER DEPTH
@@ -1760,159 +1428,6 @@ function revealOnScroll(nodes, step){
 
    Coarse pointers and reduced-motion never reach any of it — phones keep
    the flat card and pay nothing for this.
-   ===================================================================== */
-function attachTilt(cards, opt){
-  if (typeof gsap === 'undefined') return;
-  if (NAVIDIX.state.reduced || !matchMedia('(hover:hover)').matches) return;
-
-  const turn = (opt && opt.turn) || 7;
-  const lift = (opt && opt.lift) || 6;
-
-  cards.forEach(card => {
-    const spark = card.querySelector('.glare i');
-    const body  = card.querySelector('.film__body');
-    const cover = card.querySelector('.film__cover img');
-    const to    = (el, p, d) => gsap.quickTo(el, p, { duration:d, ease:'power3.out' });
-    if (cover) card.classList.add('is-turning');
-
-    /* quickTo resolves the property by its exact name, and GSAP registers
-       the rotations as rotationX/rotationY. The rotateX/rotateY spelling is
-       an alias gsap.to() understands but quickTo silently drops. */
-    const set = {
-      rY: to(card, 'rotationY', .55),
-      rX: to(card, 'rotationX', .55),
-      y:  to(card, 'y',         .55),
-      gx: spark && to(spark, 'x', .5),
-      gy: spark && to(spark, 'y', .5),
-      bx: body  && to(body,  'x', .6),
-      by: body  && to(body,  'y', .6),
-      ix: cover && to(cover, 'x', .7),
-      iy: cover && to(cover, 'y', .7)
-    };
-
-    let box = null, queued = false, mx = 0, my = 0;
-
-    const apply = () => {
-      queued = false;
-      if (!box) return;
-      const dx = (mx - box.left) / box.width  - .5;
-      const dy = (my - box.top)  / box.height - .5;
-
-      set.rY(dx * turn);
-      set.rX(-dy * turn * .78);
-      set.y(-lift + dy * 3);
-
-      if (spark){ set.gx(mx - box.left); set.gy(my - box.top); }
-      /* three planes at three depths, and the gap between them is the whole
-         illusion: the still leans into the cursor, the text leans away. the
-         cover is held at 1.06 so there is overscan to slide inside without
-         ever exposing an edge. */
-      if (cover){ set.ix(dx * 13); set.iy(dy * 9); }
-      if (body){ set.bx(dx * -7); set.by(dy * -4); }
-    };
-
-    const read = e => {
-      mx = e.clientX; my = e.clientY;
-      if (!queued){ queued = true; requestAnimationFrame(apply); }
-    };
-
-    card.addEventListener('pointerenter', e => {
-      box = card.getBoundingClientRect();        // measured while at rest
-      card.style.willChange = 'transform';
-      if (cover) gsap.to(cover, { scale:1.06, duration:.9, ease:'power3.out' });
-      read(e);
-    });
-    card.addEventListener('pointermove', read);
-
-    /* the reset only ever names the properties it is putting back, and never
-       takes overwrite:'auto' — that would kill the quickTo tweens outright
-       and the card would come to rest for good after its first hover. */
-    card.addEventListener('pointerleave', () => {
-      box = null;
-      card.style.willChange = '';
-      set.rY(0); set.rX(0); set.y(0);
-      if (body){ set.bx(0); set.by(0); }   // the specular is left where it is
-                                           // and simply fades, so re-entering
-                                           // never snaps it across the pane
-      if (cover){
-        set.ix(0); set.iy(0);
-        gsap.to(cover, { scale:1.015, duration:1.1, ease:'power3.out' });
-      }
-    });
-  });
-}
-
-function buildBands(){
-  const { config } = NAVIDIX;
-
-  const films = document.getElementById('filmGrid');
-  renderFilms(config.films);
-
-  function renderFilms(list){ films.innerHTML = ''; list.forEach(f => {
-    const el = document.createElement('article');
-    el.className = 'card film';
-    el.innerHTML =
-      '<a class="film__cover" href="https://www.youtube.com/watch?v=' + f.id + '" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">' +
-        '<img alt="" loading="lazy" src="https://img.youtube.com/vi/' + f.id + '/maxresdefault.jpg" ' +
-             'onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/' + f.id + '/hqdefault.jpg\'">' +
-        '<span class="film__scrim"></span>' +
-        (f.time ? '<span class="film__time">' + f.time + '</span>' : '') +
-        '<span class="film__play"><i></i></span>' +
-      '</a>' +
-      '<div class="film__body">' +
-        '<h3 class="film__title"></h3><p class="film__desc"></p>' +
-        '<a class="cta" href="https://www.youtube.com/watch?v=' + f.id + '" target="_blank" rel="noopener"></a>' +
-      '</div>' +
-      '<span class="glare"><i></i></span>';
-    films.appendChild(el);
-  }); revealOnScroll([...films.children], 2);
-     attachTilt([...films.children]); }        // the grid is rebuilt when the
-                                               // channel feed lands, so the
-                                               // turn is re-attached with it
-  NAVIDIX.renderFilms = renderFilms;
-
-  /* the curated set uses the same card as the documentaries */
-  const coll = document.getElementById('collectionGrid');
-  config.collections.forEach(c => {
-    const el = document.createElement('article');
-    el.className = 'card film';
-    el.dataset.vid = c.id;
-    el.innerHTML =
-      '<a class="film__cover" href="https://www.youtube.com/watch?v=' + c.id + '" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">' +
-        '<img alt="" loading="lazy" src="https://img.youtube.com/vi/' + c.id + '/maxresdefault.jpg" ' +
-             'onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/' + c.id + '/hqdefault.jpg\'">' +
-        '<span class="film__scrim"></span><span class="film__play"><i></i></span>' +
-      '</a>' +
-      '<div class="film__body">' +
-        '<h3 class="film__title"></h3>' +
-        '<a class="cta" href="https://www.youtube.com/watch?v=' + c.id + '" target="_blank" rel="noopener"></a>' +
-      '</div>' +
-      '<span class="glare"><i></i></span>';
-    el.querySelector('.film__title').textContent = c.t;
-    coll.appendChild(el);
-  });
-  revealOnScroll([...coll.children], 2);
-  attachTilt([...coll.children]);
-
-  const socials = document.getElementById('socialGrid');
-  config.social.forEach(sn => {
-    const el = document.createElement('article');
-    el.className = 'card social';
-    el.innerHTML =
-      '<span class="social__icon">' + ICONS[sn.key] + '</span>' +
-      '<h3 class="social__name">' + sn.name + '</h3>' +
-      '<p class="social__handle">' + sn.handle + '</p>' +
-      '<p class="social__desc"></p>' +
-      '<a class="cta" href="' + sn.url + '" target="_blank" rel="noopener"></a>' +
-      '<span class="glare"><i></i></span>';
-    socials.appendChild(el);
-  });
-
-  revealOnScroll([...socials.children], 4);
-  /* the channel tiles are smaller, so the same turn would read as a wobble */
-  attachTilt([...socials.children], { turn:5, lift:4 });
-  return { films:[...films.children], socials:[...socials.children] };
-}
 
 /* =====================================================================
    NAV DECK
@@ -1922,7 +1437,14 @@ function buildDeck(){
   const frag = document.createDocumentFragment();
   NAVIDIX.config.nav.forEach(item => {
     const a = document.createElement('a');
-    const EXTERNAL = { system:'system.html', training:'training.html' };
+    /* Every panel is a real page now. They used to open a fixed layer over
+       the live canvas and push a #hash, which meant sharing any of them sent
+       the homepage and its cover, Google could not index a word of them, and
+       opening one animated a full-screen overlay on top of a running WebGL
+       scene — the slowest thing a phone here can be asked to do. */
+    const EXTERNAL = { system:'system.html', training:'training.html',
+                       documentaries:'documentaries.html', collections:'collections.html',
+                       gallery:'gallery.html', social:'channels.html' };
     a.className = 'panel';
     a.href = EXTERNAL[item.id] || ('#' + item.id);
     a.dataset.section = item.id;
@@ -1943,13 +1465,6 @@ function buildDeck(){
   deck.appendChild(frag);
 
   const panels = [...deck.querySelectorAll('.panel')];
-
-  panels.forEach(a => {
-    const id = a.dataset.section;
-    if (a.dataset.external) return;                    // a real page — let the browser navigate
-    if (!Views.has(id)) { a.classList.add('panel--soon'); a.setAttribute('aria-disabled','true'); }
-    a.addEventListener('click', e => { e.preventDefault(); Views.open(id, a); });
-  });
 
   /* Magnetic hover.
      The rect is measured once on entry and cached. Measuring it live is the
@@ -2018,147 +1533,6 @@ function buildDeck(){
 
 
 
-
-/* =====================================================================
-   CHANNEL FEED — optional. With an API key the documentaries section
-   mirrors the channel; without one it falls back to the curated list.
-   ===================================================================== */
-async function loadChannelFeed(){
-  const { config } = NAVIDIX;
-  const y = config.youtube;
-  if (!y || !y.apiKey || !y.channelId) return;
-
-  const uploads = 'UU' + y.channelId.slice(2);
-  const base = 'https://www.googleapis.com/youtube/v3/';
-
-  try {
-    const r1 = await fetch(base + 'playlistItems?part=snippet&maxResults=' + y.max +
-                           '&playlistId=' + uploads + '&key=' + y.apiKey);
-    if (!r1.ok) throw new Error('playlistItems ' + r1.status);
-    const d1 = await r1.json();
-    const items = (d1.items || [])
-      .map(it => it.snippet)
-      .filter(sn => sn && sn.resourceId && sn.resourceId.videoId);
-    if (!items.length) return;
-
-    const ids = items.map(sn => sn.resourceId.videoId);
-    let times = {};
-    try {
-      const r2 = await fetch(base + 'videos?part=contentDetails&id=' + ids.join(',') + '&key=' + y.apiKey);
-      if (r2.ok){
-        const d2 = await r2.json();
-        (d2.items || []).forEach(v => { times[v.id] = iso8601(v.contentDetails.duration); });
-      }
-    } catch(e){ /* durations are optional */ }
-
-    config.films = items.map(sn => {
-      const one = { t: sn.title, d: trim(sn.description) };
-      return { id: sn.resourceId.videoId, time: times[sn.resourceId.videoId] || null, en: one, fa: one };
-    });
-    NAVIDIX.renderFilms(config.films);
-    Lang.repaint();
-  } catch(err){
-    console.warn('[navidix] channel feed unavailable, using the curated list —', err.message);
-  }
-
-  function trim(text){
-    const first = (text || '').split('\n').find(l => l.trim().length > 30) || '';
-    return first.length > 170 ? first.slice(0, 167).trim() + '…' : first.trim();
-  }
-  function iso8601(v){
-    const m = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(v || '');
-    if (!m) return null;
-    const h = +(m[1]||0), mi = +(m[2]||0), se = +(m[3]||0);
-    const pad = n => String(n).padStart(2,'0');
-    return h ? h + ':' + pad(mi) + ':' + pad(se) : mi + ':' + pad(se);
-  }
-}
-
-/* =====================================================================
-   VIEWS — each portal opens into its own screen, over the galaxy.
-   Register a section id here and the matching portal becomes live.
-   ===================================================================== */
-const Views = (() => {
-  /* one line per section — add an id here and its portal goes live */
-  const routes = {
-    documentaries:'films', gallery:'gallery',
-    training:'training', collections:'collections', social:'socials'
-  };
-  const root = document.getElementById('view');
-  const scroll = document.getElementById('viewScroll');
-  let current = null, opener = null;
-
-  function open(sectionId, fromEl, push){
-    const target = routes[sectionId];
-    if (!target || current === sectionId) return;
-    opener = fromEl || null;
-    current = sectionId;
-
-    [...scroll.querySelectorAll('.band')].forEach(b => { b.hidden = (b.id !== target); });
-    root.hidden = false;
-    NAVIDIX.state.viewOpen = true;
-    document.body.classList.add('view-open');
-    scroll.scrollTop = 0;
-    /* a real history entry, so the phone's Back gesture closes the portal
-       rather than leaving the site */
-    if (push !== false) history.pushState({ nvx:sectionId }, '', '#' + sectionId);
-
-    if (NAVIDIX.state.reduced) return;
-
-    /* Unhiding the panel paints it whole for one frame before any tween can
-       start, and that single frame is what read as a snap. Set the opening
-       state synchronously first, then let it rise. The frame itself moves
-       too — animating only the contents left the container popping. */
-    gsap.set('.view__scrim', { opacity:0 });
-    gsap.set('.view__panel', { opacity:0, y:22, scale:.992 });
-    gsap.set('#viewScroll',  { opacity:0, y:20, filter:'blur(8px)' });
-    gsap.set('.view__close', { opacity:0, scale:.9 });
-
-    var tl = gsap.timeline();
-    tl.to('.view__scrim', { opacity:1, duration:.62, ease:'power2.out' }, 0)
-      .to('.view__panel', { opacity:1, y:0, scale:1, duration:.92, ease:'expo.out',
-                            clearProps:'scale,transform' }, .06)
-      .to('#viewScroll',  { opacity:1, y:0, filter:'blur(0px)', duration:1.0,
-                            ease:'expo.out', clearProps:'filter' }, .14)
-      .to('.view__close', { opacity:1, scale:1, duration:.6, ease:'power3.out' }, .34);
-  }
-
-  function hide(){
-    if (!current) return;
-    const done = () => {
-      root.hidden = true;
-      NAVIDIX.state.viewOpen = false;
-      document.body.classList.remove('view-open');
-      current = null;
-      if (opener) { opener.focus({ preventScroll:true }); opener = null; }
-    };
-    if (NAVIDIX.state.reduced) return done();
-    gsap.to('#viewScroll',  { opacity:0, y:12, duration:.34, ease:'power2.in' });
-    gsap.to('.view__panel', { opacity:0, y:16, scale:.994, duration:.44, ease:'power2.in' });
-    gsap.to('.view__scrim', { opacity:0, duration:.52, ease:'power2.inOut', delay:.06,
-                              onComplete:done });
-  }
-
-  /* closing by button or Esc walks history back, so Back and the × agree */
-  function close(){
-    if (!current) return;
-    if (history.state && history.state.nvx) history.back();
-    else { hide(); history.replaceState(null, '', location.pathname + location.search); }
-  }
-
-  addEventListener('popstate', () => {
-    const id = location.hash.replace('#','');
-    if (current && id !== current) hide();
-    if (!current && routes[id]) open(id, null, false);
-  });
-
-  root.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
-  addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-
-  return { open, close, has: id => !!routes[id],
-    fromHash(){ const id = location.hash.replace('#',''); if (routes[id]) open(id, null, false); } };
-})();
-
 /* =====================================================================
    BOOT
    ===================================================================== */
@@ -2173,7 +1547,6 @@ const Views = (() => {
   const mark = buildMark(scene);
   const balance = buildBalance(mark);
   const panels = buildDeck();
-  buildBands();
   Lang.init(panels);
 
   const wm = document.getElementById('wordmark');
@@ -2273,15 +1646,10 @@ const Views = (() => {
     }, { rootMargin:'200px' }).observe(landing);
   })();
 
-  let frame = 0, drawn = 0;
+  let drawn = 0;
   function tick(now){
     requestAnimationFrame(tick);
     if (!state.running || !onStage) return;
-    frame++;
-    if (state.viewOpen){
-      if (state.lite) return;      // phone: freeze the field entirely
-      if (frame % 2) return;       // desktop: half rate behind the scrim
-    }
     /* A phone pays for every pixel of a full-screen field, and the mark turns
        at a fifth of a radian a second — a twenty-fifth of a degree between
        frames at sixty. Half those frames buy nothing an eye can find, so the
@@ -2345,9 +1713,6 @@ const Views = (() => {
     tl.to('#cue', { opacity:1, duration:1.2, ease:'power2.out' }, 3.3);
   }
 
-  loadChannelFeed();
-  Views.fromHash();
-  addEventListener('hashchange', () => Views.fromHash());
 
   mark.ready = play;
   setTimeout(play, 4500);

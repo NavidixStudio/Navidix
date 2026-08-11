@@ -69,6 +69,20 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
 .lesson .funnel-read .count small, .feat__tag,
 .no, .cards .no, .dna dt, .lang button[data-fa]{{ letter-spacing:normal; }}
 .lat{{ letter-spacing:.24em; }}
+
+/* ---- the studio's one recurring gesture ----
+   A hairline running from red into blue along a top edge — the only place the
+   two brand colours touch, and what makes a card here read as the same object
+   as a card three pages away. Applied in CSS rather than markup so the search
+   filter never has to know about it. */
+.pc, .sd__stage{{ position:relative; overflow:hidden; }}
+.pc::before, .sd__stage::before{{
+  content:''; position:absolute; inset:0 0 auto; height:1px; z-index:3;
+  background:linear-gradient(to left, transparent, rgba(227,32,42,.7) 30%,
+             rgba(110,170,255,.52) 70%, transparent);
+  opacity:.62; transition:opacity .45s cubic-bezier(.16,1,.3,1);
+}}
+.pc:hover::before{{ opacity:1; }}
 </style>'''
 
 LIB_CSS = '''
