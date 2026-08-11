@@ -530,6 +530,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
 .pc:focus-visible{ outline:1px solid #5BD6C0; outline-offset:3px; }
 .pc[hidden]{ display:none; }
 .pc__sw{ position:relative; aspect-ratio:16/10; }
+picture{ display:contents; }
 .pc__sw img{ width:100%; height:100%; object-fit:cover; display:block; }
 .pc__tag{ position:absolute; inset-inline-start:9px; bottom:9px; font-size:10.5px; letter-spacing:.04em;
   padding:4px 9px; border-radius:3px; background:rgba(4,5,8,.74); color:#C9D1D9;
@@ -655,7 +656,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
       <div class="cards2">
         <a class="pc" href="style/studio.html" target="_blank" rel="noopener"
            data-cat="real" data-tags="studio Studio Portrait پرتره‌ی استودیویی پرتره استودیو سافت‌باکس لنز بوکه پوست هدشات portrait studio softbox 85mm bokeh headshot خنثی و کم‌اشباع؛ پوست گرم روی پس‌زمینه‌ی زغالی یک سافت‌باکس بزرگ در زاویه‌ی ۴۵ درجه، نور مو از پشت">
-          <span class="pc__sw"><img src="prompts/studio.jpg" alt="لوح بصری سبک پرتره‌ی استودیویی" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Studio Portrait</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/studio.webp" type="image/webp" /><img src="prompts/studio.jpg" alt="پرتره‌ی استودیویی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Studio Portrait</span></span>
           <span class="pc__body">
             <h3 class="pc__title">پرتره‌ی استودیویی<span class="pc__en">Studio Portrait</span></h3>
             <p class="pc__hint">یک سافت‌باکس بزرگ در زاویه‌ی ۴۵ درجه، نور مو از پشت</p>
@@ -664,7 +665,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/doc.html" target="_blank" rel="noopener"
            data-cat="real" data-tags="doc Documentary / Street عکاسی مستند و خیابانی مستند خیابانی فتوژورنالیسم کاندید گرین documentary street candid photojournalism grain رنگ طبیعی و کم‌اشباع، نزدیک به واقعیت فقط نور موجود؛ هیچ منبع مصنوعی">
-          <span class="pc__sw"><img src="prompts/doc.jpg" alt="لوح بصری سبک عکاسی مستند و خیابانی" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Documentary / Street</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/doc.webp" type="image/webp" /><img src="prompts/doc.jpg" alt="عکاسی مستند و خیابانی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Documentary / Street</span></span>
           <span class="pc__body">
             <h3 class="pc__title">عکاسی مستند و خیابانی<span class="pc__en">Documentary / Street</span></h3>
             <p class="pc__hint">فقط نور موجود؛ هیچ منبع مصنوعی</p>
@@ -673,7 +674,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/film35.html" target="_blank" rel="noopener"
            data-cat="real" data-tags="film35 Cinematic 35mm قاب سینمایی ۳۵ میلی‌متری سینمایی فیلم آنالوگ آنامورفیک گرید کداک cinematic 35mm anamorphic halation film grain گرید فیروزه‌ای–نارنجی، سایه‌های سرد منبع نور داخل کادر، هاله‌ی نرم دور هایلایت">
-          <span class="pc__sw"><img src="prompts/film35.jpg" alt="لوح بصری سبک قاب سینمایی ۳۵ میلی‌متری" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Cinematic 35mm</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/film35.webp" type="image/webp" /><img src="prompts/film35.jpg" alt="قاب سینمایی ۳۵ میلی‌متری — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Cinematic 35mm</span></span>
           <span class="pc__body">
             <h3 class="pc__title">قاب سینمایی ۳۵ میلی‌متری<span class="pc__en">Cinematic 35mm</span></h3>
             <p class="pc__hint">منبع نور داخل کادر، هاله‌ی نرم دور هایلایت</p>
@@ -682,7 +683,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/product.html" target="_blank" rel="noopener"
            data-cat="real" data-tags="product Product Macro ماکرو محصول محصول تبلیغاتی ماکرو بازتاب استودیو product macro commercial specular focus stacking خنثی و تمیز، پس‌زمینه‌ی گرادیانی سافت‌باکس بزرگ از بالا، بازتاب کنترل‌شده">
-          <span class="pc__sw"><img src="prompts/product.jpg" alt="لوح بصری سبک ماکرو محصول" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Product Macro</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/product.webp" type="image/webp" /><img src="prompts/product.jpg" alt="ماکرو محصول — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Product Macro</span></span>
           <span class="pc__body">
             <h3 class="pc__title">ماکرو محصول<span class="pc__en">Product Macro</span></h3>
             <p class="pc__hint">سافت‌باکس بزرگ از بالا، بازتاب کنترل‌شده</p>
@@ -698,7 +699,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
       <div class="cards2">
         <a class="pc" href="style/oil.html" target="_blank" rel="noopener"
            data-cat="classic" data-tags="oil Classical Oil Painting رنگ روغن کلاسیک اویل رنگ‌روغن کلاسیک رامبراند بوم قلم‌مو oil painting impasto canvas classical خاکی گرم: اومبر، اخرا، عاج کیاروسکورو از یک پنجره‌ی بلند">
-          <span class="pc__sw"><img src="prompts/oil.jpg" alt="لوح بصری سبک رنگ روغن کلاسیک" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Classical Oil Painting</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/oil.webp" type="image/webp" /><img src="prompts/oil.jpg" alt="رنگ روغن کلاسیک — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Classical Oil Painting</span></span>
           <span class="pc__body">
             <h3 class="pc__title">رنگ روغن کلاسیک<span class="pc__en">Classical Oil Painting</span></h3>
             <p class="pc__hint">کیاروسکورو از یک پنجره‌ی بلند</p>
@@ -707,7 +708,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/baroque.html" target="_blank" rel="noopener"
            data-cat="classic" data-tags="baroque Baroque باروک باروک تنبریسم کاراواجو دراماتیک قطری baroque tenebrism caravaggio dramatic diagonal قرمز عمیق، طلایی خاموش، قهوه‌ای سوخته تنبریسم — نور تند از یک سو، بقیه در سیاهی">
-          <span class="pc__sw"><img src="prompts/baroque.jpg" alt="لوح بصری سبک باروک" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Baroque</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/baroque.webp" type="image/webp" /><img src="prompts/baroque.jpg" alt="باروک — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Baroque</span></span>
           <span class="pc__body">
             <h3 class="pc__title">باروک<span class="pc__en">Baroque</span></h3>
             <p class="pc__hint">تنبریسم — نور تند از یک سو، بقیه در سیاهی</p>
@@ -716,7 +717,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/renaissance.html" target="_blank" rel="noopener"
            data-cat="classic" data-tags="renaissance Renaissance رنسانس رنسانس اسفوماتو پرسپکتیو داوینچی تعادل renaissance sfumato perspective humanist panel سبز زیتونی، اخرای روشن، آبی آسمانی کم‌رنگ نور نرم و یکنواخت از چپ">
-          <span class="pc__sw"><img src="prompts/renaissance.jpg" alt="لوح بصری سبک رنسانس" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Renaissance</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/renaissance.webp" type="image/webp" /><img src="prompts/renaissance.jpg" alt="رنسانس — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Renaissance</span></span>
           <span class="pc__body">
             <h3 class="pc__title">رنسانس<span class="pc__en">Renaissance</span></h3>
             <p class="pc__hint">نور نرم و یکنواخت از چپ</p>
@@ -725,7 +726,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/romantic.html" target="_blank" rel="noopener"
            data-cat="classic" data-tags="romantic Romanticism رمانتیسم رمانتیسم سابلایم طبیعت طوفان فریدریش romanticism sublime storm landscape friedrich خاکستری آبی سرد در برابر طلایی گرم نور طوفانی، شکاف ابر، کنتراست شدید">
-          <span class="pc__sw"><img src="prompts/romantic.jpg" alt="لوح بصری سبک رمانتیسم" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Romanticism</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/romantic.webp" type="image/webp" /><img src="prompts/romantic.jpg" alt="رمانتیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Romanticism</span></span>
           <span class="pc__body">
             <h3 class="pc__title">رمانتیسم<span class="pc__en">Romanticism</span></h3>
             <p class="pc__hint">نور طوفانی، شکاف ابر، کنتراست شدید</p>
@@ -741,7 +742,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
       <div class="cards2">
         <a class="pc" href="style/impressionist.html" target="_blank" rel="noopener"
            data-cat="modern" data-tags="impressionist Impressionism امپرسیونیسم امپرسیونیسم مونه نور طبیعی ضربه‌قلم impressionist monet plein air broken colour های‌کی؛ آبی، صورتی، زرد در کنار هم نور طبیعی لکه‌لکه، ساعت‌های روشن روز">
-          <span class="pc__sw"><img src="prompts/impressionist.jpg" alt="لوح بصری سبک امپرسیونیسم" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Impressionism</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/impressionist.webp" type="image/webp" /><img src="prompts/impressionist.jpg" alt="امپرسیونیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Impressionism</span></span>
           <span class="pc__body">
             <h3 class="pc__title">امپرسیونیسم<span class="pc__en">Impressionism</span></h3>
             <p class="pc__hint">نور طبیعی لکه‌لکه، ساعت‌های روشن روز</p>
@@ -750,7 +751,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/postimp.html" target="_blank" rel="noopener"
            data-cat="modern" data-tags="postimp Post-Impressionism پست‌امپرسیونیسم پست امپرسیونیسم ونگوگ ایمپاستو مارپیچ post-impressionism van gogh impasto swirling رنگ خالص و اشباع، تضاد مکمل نور نمادین، نه واقعی">
-          <span class="pc__sw"><img src="prompts/postimp.jpg" alt="لوح بصری سبک پست‌امپرسیونیسم" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Post-Impressionism</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/postimp.webp" type="image/webp" /><img src="prompts/postimp.jpg" alt="پست‌امپرسیونیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Post-Impressionism</span></span>
           <span class="pc__body">
             <h3 class="pc__title">پست‌امپرسیونیسم<span class="pc__en">Post-Impressionism</span></h3>
             <p class="pc__hint">نور نمادین، نه واقعی</p>
@@ -759,7 +760,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/artnouveau.html" target="_blank" rel="noopener"
            data-cat="modern" data-tags="artnouveau Art Nouveau آر نوو آرنوو موشا پوستر تزئینی گیاهی art nouveau mucha poster whiplash ornamental سبز زیتونی، طلایی، هلویی خاموش بدون سایه‌ی حجمی؛ سطح تخت">
-          <span class="pc__sw"><img src="prompts/artnouveau.jpg" alt="لوح بصری سبک آر نوو" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Art Nouveau</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/artnouveau.webp" type="image/webp" /><img src="prompts/artnouveau.jpg" alt="آر نوو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Art Nouveau</span></span>
           <span class="pc__body">
             <h3 class="pc__title">آر نوو<span class="pc__en">Art Nouveau</span></h3>
             <p class="pc__hint">بدون سایه‌ی حجمی؛ سطح تخت</p>
@@ -768,7 +769,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/artdeco.html" target="_blank" rel="noopener"
            data-cat="modern" data-tags="artdeco Art Deco آر دکو آردکو هندسی متقارن طلایی ماشینی art deco geometric symmetry streamline gatsby سرمه‌ای، طلا، قرمز آجری، کرم نور نمادین، پرتوهای هندسی">
-          <span class="pc__sw"><img src="prompts/artdeco.jpg" alt="لوح بصری سبک آر دکو" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Art Deco</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/artdeco.webp" type="image/webp" /><img src="prompts/artdeco.jpg" alt="آر دکو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Art Deco</span></span>
           <span class="pc__body">
             <h3 class="pc__title">آر دکو<span class="pc__en">Art Deco</span></h3>
             <p class="pc__hint">نور نمادین، پرتوهای هندسی</p>
@@ -777,7 +778,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/surreal.html" target="_blank" rel="noopener"
            data-cat="modern" data-tags="surreal Surrealism سوررئالیسم سوررئال دالی مگریت رؤیا افق surrealism dali magritte dreamlike juxtaposition آبی عمیق، اخرای بیابانی، افق روشن نور رؤیایی، سایه‌های بلند و غیرممکن">
-          <span class="pc__sw"><img src="prompts/surreal.jpg" alt="لوح بصری سبک سوررئالیسم" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Surrealism</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/surreal.webp" type="image/webp" /><img src="prompts/surreal.jpg" alt="سوررئالیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Surrealism</span></span>
           <span class="pc__body">
             <h3 class="pc__title">سوررئالیسم<span class="pc__en">Surrealism</span></h3>
             <p class="pc__hint">نور رؤیایی، سایه‌های بلند و غیرممکن</p>
@@ -786,7 +787,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/concept.html" target="_blank" rel="noopener"
            data-cat="modern" data-tags="concept Cinematic Concept Art کنسپت‌آرت سینمایی کنسپت آرت سینمایی مت‌پینتینگ عظمت concept art matte painting cinematic scale silhouette کم‌اشباع سرد با یک لکه‌ی گرم نور پشت‌سری، مه اتمسفری بین لایه‌ها">
-          <span class="pc__sw"><img src="prompts/concept.jpg" alt="لوح بصری سبک کنسپت‌آرت سینمایی" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Cinematic Concept Art</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/concept.webp" type="image/webp" /><img src="prompts/concept.jpg" alt="کنسپت‌آرت سینمایی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Cinematic Concept Art</span></span>
           <span class="pc__body">
             <h3 class="pc__title">کنسپت‌آرت سینمایی<span class="pc__en">Cinematic Concept Art</span></h3>
             <p class="pc__hint">نور پشت‌سری، مه اتمسفری بین لایه‌ها</p>
@@ -802,7 +803,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
       <div class="cards2">
         <a class="pc" href="style/miniature.html" target="_blank" rel="noopener"
            data-cat="trad" data-tags="miniature Persian Miniature مینیاتور ایرانی مینیاتور ایرانی نگارگری صفوی تذهیب لاجورد شنگرف نسخه خطی persian miniature safavid gold lapis لاجورد، فیروزه، شنگرف، طلا بدون منبع نور واحد؛ همه‌جا روشن">
-          <span class="pc__sw"><img src="prompts/miniature.jpg" alt="لوح بصری سبک مینیاتور ایرانی" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Persian Miniature</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/miniature.webp" type="image/webp" /><img src="prompts/miniature.jpg" alt="مینیاتور ایرانی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Persian Miniature</span></span>
           <span class="pc__body">
             <h3 class="pc__title">مینیاتور ایرانی<span class="pc__en">Persian Miniature</span></h3>
             <p class="pc__hint">بدون منبع نور واحد؛ همه‌جا روشن</p>
@@ -811,7 +812,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/qajar.html" target="_blank" rel="noopener"
            data-cat="trad" data-tags="qajar Qajar Painting نقاشی قاجار قاجار درباری ایرانی پرتره تزئین qajar persian court portrait ornament nineteenth century قرمز یاقوتی، سبز زمردی، طلا، سیاه نور یکنواخت جلویی، سایه‌ی کم">
-          <span class="pc__sw"><img src="prompts/qajar.jpg" alt="لوح بصری سبک نقاشی قاجار" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Qajar Painting</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/qajar.webp" type="image/webp" /><img src="prompts/qajar.jpg" alt="نقاشی قاجار — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Qajar Painting</span></span>
           <span class="pc__body">
             <h3 class="pc__title">نقاشی قاجار<span class="pc__en">Qajar Painting</span></h3>
             <p class="pc__hint">نور یکنواخت جلویی، سایه‌ی کم</p>
@@ -820,7 +821,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/ukiyoe.html" target="_blank" rel="noopener"
            data-cat="trad" data-tags="ukiyoe Ukiyo-e اوکیو-ئه ژاپنی اوکیوئه ژاپنی چاپ چوبی هوکوسای موج ukiyo-e japanese woodblock hokusai prussian blue آبی پروس، صورتی مرجانی، خردلی، کرم کاغذ بدون سایه؛ سطوح تخت">
-          <span class="pc__sw"><img src="prompts/ukiyoe.jpg" alt="لوح بصری سبک اوکیو-ئه ژاپنی" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Ukiyo-e</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/ukiyoe.webp" type="image/webp" /><img src="prompts/ukiyoe.jpg" alt="اوکیو-ئه ژاپنی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Ukiyo-e</span></span>
           <span class="pc__body">
             <h3 class="pc__title">اوکیو-ئه ژاپنی<span class="pc__en">Ukiyo-e</span></h3>
             <p class="pc__hint">بدون سایه؛ سطوح تخت</p>
@@ -829,7 +830,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/inkwash.html" target="_blank" rel="noopener"
            data-cat="trad" data-tags="inkwash Chinese Ink Wash مرکب چینی مرکب چینی شوان کوهستان مه تک‌رنگ chinese ink wash sumi xuan monochrome mountains تک‌رنگ، از سیاه غلیظ تا خاکستری آبکی بدون نور جهت‌دار؛ ارزش با غلظت مرکب">
-          <span class="pc__sw"><img src="prompts/inkwash.jpg" alt="لوح بصری سبک مرکب چینی" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Chinese Ink Wash</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/inkwash.webp" type="image/webp" /><img src="prompts/inkwash.jpg" alt="مرکب چینی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Chinese Ink Wash</span></span>
           <span class="pc__body">
             <h3 class="pc__title">مرکب چینی<span class="pc__en">Chinese Ink Wash</span></h3>
             <p class="pc__hint">بدون نور جهت‌دار؛ ارزش با غلظت مرکب</p>
@@ -845,7 +846,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
       <div class="cards2">
         <a class="pc" href="style/watercolor.html" target="_blank" rel="noopener"
            data-cat="tech" data-tags="watercolor Watercolour آبرنگ آبرنگ واترکالر کاغذ واش شفاف watercolour aquarelle wet-on-wet paper granulation پاستل کم‌اشباع، شفاف روشنایی از کاغذ می‌آید، نه از رنگ">
-          <span class="pc__sw"><img src="prompts/watercolor.jpg" alt="لوح بصری سبک آبرنگ" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Watercolour</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/watercolor.webp" type="image/webp" /><img src="prompts/watercolor.jpg" alt="آبرنگ — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Watercolour</span></span>
           <span class="pc__body">
             <h3 class="pc__title">آبرنگ<span class="pc__en">Watercolour</span></h3>
             <p class="pc__hint">روشنایی از کاغذ می‌آید، نه از رنگ</p>
@@ -854,7 +855,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/gouache.html" target="_blank" rel="noopener"
            data-cat="tech" data-tags="gouache Gouache / Retro Poster گواش و پوستر رترو گواش پوستر رترو مینیمال چاپ ریسو gouache poster retro flat halftone risograph حداکثر چهار رنگ نور نمادین، سایه به شکل لکه‌ی رنگی">
-          <span class="pc__sw"><img src="prompts/gouache.jpg" alt="لوح بصری سبک گواش و پوستر رترو" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Gouache / Retro Poster</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/gouache.webp" type="image/webp" /><img src="prompts/gouache.jpg" alt="گواش و پوستر رترو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Gouache / Retro Poster</span></span>
           <span class="pc__body">
             <h3 class="pc__title">گواش و پوستر رترو<span class="pc__en">Gouache / Retro Poster</span></h3>
             <p class="pc__hint">نور نمادین، سایه به شکل لکه‌ی رنگی</p>
@@ -863,7 +864,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/graphite.html" target="_blank" rel="noopener"
            data-cat="tech" data-tags="graphite Graphite Sketch طراحی با مداد مداد طراحی اتود سیاه‌قلم هاشور graphite pencil sketch hatching monochrome construction تک‌رنگ خاکستری ارزش‌گذاری تُنی، بدون رنگ">
-          <span class="pc__sw"><img src="prompts/graphite.jpg" alt="لوح بصری سبک طراحی با مداد" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Graphite Sketch</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/graphite.webp" type="image/webp" /><img src="prompts/graphite.jpg" alt="طراحی با مداد — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Graphite Sketch</span></span>
           <span class="pc__body">
             <h3 class="pc__title">طراحی با مداد<span class="pc__en">Graphite Sketch</span></h3>
             <p class="pc__hint">ارزش‌گذاری تُنی، بدون رنگ</p>
@@ -872,7 +873,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/woodcut.html" target="_blank" rel="noopener"
            data-cat="tech" data-tags="woodcut Woodcut / Linocut چاپ چوبی و لینوکات چاپ چوبی لینوکات گراوور کنده‌کاری woodcut linocut relief print carved high contrast سیاه روی کاغذ کرم، گاهی یک رنگ دوم بدون تُن میانی؛ فقط سیاه و سفید">
-          <span class="pc__sw"><img src="prompts/woodcut.jpg" alt="لوح بصری سبک چاپ چوبی و لینوکات" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Woodcut / Linocut</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/woodcut.webp" type="image/webp" /><img src="prompts/woodcut.jpg" alt="چاپ چوبی و لینوکات — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Woodcut / Linocut</span></span>
           <span class="pc__body">
             <h3 class="pc__title">چاپ چوبی و لینوکات<span class="pc__en">Woodcut / Linocut</span></h3>
             <p class="pc__hint">بدون تُن میانی؛ فقط سیاه و سفید</p>
@@ -888,7 +889,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
       <div class="cards2">
         <a class="pc" href="style/golden.html" target="_blank" rel="noopener"
            data-cat="light" data-tags="golden Golden Hour نور طلایی (گلدن آور) گلدن آور نور طلایی غروب کنتره گرم golden hour warm sunset backlight haze flare کهربایی گرم، دمای رنگ حدود ۳۲۰۰ کلوین خورشید پایین و پشت سوژه، پرتوهای مایل">
-          <span class="pc__sw"><img src="prompts/golden.jpg" alt="لوح بصری سبک نور طلایی (گلدن آور)" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Golden Hour</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/golden.webp" type="image/webp" /><img src="prompts/golden.jpg" alt="نور طلایی (گلدن آور) — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Golden Hour</span></span>
           <span class="pc__body">
             <h3 class="pc__title">نور طلایی (گلدن آور)<span class="pc__en">Golden Hour</span></h3>
             <p class="pc__hint">خورشید پایین و پشت سوژه، پرتوهای مایل</p>
@@ -897,7 +898,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/chiaro.html" target="_blank" rel="noopener"
            data-cat="light" data-tags="chiaro Chiaroscuro کیاروسکورو کیاروسکورو کاراواجو نور تک منبع کنتراست chiaroscuro caravaggio rembrandt hard light tenebrism سیاه له‌شده با یک حوضچه‌ی گرم یک منبع سخت از بالا-چپ، افت شدید">
-          <span class="pc__sw"><img src="prompts/chiaro.jpg" alt="لوح بصری سبک کیاروسکورو" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Chiaroscuro</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/chiaro.webp" type="image/webp" /><img src="prompts/chiaro.jpg" alt="کیاروسکورو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Chiaroscuro</span></span>
           <span class="pc__body">
             <h3 class="pc__title">کیاروسکورو<span class="pc__en">Chiaroscuro</span></h3>
             <p class="pc__hint">یک منبع سخت از بالا-چپ، افت شدید</p>
@@ -906,7 +907,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/neon.html" target="_blank" rel="noopener"
            data-cat="light" data-tags="neon Neon Night نئون شبانه نئون شب سایبرپانک بازتاب مه neon night cyberpunk reflection fog magenta cyan سرخابی و فیروزه‌ای در سیاهی فقط تابلوهای نئون؛ دو رنگ مکمل">
-          <span class="pc__sw"><img src="prompts/neon.jpg" alt="لوح بصری سبک نئون شبانه" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Neon Night</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/neon.webp" type="image/webp" /><img src="prompts/neon.jpg" alt="نئون شبانه — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Neon Night</span></span>
           <span class="pc__body">
             <h3 class="pc__title">نئون شبانه<span class="pc__en">Neon Night</span></h3>
             <p class="pc__hint">فقط تابلوهای نئون؛ دو رنگ مکمل</p>
@@ -915,7 +916,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/window.html" target="_blank" rel="noopener"
            data-cat="light" data-tags="window Soft Window Light نور نرم پنجره نور پنجره نرم روزانه ورمیر آرام window light soft daylight vermeer bounce fill خنثی و آرام، کم‌اشباع نور غیرمستقیم شمالی از پنجره‌ی بزرگ">
-          <span class="pc__sw"><img src="prompts/window.jpg" alt="لوح بصری سبک نور نرم پنجره" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Soft Window Light</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/window.webp" type="image/webp" /><img src="prompts/window.jpg" alt="نور نرم پنجره — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Soft Window Light</span></span>
           <span class="pc__body">
             <h3 class="pc__title">نور نرم پنجره<span class="pc__en">Soft Window Light</span></h3>
             <p class="pc__hint">نور غیرمستقیم شمالی از پنجره‌ی بزرگ</p>
@@ -924,7 +925,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
         </a>
         <a class="pc" href="style/rim.html" target="_blank" rel="noopener"
            data-cat="light" data-tags="rim Rim / Backlight بک‌لایت و نور لبه بک‌لایت کنتره سیلوئت نور لبه rim light backlight silhouette separation haze سرد و تک‌رنگ، سوژه تقریباً سیاه منبع پشت سوژه، خط نور روی کانتور">
-          <span class="pc__sw"><img src="prompts/rim.jpg" alt="لوح بصری سبک بک‌لایت و نور لبه" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">Rim / Backlight</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/rim.webp" type="image/webp" /><img src="prompts/rim.jpg" alt="بک‌لایت و نور لبه — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">Rim / Backlight</span></span>
           <span class="pc__body">
             <h3 class="pc__title">بک‌لایت و نور لبه<span class="pc__en">Rim / Backlight</span></h3>
             <p class="pc__hint">منبع پشت سوژه، خط نور روی کانتور</p>

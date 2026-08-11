@@ -30,6 +30,7 @@ REPO = os.path.dirname(HERE)
 OUT = os.path.join(REPO, 'prompts')
 W, H = 800, 500
 QUALITY = 82
+WEBP_QUALITY = 80
 
 
 def load_manifest():
@@ -116,11 +117,18 @@ def main():
                      if args.from_dir else 'no URL in plates.local.json')
             missing.append(f"{plate['id']}: {where}")
             continue
+        im = to_plate(raw)
         path = os.path.join(OUT, f"{plate['id']}.jpg")
-        to_plate(raw).save(path, 'JPEG', quality=QUALITY, optimize=True,
-                           progressive=True)
+        im.save(path, 'JPEG', quality=QUALITY, optimize=True, progressive=True)
+        # A WebP beside it, written from the same in-memory image rather than
+        # re-encoded from the JPEG, so it is not lossy twice. Roughly a third
+        # smaller across the set; the pages ask for it first and fall back to
+        # the JPEG, which stays the file every other tool and crawler expects.
+        wpath = os.path.join(OUT, f"{plate['id']}.webp")
+        im.save(wpath, 'WEBP', quality=WEBP_QUALITY, method=6)
         done.append(plate['id'])
-        print(f"  {plate['id']:<14} {os.path.getsize(path) // 1024:>4} KB")
+        print(f"  {plate['id']:<14} {os.path.getsize(path) // 1024:>4} KB"
+              f"  ·  webp {os.path.getsize(wpath) // 1024:>4} KB")
 
     print(f"\n{len(done)}/{len(man['plates'])} plates written to prompts/")
     if missing:

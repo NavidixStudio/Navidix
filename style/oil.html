@@ -530,6 +530,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
 .pc:focus-visible{ outline:1px solid #5BD6C0; outline-offset:3px; }
 .pc[hidden]{ display:none; }
 .pc__sw{ position:relative; aspect-ratio:16/10; }
+picture{ display:contents; }
 .pc__sw img{ width:100%; height:100%; object-fit:cover; display:block; }
 .pc__tag{ position:absolute; inset-inline-start:9px; bottom:9px; font-size:10.5px; letter-spacing:.04em;
   padding:4px 9px; border-radius:3px; background:rgba(4,5,8,.74); color:#C9D1D9;
@@ -690,7 +691,10 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
   <div class="sd__en">Classical Oil Painting</div>
   <div class="sd__meta"><span>نقاشی کلاسیک</span><span>سده‌ی ۱۷–۱۹</span></div>
 
-  <div class="sd__stage"><div class="sd__hero"><img src="../prompts/oil.jpg" alt="لوح بصری سبک رنگ روغن کلاسیک" width="800" height="500" /></div></div>
+  <div class="sd__stage"><div class="sd__hero"><picture>
+    <source srcset="../prompts/oil.webp" type="image/webp" />
+    <img src="../prompts/oil.jpg" alt="رنگ روغن کلاسیک — خروجی واقعی پرامپت این سبک" width="800" height="500" />
+  </picture></div></div>
   <p class="sd__cap">این تصویر خروجی واقعی همین پرامپت است — با سوژه‌ی نمونه اجرا شده؛ سوژه را عوض کن، سبک سر جایش می‌ماند.</p>
 
   <h2><span class="n">۰۱</span>شناسنامه‌ی سبک</h2>
@@ -716,7 +720,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
   <h2><span class="n">۰۶</span>چطور هر چیزی را در این سبک بسازی</h2>
   <p>سه ستون دارد: <b>ضربه‌قلم دیده‌شود</b>، <b>پالت خاکی گرم</b>، و <b>بافت بوم</b>. اگر خروجی زیادی «دیجیتال» شد، «museum photograph» و «aged canvas texture» را نگه دار — بیشترین اثر را همین دو دارند.</p>
 
-  <h2><span class="n">۰۷</span>سبک‌های هم‌خانواده</h2><div class="rel"><a href="baroque.html"><img src="../prompts/baroque.jpg" alt="" loading="lazy" /><span><b>باروک</b><small>Baroque</small></span></a><a href="renaissance.html"><img src="../prompts/renaissance.jpg" alt="" loading="lazy" /><span><b>رنسانس</b><small>Renaissance</small></span></a><a href="romantic.html"><img src="../prompts/romantic.jpg" alt="" loading="lazy" /><span><b>رمانتیسم</b><small>Romanticism</small></span></a></div>
+  <h2><span class="n">۰۷</span>سبک‌های هم‌خانواده</h2><div class="rel"><a href="baroque.html"><picture><source srcset="../prompts/baroque.webp" type="image/webp" /><img src="../prompts/baroque.jpg" alt="" loading="lazy" /></picture><span><b>باروک</b><small>Baroque</small></span></a><a href="renaissance.html"><picture><source srcset="../prompts/renaissance.webp" type="image/webp" /><img src="../prompts/renaissance.jpg" alt="" loading="lazy" /></picture><span><b>رنسانس</b><small>Renaissance</small></span></a><a href="romantic.html"><picture><source srcset="../prompts/romantic.webp" type="image/webp" /><img src="../prompts/romantic.jpg" alt="" loading="lazy" /></picture><span><b>رمانتیسم</b><small>Romanticism</small></span></a></div>
 
   <div class="join">
     <h2>دنبال کردن ادامه‌ی کار</h2>

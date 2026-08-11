@@ -122,6 +122,7 @@ EXTRA_CSS = '''
 }
 .art:focus-visible{ outline:1px solid #5BD6C0; outline-offset:3px; }
 .art__frame{ position:absolute; inset:0; }
+picture{ display:contents; }
 .art__frame img{
   width:100%; height:100%; object-fit:cover; display:block;
   filter:saturate(.9) contrast(1.02);
@@ -401,8 +402,11 @@ def art_card(i, s):
     big = ' art--lead' if i in FEATURED else ''
     return f'''  <a class="art{big} edge" href="style/{s['id']}.html">
     <span class="art__frame">
-      <img src="prompts/{s['id']}.jpg" alt="{s['fa']} — خروجی واقعی پرامپت این سبک"
-           width="800" height="500" loading="lazy" decoding="async" />
+      <picture>
+        <source srcset="prompts/{s['id']}.webp" type="image/webp" />
+        <img src="prompts/{s['id']}.jpg" alt="{s['fa']} — خروجی واقعی پرامپت این سبک"
+             width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
       <span class="art__pin lat">{s['en']}</span>
     </span>
     <span class="art__veil">

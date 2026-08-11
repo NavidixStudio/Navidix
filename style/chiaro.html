@@ -530,6 +530,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
 .pc:focus-visible{ outline:1px solid #5BD6C0; outline-offset:3px; }
 .pc[hidden]{ display:none; }
 .pc__sw{ position:relative; aspect-ratio:16/10; }
+picture{ display:contents; }
 .pc__sw img{ width:100%; height:100%; object-fit:cover; display:block; }
 .pc__tag{ position:absolute; inset-inline-start:9px; bottom:9px; font-size:10.5px; letter-spacing:.04em;
   padding:4px 9px; border-radius:3px; background:rgba(4,5,8,.74); color:#C9D1D9;
@@ -690,7 +691,10 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
   <div class="sd__en">Chiaroscuro</div>
   <div class="sd__meta"><span>نورپردازی سینمایی</span><span>—</span></div>
 
-  <div class="sd__stage"><div class="sd__hero"><img src="../prompts/chiaro.jpg" alt="لوح بصری سبک کیاروسکورو" width="800" height="500" /></div></div>
+  <div class="sd__stage"><div class="sd__hero"><picture>
+    <source srcset="../prompts/chiaro.webp" type="image/webp" />
+    <img src="../prompts/chiaro.jpg" alt="کیاروسکورو — خروجی واقعی پرامپت این سبک" width="800" height="500" />
+  </picture></div></div>
   <p class="sd__cap">این تصویر خروجی واقعی همین پرامپت است — با سوژه‌ی نمونه اجرا شده؛ سوژه را عوض کن، سبک سر جایش می‌ماند.</p>
 
   <h2><span class="n">۰۱</span>شناسنامه‌ی سبک</h2>
@@ -716,7 +720,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
   <h2><span class="n">۰۶</span>چطور هر چیزی را در این سبک بسازی</h2>
   <p>این سبک با <b>تاریکی</b> ساخته می‌شود نه با نور. «deep crushed blacks occupying most of the frame» را حتماً بگو، وگرنه مدل همه‌جا را روشن می‌کند. «single hard light source» یعنی فقط یکی — دو منبع، کیاروسکورو را نابود می‌کند.</p>
 
-  <h2><span class="n">۰۷</span>سبک‌های هم‌خانواده</h2><div class="rel"><a href="golden.html"><img src="../prompts/golden.jpg" alt="" loading="lazy" /><span><b>نور طلایی (گلدن آور)</b><small>Golden Hour</small></span></a><a href="neon.html"><img src="../prompts/neon.jpg" alt="" loading="lazy" /><span><b>نئون شبانه</b><small>Neon Night</small></span></a><a href="window.html"><img src="../prompts/window.jpg" alt="" loading="lazy" /><span><b>نور نرم پنجره</b><small>Soft Window Light</small></span></a><a href="rim.html"><img src="../prompts/rim.jpg" alt="" loading="lazy" /><span><b>بک‌لایت و نور لبه</b><small>Rim / Backlight</small></span></a></div>
+  <h2><span class="n">۰۷</span>سبک‌های هم‌خانواده</h2><div class="rel"><a href="golden.html"><picture><source srcset="../prompts/golden.webp" type="image/webp" /><img src="../prompts/golden.jpg" alt="" loading="lazy" /></picture><span><b>نور طلایی (گلدن آور)</b><small>Golden Hour</small></span></a><a href="neon.html"><picture><source srcset="../prompts/neon.webp" type="image/webp" /><img src="../prompts/neon.jpg" alt="" loading="lazy" /></picture><span><b>نئون شبانه</b><small>Neon Night</small></span></a><a href="window.html"><picture><source srcset="../prompts/window.webp" type="image/webp" /><img src="../prompts/window.jpg" alt="" loading="lazy" /></picture><span><b>نور نرم پنجره</b><small>Soft Window Light</small></span></a><a href="rim.html"><picture><source srcset="../prompts/rim.webp" type="image/webp" /><img src="../prompts/rim.jpg" alt="" loading="lazy" /></picture><span><b>بک‌لایت و نور لبه</b><small>Rim / Backlight</small></span></a></div>
 
   <div class="join">
     <h2>دنبال کردن ادامه‌ی کار</h2>

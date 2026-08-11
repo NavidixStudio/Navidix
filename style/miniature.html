@@ -530,6 +530,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
 .pc:focus-visible{ outline:1px solid #5BD6C0; outline-offset:3px; }
 .pc[hidden]{ display:none; }
 .pc__sw{ position:relative; aspect-ratio:16/10; }
+picture{ display:contents; }
 .pc__sw img{ width:100%; height:100%; object-fit:cover; display:block; }
 .pc__tag{ position:absolute; inset-inline-start:9px; bottom:9px; font-size:10.5px; letter-spacing:.04em;
   padding:4px 9px; border-radius:3px; background:rgba(4,5,8,.74); color:#C9D1D9;
@@ -690,7 +691,10 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
   <div class="sd__en">Persian Miniature</div>
   <div class="sd__meta"><span>سنتی و شرقی</span><span>صفوی · سده‌ی ۱۶</span></div>
 
-  <div class="sd__stage"><div class="sd__hero"><img src="../prompts/miniature.jpg" alt="لوح بصری سبک مینیاتور ایرانی" width="800" height="500" /></div></div>
+  <div class="sd__stage"><div class="sd__hero"><picture>
+    <source srcset="../prompts/miniature.webp" type="image/webp" />
+    <img src="../prompts/miniature.jpg" alt="مینیاتور ایرانی — خروجی واقعی پرامپت این سبک" width="800" height="500" />
+  </picture></div></div>
   <p class="sd__cap">این تصویر خروجی واقعی همین پرامپت است — با سوژه‌ی نمونه اجرا شده؛ سوژه را عوض کن، سبک سر جایش می‌ماند.</p>
 
   <h2><span class="n">۰۱</span>شناسنامه‌ی سبک</h2>
@@ -716,7 +720,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
   <h2><span class="n">۰۶</span>چطور هر چیزی را در این سبک بسازی</h2>
   <p>مینیاتور <b>پرسپکتیو ندارد</b> — «no vanishing point» چیزی است که مدل همیشه فراموش می‌کند. سه رنگ امضایش: لاجورد، شنگرف، طلا. و صحنه به‌جای عقب رفتن، <b>رو به بالا باز می‌شود</b>؛ همین را هم بنویس.</p>
 
-  <h2><span class="n">۰۷</span>سبک‌های هم‌خانواده</h2><div class="rel"><a href="qajar.html"><img src="../prompts/qajar.jpg" alt="" loading="lazy" /><span><b>نقاشی قاجار</b><small>Qajar Painting</small></span></a><a href="ukiyoe.html"><img src="../prompts/ukiyoe.jpg" alt="" loading="lazy" /><span><b>اوکیو-ئه ژاپنی</b><small>Ukiyo-e</small></span></a><a href="inkwash.html"><img src="../prompts/inkwash.jpg" alt="" loading="lazy" /><span><b>مرکب چینی</b><small>Chinese Ink Wash</small></span></a></div>
+  <h2><span class="n">۰۷</span>سبک‌های هم‌خانواده</h2><div class="rel"><a href="qajar.html"><picture><source srcset="../prompts/qajar.webp" type="image/webp" /><img src="../prompts/qajar.jpg" alt="" loading="lazy" /></picture><span><b>نقاشی قاجار</b><small>Qajar Painting</small></span></a><a href="ukiyoe.html"><picture><source srcset="../prompts/ukiyoe.webp" type="image/webp" /><img src="../prompts/ukiyoe.jpg" alt="" loading="lazy" /></picture><span><b>اوکیو-ئه ژاپنی</b><small>Ukiyo-e</small></span></a><a href="inkwash.html"><picture><source srcset="../prompts/inkwash.webp" type="image/webp" /><img src="../prompts/inkwash.jpg" alt="" loading="lazy" /></picture><span><b>مرکب چینی</b><small>Chinese Ink Wash</small></span></a></div>
 
   <div class="join">
     <h2>دنبال کردن ادامه‌ی کار</h2>

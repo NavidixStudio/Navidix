@@ -173,6 +173,7 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
 .pc:focus-visible{ outline:1px solid #5BD6C0; outline-offset:3px; }
 .pc[hidden]{ display:none; }
 .pc__sw{ position:relative; aspect-ratio:16/10; }
+picture{ display:contents; }
 .pc__sw img{ width:100%; height:100%; object-fit:cover; display:block; }
 .pc__tag{ position:absolute; inset-inline-start:9px; bottom:9px; font-size:10.5px; letter-spacing:.04em;
   padding:4px 9px; border-radius:3px; background:rgba(4,5,8,.74); color:#C9D1D9;
@@ -347,7 +348,9 @@ for s in STYLES:
         for k, lab in DNA_LABELS if s['dna'].get(k) and s['dna'][k] != '—')
     pal = ''.join(f'<span style="background:{c}"></span>' for c in s['plate'][2])
     rel = ''.join(
-        f'<a href="{x["id"]}.html"><img src="../prompts/{x["id"]}.jpg" alt="" loading="lazy" />'
+        f'<a href="{x["id"]}.html"><picture>'
+        f'<source srcset="../prompts/{x["id"]}.webp" type="image/webp" />'
+        f'<img src="../prompts/{x["id"]}.jpg" alt="" loading="lazy" /></picture>'
         f'<span><b>{x["fa"]}</b><small>{x["en"]}</small></span></a>' for x in sibs)
     title = f'{s["fa"]} — پرامپت و شناسنامه‌ی سبک | Navidix'
     desc = (f'پرامپت آماده‌ی {s["fa"]} ({s["en"]}) برای تصویر و ویدیو، همراه با شناسنامه‌ی سبک: '
@@ -363,7 +366,10 @@ for s in STYLES:
   <div class="sd__en">{s['en']}</div>
   <div class="sd__meta"><span>{CATNAME[s['cat']]}</span><span>{s['period']}</span></div>
 
-  <div class="sd__stage"><div class="sd__hero"><img src="../prompts/{s['id']}.jpg" alt="لوح بصری سبک {s['fa']}" width="800" height="500" /></div></div>
+  <div class="sd__stage"><div class="sd__hero"><picture>
+    <source srcset="../prompts/{s['id']}.webp" type="image/webp" />
+    <img src="../prompts/{s['id']}.jpg" alt="{s['fa']} — خروجی واقعی پرامپت این سبک" width="800" height="500" />
+  </picture></div></div>
   <p class="sd__cap">{PLATE_CAP}</p>
 
   <h2><span class="n">۰۱</span>شناسنامه‌ی سبک</h2>
@@ -434,7 +440,7 @@ for i, (cid, cname, cdesc) in enumerate(CATS, 1):
     for s in by_cat.get(cid, []):
         cards += f'''        <a class="pc" href="style/{s['id']}.html" target="_blank" rel="noopener"
            data-cat="{s['cat']}" data-tags="{s['id']} {s['en']} {s['fa']} {s['tags']} {s['dna']['palette']} {s['dna']['light']}">
-          <span class="pc__sw"><img src="prompts/{s['id']}.jpg" alt="لوح بصری سبک {s['fa']}" width="800" height="500" loading="lazy" decoding="async" /><span class="pc__tag">{s['en']}</span></span>
+          <span class="pc__sw"><picture><source srcset="prompts/{s['id']}.webp" type="image/webp" /><img src="prompts/{s['id']}.jpg" alt="{s['fa']} — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" /></picture><span class="pc__tag">{s['en']}</span></span>
           <span class="pc__body">
             <h3 class="pc__title">{s['fa']}<span class="pc__en">{s['en']}</span></h3>
             <p class="pc__hint">{s['dna']['light']}</p>
