@@ -12,12 +12,6 @@ They are ordinary pages now, built on the same shell every lesson uses, so
 they inherit the reading style and the brand hairline along with it.
 """
 
-import os, sys
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-# The gallery is an archive of the library's own output, so it reads the same
-# registry the library is built from — one list of styles, never two.
-from styles import STYLES, CATS
-
 SRC  = '/home/user/Navidix/brand-content.html'
 BASE = 'https://navidixstudio.com/'
 OUT  = '/home/user/Navidix/'
@@ -90,151 +84,6 @@ EXTRA_CSS = '''
 .sect .sub{ color:#98A0A9; font-size:clamp(14px,2vw,16.5px); line-height:2.05;
   max-width:62ch; margin:0; }
 
-/* ---------------------------------------------------------------- the wall
-   An archive, not a contact sheet. Three works hang large and the rest at a
-   single size; auto-flow:dense backfills around the large ones so the run
-   never leaves a hole. Row height is stated rather than derived, which is the
-   only way a 2x2 piece and a 1x1 piece can both land on the plate's own 8:5.
-
-   Provenance is held back on purpose. At rest a piece shows the picture and
-   its name and nothing else — that is what a gallery wall looks like. The
-   category, the model, the period and the way through to the full recipe
-   arrive together, on approach, over a scrim of their own. */
-.lesson .wall{
-  max-width:1180px; margin:0 auto; padding:clamp(14px,2.4vh,26px) 22px 0;
-  display:grid; grid-template-columns:repeat(4,1fr);
-  grid-auto-rows:clamp(104px,12.2vw,164px);
-  grid-auto-flow:dense; gap:clamp(9px,1.1vw,15px);
-}
-.art{
-  position:relative; overflow:hidden; display:block; text-decoration:none;
-  border:1px solid #262A31; border-radius:6px; background:#0d1015;
-  box-shadow:inset 0 1px 0 rgba(196,216,244,.05), 0 18px 40px -30px rgba(0,0,0,.9);
-  transition:border-color .45s cubic-bezier(.16,1,.3,1),
-             box-shadow .55s cubic-bezier(.16,1,.3,1),
-             transform .45s cubic-bezier(.16,1,.3,1);
-}
-.art--lead{ grid-column:span 2; grid-row:span 2; }
-.art:hover, .art:focus-visible{
-  transform:translateY(-2px); border-color:rgba(229,32,42,.42);
-  box-shadow:inset 0 1px 0 rgba(220,234,255,.1), 0 30px 64px -34px rgba(120,16,22,.6);
-  outline:none;
-}
-.art:focus-visible{ outline:1px solid #5BD6C0; outline-offset:3px; }
-.art__frame{ position:absolute; inset:0; }
-picture{ display:contents; }
-.art__frame img{
-  width:100%; height:100%; object-fit:cover; display:block;
-  filter:saturate(.9) contrast(1.02);
-  transition:transform 1.15s cubic-bezier(.16,1,.3,1), filter .6s ease;
-}
-.art:hover img, .art:focus-visible img{ transform:scale(1.05); filter:saturate(1) contrast(1.02); }
-/* the quiet label a wall always carries */
-.art__pin{
-  position:absolute; z-index:2; inset-inline-start:9px; top:9px;
-  font-family:ui-monospace,Menlo,monospace; font-size:9px;
-  padding:3px 7px; border-radius:3px; color:rgba(237,242,250,.85);
-  background:rgba(3,5,10,.62); border:1px solid rgba(255,255,255,.1);
-  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
-  transition:opacity .45s cubic-bezier(.16,1,.3,1);
-}
-.art:hover .art__pin, .art:focus-visible .art__pin{ opacity:0; }
-/* everything the piece knows about itself, delivered only when asked */
-.art__veil{
-  position:absolute; z-index:3; inset:auto 0 0; padding:22px 13px 11px;
-  display:flex; flex-direction:column; gap:3px;
-  /* a small piece is short, so its label sits over a busy part of the picture
-     rather than over sky. The scrim reaches full strength earlier here and
-     opens out again on the large pieces, which have the height to spare. */
-  background:linear-gradient(to top, rgba(3,5,10,.97) 42%, rgba(3,5,10,.78) 72%, transparent);
-  opacity:0; transform:translateY(22%);
-  transition:opacity .45s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1);
-}
-.art--lead .art__veil{
-  padding:34px 16px 14px;
-  background:linear-gradient(to top, rgba(3,5,10,.94) 16%, rgba(3,5,10,.62) 56%, transparent);
-}
-.art:hover .art__veil, .art:focus-visible .art__veil{ opacity:1; transform:none; }
-.art__cat{ font-size:10px; color:#E5202A; letter-spacing:.02em; }
-.art__t{ font-size:13.5px; font-weight:600; line-height:1.5; color:#F2F6FB; }
-.art__meta{ font-size:10.5px; color:#8C939B; }
-.art__go{ display:none; }
-/* only the large pieces have the room to say where the recipe is */
-.art--lead .art__cat{ font-size:11px; }
-.art--lead .art__t{ font-size:19px; }
-.art--lead .art__meta{ font-size:11.5px; }
-.art--lead .art__go{
-  display:flex; align-items:center; gap:6px; margin-top:6px;
-  font-size:11.5px; color:#E5202A;
-}
-.art--lead .art__go i{ font-style:normal; transition:transform .45s cubic-bezier(.16,1,.3,1); }
-.art--lead:hover .art__go i{ transform:translateX(-4px); }
-
-.wall__foot{
-  max-width:980px; margin:0 auto; padding:clamp(34px,6vh,64px) 22px 0; text-align:center;
-}
-.wall__foot p{
-  color:#8C939B; font-size:14px; line-height:2.05; max-width:58ch; margin:0 auto 20px;
-}
-@media (max-width:900px){
-  .lesson .wall{ grid-template-columns:repeat(3,1fr); grid-auto-rows:clamp(96px,15.5vw,150px); }
-}
-@media (max-width:560px){
-  .lesson .wall{ grid-template-columns:repeat(2,1fr); grid-auto-rows:26vw; gap:8px; }
-  /* a lead piece keeps its width but not its height, or one work would take
-     the whole screen on a phone */
-  .art--lead{ grid-column:span 2; grid-row:span 1; }
-  .art--lead .art__t{ font-size:15px; }
-  /* there is no approach on a touch screen, so the label simply stays */
-  .art__veil{ opacity:1; transform:none; padding-top:24px; }
-  .art__pin{ display:none; }
-}
-@media (prefers-reduced-motion:reduce){
-  .art, .art__frame img, .art__veil{ transition:none; }
-  .art:hover img{ transform:none; }
-}
-.sect .eyebrow{ font-size:11.5px; letter-spacing:.06em; color:#7FB8FF;
-  margin:0 0 11px; font-weight:600; }
-
-.grid{ max-width:980px; margin:0 auto; padding:clamp(26px,4vh,40px) 22px 0;
-  display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(288px,1fr)); }
-.vcard{
-  display:flex; flex-direction:column; text-decoration:none; border:1px solid #262A31;
-  border-radius:8px; overflow:hidden; background:#101216;
-  transition:border-color .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1),
-             box-shadow .5s cubic-bezier(.16,1,.3,1);
-}
-.vcard:hover{ transform:translateY(-2px); border-color:rgba(150,196,255,.4);
-  box-shadow:0 22px 44px -30px rgba(0,0,0,.95); }
-.vcard__cover{ position:relative; display:block; aspect-ratio:16/9; background:#08090B; }
-.vcard__cover img{ width:100%; height:100%; object-fit:cover; display:block; }
-.vcard__time{ position:absolute; bottom:8px; left:8px; background:rgba(4,6,10,.84);
-  color:#D7DEE7; font-size:11px; padding:2px 7px; border-radius:3px; letter-spacing:.02em; }
-.vcard__body{ padding:16px 18px 18px; display:flex; flex-direction:column; gap:9px; flex:1; }
-.vcard__body h2{ margin:0; font-size:15.5px; line-height:1.75; font-weight:600; color:#EDF2FA; }
-.vcard__body p{ margin:0; font-size:13px; line-height:1.95; color:#8C939B; flex:1; }
-.vcard__go{ font-size:12.5px; color:#7FB8FF; font-weight:600; }
-.vcard:hover .vcard__go{ color:#A9CEFF; }
-
-.chan{ display:flex; align-items:flex-start; gap:14px; text-decoration:none;
-  border:1px solid #262A31; border-radius:8px; padding:18px 19px; background:#101216;
-  transition:border-color .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1); }
-.chan:hover{ transform:translateY(-2px); border-color:rgba(150,196,255,.42); }
-.chan svg{ flex:0 0 auto; width:23px; height:23px; margin-top:2px; color:#98A0A9; }
-.chan:hover svg{ color:#E4E7EA; }
-.chan--yt:hover svg{ color:#E3202A; }
-.chan--tg:hover svg{ color:#6EAAFF; }
-.chan b{ display:block; font-size:15px; font-weight:600; color:#EDF2FA; margin-bottom:2px; }
-.chan .at{ font-size:11.5px; color:#6B7280; display:block; margin-bottom:7px; }
-.chan p{ margin:0; font-size:13px; line-height:1.95; color:#8C939B; }
-
-.rowcta{ max-width:980px; margin:0 auto; padding:clamp(22px,3.5vh,32px) 22px 0;
-  display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
-.rowcta h2{ margin:0; font-size:clamp(17px,2.6vw,22px); font-weight:700; color:#EDF2FA; }
-
-/* .hollow — the empty-state panel — was only ever used by the gallery, and the
-   gallery has work in it now. Dropped rather than shipped to four pages that
-   cannot use it. */
 '''
 
 FOLLOWUP = '''<section class="followup">
@@ -383,63 +232,18 @@ LD_GAL = ('{"@context":"https://schema.org","@type":"CollectionPage",'
           '"url":"' + BASE + 'gallery.html",'
           '"publisher":{"@type":"Organization","name":"Navidix","url":"' + BASE + '"}}')
 
-# The gallery used to be an empty state apologising for itself. There are
-# twenty-seven finished works sitting in prompts/ — every one of them the real
-# output of a prompt this site publishes, made on a stated model with a stated
-# subject — so the archive is built from those rather than from a promise.
-#
-# It is deliberately not the library. prompts.html is a tool: search, filter,
-# the full recipe, something to work from. This is a gallery: the pictures at
-# the size they deserve, provenance one gesture away, and nothing to fill in.
-CAT_FA = dict((c[0], c[1]) for c in CATS)
-
-# Three pieces carry the wall. The rest hang at a single size, and the grid
-# backfills around the large ones so no hole is ever left in the run.
-FEATURED = {0, 9, 18}
-
-
-def art_card(i, s):
-    big = ' art--lead' if i in FEATURED else ''
-    return f'''  <a class="art{big} edge" href="style/{s['id']}.html">
-    <span class="art__frame">
-      <picture>
-        <source srcset="prompts/{s['id']}.webp" type="image/webp" />
-        <img src="prompts/{s['id']}.jpg" alt="{s['fa']} — خروجی واقعی پرامپت این سبک"
-             width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-      <span class="art__pin lat">{s['en']}</span>
-    </span>
-    <span class="art__veil">
-      <span class="art__cat">{CAT_FA.get(s['cat'], '')}</span>
-      <b class="art__t">{s['fa']}</b>
-      <span class="art__meta"><span class="lat">seedream v4.5</span> · {s['period']}</span>
-      <span class="art__go">دیدن شناسنامه و پرامپت <i aria-hidden="true">←</i></span>
-    </span>
-  </a>'''
-
-
+# ---- the gallery is deliberately empty ----
+# It briefly held the prompt library's twenty-seven plates, which was the wrong
+# call: the library is a tool and the gallery is meant to be the studio's own
+# work, so all that did was print the same twenty-seven pictures twice under
+# two names. The wall, its markup and its stylesheet are gone rather than left
+# commented out. The page stays — it is linked from the homepage and the
+# sitemap — and says plainly that it is being prepared.
 gal_body = '''<section class="sect">
   <p class="eyebrow">آرشیو تصویری</p>
   <h1>گالری هوش مصنوعی</h1>
-  <p class="sub">بیست‌وهفت اثر، هرکدام خروجی واقعی یکی از پرامپت‌های همین سایت — همان مدل، همان جمله، همان سوژه‌ی نمونه. اینجا فقط نگاه می‌کنی؛ اگر خواستی بدانی هرکدام چطور ساخته شده، شناسنامه‌ی کاملش یک کلیک آن‌طرف‌تر است.</p>
-</section>
-
-<div class="wall">
-''' + '\n'.join(art_card(i, s) for i, s in enumerate(STYLES)) + '''
-</div>
-
-<div class="wall__foot">
-  <p>هر بیست‌وهفت سبک با شناسنامه‌ی کامل — پالت، نور، ضربه‌قلم، پرامپت تصویر و ویدیو — در کتابخانه آماده است.</p>
-  <div class="follow-row" style="justify-content:center">
-    <a class="fbtn fbtn--tg" href="prompts.html">
-      <span>کتابخانه‌ی پرامپت<small>۲۷ سبک، با شناسنامه‌ی کامل</small></span>
-    </a>
-    <a class="fbtn" href="https://www.instagram.com/navidi__ai" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 3.3.15 4.8 1.7 5 5 .06 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.15 3.2-1.7 4.8-5 5-1.3.06-1.7.07-4.9.07s-3.6 0-4.9-.07c-3.3-.15-4.8-1.7-5-5C2.07 15.6 2.06 15.2 2.06 12s0-3.6.07-4.9c.15-3.3 1.7-4.8 5-5C8.4 2.2 8.8 2.2 12 2.2zm0 3.2a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2zm0 10.9a4.3 4.3 0 1 1 0-8.6 4.3 4.3 0 0 1 0 8.6zm6.9-11.1a1.55 1.55 0 1 0 0 3.1 1.55 1.55 0 0 0 0-3.1z"/></svg>
-      <span>اینستاگرام استودیو<small>تصویرهای تازه، همان‌جا</small></span>
-    </a>
-  </div>
-</div>'''
+  <p class="sub">این بخش در حال آماده شدن است. گالری قرار است کارِ خودِ استودیو را نشان دهد — پوستر یک مستند، طراحی یک نما، آزمودن یک زبان تصویری پیش از آنکه به فیلم برسد — با هنر-کارگردانی مخصوص خودش. تا آن‌وقت، اگر دنبال ساختن تصویر با هوش مصنوعی هستی، شناسنامه‌ی کامل ۲۷ سبک در <a href="prompts.html">کتابخانه‌ی پرامپت</a> آماده است.</p>
+</section>'''
 
 
 # ----------------------------------------------------------------- channels
