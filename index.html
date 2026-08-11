@@ -44,9 +44,37 @@
 {"@context":"https://schema.org","@type":"ItemList","name":"بخش‌های اصلی سایت نویدیکس","itemListElement":[{"@type":"SiteNavigationElement","position":1,"name":"آموزش هوش مصنوعی کاربردی","url":"https://navidixstudio.com/training.html"},{"@type":"SiteNavigationElement","position":2,"name":"از کجا شروع کنم؟ راهنمای صفرِ صفر","url":"https://navidixstudio.com/ai-start.html"},{"@type":"SiteNavigationElement","position":3,"name":"چطور درست بپرسم؟ آناتومی پرامپت","url":"https://navidixstudio.com/ai-prompting.html"},{"@type":"SiteNavigationElement","position":4,"name":"تصویر و صدا: ساختن، خواندن، شنیدن","url":"https://navidixstudio.com/ai-image-sound.html"},{"@type":"SiteNavigationElement","position":5,"name":"کتابخانه‌ی پرامپت فارسی","url":"https://navidixstudio.com/prompts.html"},{"@type":"SiteNavigationElement","position":5,"name":"خدمات استودیو نویدیکس","url":"https://navidixstudio.com/system.html"},{"@type":"SiteNavigationElement","position":6,"name":"برند، پیش از محتوا","url":"https://navidixstudio.com/brand-content.html"},{"@type":"SiteNavigationElement","position":7,"name":"زبان دوربین","url":"https://navidixstudio.com/camera-language.html"},{"@type":"SiteNavigationElement","position":8,"name":"پرونده‌ی باز Hell Grind","url":"https://navidixstudio.com/hell-grind.html"}]}
 </script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400&family=Inter:wght@300;400;500&family=Vazirmatn:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+/* Served from this origin. Google Fonts is unreliable for most of this
+   site's readers, and a render-blocking stylesheet on a host that hangs
+   means nothing paints at all. One variable file per family covers every
+   weight used here. swap, so text is readable before the file lands. */
+@font-face{font-family:'Vazirmatn';src:url('/assets/vazirmatn-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+@font-face{font-family:'Sora';src:url('/assets/sora-var.woff2')format('woff2');
+  font-weight:100 800;font-display:swap;font-style:normal}
+@font-face{font-family:'Inter';src:url('/assets/inter-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+
+/* ---- the page without its galaxy ----
+   Everything in the hero starts invisible because the opening timeline fades
+   it in. If that timeline can never run, these are simply shown. Not a
+   degraded page — the same page, without the canvas behind it. */
+html.nostage .lang, html.nostage .wordmark, html.nostage .tagline,
+html.nostage .pitch, html.nostage .hcta, html.nostage .cue,
+html.nostage .panel{ opacity:1; animation:nvxIn .7s cubic-bezier(.16,1,.3,1) both; }
+html.nostage .panel{ animation-delay:.06s; }
+@keyframes nvxIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+html.nostage #curtain{ display:none; }
+html.nostage .landing{ min-height:auto; }
+/* the hero's top padding is measured from where the 3D mark ends, and there
+   is no mark to measure — so it is a plain inset instead of a leftover gap */
+html.nostage .hero{ padding-top:clamp(56px,12vh,120px); justify-content:center; }
+@media (prefers-reduced-motion:reduce){
+  html.nostage .lang, html.nostage .wordmark, html.nostage .tagline, html.nostage .pitch,
+  html.nostage .hcta, html.nostage .cue, html.nostage .panel{ animation:none; }
+}
+</style>
 
 <style>
 /* =====================================================================
@@ -464,8 +492,14 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
 .panel{ position:relative; overflow:hidden; }
 .panel::before{
   content:''; position:absolute; inset:0 0 auto; height:1px; z-index:2;
-  background:linear-gradient(to left, transparent, rgba(227,32,42,.7) 30%,
-             rgba(110,170,255,.52) 70%, transparent);
+  /* Twice the element's width and offset by --nvx-flow, which the UI layer
+     moves with the scroll. Two full red-into-blue runs sit side by side, so
+     sliding by any amount lands on more gradient and never on a seam. */
+  background:linear-gradient(to left,
+    transparent 0%, rgba(227,32,42,.7) 15%, rgba(110,170,255,.52) 35%, transparent 50%,
+    transparent 50%, rgba(227,32,42,.7) 65%, rgba(110,170,255,.52) 85%, transparent 100%);
+  background-size:200% 100%;
+  background-position:var(--nvx-flow, 0%) 0;
   opacity:.62; transition:opacity .45s cubic-bezier(.16,1,.3,1);
 }
 .panel:hover::before{ opacity:1; }
@@ -519,8 +553,8 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
 
 <div id="curtain"><div class="bar"><i id="curtainBar"></i></div></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="assets/three.min.js"></script>
+<script src="assets/gsap.min.js"></script>
 <script>
 /* =====================================================================
    NAVIDIX CORE
@@ -702,16 +736,39 @@ const Stage = (() => {
 
     state.clock = new THREE.Clock();
     addEventListener('resize', onResize, { passive:true });
-    addEventListener('orientationchange', () => setTimeout(onResize, 250));
+    addEventListener('orientationchange', () => setTimeout(apply, 260));
     document.addEventListener('visibilitychange', () => { state.running = !document.hidden; });
     return { scene, camera };
   }
 
-  function onResize(){
+  /* Resizing is the most expensive thing on this page: setSize reallocates the
+     drawing buffer and every module re-measures itself. On a phone that has to
+     be defended, because scrolling fires resize. The address bar collapses as
+     you swipe down and expands as you swipe up, and each of those is a resize
+     event with a changed height — so the old handler was reallocating the
+     framebuffer in the middle of the gesture, repeatedly. That is the scroll
+     lag no headless test can see, because there the viewport never moves.
+
+     Two guards. A height change on its own, under the tallest address bar, is
+     the address bar: the canvas is fixed to the viewport and already covers
+     it, so nothing needs doing. And whatever is left is coalesced to one call
+     after the resizing stops, since dragging a desktop window fires this
+     continuously too. */
+  let lastW = innerWidth, lastH = innerHeight, pending = 0;
+
+  function apply(){
+    pending = 0;
+    lastW = innerWidth; lastH = innerHeight;
     camera.aspect = innerWidth/innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
     NAVIDIX.each(m => m.layout && m.layout());
+  }
+
+  function onResize(){
+    if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 160) return;
+    clearTimeout(pending);
+    pending = setTimeout(apply, 140);
   }
 
   /* viewport size in world units at the plane the mark sits on */
@@ -1475,7 +1532,11 @@ function buildDeck(){
      cursor's position *inside* the panel, which moves it again — a feedback
      loop that reads as a fast shake. Pointer readings are also collapsed
      into one write per animation frame. */
-  if (!NAVIDIX.state.reduced && matchMedia('(hover:hover)').matches){
+  /* Both of the flourishes below are gsap. Without it they must be skipped
+     rather than thrown from, or the deck ends up in the document with no
+     text in it — built, then abandoned halfway. */
+  const HAS_GSAP = typeof gsap !== 'undefined';
+  if (HAS_GSAP && !NAVIDIX.state.reduced && matchMedia('(hover:hover)').matches){
     panels.forEach(p => {
       /* rotationX/rotationY, not rotateX/rotateY: quickTo looks the property
          up by its exact registered name, so the alias resolves to nothing and
@@ -1519,7 +1580,7 @@ function buildDeck(){
   }
 
   /* portals arrive as they enter view, not all at once on load */
-  if ('IntersectionObserver' in window){
+  if (HAS_GSAP && 'IntersectionObserver' in window){
     const io = new IntersectionObserver(entries => {
       entries.forEach(en => {
         if (!en.isIntersecting) return;
@@ -1530,7 +1591,7 @@ function buildDeck(){
       });
     }, { threshold:.18, rootMargin:'0px 0px -8% 0px' });
     panels.forEach(p => io.observe(p));
-  } else { gsap.set(panels, { opacity:1 }); }
+  } else { panels.forEach(p => { p.style.opacity = '1'; }); }
   return panels;
 }
 
@@ -1539,8 +1600,44 @@ function buildDeck(){
 /* =====================================================================
    BOOT
    ===================================================================== */
+/* ---- the page has to read even when the galaxy never arrives ----
+   The boot curtain is a fixed black layer that the opening timeline removes,
+   and that timeline is gsap driving three. If either script is missing — and
+   for most of this site's readers a blocked CDN is an ordinary Tuesday — the
+   timeline never runs, the curtain never lifts, and the homepage is a black
+   screen for good. Both libraries are served from this origin now, so it
+   should not happen; this is what happens if it does anyway. The hero copy,
+   the deck and the language switch are all ordinary HTML and CSS. Only the
+   canvas is lost. */
+function plainSite(why){
+  if (document.documentElement.classList.contains('nostage')) return;
+  console.warn('[navidix] running without the stage —', why);
+  document.documentElement.classList.add('nostage');
+  const c = document.getElementById('curtain');
+  if (c) c.remove();
+  try {
+    /* Lang.init fills the tagline, the pitch, both buttons and all six panel
+       titles, and touches gsap only on the animated path. */
+    if (!document.querySelector('.panel')) Lang.init(buildDeck());
+  } catch (e) { console.warn('[navidix] plain site, deck', e); }
+  try {
+    const wm = document.getElementById('wordmark'), a = NAVIDIX.config.assets.wordmark;
+    if (wm){ if (a && a.indexOf('__') !== 0) wm.src = a; else wm.remove(); }
+  } catch (e) { console.warn('[navidix] plain site, wordmark', e); }
+}
+
+/* A library that is merely slow still gets its chance; one that never comes
+   does not hold the page hostage past this. */
+setTimeout(function () {
+  if (!document.querySelector('#stage canvas')) plainSite('nothing on the stage after 6s');
+}, 6000);
+
 (function boot(){
   const { config, state } = NAVIDIX;
+
+  if (typeof THREE === 'undefined' || typeof gsap === 'undefined')
+    return plainSite(typeof THREE === 'undefined' ? 'three.js did not load' : 'gsap did not load');
+
   const { scene } = Stage.init();
 
   buildStarfield(scene);

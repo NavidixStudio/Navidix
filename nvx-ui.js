@@ -103,4 +103,32 @@
   /* Coming back through history reuses the cached page with the veil still
      up, so it has to be cleared on show as well as on load. */
   addEventListener('pageshow', function () { veil.classList.remove('on'); });
+
+  /* ---- 4. the brand hairline drifts as you scroll ----
+     Every card on the site carries a hairline running red into blue. This
+     makes that gradient travel with the page instead of sitting still.
+
+     The whole effect is one number. Scroll position becomes --nvx-flow on
+     the root element, every .edge::before reads it as a background offset,
+     and the work per frame is a single custom-property write — no element
+     is measured, no list is walked, nothing is queried. The listener is
+     passive and collapses into one write per animation frame, so a fast
+     flick costs the same as a slow drag, and once the page stops moving
+     nothing runs at all.
+
+     The gradient is laid out twice as wide as its element and shifted by
+     half its width over one viewport of scrolling, so the colours slide
+     through continuously and never show a seam. */
+  if (!REDUCED) {
+    var root = document.documentElement, queued = false;
+
+    function flow() {
+      queued = false;
+      root.style.setProperty('--nvx-flow', (-(scrollY * 0.5) % 200) + '%');
+    }
+    addEventListener('scroll', function () {
+      if (!queued) { queued = true; requestAnimationFrame(flow); }
+    }, { passive: true });
+    flow();
+  }
 })();

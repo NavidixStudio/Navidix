@@ -11,10 +11,15 @@ BASE = 'https://navidixstudio.com/'
 # up advertising the wrong cover. Bounded by what is actually wanted instead.
 src = open(SRC, encoding='utf-8').read().split('\n')
 _a = next(i for i, l in enumerate(src) if l.startswith('<link rel="icon"'))
-_b = next(i for i, l in enumerate(src)
-         if l.startswith('<link href="https://fonts.googleapis.com/css2'))
+# ends at the </style> closing the local @font-face block, which is the last
+# thing in the shell's head-asset run
+_b = next(i for i, l in enumerate(src) if i > _a and l == '</style>')
 head_assets = '\n'.join(src[_a:_b + 1])
-_i = src.index('<style>'); _j = src.index('</style>')
+# The shell has two style blocks now — the local @font-face block up in the
+# head assets, and the site's stylesheet below it. index() finds the first,
+# which is the wrong one, so this takes the block that follows the assets.
+_i = next(i for i, l in enumerate(src) if i > _b and l == '<style>')
+_j = next(i for i, l in enumerate(src) if i > _i and l == '</style>')
 style = '\n'.join(src[_i:_j])
 
 TITLE = 'چطور درست بپرسم؟ آناتومی یک پرامپت خوب | آموزش هوش مصنوعی کاربردی — قسمت ۲'

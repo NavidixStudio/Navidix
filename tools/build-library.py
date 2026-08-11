@@ -18,10 +18,15 @@ src  = open(f'{REPO}/brand-content.html', encoding='utf-8').read().split('\n')
 # pulling in the shell's own twitter:image, so every page here advertised
 # the wrong cover.
 _a = next(i for i, l in enumerate(src) if l.startswith('<link rel="icon"'))
-_b = next(i for i, l in enumerate(src)
-         if l.startswith('<link href="https://fonts.googleapis.com/css2'))
+# ends at the </style> closing the local @font-face block, which is the last
+# thing in the shell's head-asset run
+_b = next(i for i, l in enumerate(src) if i > _a and l == '</style>')
 HEAD_ASSETS = '\n'.join(src[_a:_b + 1])
-_i = src.index('<style>'); _j = src.index('</style>')
+# The shell has two style blocks now — the local @font-face block up in the
+# head assets, and the site's stylesheet below it. index() finds the first,
+# which is the wrong one, so this takes the block that follows the assets.
+_i = next(i for i, l in enumerate(src) if i > _b and l == '<style>')
+_j = next(i for i, l in enumerate(src) if i > _i and l == '</style>')
 SHELL_CSS = '\n'.join(src[_i:_j])   # by marker, not by line number
 
 CATNAME = {c[0]: c[1] for c in CATS}
@@ -89,8 +94,13 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
 .pc, .sd__stage{{ position:relative; overflow:hidden; }}
 .pc::before, .sd__stage::before{{
   content:''; position:absolute; inset:0 0 auto; height:1px; z-index:3;
-  background:linear-gradient(to left, transparent, rgba(227,32,42,.7) 30%,
-             rgba(110,170,255,.52) 70%, transparent);
+  /* twice as wide as the card and offset by --nvx-flow, which the shared UI
+     layer moves with the scroll — two runs side by side, so it never seams */
+  background:linear-gradient(to left,
+    transparent 0%, rgba(227,32,42,.7) 15%, rgba(110,170,255,.52) 35%, transparent 50%,
+    transparent 50%, rgba(227,32,42,.7) 65%, rgba(110,170,255,.52) 85%, transparent 100%);
+  background-size:200% 100%;
+  background-position:var(--nvx-flow, 0%) 0;
   opacity:.62; transition:opacity .45s cubic-bezier(.16,1,.3,1);
 }}
 .pc:hover::before{{ opacity:1; }}
