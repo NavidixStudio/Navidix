@@ -375,7 +375,7 @@ BODY = '''<body>
   </div>
 </footer>
 
-<nav class="pager"><a href="ai-prompting.html"><small>قسمت پیش</small><b>چطور درست بپرسم؟ آناتومی یک پرامپت خوب</b></a><a href="prompts.html"><small>مرتبط</small><b>کتابخانه‌ی پرامپت فارسی — ۲۷ سبک</b></a><a href="training.html"><small>فهرست</small><b>همه‌ی قسمت‌های آموزش هوش مصنوعی کاربردی</b></a></nav>
+<nav class="pager"><a href="ai-prompting.html"><small>قسمت پیش</small><b>چطور درست بپرسم؟ آناتومی یک پرامپت خوب</b></a><a href="ai-systems.html"><small>قسمت بعد</small><b>از یک کار به یک سیستم</b></a><a href="training.html"><small>فهرست</small><b>همه‌ی قسمت‌های آموزش هوش مصنوعی کاربردی</b></a></nav>
 
 </div>
 </div>
