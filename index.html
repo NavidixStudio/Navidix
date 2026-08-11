@@ -979,7 +979,7 @@ const Stage = (() => {
   function init(){
     const small = Math.min(innerWidth, innerHeight) < 700;
     const cores = navigator.hardwareConcurrency || 4;
-    if (small || cores <= 4) config.quality = { stars:3800, dust:0, dpr:1.25, nebulae:1, streaks:1, octaves:3 };
+    if (small || cores <= 4) config.quality = { stars:12000, dust:0, dpr:1.25, nebulae:1, streaks:1, octaves:3, bake:true };
     if (state.reduced) { config.quality.dust = 0; config.quality.streaks = 0; }
 
     scene  = new THREE.Scene();
@@ -1014,6 +1014,17 @@ const Stage = (() => {
     return { h, w: h * camera.aspect };
   }
 
+  /* gl_PointSize is counted in drawing-buffer pixels, so a point only keeps
+     its apparent size on screen if it is scaled by the ratio the renderer is
+     actually drawing at — not by the ratio the screen reports. A 3x phone
+     renders at 1.25 here, so reading devicePixelRatio directly drew every
+     star more than twice as wide as intended, and fill cost goes with the
+     square of that. Anything that scales a point asks for this instead, and
+     is told again when the watchdog changes it. */
+  const scaled = [];
+  function useScale(u){ scaled.push(u); u.value = renderer.getPixelRatio(); }
+  function pushScale(){ const r = renderer.getPixelRatio(); scaled.forEach(u => u.value = r); }
+
   let samples = [], degraded = false;
   function watch(dt){
     if (degraded) return;
@@ -1021,10 +1032,10 @@ const Stage = (() => {
     if (samples.length < 90) return;
     const avg = samples.reduce((a,b)=>a+b,0) / samples.length;
     samples = [];
-    if (avg > 0.0235){ degraded = true; renderer.setPixelRatio(Math.max(1, dpr*0.7)); }
+    if (avg > 0.0235){ degraded = true; renderer.setPixelRatio(Math.max(1, dpr*0.7)); pushScale(); }
   }
 
-  return { init, viewport, watch,
+  return { init, viewport, watch, useScale,
     render(){ renderer.render(scene, camera); },
     get scene(){return scene;}, get camera(){return camera;}, get renderer(){return renderer;} };
 })();
@@ -1103,7 +1114,7 @@ function buildStarfield(scene){
   geo.setAttribute('aSpike',   new THREE.BufferAttribute(spk,1));
 
   const mat = new THREE.ShaderMaterial({
-    uniforms:{ uTime:{value:0}, uDpr:{value:Math.min(devicePixelRatio||1,2)}, uOpacity:{value:0} },
+    uniforms:{ uTime:{value:0}, uDpr:{value:1}, uOpacity:{value:0} },
     vertexShader:`
       attribute float aSize; attribute float aTwinkle; attribute float aSpike; attribute vec3 aColor;
       uniform float uTime, uDpr;
@@ -1139,6 +1150,7 @@ function buildStarfield(scene){
     transparent:true, depthWrite:false, blending:THREE.AdditiveBlending
   });
 
+  Stage.useScale(mat.uniforms.uDpr);
   const pts = new THREE.Points(geo, mat);
   pts.rotation.z = -0.46;      // the band runs corner to corner
   scene.add(pts);
@@ -1180,6 +1192,34 @@ void main(){
 }`;
 const NEB_VERT = `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`;
 
+/* Draws a full-strength frame of the cloud into an offscreen square and hands
+   the mesh a plain textured material in place of the noise shader. The bake
+   happens once, at boot, before the curtain lifts. */
+function bakeToTexture(mat, mesh){
+  const SIDE = 640;
+  const rt = new THREE.WebGLRenderTarget(SIDE, SIDE, {
+    minFilter:THREE.LinearFilter, magFilter:THREE.LinearFilter, depthBuffer:false, stencilBuffer:false
+  });
+  const cam   = new THREE.OrthographicCamera(-.5, .5, .5, -.5, 0, 1);
+  const quad  = new THREE.Mesh(new THREE.PlaneGeometry(1,1), mat);
+  const shot  = new THREE.Scene(); shot.add(quad);
+
+  const held = mat.uniforms.uOpacity.value, blend = mat.blending;
+  mat.uniforms.uOpacity.value = 1;
+  mat.blending = THREE.NormalBlending;         // no field to add onto in here
+  const r = Stage.renderer, prev = r.getRenderTarget();
+  r.setRenderTarget(rt); r.clear(); r.render(shot, cam); r.setRenderTarget(prev);
+  mat.uniforms.uOpacity.value = held;
+  mat.blending = blend;
+
+  shot.remove(quad); quad.geometry.dispose();
+  mesh.material = new THREE.MeshBasicMaterial({
+    map:rt.texture, transparent:true, depthWrite:false,
+    blending:THREE.AdditiveBlending, opacity:0
+  });
+  return true;
+}
+
 function buildNebulae(scene){
   const { config } = NAVIDIX;
   const specs = [
@@ -1198,13 +1238,30 @@ function buildNebulae(scene){
     });
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(sp.s, sp.s), mat);
     mesh.position.z = sp.z; mesh.rotation.z = sp.rot;
+
+    /* On a phone this plane is the most expensive thing on the screen: it
+       covers the viewport, and every pixel of it runs three bands of fractal
+       noise — nine noise lookups, thirty-six sines — sixty times a second, to
+       show a cloud that drifts about one part in five hundred per frame.
+       So it is drawn once into a texture and then shown as an image. What is
+       lost is the slow evolution of the filaments; what stands in for it is
+       the drift the layer already had. Nobody watches a nebula change shape;
+       they see that it is there. */
+    if (config.quality.bake) mat.__baked = bakeToTexture(mat, mesh);
+
     scene.add(mesh);
     return { mat, mesh, rot:sp.rot, target:sp.o };
   });
 
   return NAVIDIX.register('nebulae', {
     layers,
-    update(t){ layers.forEach((l,i)=>{ l.mat.uniforms.uTime.value=t; l.mesh.rotation.z = l.rot + Math.sin(t*0.02+i)*0.012; }); }
+    update(t){ layers.forEach((l,i)=>{
+      l.mat.uniforms.uTime.value = t;
+      /* a baked layer keeps the same uOpacity object so the opening timeline
+         does not need to know which of the two it is animating */
+      if (l.mat.__baked) l.mesh.material.opacity = l.mat.uniforms.uOpacity.value;
+      l.mesh.rotation.z = l.rot + Math.sin(t*0.02+i)*0.012;
+    }); }
   });
 }
 
@@ -1223,7 +1280,7 @@ function buildDust(scene){
   geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
   geo.setAttribute('aSpeed',   new THREE.BufferAttribute(spd,1));
   const mat = new THREE.ShaderMaterial({
-    uniforms:{ uTime:{value:0}, uOpacity:{value:0}, uDpr:{value:Math.min(devicePixelRatio||1,2)} },
+    uniforms:{ uTime:{value:0}, uOpacity:{value:0}, uDpr:{value:1} },
     vertexShader:`
       attribute float aSpeed; uniform float uTime,uDpr; varying float vA;
       void main(){
@@ -1241,6 +1298,7 @@ function buildDust(scene){
         gl_FragColor=vec4(vec3(0.58,0.76,1.0), pow(1.0-r,3.0)*vA*uOpacity*0.42); }`,
     transparent:true, depthWrite:false, blending:THREE.AdditiveBlending
   });
+  Stage.useScale(mat.uniforms.uDpr);
   scene.add(new THREE.Points(geo, mat));
   return NAVIDIX.register('dust', { material:mat, update(t){ mat.uniforms.uTime.value = t; } });
 }
@@ -1510,7 +1568,18 @@ function buildMark(scene){
         core.rotation.x = Math.sin(t*0.161 + 1.3) * 0.045;   // square to camera
         core.rotation.z = Math.sin(t*0.094 + 2.7) * 0.022;
       }
-      group.position.y = (api.baseY || 0) + Math.sin(t*0.32) * (api.H * (api.scale||1) * 0.035);
+      /* The canvas is fixed to the viewport, which is right for the stars —
+         a sky does not scroll — but wrong for the mark. Left fixed, it stays
+         dead centre while the wordmark and the buttons ride up over it, and
+         halfway down the landing the logo is sitting behind the call to
+         action. So the mark is tied to the document instead: it rises with
+         the page and is gone by the time the deck arrives, at a shade under
+         scroll speed, which reads as depth rather than as a second layer
+         sliding. One CSS pixel of scroll is vp.h/innerHeight world units. */
+      const vph = Stage.viewport(group.position.z).h;
+      const away = (scrollY || 0) * (vph / innerHeight) * 0.86;
+      group.position.y = (api.baseY || 0) + away
+                       + Math.sin(t*0.32) * (api.H * (api.scale||1) * 0.035);
       group.rotation.x = THREE.MathUtils.lerp(group.rotation.x, -state.pointer.y*0.09, .03);
       group.rotation.z = THREE.MathUtils.lerp(group.rotation.z,  state.pointer.x*0.04, .03);
 
@@ -1529,6 +1598,18 @@ function buildMark(scene){
         pulse.scale.set(sz, sz, 1);
         pulse.material.opacity = Math.sin(cyc*Math.PI) * 0.38;
       } else pulse.material.opacity = 0;
+
+      /* A transparent quad at zero opacity still costs every pixel it covers:
+         the fragment shader runs, blends nothing, and the frame is gone. The
+         blue bloom is held at zero — the mark reads better against true black
+         — and the ring rides on the same value, so between them these two
+         were rasterising most of the hero for no visible result. Skipping
+         them outright is worth half the frame on a phone, and they light
+         back up on their own the moment either is given an opacity. */
+      bloom.visible = bloom.material.opacity > 0.003;
+      pulse.visible = pulse.material.opacity > 0.003;
+      bloomInner.visible = bloomInner.material.opacity > 0.003;
+      well.visible = well.material.opacity > 0.003;
     }
   }));
   return api;
@@ -2112,11 +2193,12 @@ const Views = (() => {
   (function grabMark(){
     if (state.reduced) return;
     const v = new THREE.Vector3();
+    const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
     let armed = false, dragging = false, lastX = 0, startX = 0, startY = 0, pid = null;
 
     function over(cx, cy){
       const vp = Stage.viewport(mark.group.position.z);
-      v.set(0, mark.baseY || 0, mark.group.position.z).project(Stage.camera);
+      v.set(0, mark.group.position.y, mark.group.position.z).project(Stage.camera);
       const sx = (v.x * .5 + .5) * innerWidth;
       const sy = (1 - (v.y * .5 + .5)) * innerHeight;
       const r  = mark.H * (mark.scale || 1) * 0.62 * (innerHeight / vp.h);
@@ -2138,7 +2220,12 @@ const Views = (() => {
 
     addEventListener('pointermove', e => {
       if (!armed && !dragging){
-        document.body.classList.toggle('is-grabbable', over(e.clientX, e.clientY));
+        /* Only a cursor needs telling that the mark can be grabbed. On a
+           touch screen this branch would run on every move of a scroll
+           gesture, projecting the mark and rewriting a class on <body> —
+           a style invalidation of the whole document, per frame, for a
+           cursor that is not there. */
+        if (fine) document.body.classList.toggle('is-grabbable', over(e.clientX, e.clientY));
         return;
       }
       if (!dragging){
@@ -2166,14 +2253,43 @@ const Views = (() => {
     if (navigator.vibrate) navigator.vibrate(9);
   }, { passive:true });
 
-  let frame = 0;
-  function tick(){
+  /* ---- the field is only worth drawing while it can be seen ----
+     The canvas is fixed behind the whole document, so the moment the landing
+     scrolls away it is a full-screen redraw of something nobody is looking
+     at — and on a phone that redraw is the entire frame budget, which the
+     deck below then has to scroll inside. An observer on the landing switches
+     the loop off at the boundary and the clock is flushed on the way back in,
+     so the mark picks up where it was instead of jumping a scroll's worth of
+     rotation. The margin means the field is already running by the time any
+     of it is on screen. */
+  let onStage = true;
+  (function onlyWhenSeen(){
+    const landing = document.querySelector('.landing');
+    if (!landing || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (e){
+      const seen = e[0].isIntersecting;
+      if (seen && !onStage) state.clock.getDelta();     // drop the gap
+      onStage = seen;
+    }, { rootMargin:'200px' }).observe(landing);
+  })();
+
+  let frame = 0, drawn = 0;
+  function tick(now){
     requestAnimationFrame(tick);
-    if (!state.running) return;
+    if (!state.running || !onStage) return;
     frame++;
     if (state.viewOpen){
       if (state.lite) return;      // phone: freeze the field entirely
       if (frame % 2) return;       // desktop: half rate behind the scrim
+    }
+    /* A phone pays for every pixel of a full-screen field, and the mark turns
+       at a fifth of a radian a second — a twenty-fifth of a degree between
+       frames at sixty. Half those frames buy nothing an eye can find, so the
+       phone draws at forty and gives the difference back to scrolling. Under
+       the hand it goes to full rate, because there the lag is felt. */
+    if (state.lite && !mark.dragging){
+      if (now - drawn < 24) return;
+      drawn = now;
     }
     const dt = state.clock.getDelta(), t = state.clock.elapsedTime;
     Stage.watch(dt);
