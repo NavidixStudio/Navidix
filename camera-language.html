@@ -336,7 +336,9 @@ body::before{
 </style>
 <link rel="stylesheet" href="nvx-training.css" />
 <script src="nvx-ui.js" defer></script>
+<link rel="stylesheet" href="nvx-diagrams.css" />
 <script src="nvx-training.js" defer></script>
+<script src="nvx-diagrams.js" defer></script>
 </head>
 <body>
 <header class="sitebar"><div class="row">
@@ -359,6 +361,14 @@ body::before{
     <div class="eyebrow">قسمت اول · سواد بصری</div>
     <h1>زبان دوربین: چگونه یک قاب، <em>معنا</em> می‌سازد</h1>
     <p class="lede">دوربین هیچ‌وقت فقط «ثبت» نمی‌کند؛ همیشه <b>قضاوت می‌کند</b>. جای دوربین، فاصله‌اش و حرکتش، پیش از آنکه شخصیت حرفی بزند، به مخاطب گفته‌اند چه کسی قدرت دارد، چه چیزی مهم است و باید چه حسی داشته باشد. این درس، آن الفبا را باز می‌کند.</p>
+
+    <figure class="nvx-hero" data-nvx-zoom>
+      <picture>
+        <source srcset="lessons/camera-language.webp" type="image/webp" />
+        <img src="lessons/camera-language.jpg" alt="دوربین سینمایی روی دالی و ریل منحنی در استودیوی تاریک، با نور سرخ پشت‌زمینه" width="1600" height="685" decoding="async" />
+      </picture>
+      <figcaption>پلیتِ این درس — ساخته‌شده با مدل تصویری، در همان تم تاریکِ بقیه‌ی سایت.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -404,6 +414,19 @@ body::before{
         </tr>
       </tbody>
     </table>
+
+    <figure class="nvx-dg" data-nvx-dg="angle" data-start="eye">
+      <div class="nvx-dg__ctrls" role="group" aria-label="انتخاب زاویه‌ی دوربین">
+        <button type="button" data-k="bird"  data-say="دوربین کاملاً بالای سر، ۹۰ درجه رو به پایین. سوژه به یک نقطه روی نقشه تبدیل می‌شود — <b>حقارت در برابر سرنوشت</b>، نه در برابر یک انسان دیگر.">نگاه پرنده<span class="en">Bird's Eye</span></button>
+        <button type="button" data-k="high"  data-say="دوربین بالاتر از سوژه، رو به پایین. سوژه کوچک‌تر و محصورتر دیده می‌شود — <b>ضعف، تسلیم، آسیب‌پذیری</b>.">زاویه بالا<span class="en">High Angle</span></button>
+        <button type="button" data-k="eye"   data-say="دوربین هم‌ارتفاع چشم سوژه. <b>برابری، صمیمیت، بی‌طرفی</b> — حالت خنثای زبان دوربین، و به همین دلیل هر انحراف از آن معنا پیدا می‌کند.">سطح چشم<span class="en">Eye Level</span></button>
+        <button type="button" data-k="low"   data-say="دوربین پایین‌تر از سوژه، رو به بالا. سوژه بر آسمان تکیه می‌زند و فضای بیشتری اشغال می‌کند — <b>قدرت، سلطه، هیبت</b>.">زاویه پایین<span class="en">Low Angle</span></button>
+        <button type="button" data-k="worm"  data-say="دوربین روی خودِ زمین، نگاهی تند رو به بالا. ساختمان‌ها خم می‌شوند و سوژه غول‌آسا می‌شود — <b>مقیاسِ غیرواقعی و تهدیدآمیز</b>.">دید کرم<span class="en">Worm's Eye</span></button>
+        <button type="button" data-k="dutch" data-say="دوربین حول محور خودش می‌چرخد و خط افق کج می‌شود. مغز خط افق را مرجع تعادل می‌خواند؛ کج که شود، <b>چیزی درست نیست</b>.">داچ انگل<span class="en">Dutch Angle</span></button>
+      </div>
+      <p class="nvx-dg__read"></p>
+      <p class="nvx-dg__hint">سمت راست، دوربین روی کمانِ محور عمودی حرکت می‌کند؛ سمت چپ، قابی که همان دوربین می‌سازد. با کلیدهای جهت‌دار هم می‌شود بین زاویه‌ها رفت.</p>
+    </figure>
 
     <div class="rule">
       <span class="tag">قاعده</span>
@@ -497,6 +520,20 @@ body::before{
       </tbody>
     </table>
 
+    <figure class="nvx-dg" data-nvx-dg="shot" data-start="ms">
+      <div class="nvx-dg__ctrls" role="group" aria-label="انتخاب اندازه‌ی نما">
+        <button type="button" data-k="els" data-say="جغرافیا و مقیاس. انسان در برابر محیط ناچیز است — برای نماهای معرفی مکان و پایان‌بندی‌ها.">خیلی باز<span class="en">ELS</span></button>
+        <button type="button" data-k="ls"  data-say="کل بدن با محیط اطراف. زبان بدن خوانده می‌شود اما چهره هنوز خصوصی است.">باز<span class="en">LS</span></button>
+        <button type="button" data-k="mls" data-say="از زانو به بالا. تعادل میان بدن و بازی چهره؛ نمای کاریِ بیشترِ صحنه‌های چندنفره.">متوسط باز<span class="en">MLS</span></button>
+        <button type="button" data-k="ms"  data-say="از کمر به بالا. فاصله‌ی گفت‌وگوی معمولی — همان فاصله‌ای که در واقعیت با یک آشنا داریم.">متوسط<span class="en">MS</span></button>
+        <button type="button" data-k="mcu" data-say="از سینه به بالا. لحظه‌ای که تمرکز از موقعیت به سمت شخص می‌چرخد.">متوسط بسته<span class="en">MCU</span></button>
+        <button type="button" data-k="cu"  data-say="صورت، تمام قاب. احساس، بدون امکان فرار — گران‌ترین ابزار فیلم، چون بعد از آن جایی برای رفتن نیست.">بسته<span class="en">CU</span></button>
+        <button type="button" data-k="ecu" data-say="یک چشم، یک دست لرزان، یک جزئیات. جزء را به کل تبدیل می‌کند و ریتم را تیز می‌کند.">خیلی بسته<span class="en">ECU</span></button>
+      </div>
+      <p class="nvx-dg__read"></p>
+      <p class="nvx-dg__hint">سوژه در هر هفت حالت دقیقاً یک اندازه است و تکان نمی‌خورد؛ تنها چیزی که عوض می‌شود، مقدارِ جهانی است که در قاب باقی می‌ماند.</p>
+    </figure>
+
     <div class="rule data">
       <span class="tag cool">قاعده‌ی اقتصاد نما</span>
       <p>نمای بسته را <strong>خرج نکن</strong>. اگر از ابتدای صحنه روی صورت باشی، وقتی لحظه‌ی واقعی برسد چیزی برای دادن نداری. صحنه را باز شروع کن و فقط وقتی نزدیک شو که <strong>اطلاعات تازه‌ای روی صورت</strong> اتفاق افتاده باشد.</p>
@@ -509,6 +546,18 @@ body::before{
     <div class="slate"><span class="clap"></span><span class="slate-num">لایه ۰۶</span></div>
     <h2>حرکت دوربین: شش خانواده</h2>
     <p class="intro">حرکت، بُعد زمان را به قاب اضافه می‌کند. مهم‌ترین پرسش پیش از هر حرکت این است: <b>چه چیزی باید در پایان حرکت آشکار شود که در آغازش نبود؟</b> اگر جوابی نداری، دوربین باید ثابت بماند.</p>
+
+    <figure class="nvx-dg" data-nvx-dg="move" data-start="pan">
+      <div class="nvx-dg__ctrls" role="group" aria-label="انتخاب حرکت دوربین">
+        <button type="button" data-k="pan"      data-say="چرخش افقی روی سه‌پایه. دوربین سرِ جایش می‌ماند و فقط می‌چرخد — برای دنبال کردن حرکت یا آشکار کردن چیزی در کنار قاب.">پن<span class="en">Pan</span></button>
+        <button type="button" data-k="dolly"    data-say="خودِ دوربین جلو یا عقب می‌رود. با زوم فرق دارد: اینجا پرسپکتیو تغییر می‌کند، چون فاصله واقعاً کم می‌شود.">دالی<span class="en">Dolly</span></button>
+        <button type="button" data-k="truck"    data-say="حرکت جانبی، موازی با سوژه. دوربین همراهی می‌کند بی‌آنکه نزدیک یا دور شود.">ترک<span class="en">Truck</span></button>
+        <button type="button" data-k="arc"      data-say="دوربین دور سوژه قوس می‌زند و زاویه در طول نما بازتعریف می‌شود — به همین دلیل برای لحظات چرخشی به کار می‌رود.">آرک<span class="en">Arc</span></button>
+        <button type="button" data-k="handheld" data-say="لرزش کنترل‌شده: فوریت، مستندنمایی، بی‌ثباتی. بیش از حد استفاده شود، فقط خستگی می‌سازد.">روی دست<span class="en">Handheld</span></button>
+      </div>
+      <p class="nvx-dg__read"></p>
+      <p class="nvx-dg__hint">نمای از بالای صحنه؛ فقط حرکتِ انتخاب‌شده اجرا می‌شود. تیلت اینجا نیست چون چرخش عمودی در نمای از بالا دیده نمی‌شود — همان را در نمودار زاویه‌ی بالای همین صفحه ببین.</p>
+    </figure>
 
     <details>
       <summary>۱. چرخش روی محور ثابت</summary>

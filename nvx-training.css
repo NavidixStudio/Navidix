@@ -287,6 +287,32 @@
 }
 
 /* =====================================================================
+   4b — the lesson plate
+
+   One frame at the head of each lesson, before the first number and
+   after the last line of the lede — the same job a title card does in a
+   film, which is the register these pages are written in anyway.
+
+   It is 21:9 on purpose. A square or a 16:9 would sit in the page like a
+   photograph dropped into an article; a scope ratio reads as a plate,
+   which is what it is. The file carries its own width and height so the
+   band is reserved before the image lands and nothing below it jumps.
+   ===================================================================== */
+.nvx-hero{ margin:clamp(30px,5vh,46px) 0 0; position:relative; }
+.nvx-hero img{
+  display:block; width:100%; height:auto; border-radius:5px;
+  border:1px solid rgba(150,175,215,.16);
+  box-shadow:0 30px 64px -42px rgba(0,0,0,1);
+  background:#0B0E14;
+}
+.nvx-hero figcaption{
+  margin:10px 0 0; font-size:11.5px; line-height:1.9; color:#5C636C;
+}
+/* the plate is itself a generated frame, so it opens like every other
+   sample on this site rather than being the one that does not */
+.nvx-hero:hover .nvx-zoom, .nvx-hero .nvx-zoom:focus-visible{ opacity:1; transform:none; }
+
+/* =====================================================================
    5 — the stats strip
 
    Four numbers on a flat band. Given a plinth each — top-lit, standing a

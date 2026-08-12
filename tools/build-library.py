@@ -253,7 +253,14 @@ DETAIL_CSS = '''
 .sd__stage:hover .sd__hero::after{ opacity:1; }
 .sd__stage:hover .sd__hero{ box-shadow:0 40px 90px -40px rgba(0,0,0,1); }
 .sd__hero{ position:relative; }
-.sd__hero img{ width:100%; display:block; }
+/* height:auto is not decoration. The tag carries width="800" height="500"
+   so the box is reserved before the file lands, and those attributes
+   become presentational hints — width:100% replaces one of them and
+   leaves the other, so on any screen under 800px the frame kept its full
+   500px of height and the sample was stretched taller the narrower the
+   phone. The sample is the whole point of the page; it cannot be the one
+   thing on it that lies. */
+.sd__hero img{ width:100%; height:auto; display:block; }
 .sd__cap{ font-size:12px; color:#6B7280; line-height:1.9; margin:0 0 clamp(26px,4vh,38px); }
 
 .sd h2{ font-size:clamp(18px,2.6vw,24px); font-weight:700; margin:clamp(28px,5vh,44px) 0 14px; line-height:1.55; color:#EDF2F8; }
