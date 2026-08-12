@@ -714,11 +714,180 @@
   }
 
   /* =================================================================
+     7 — the production line
+
+     Seven stages on one rail. The figure exists because the lesson's
+     whole claim is that the stages have an order and that skipping one
+     is what costs the money — and an order is a shape, not a paragraph.
+     The rail fills up to wherever the reader is standing, so the cost of
+     the stage they are reading about is visible as the distance still
+     ahead of it.
+     ================================================================= */
+  function buildPipe(fig) {
+    var s = stage(fig, '0 0 560 132');
+    var X0 = 48, X1 = 512, Y = 74, N = 7;
+    var at = function (i) { return X0 + (X1 - X0) * i / (N - 1); };
+
+    s.appendChild(e('line', { class: 'rail', x1: X0, y1: Y, x2: X1, y2: Y }));
+    var live = e('line', { class: 'rail-live', x1: X0, y1: Y, x2: X0, y2: Y });
+    s.appendChild(live);
+    for (var i = 0; i < N; i++) {
+      s.appendChild(e('circle', { class: 'pin', cx: at(i), cy: Y, r: 5.5 }));
+      s.appendChild(e('text', { x: at(i) - 6, y: Y + 26 }, [txt('0' + (i + 1))]));
+    }
+    var mark = e('g', { 'data-move': '' }, [
+      e('circle', { class: 'pin-halo', cx: X0, cy: Y, r: 15 }),
+      e('circle', { class: 'pin-on',   cx: X0, cy: Y, r: 10 }),
+      e('circle', { class: 'pin-core', cx: X0, cy: Y, r: 4.5 })
+    ]);
+    s.appendChild(mark);
+    s.appendChild(e('text', { x: X0 - 8, y: Y - 28 }, [txt('IDEA')]));
+    s.appendChild(e('text', { x: X1 - 54, y: Y - 28 }, [txt('FINAL CUT')]));
+
+    return {
+      set: function (k) {
+        var i = Math.min(N - 1, Math.max(0, (parseInt(k.replace(/\D/g, ''), 10) || 1) - 1));
+        mark.style.transform = 'translateX(' + (at(i) - X0) + 'px)';
+        live.setAttribute('x2', at(i));
+      }
+    };
+  }
+
+  /* =================================================================
+     8 — the shape of the thing being made
+
+     Story structure is taught as five names and left there, which leaves
+     a reader with no idea how long any of it is. Here the same five
+     beats are laid against three real running times, and each carries
+     the number the reader actually needs: how many seconds it gets, and
+     therefore how many shots have to exist to fill it.
+     ================================================================= */
+  var BEAT_FA = ['قلاب', 'موقعیت', 'تنش', 'اوج', 'فرود'];
+  var BEATS = {
+    reel:   { total: 30,  shots: 8,  cut: [.17, .18, .33, .19, .13] },
+    teaser: { total: 90,  shots: 18, cut: [.11, .21, .34, .20, .14] },
+    ep:     { total: 300, shots: 55, cut: [.06, .24, .38, .19, .13] }
+  };
+
+  function buildBeats(fig) {
+    var s = stage(fig, '0 0 560 172');
+    var X0 = 34, X1 = 526, Y = 58, H = 48;
+
+    s.appendChild(e('rect', { class: 'track', x: X0, y: Y, width: X1 - X0, height: H, rx: 3 }));
+    var bars = [], tags = [];
+    for (var i = 0; i < 5; i++) {
+      bars.push(s.appendChild(e('rect', {
+        class: 'beat' + (i === 3 ? ' peak' : ''), x: X0, y: Y, width: 10, height: H, rx: 2
+      })));
+      /* the two labels ride one group, so a beat's name and its length
+         travel together and neither can drift off its own block */
+      var g = e('g', { 'data-move': '' }, [
+        e('text', { class: 'fa', x: 0, y: Y - 12 }, [txt(BEAT_FA[i])]),
+        e('text', { class: 'mid', x: 0, y: Y + H + 20 }, [txt('')])
+      ]);
+      tags.push(s.appendChild(g));
+    }
+    var sum = e('text', { x: X0, y: 158 }, [txt('')]);
+    s.appendChild(sum);
+
+    return {
+      set: function (k) {
+        var c = BEATS[k] || BEATS.reel, W = X1 - X0, x = X0;
+        c.cut.forEach(function (f, i) {
+          var w = W * f;
+          bars[i].setAttribute('x', x + 1);
+          bars[i].setAttribute('width', Math.max(2, w - 2));
+          tags[i].style.transform = 'translateX(' + (x + w / 2) + 'px)';
+          tags[i].lastChild.firstChild.nodeValue = Math.round(c.total * f) + 's';
+          x += w;
+        });
+        sum.firstChild.nodeValue =
+          c.total + ' SECONDS  ·  ~' + c.shots + ' SHOTS  ·  ~' +
+          (Math.round(c.total / c.shots * 10) / 10) + 's AVERAGE CUT';
+      }
+    };
+  }
+
+  /* =================================================================
+     9 — one line of script, four shots
+
+     The payoff figure for the whole track: a single action line is not a
+     shot, it is a decision about how many shots it is worth. Each of the
+     four is drawn with the vocabulary of the two lessons before this one
+     — a size, an angle, a light — so the reader can see the earlier
+     parts being spent rather than being told they will be useful.
+     ================================================================= */
+  function mini(s, x, y, w, h, kind) {
+    var id = 'nvxdg' + (++uid);
+    s.appendChild(e('clipPath', { id: id },
+      [e('rect', { x: x, y: y, width: w, height: h, rx: 2 })]));
+    var g = e('g', { 'clip-path': 'url(#' + id + ')' });
+    g.appendChild(e('rect', { class: 'wall', x: x, y: y, width: w, height: h, rx: 2 }));
+    var cx = x + w / 2, floor = y + h * .86;
+
+    if (kind === 'els') {
+      g.appendChild(e('line', { class: 'horizon', x1: x, y1: floor, x2: x + w, y2: floor }));
+      g.appendChild(e('rect', { class: 'prop', x: x + w * .58, y: floor - h * .34, width: w * .2, height: h * .34 }));
+      g.appendChild(e('rect', { class: 'prop', x: x + w * .78, y: floor - h * .22, width: w * .13, height: h * .22 }));
+      g.appendChild(person(x + w * .3, floor, h * .3));
+    } else if (kind === 'ms') {
+      g.appendChild(e('line', { class: 'horizon', x1: x, y1: y + h * .42, x2: x + w, y2: y + h * .42 }));
+      g.appendChild(person(cx, y + h * 2.05, h * 1.9));
+    } else if (kind === 'cu') {
+      bust(cx, y + h * 1.62, h * .42, true).forEach(function (n) { g.appendChild(n); });
+    } else {
+      /* the insert: a thing, not a person — the shot the reader forgets
+         to list and then misses in the edit */
+      g.appendChild(e('rect', { class: 'prop', x: cx - w * .17, y: y + h * .3, width: w * .34, height: h * .4, rx: 2 }));
+      g.appendChild(e('path', { class: 'limb', 'stroke-width': 3,
+        d: 'M' + (cx - w * .3) + ' ' + (y + h * .82) + 'h' + (w * .28) }));
+      g.appendChild(e('circle', { cx: cx + w * .05, cy: y + h * .44, r: 2.6, fill: '#E5202A' }));
+    }
+    s.appendChild(g);
+    var box = e('rect', { class: 'mini-box', x: x, y: y, width: w, height: h, rx: 2 });
+    s.appendChild(box);
+    return { g: g, box: box, cx: cx, cy: y + h / 2 };
+  }
+
+  function buildShots(fig) {
+    var s = stage(fig, '0 0 560 150');
+    var W = 118, H = 66, Y = 48, kinds = ['els', 'ms', 'cu', 'in'];
+    var LAB = ['01 · ELS', '02 · MS', '03 · CU', '04 · INSERT'];
+    var cells = kinds.map(function (kind, i) {
+      var x = 22 + i * 132;
+      var c = mini(s, x, Y, W, H, kind);
+      c.lab = s.appendChild(e('text', { class: 'mini-lab', x: x, y: Y - 12 }, [txt(LAB[i])]));
+      c.wrap = e('g', { 'data-move': '', 'data-fade': '' });
+      /* the cell is built in place and then adopted, so the geometry
+         above stays written in plain stage coordinates */
+      c.wrap.appendChild(c.g); c.wrap.appendChild(c.box);
+      pivot(c.wrap, c.cx, c.cy);
+      s.insertBefore(c.wrap, c.lab);
+      return c;
+    });
+    s.appendChild(e('text', { x: 22, y: 138 }, [txt('ONE ACTION LINE  →  FOUR SHOTS')]));
+
+    return {
+      set: function (k) {
+        var n = Math.min(3, Math.max(0, (parseInt(k.replace(/\D/g, ''), 10) || 1) - 1));
+        cells.forEach(function (c, i) {
+          var on = i === n;
+          c.wrap.style.transform = on ? 'scale(1.07)' : 'scale(1)';
+          c.wrap.style.opacity = on ? 1 : .4;
+          c.box.setAttribute('class', on ? 'mini-box is-on' : 'mini-box');
+          c.lab.setAttribute('class', on ? 'mini-lab is-on' : 'mini-lab');
+        });
+      }
+    };
+  }
+
+  /* =================================================================
      wiring
      ================================================================= */
   var BUILD = {
     angle: buildAngle, shot: buildShot, move: buildMove,
-    key: buildKey, ratio: buildRatio, comp: buildComp
+    key: buildKey, ratio: buildRatio, comp: buildComp,
+    pipe: buildPipe, beats: buildBeats, shots: buildShots
   };
 
   function init(fig) {

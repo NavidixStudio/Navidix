@@ -101,6 +101,49 @@
 .nvx-dg__stage text.stamp{ fill:#E5202A; letter-spacing:.14em; }
 .nvx-dg__stage text.big{ font-size:16px; }
 
+/* ---- the production line ---- */
+.nvx-dg .rail{ stroke:#262A31; stroke-width:2; }
+.nvx-dg .rail-live{
+  stroke:#E5202A; stroke-width:2;
+  transition:x2 .62s cubic-bezier(.16,1,.3,1);
+}
+.nvx-dg .pin{ fill:#0B0E14; stroke:#3A424E; stroke-width:1.5; }
+.nvx-dg .pin-halo{ fill:rgba(229,32,42,.13); }
+.nvx-dg .pin-on{ fill:none; stroke:rgba(229,32,42,.75); stroke-width:1.5; }
+.nvx-dg .pin-core{ fill:#E5202A; }
+
+/* ---- the beat track ---- */
+.nvx-dg .track{ fill:#0A0D12; stroke:#1B1F26; stroke-width:1; }
+.nvx-dg .beat, .nvx-dg .mini-box{
+  transition:x .62s cubic-bezier(.16,1,.3,1), width .62s cubic-bezier(.16,1,.3,1);
+}
+.nvx-dg .beat{ fill:#2A323D; }
+.nvx-dg .beat.peak{ fill:rgba(229,32,42,.62); }
+/* The only Persian on any stage. It needs the page's own face — no mono
+   family carries the script — and it needs the rtl the stage's latin
+   rule switches off. */
+.nvx-dg__stage text.fa{
+  font-family:"Vazirmatn","IRANSans",Tahoma,sans-serif; font-size:12px;
+  fill:#D7DEE7; direction:rtl; text-anchor:middle; letter-spacing:normal;
+}
+.nvx-dg__stage text.mid{ text-anchor:middle; fill:#8C939B; }
+
+/* ---- the four shots ---- */
+.nvx-dg .mini-box{ fill:none; stroke:#2A313B; stroke-width:1; }
+.nvx-dg .mini-box.is-on{ stroke:#E5202A; stroke-width:2; }
+.nvx-dg__stage text.mini-lab{ fill:#5C636C; }
+.nvx-dg__stage text.mini-lab.is-on{ fill:#E5202A; }
+.nvx-dg .horizon{ stroke:#252C35; stroke-width:1; }
+
+/* a prompt is latin, monospaced and left-aligned wherever it appears —
+   including inside a readout the rest of which is Persian */
+.nvx-dg__read code{
+  display:block; margin-top:11px; padding:10px 12px;
+  direction:ltr; text-align:left; white-space:pre-wrap;
+  font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px; line-height:1.85;
+  color:#B9C0C8; background:#080B0E; border:1px solid #1B1F26; border-radius:4px;
+}
+
 /* An element that both moves and fades needs both transitions named in
    one declaration: the two rules above set the same property, so the
    later one would otherwise win outright and the other change would
