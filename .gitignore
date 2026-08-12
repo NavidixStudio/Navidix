@@ -1,2 +1,9 @@
 __pycache__/
 tools/plates.local.json
+
+# Two tools in tools/ drive a headless browser. A maintainer who runs them
+# gets an npm tree that has nothing to do with what ships — the site itself
+# has no build step and no dependencies.
+node_modules/
+package.json
+package-lock.json

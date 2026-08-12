@@ -80,8 +80,15 @@ python3 tools/build-lesson-start.py       # قسمت ۱
 python3 tools/build-lesson-prompting.py   # قسمت ۲
 python3 tools/build-lesson-image-sound.py # قسمت ۳
 python3 tools/build-lesson-systems.py     # قسمت ۴
+node    tools/build-lesson-plate.mjs      # پلیت و کاور درس نور (npm i playwright)
 python3 tools/normalise-share.py          # تگ‌های اشتراک‌گذاری را یکدست می‌کند
 ```
+
+`build-lesson-plate.mjs` سه فایل می‌سازد و هر سه از یک ترکیب‌بندی واحد در
+می‌آیند: `lessons/light-composition.jpg`، نسخه‌ی `webp` همان، و
+`og-light.png` که عنوان درس رویش نوشته شده. برخلاف بقیه‌ی پلیت‌ها این یکی
+با مدل تصویری ساخته نشده، با کد رسم شده — و کپشنِ زیرش در صفحه همین را
+می‌گوید. اگر روزی خروجی یک مدل جایش را گرفت، آن کپشن هم باید عوض شود.
 
 `normalise-share.py` را آخر از همه اجرا کن. کاری که می‌کند این است: هر صفحه‌ای
 که تگ‌های کاورش ناقص باشد، از روی همان چیزی که خودش دارد کاملش می‌کند. دو بار
