@@ -68,7 +68,9 @@ head = f'''<!DOCTYPE html>
 <meta name="twitter:image" content="{IMG}" />
 <meta name="twitter:image:alt" content="از کجا شروع کنم؟ راهنمای صفرِ صفر هوش مصنوعی" />
 {head_assets}
+<link rel="stylesheet" href="nvx-training.css" />
 <script src="nvx-ui.js" defer></script>
+<script src="nvx-training.js" defer></script>
 <script type="application/ld+json">
 {LD}
 </script>

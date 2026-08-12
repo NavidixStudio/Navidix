@@ -1,0 +1,447 @@
+/* =====================================================================
+   NAVIDIX — the training layer.
+
+   Everything the آموزش‌ها section needs on top of the pages it sits on:
+   scroll-reveal, a 3D tilt for card surfaces, glass for the boxes a lesson
+   is built from, a neon diagram, and a lightbox for the sample frames.
+   One stylesheet and one script, shared by the index, the eight lessons
+   and the prompt library — so a new lesson inherits all of it by adding
+   two tags and nothing else.
+
+   Four rules this file keeps to:
+
+   · Nothing here hides content on its own. The reveal state is applied by
+     the script, and only to elements still below the fold, so a script
+     that fails or arrives late can never leave the page blank — and an
+     element already on screen is never hidden just to animate it back in.
+
+   · Only opacity and transform animate. Both run on the compositor, which
+     is what keeps a mid-range phone at 60fps while a track of cards
+     enters. Nothing here animates a colour, a shadow or a filter.
+
+   · Blur, glare, glow and tilt are desktop luxuries. On a phone they are
+     dropped entirely rather than turned down — a cheap effect that
+     stutters reads worse than no effect at all.
+
+   · The palette is the one already in the page: #08090B ground, #E5202A
+     ember, #B9C0C8 steel, #262A31 line. No new colour is introduced here,
+     and every value below is either one of those or a transparency of it.
+   ===================================================================== */
+
+:root{
+  --nvx-ease:cubic-bezier(.16,1,.3,1);
+  --nvx-ember:#E5202A;
+  --nvx-steel:#B9C0C8;
+  --nvx-line:#262A31;
+
+  /* the glass recipe, in one place: a dark pane lit from its top edge,
+     with the brand ember sitting in the far corner at single-digit alpha */
+  --nvx-pane:linear-gradient(158deg, rgba(32,38,48,.60) 0%, rgba(14,17,22,.72) 58%, rgba(10,12,16,.76) 100%);
+  --nvx-pane-edge:rgba(150,175,215,.17);
+  --nvx-pane-lip:inset 0 1px 0 rgba(226,238,255,.075);
+  --nvx-pane-cast:0 24px 48px -34px rgba(0,0,0,.95);
+}
+
+/* =====================================================================
+   1 — reveal
+
+   The script adds .nvx-rv, then .is-in when the element crosses into
+   view. --nvx-d is the stagger inside a group; --nvx-y the distance it
+   travels. Both are written by the script so one transition serves every
+   kind of element.
+   ===================================================================== */
+.nvx-rv{
+  opacity:0;
+  transform:translate3d(0, var(--nvx-y, 22px), 0) scale(var(--nvx-s, .992));
+  transition:opacity .72s var(--nvx-ease) var(--nvx-d, 0ms),
+             transform .72s var(--nvx-ease) var(--nvx-d, 0ms);
+}
+.nvx-rv.is-in{ opacity:1; transform:none; }
+
+/* Deliberately no will-change here. A long lesson can carry forty of
+   these at once, and promoting forty layers up front to save a promotion
+   each does far more harm on a phone than it saves — the browser already
+   composites an opacity/transform transition for the time it runs. Once
+   the element has arrived it stops being animated at all. */
+.nvx-rv.is-done{ transition:none; }
+
+/* =====================================================================
+   2 — tilt
+
+   A card tips toward the cursor. The angles arrive as custom properties
+   from the script, so the only per-frame work is two number writes and a
+   compositor transform — no layout, no paint.
+
+   The hover transforms already in the pages (translateY(-2px) on a card)
+   would win the cascade over a plain .nvx-tilt rule, so the same
+   transform is restated at their specificity rather than fought with
+   !important. The lift they were buying is kept as --nvx-lift.
+   ===================================================================== */
+.nvx-tilt{
+  position:relative;
+  transform-style:preserve-3d;
+  --nvx-xf:perspective(var(--nvx-persp, 1050px))
+           rotateX(var(--nvx-rx, 0deg))
+           rotateY(var(--nvx-ry, 0deg))
+           translate3d(0, var(--nvx-lift, 0px), 0);
+  transform:var(--nvx-xf);
+  transition:transform .55s var(--nvx-ease),
+             border-color .35s ease,
+             box-shadow .55s var(--nvx-ease);
+}
+.cards a.nvx-tilt:hover,
+.feat.nvx-tilt:hover,
+.pc.nvx-tilt:hover,
+.pager a.nvx-tilt:hover,
+.rel a.nvx-tilt:hover{ transform:var(--nvx-xf); }
+
+.nvx-tilt:hover{ --nvx-lift:-4px; }
+
+/* While the pointer is on the card the transform has to keep up with it;
+   the long ease is only for the return to rest. This is the one place a
+   layer is worth asking for outright — it is a single card, for as long
+   as the cursor is on it, being rewritten every frame. */
+.nvx-tilt.is-live{
+  transition:border-color .35s ease, box-shadow .55s var(--nvx-ease);
+  will-change:transform;
+}
+
+/* the glare — a soft pool under the cursor, ember-tinted at its edge so
+   the highlight belongs to this brand rather than being generic white */
+.nvx-tilt::after{
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  opacity:0; border-radius:inherit;
+  background:radial-gradient(42% 58% at var(--nvx-mx, 50%) var(--nvx-my, 50%),
+             rgba(233,244,255,.11), rgba(229,32,42,.085) 45%, transparent 74%);
+  transition:opacity .45s var(--nvx-ease);
+}
+.nvx-tilt:hover::after{ opacity:1; }
+
+/* the card's own body sits above the glare */
+.nvx-tilt > *{ position:relative; z-index:2; }
+
+/* a hover reads as the card catching the ember, not just moving */
+.cards a.nvx-tilt:hover,
+.feat.nvx-tilt:hover,
+.pc.nvx-tilt:hover{
+  box-shadow:var(--nvx-pane-lip), 0 30px 62px -34px rgba(120,16,22,.6);
+}
+
+/* =====================================================================
+   3 — glass
+
+   The boxes a lesson is built from were flat #101216 panels separated
+   from the ground by a 1px line. These pages already paint an ambient
+   wash behind everything (body::before) and leave .lesson transparent, so
+   there is real light for a pane to catch — which is the only reason
+   backdrop-filter is worth its cost here.
+   ===================================================================== */
+.lesson .rule,
+.lesson .branch,
+.lesson .step,
+.lesson .pbox,
+.lesson .gauge,
+.lesson .forge,
+.lesson .quiz,
+.lesson .picker,
+.lesson .demo,
+.lesson .verdict,
+.lesson .funnel,
+.lesson details,
+.idx .cards a,
+.idx .feat,
+.lib .pc{
+  background:var(--nvx-pane);
+  border-color:var(--nvx-pane-edge);
+  box-shadow:var(--nvx-pane-lip), var(--nvx-pane-cast);
+}
+
+/* The accent border a rule card carries is its whole classification — it
+   says craft, or data, or warning. Restate it after the pane, which
+   rewrote the shorthand's colour. */
+.lesson .rule{ border-inline-start-color:var(--nvx-ember); }
+.lesson .rule.data{ border-inline-start-color:var(--nvx-steel); }
+.lesson .rule.warn{ border-inline-start-color:#B01620; }
+
+/* hover and open states keep their old meaning, in the new material */
+.lesson details[open]{ border-color:rgba(150,175,215,.28); }
+.idx .cards a:hover,
+.idx .feat:hover,
+.lib .pc:hover{
+  background:linear-gradient(158deg, rgba(44,32,36,.62) 0%, rgba(18,20,25,.74) 58%, rgba(12,14,18,.78) 100%);
+  border-color:rgba(229,32,42,.5);
+}
+
+/* =====================================================================
+   4 — the diagram
+
+   A flow the reader can see the shape of: nodes as glass chips, a wire
+   drawn behind them in ember, and a pulse that runs the wire once the
+   figure is on screen. The nodes are ordinary list items — with the
+   script absent the figure is still a numbered list of the four tracks,
+   which is what it means anyway.
+   ===================================================================== */
+.nvx-fig{
+  position:relative; margin:0 0 clamp(34px,5vh,54px);
+  padding:clamp(22px,3.2vw,30px) clamp(18px,3vw,28px) clamp(26px,3.6vw,34px);
+  border:1px solid var(--nvx-pane-edge); border-radius:6px;
+  background:
+    radial-gradient(120% 150% at 92% 0%, rgba(229,32,42,.075), transparent 58%),
+    radial-gradient(100% 140% at 4% 100%, rgba(110,170,255,.05), transparent 56%),
+    var(--nvx-pane);
+  box-shadow:var(--nvx-pane-lip), var(--nvx-pane-cast);
+  overflow:hidden;
+}
+/* No Persian mono face exists, so a Persian phrase set in the mono stack
+   falls back to whatever the browser has and stops looking like a word.
+   The label keeps the page's own font; only the Latin run inside it goes
+   mono, and .lat — already in the page — gives that run its tracking. */
+.nvx-fig__cap{
+  display:block; margin:0 0 clamp(20px,3vh,28px);
+  font-size:11.5px; line-height:1.9; color:var(--nvx-steel);
+}
+.nvx-fig__cap .lat{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; }
+.nvx-fig__cap b{ display:block; margin-top:7px;
+  font-size:15px; line-height:1.7; color:#E4E7EA; font-weight:600; }
+
+.nvx-fig__steps{
+  list-style:none; margin:0; padding:0; position:relative; z-index:2;
+  display:grid; gap:14px;
+}
+
+/* The rail needs a lane of its own — above the row on a wide screen,
+   beside the column on a narrow one. It is reserved here rather than
+   decided in the script: the script only ever measures what the
+   stylesheet has already laid out. */
+@media (min-width:761px){
+  .nvx-fig{ perspective:1250px; }
+  .nvx-fig__steps{
+    grid-auto-flow:column; grid-auto-columns:1fr;
+    margin-block-start:52px;
+    /* the whole of the third dimension here: the row arrives tipped away
+       from the reader and settles flat. One transform on one element,
+       so the cost is a single compositor layer for one second. */
+    transform-style:preserve-3d; transform-origin:50% 0;
+    transform:rotateX(7deg) translateZ(-16px);
+    opacity:.55;
+    transition:transform 1s var(--nvx-ease) .08s, opacity 1s var(--nvx-ease) .08s;
+  }
+  .nvx-fig.is-in .nvx-fig__steps{ transform:none; opacity:1; }
+  .nvx-fig__steps > li:hover{
+    transform:translateZ(16px);
+    border-color:rgba(229,32,42,.5);
+    box-shadow:var(--nvx-pane-lip), 0 26px 50px -30px rgba(120,16,22,.7);
+  }
+}
+@media (max-width:760px){
+  .nvx-fig__steps{ margin-inline-start:34px; }
+}
+.nvx-fig__steps > li{
+  position:relative; padding:16px 17px 17px; border-radius:5px;
+  border:1px solid var(--nvx-line); background:rgba(11,14,19,.82);
+  box-shadow:var(--nvx-pane-lip);
+  transition:transform .5s var(--nvx-ease), border-color .35s ease, box-shadow .5s var(--nvx-ease);
+}
+.nvx-fig__steps > li::before{
+  content:attr(data-no); display:block; margin-bottom:9px;
+  font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11px;
+  color:var(--nvx-ember);
+}
+.nvx-fig__steps > li[data-cat]{ cursor:pointer; }
+.nvx-fig__steps > li[data-cat]:focus-visible{ outline:1px solid var(--nvx-steel); outline-offset:3px; }
+.nvx-fig__steps b{ display:block; font-size:15px; line-height:1.65; color:#E4E7EA; font-weight:700; }
+.nvx-fig__steps span{ display:block; margin-top:6px; font-size:12.5px; line-height:1.95; color:#8C939B; }
+
+/* the wire, painted behind the nodes */
+.nvx-fig__wire{
+  position:absolute; inset:0; width:100%; height:100%;
+  pointer-events:none; z-index:1; overflow:visible;
+}
+.nvx-fig__wire path{ fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.nvx-fig__wire .rail{ stroke:rgba(150,175,215,.16); stroke-width:1.5; }
+.nvx-fig__wire .live{
+  stroke:var(--nvx-ember); stroke-width:1.75;
+  stroke-dasharray:var(--nvx-len, 1000); stroke-dashoffset:var(--nvx-len, 1000);
+  transition:stroke-dashoffset 1.6s cubic-bezier(.22,1,.36,1) .12s;
+}
+.nvx-fig.is-in .nvx-fig__wire .live{ stroke-dashoffset:0; }
+.nvx-fig__wire .node{ fill:#0B0E14; stroke:var(--nvx-ember); stroke-width:1.5; }
+
+/* the pulse: one dot travelling the wire, its path written by the script
+   as an offset-path. Purely decorative — if offset-path is unsupported
+   the script never adds it. */
+.nvx-fig__pulse{
+  position:absolute; top:0; left:0; width:7px; height:7px; margin:-3.5px 0 0 -3.5px;
+  border-radius:50%; background:var(--nvx-ember); z-index:1; pointer-events:none;
+  box-shadow:0 0 8px rgba(229,32,42,.95), 0 0 18px rgba(229,32,42,.5);
+  offset-distance:0%; opacity:0;
+}
+.nvx-fig.is-in .nvx-fig__pulse{
+  animation:nvxPulseRun 4.6s linear 1.5s infinite;
+}
+@keyframes nvxPulseRun{
+  0%{ offset-distance:0%; opacity:0 }
+  8%{ opacity:1 }
+  88%{ opacity:1 }
+  100%{ offset-distance:100%; opacity:0 }
+}
+
+/* =====================================================================
+   5 — the stats strip
+
+   Four numbers on a flat band. Given a plinth each — top-lit, standing a
+   little proud of the band — and an ember hairline that draws itself
+   under the number as the strip arrives. The number counts up from the
+   script; the width is already tabular, so nothing reflows while it does.
+   ===================================================================== */
+.lesson .stats .wrap .stat{
+  position:relative;
+  background:linear-gradient(180deg, rgba(30,36,45,.5), rgba(9,11,15,.86));
+  transition:transform .5s var(--nvx-ease);
+}
+.lesson .stats .wrap .stat::after{
+  content:''; position:absolute; inset-inline:20px; bottom:0; height:1px;
+  background:linear-gradient(to left, transparent, var(--nvx-ember), transparent);
+  transform:scaleX(0); transform-origin:center;
+  transition:transform 1.1s var(--nvx-ease) .18s;
+}
+.lesson .stats .wrap .stat.is-in::after{ transform:scaleX(1); }
+.lesson .stat .v{ position:relative; }
+
+/* =====================================================================
+   6 — the lightbox
+
+   A sample frame is the one thing on these pages worth seeing bigger:
+   it is the output the whole lesson is about. The overlay is built by the
+   script and lives at the end of <body>, outside every transform.
+   ===================================================================== */
+.nvx-zoom{
+  position:absolute; z-index:3; inset-block-start:9px; inset-inline-end:9px;
+  width:30px; height:30px; padding:0; display:grid; place-items:center;
+  border:1px solid rgba(150,175,215,.28); border-radius:50%; cursor:zoom-in;
+  background:rgba(8,9,11,.68); color:#D7DEE7;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  opacity:0; transform:scale(.9);
+  transition:opacity .35s var(--nvx-ease), transform .35s var(--nvx-ease),
+             border-color .25s ease, background .25s ease;
+}
+.nvx-zoom svg{ width:15px; height:15px; display:block; }
+.pc:hover .nvx-zoom, .nvx-zoom:focus-visible{ opacity:1; transform:none; }
+.nvx-zoom:hover{ background:rgba(229,32,42,.85); border-color:rgba(255,138,128,.7); color:#fff; }
+/* a touch reader gets no hover, so the affordance is simply always there */
+@media (hover:none){ .nvx-zoom{ opacity:1; transform:none; } }
+
+.nvx-lb{
+  position:fixed; inset:0; z-index:10000; display:grid; place-items:center;
+  padding:clamp(14px,3vw,40px);
+  background:rgba(4,5,7,.9);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  opacity:0; visibility:hidden;
+  transition:opacity .32s var(--nvx-ease), visibility .32s;
+}
+.nvx-lb.is-open{ opacity:1; visibility:visible; }
+.nvx-lb__fig{
+  margin:0; max-width:min(1100px, 100%); max-height:100%;
+  display:flex; flex-direction:column; gap:12px; align-items:center;
+  transform:scale(.96) translateY(10px);
+  transition:transform .4s var(--nvx-ease);
+}
+.nvx-lb.is-open .nvx-lb__fig{ transform:none; }
+.nvx-lb__fig img{
+  display:block; max-width:100%; max-height:78vh; width:auto; height:auto;
+  border:1px solid rgba(150,175,215,.2); border-radius:6px;
+  box-shadow:0 50px 110px -48px rgba(0,0,0,1), 0 0 0 1px rgba(229,32,42,.16);
+  background:#0B0E14;
+}
+.nvx-lb__cap{
+  margin:0; max-width:70ch; text-align:center;
+  font-family:"Vazirmatn","IRANSans",Tahoma,sans-serif;
+  font-size:13px; line-height:2; color:#8C939B;
+}
+.nvx-lb__cap b{ display:block; color:#D7DEE7; font-weight:600; }
+.nvx-lb__n{
+  font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px; color:#6B7280;
+}
+.nvx-lb button{
+  position:absolute; display:grid; place-items:center; cursor:pointer;
+  border:1px solid rgba(150,175,215,.24); border-radius:50%;
+  background:rgba(16,18,22,.9); color:#D7DEE7; padding:0;
+  transition:background .25s ease, border-color .25s ease, color .25s ease, transform .25s var(--nvx-ease);
+}
+.nvx-lb button:hover{ background:rgba(229,32,42,.9); border-color:rgba(255,138,128,.75); color:#fff; }
+.nvx-lb button:focus-visible{ outline:1px solid var(--nvx-steel); outline-offset:3px; }
+/* The controls are drawn rather than typed. ‹ and › carry the Unicode
+   mirroring property, so in an RTL document the browser is entitled to
+   swap them and the previous button ends up pointing at next. A path
+   cannot be mirrored out from under you. */
+.nvx-lb button svg{ width:19px; height:19px; display:block; }
+.nvx-lb__next svg{ transform:rotate(180deg); }
+.nvx-lb__x{ inset-block-start:clamp(12px,2.5vw,24px); inset-inline-end:clamp(12px,2.5vw,24px);
+  width:42px; height:42px; }
+.nvx-lb__prev, .nvx-lb__next{ top:50%; margin-top:-23px; width:46px; height:46px; }
+.nvx-lb__prev{ inset-inline-start:clamp(8px,2vw,22px); }
+.nvx-lb__next{ inset-inline-end:clamp(8px,2vw,22px); }
+.nvx-lb[data-single="1"] .nvx-lb__prev,
+.nvx-lb[data-single="1"] .nvx-lb__next{ display:none; }
+.nvx-lb-lock{ overflow:hidden; }
+
+/* the style page's hero is the sample itself, so the whole frame opens */
+.sd__hero{ cursor:zoom-in; }
+
+/* =====================================================================
+   7 — what a phone gets
+
+   Below 760px every effect that costs a paint is removed: no backdrop
+   blur, no glare, no tilt, no shadow casting. What survives is the part
+   that runs on the compositor — the reveal — plus the flat colours the
+   pages already had. The result is the same page, arriving, at 60fps.
+   ===================================================================== */
+@media (max-width:760px){
+  .lesson .rule, .lesson .branch, .lesson .step, .lesson .pbox, .lesson .gauge,
+  .lesson .forge, .lesson .quiz, .lesson .picker, .lesson .demo, .lesson .verdict,
+  .lesson .funnel, .lesson details, .idx .cards a, .idx .feat, .lib .pc, .nvx-fig{
+    background:#101216;
+    -webkit-backdrop-filter:none; backdrop-filter:none;
+    box-shadow:none;
+  }
+  .nvx-fig{ background:#0E1116; }
+  .idx .cards a:hover, .idx .feat:hover, .lib .pc:hover{ background:#12151a; }
+  .nvx-tilt::after{ display:none; }
+  .nvx-tilt{ transform:none; transform-style:flat; }
+  .nvx-fig__pulse{ display:none; }
+  .lesson .stats .wrap .stat{ background:var(--ink, #08090B); }
+  .nvx-lb{ -webkit-backdrop-filter:none; backdrop-filter:none; background:rgba(4,5,7,.97); }
+  .nvx-lb__fig img{ max-height:66vh; }
+  .nvx-rv{ --nvx-y:14px; --nvx-s:1; }   /* a shorter, cheaper entrance */
+}
+
+/* A pointer that cannot hover has nothing to tip a card toward, and a
+   coarse one is a finger sitting on the surface it would be tilting. */
+@media (hover:none), (pointer:coarse){
+  .nvx-tilt{ transform:none; }
+  .nvx-tilt::after{ display:none; }
+}
+
+/* =====================================================================
+   8 — asked to stop
+
+   Reduced motion turns off every entrance and every loop. The reveal is
+   neutralised rather than merely shortened, because the script may
+   already have applied .nvx-rv before the query is consulted.
+   ===================================================================== */
+@media (prefers-reduced-motion:reduce){
+  .nvx-rv, .nvx-rv.is-in{ opacity:1 !important; transform:none !important; transition:none !important; }
+  .nvx-tilt, .nvx-tilt::after, .nvx-fig__steps, .nvx-fig__steps > li,
+  .lesson .stats .wrap .stat, .lesson .stats .wrap .stat::after{ transition:none; }
+  .nvx-tilt{ transform:none; }
+  .nvx-fig__steps{ transform:none !important; opacity:1 !important; }
+  .lesson .stats .wrap .stat::after{ transform:scaleX(1); }
+  .nvx-fig__wire .live{ transition:none; stroke-dashoffset:0; }
+  .nvx-fig__pulse{ display:none; }
+  .nvx-lb, .nvx-lb__fig, .nvx-zoom{ transition:none; }
+}
+
+@media print{
+  .nvx-rv{ opacity:1 !important; transform:none !important; }
+  .nvx-lb, .nvx-zoom{ display:none !important; }
+}

@@ -77,7 +77,9 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
 <meta name="twitter:image" content="{img}" />
 <meta name="twitter:image:alt" content="{title}" />
 {HEAD_ASSETS}
+<link rel="stylesheet" href="{depth}nvx-training.css" />
 <script src="{depth}nvx-ui.js" defer></script>
+<script src="{depth}nvx-training.js" defer></script>
 <script type="application/ld+json">
 {ld}
 </script>

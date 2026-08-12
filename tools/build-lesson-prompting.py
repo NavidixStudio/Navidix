@@ -67,7 +67,9 @@ head = f'''<!DOCTYPE html>
 <meta name="twitter:image" content="{IMG}" />
 <meta name="twitter:image:alt" content="چطور درست بپرسم؟ آناتومی یک پرامپت خوب" />
 {head_assets}
+<link rel="stylesheet" href="nvx-training.css" />
 <script src="nvx-ui.js" defer></script>
+<script src="nvx-training.js" defer></script>
 <script type="application/ld+json">
 {LD}
 </script>

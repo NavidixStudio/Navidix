@@ -497,7 +497,9 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
 }
 .cards a:hover::before, .feat:hover::before{ opacity:1; }
 </style>
+<link rel="stylesheet" href="nvx-training.css" />
 <script src="nvx-ui.js" defer></script>
+<script src="nvx-training.js" defer></script>
 </head>
 <body>
 <header class="sitebar"><div class="row">
@@ -508,7 +510,24 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
 <main class="idx">
   <div class="eyebrow"><span class="lat">Navidix</span> · مجموعه آموزشی</div>
   <h1>آموزش هوش مصنوعی کاربردی</h1>
-  <p class="sub">پروتکل‌ها و یادداشت‌های میدانی از تولیدهای واقعی — آنچه واقعاً جواب داد، و اعدادش چه بود. آموزش‌ها در سه مسیر مرتب شده‌اند؛ هر درس مستقل خوانده می‌شود.</p>
+  <p class="sub">پروتکل‌ها و یادداشت‌های میدانی از تولیدهای واقعی — آنچه واقعاً جواب داد، و اعدادش چه بود. آموزش‌ها در چهار مسیر مرتب شده‌اند؛ هر درس مستقل خوانده می‌شود.</p>
+
+  <!-- The map. Four tracks, in the order they are meant to be walked, on a
+       rail the page draws when the figure lands. Written as an ordinary
+       ordered list on purpose: with the training layer absent it is still
+       the four tracks in order, which is all it ever claims to be. Each
+       station carries the track's own data-cat, so pressing one is the
+       same act as pressing its chip below. -->
+  <figure class="nvx-fig" aria-label="مسیر پیشنهادی آموزش‌ها">
+    <figcaption class="nvx-fig__cap"><span class="lat">Navidix</span> · مسیر پیشنهادی<b>از صفرِ صفر تا سیستمی که خودش کار می‌کند</b></figcaption>
+    <ol class="nvx-fig__steps">
+      <li data-no="۰۱" data-cat="start"><b>شروع از صفر</b><span>ابزار درست را انتخاب کن — و مهم‌تر، بفهم کِی دارد اشتباه می‌گوید.</span></li>
+      <li data-no="۰۲" data-cat="prompt"><b>ویدیو و پرامپت‌نویسی</b><span>زبان دوربین، و آناتومی درخواستی که دقیقاً همان قاب را می‌سازد.</span></li>
+      <li data-no="۰۳" data-cat="brand"><b>برند و محتوا</b><span>هویتی که می‌ماند، و سیستمی که تولید محتوا را تکرارپذیر می‌کند.</span></li>
+      <li data-no="۰۴" data-cat="cases"><b>نمونه‌ها و خطاها</b><span>پرونده‌های واقعی: چه چیزی شکست خورد، و اعدادش چه بود.</span></li>
+    </ol>
+  </figure>
+
   <div class="find" id="find">
     <label class="find__box">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -692,6 +711,21 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
       reveal();
     });
   });
+
+  /* The map above the search is these same tracks, drawn. Pressing a
+     station is the same act as pressing its chip — one behaviour, so a
+     track can never be selected in the map and unselected in the chips. */
+  [].slice.call(document.querySelectorAll('.nvx-fig__steps > li[data-cat]'))
+    .forEach(function(li){
+      var chip = chips.filter(function(c){ return c.dataset.cat === li.dataset.cat; })[0];
+      if (!chip) return;
+      li.setAttribute('role', 'button');
+      li.setAttribute('tabindex', '0');
+      li.addEventListener('click', function(){ chip.click(); });
+      li.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); chip.click(); }
+      });
+    });
 
   /* Filtering shortens the page, the browser clamps the scroll to the new
      maximum, and the reader can end up below the results they asked for. Bring
