@@ -51,7 +51,7 @@
 
 /* The ground lifts a shade off absolute black, so the ambient light
    below has something to sit on rather than a hole to fall into. */
-html{ background:#0E1219; }
+html{ background:#0B0E14; }
 body{ margin:0; }
 
 /* ---- ambient light ----
@@ -68,12 +68,12 @@ body{ margin:0; }
 body::before{
   content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
   background:
-    radial-gradient(124% 70% at 10% -8%,  rgba(48,112,255,.20),  transparent 66%),
-    radial-gradient(104% 62% at 94% 12%,  rgba(122,172,255,.12), transparent 64%),
-    radial-gradient(136% 62% at 50% 108%, rgba(227,27,35,.10),   transparent 68%),
+    radial-gradient(124% 70% at 10% -8%,  rgba(48,112,255,.125), transparent 66%),
+    radial-gradient(104% 62% at 94% 12%,  rgba(122,172,255,.07), transparent 64%),
+    radial-gradient(136% 62% at 50% 108%, rgba(227,27,35,.062),  transparent 68%),
     /* a low wash across the whole width, so the outer margins are lit at all
        rather than falling away to the ground colour on a wide screen */
-    linear-gradient(to bottom, rgba(150,185,240,.055), transparent 46%);
+    linear-gradient(to bottom, rgba(150,185,240,.032), transparent 46%);
 }
 
 .sitebar{ position:sticky; top:0; z-index:30; background:rgba(8,9,11,.9); border-bottom:1px solid #262A31;
@@ -502,7 +502,7 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
 <body>
 <header class="sitebar"><div class="row">
   <a class="home" href="index.html"><img class="navmark" src="navidix-mark.png" alt="" width="24" height="24" /><span>NAVIDIX</span></a>
-  <a href="training.html">همه‌ی آموزش‌ها ←</a>
+  <a href="index.html">صفحه‌ی اصلی ←</a>
 </div></header>
 
 <main class="idx">
@@ -521,6 +521,7 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
     </label>
     <div class="find__chips" id="chips" role="group" aria-label="دسته‌بندی">
       <button class="chip" type="button" data-cat="all"    aria-pressed="true">همه</button>
+      <button class="chip" type="button" data-cat="start"  aria-pressed="false">شروع از صفر</button>
       <button class="chip" type="button" data-cat="prompt" aria-pressed="false">ویدیو و پرامپت‌نویسی</button>
       <button class="chip" type="button" data-cat="brand"  aria-pressed="false">برند و محتوا</button>
       <button class="chip" type="button" data-cat="cases"  aria-pressed="false">نمونه‌ها و خطاها</button>
@@ -532,12 +533,12 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
     <span class="feat__tag">کتابخانه</span>
     <span class="feat__b">
       <b>کتابخانه‌ی پرامپت فارسی</b>
-      <span>۱۶ سبک آماده‌ی کپی — نقاشی، عکاسی واقع‌گرایانه و نورپردازی. هر سبک با فرمولش، تا بتوانی هر سوژه‌ای را در همان سبک بسازی.</span>
+      <span>۲۷ سبک آماده‌ی کپی — نقاشی، عکاسی واقع‌گرایانه و نورپردازی. هر سبک با فرمولش، تا بتوانی هر سوژه‌ای را در همان سبک بسازی.</span>
     </span>
     <span class="feat__go" aria-hidden="true">←</span>
   </a>
 
-  <section class="grp" data-cat="prompt">
+  <section class="grp" data-cat="start">
     <div class="grp__head"><span class="grp__no">۰۱</span><h2>شروع از صفر — برای همه</h2></div>
     <p class="grp__sub">اگر تا حالا هیچ کاری با هوش مصنوعی نکرده‌ای، از اینجا شروع کن. بدون پیش‌نیاز، بدون هزینه.</p>
     <div class="cards">
@@ -548,7 +549,7 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
     </div>
   </section>
 
-  <section class="grp">
+  <section class="grp" data-cat="prompt">
     <div class="grp__head"><span class="grp__no">۰۲</span><h2>تولید ویدیو، تصویر و پرامپت‌نویسی</h2></div>
     <p class="grp__sub">زبان دوربین، ساخت پرامپت، کنترل نور و ترکیب‌بندی، و رساندن یک ایده تا نمای نهایی.</p>
     <div class="cards">
@@ -662,6 +663,12 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
       g.hidden = !items.some(function(it){ return it.grp === g && !it.el.hidden; });
     });
 
+    /* the featured card is a promotion, not a lesson. It belongs to no track,
+       so a filtered view has no honest place for it — leaving it up made a
+       category look like it had returned the wrong thing. */
+    var feat = document.querySelector('.feat');
+    if (feat) feat.hidden = !(cat === 'all' && !q);
+
     find.classList.toggle('has-query', qRaw.length > 0);
     idx.classList.toggle('is-empty', hits === 0);
     emptyQ.textContent = qRaw;
@@ -682,8 +689,31 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
       cat = c.dataset.cat;
       chips.forEach(function(o){ o.setAttribute('aria-pressed', String(o === c)); });
       apply();
+      reveal();
     });
   });
+
+  /* Filtering shortens the page, the browser clamps the scroll to the new
+     maximum, and the reader can end up below the results they asked for. Bring
+     the first surviving track to rest under the sticky bar. Measured from that
+     track, never from the bar: a stuck sticky element reports where it is
+     stuck, not where it lives. */
+  function reveal(){
+    requestAnimationFrame(function(){
+      var target = null;
+      for (var i = 0; i < groups.length; i++){ if (!groups[i].hidden){ target = groups[i]; break; } }
+      if (!target) return;
+      var r = target.getBoundingClientRect(),
+          bar = find ? find.getBoundingClientRect().height : 0,
+          rest = bar + 14;
+      if (Math.abs(r.top - rest) < 24) return;
+      var top = window.pageYOffset + r.top - rest;
+      if (top < 0) top = 0;
+      var soft = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      try { window.scrollTo({ top: top, behavior: soft ? 'smooth' : 'auto' }); }
+      catch (_) { window.scrollTo(0, top); }
+    });
+  }
 
   document.getElementById('resetAll').addEventListener('click', function(){
     input.value = ''; cat = 'all';

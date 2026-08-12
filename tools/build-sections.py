@@ -84,6 +84,56 @@ EXTRA_CSS = '''
 .sect .sub{ color:#98A0A9; font-size:clamp(14px,2vw,16.5px); line-height:2.05;
   max-width:62ch; margin:0; }
 
+/* The furniture all four section pages share: the card grid, the video card
+   documentaries and collections are built from, the channel row, and the
+   playlist button. It went out by accident with the gallery wall — that cut was
+   made by position rather than by rule, and these sat after the wall inside the
+   same block. Every one of those pages fell back to unstyled defaults as a
+   result, and the channel icons, being inline svg carrying only a viewBox and
+   therefore no intrinsic size, grew until they filled a phone edge to edge. */
+.sect .eyebrow{ font-size:11.5px; letter-spacing:.06em; color:#7FB8FF;
+  margin:0 0 11px; font-weight:600; }
+
+.grid{ max-width:980px; margin:0 auto; padding:clamp(26px,4vh,40px) 22px 0;
+  display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(288px,1fr)); }
+.vcard{
+  display:flex; flex-direction:column; text-decoration:none; border:1px solid #262A31;
+  border-radius:8px; overflow:hidden; background:#101216;
+  transition:border-color .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1),
+             box-shadow .5s cubic-bezier(.16,1,.3,1);
+}
+.vcard:hover{ transform:translateY(-2px); border-color:rgba(150,196,255,.4);
+  box-shadow:0 22px 44px -30px rgba(0,0,0,.95); }
+.vcard__cover{ position:relative; display:block; aspect-ratio:16/9; background:#08090B; }
+.vcard__cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+.vcard__time{ position:absolute; bottom:8px; left:8px; background:rgba(4,6,10,.84);
+  color:#D7DEE7; font-size:11px; padding:2px 7px; border-radius:3px; letter-spacing:.02em; }
+.vcard__body{ padding:16px 18px 18px; display:flex; flex-direction:column; gap:9px; flex:1; }
+.vcard__body h2{ margin:0; font-size:15.5px; line-height:1.75; font-weight:600; color:#EDF2FA; }
+.vcard__body p{ margin:0; font-size:13px; line-height:1.95; color:#8C939B; flex:1; }
+.vcard__go{ font-size:12.5px; color:#7FB8FF; font-weight:600; }
+.vcard:hover .vcard__go{ color:#A9CEFF; }
+
+.chan{ display:flex; align-items:flex-start; gap:14px; text-decoration:none;
+  border:1px solid #262A31; border-radius:8px; padding:18px 19px; background:#101216;
+  transition:border-color .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1); }
+.chan:hover{ transform:translateY(-2px); border-color:rgba(150,196,255,.42); }
+.chan svg{ flex:0 0 auto; width:23px; height:23px; margin-top:2px; color:#98A0A9; }
+.chan:hover svg{ color:#E4E7EA; }
+.chan--yt:hover svg{ color:#E3202A; }
+.chan--tg:hover svg{ color:#6EAAFF; }
+.chan b{ display:block; font-size:15px; font-weight:600; color:#EDF2FA; margin-bottom:2px; }
+.chan .at{ font-size:11.5px; color:#6B7280; display:block; margin-bottom:7px; }
+.chan p{ margin:0; font-size:13px; line-height:1.95; color:#8C939B; }
+
+.rowcta{ max-width:980px; margin:0 auto; padding:clamp(22px,3.5vh,32px) 22px 0;
+  display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+.rowcta h2{ margin:0; font-size:clamp(17px,2.6vw,22px); font-weight:700; color:#EDF2FA; }
+
+/* .hollow — the empty-state panel — was only ever used by the gallery, and the
+   gallery has work in it now. Dropped rather than shipped to four pages that
+   cannot use it. */
+
 '''
 
 FOLLOWUP = '''<section class="followup">
@@ -105,6 +155,13 @@ FOLLOWUP = '''<section class="followup">
   </div>
 </section>
 
+'''
+
+# The colophon and the closing tags are every page's, but the block above is
+# not: it asks the reader to go and follow the Telegram and YouTube channels,
+# which is the entire subject of channels.html. Printed there it repeated the
+# page's own content back at it, with the same two buttons a second time.
+TAIL = '''
 <div class="colophon">
   <p><span class="mk">&copy;</span> ۱۴۰۵ <b>استودیو نویدیکس</b> — ساخته‌ی <b>محمد نویدی</b>. تمام حقوق محفوظ است.<br />بازنشر با ذکر منبع آزاد است، فروشش نه.</p>
 </div>
@@ -113,7 +170,8 @@ FOLLOWUP = '''<section class="followup">
 '''
 
 
-def page(slug, title, desc, img, alt, ld, body, back=('index.html', 'صفحه‌ی اصلی ←')):
+def page(slug, title, desc, img, alt, ld, body, back=('index.html', 'صفحه‌ی اصلی ←'),
+         followup=True):
     url = BASE + slug
     return f'''<!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -163,7 +221,7 @@ def page(slug, title, desc, img, alt, ld, body, back=('index.html', 'صفحه‌
 </div>
 </div>
 
-{FOLLOWUP}'''
+{FOLLOWUP if followup else ''}{TAIL}'''
 
 
 def film_card(vid, time, t, d, cta='تماشا در یوتیوب'):
@@ -291,6 +349,12 @@ PAGES = [
      'og-home.png', 'کانال‌های رسمی — Navidix', LD_CHAN, chan_body),
 ]
 
+# channels.html is the one page the follow prompt has nothing to add to — it is
+# already a list of every channel, with the same links, further up the page.
+NO_FOLLOWUP = {'channels.html'}
+
 for slug, title, desc, img, alt, ld, body in PAGES:
-    open(OUT + slug, 'w', encoding='utf-8').write(page(slug, title, desc, img, alt, ld, body))
-    print('wrote', slug)
+    open(OUT + slug, 'w', encoding='utf-8').write(
+        page(slug, title, desc, img, alt, ld, body,
+             followup=slug not in NO_FOLLOWUP))
+    print('wrote', slug, '(no follow prompt)' if slug in NO_FOLLOWUP else '')
