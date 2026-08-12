@@ -183,6 +183,17 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
   padding-top:calc(var(--logo-bottom) + clamp(38px,7.5vh,104px));
   padding-bottom:clamp(24px,5vh,64px);
 }
+/* The hero's column. It only ever had styles inside the wide-screen block,
+   which left it a plain block element on a phone — and a plain block in a
+   right-to-left page pins its children to the right edge. The rule and the
+   pitch, both of which set a width, ended up hard against that edge while the
+   wordmark and the buttons stayed centred: 87px and 39px out of true, which is
+   exactly the crookedness it looked like. Centred here, and the wide-screen
+   block ragged-aligns it from the reading edge instead. */
+.hero__col{
+  display:flex; flex-direction:column; align-items:center;
+  width:100%; min-width:0;
+}
 /* the wordmark sits on a plate of light — a title card, not a floating image */
 .plate{ position:relative; display:flex; justify-content:center; width:100%; }
 /* The wordmark used to sit on a plate of light. Against deep black a lit
@@ -1802,6 +1813,60 @@ function ringTexture(){
   return new THREE.CanvasTexture(c);
 }
 
+/* ---- the trace ring ----
+   A die shot, drawn once into a canvas at boot and never touched again: two
+   concentric tracks, spurs running out to small pads, and a scatter of vias.
+   It is the same language as the etching already inside the mark, continued
+   past its edge, so the hexagon reads as one component seated on a board
+   rather than as a badge floating in space.
+
+   Deliberately faint and deliberately still — it is texture, not an event.
+   One canvas, one sprite, no per-frame work beyond a very slow turn. */
+function traceTexture(){
+  const S = 512, c = document.createElement('canvas'); c.width = c.height = S;
+  const g = c.getContext('2d'), C = S/2;
+  g.lineCap = 'round';
+
+  const ring = (r, a, from, to) => {
+    g.beginPath(); g.arc(C, C, r, from, to);
+    g.strokeStyle = 'rgba(150,196,255,' + a + ')'; g.lineWidth = 1.15; g.stroke();
+  };
+  /* two tracks, each broken into arcs so it reads as routing and not as a
+     drawn circle */
+  for (let k = 0; k < 2; k++){
+    const r = 150 + k*46;
+    for (let i = 0; i < 7; i++){
+      const a0 = (i/7)*Math.PI*2 + k*0.4;
+      ring(r, 0.30 - k*0.09, a0 + 0.10, a0 + Math.PI*2/7 - 0.16);
+    }
+  }
+  /* spurs out to pads, at angles that avoid the mark's own points */
+  for (let i = 0; i < 14; i++){
+    const a = (i/14)*Math.PI*2 + 0.21;
+    const r0 = 150 + (i%2)*46, r1 = r0 + 26 + (i%3)*17;
+    const x0 = C + Math.cos(a)*r0, y0 = C + Math.sin(a)*r0;
+    const xm = C + Math.cos(a)*(r0+14), ym = C + Math.sin(a)*(r0+14);
+    /* one right-angle bend, the way a real trace turns */
+    const a2 = a + (i%2 ? 0.085 : -0.085);
+    const x1 = C + Math.cos(a2)*r1, y1 = C + Math.sin(a2)*r1;
+    g.beginPath(); g.moveTo(x0,y0); g.lineTo(xm,ym); g.lineTo(x1,y1);
+    g.strokeStyle = 'rgba(150,196,255,' + (0.20 + (i%3)*0.05) + ')';
+    g.lineWidth = 1; g.stroke();
+    g.beginPath(); g.arc(x1, y1, 2.1, 0, Math.PI*2);
+    g.fillStyle = i % 4 === 0 ? 'rgba(255,120,110,.42)' : 'rgba(150,196,255,.30)';
+    g.fill();
+  }
+  /* vias, scattered but never over the mark itself */
+  for (let i = 0; i < 26; i++){
+    const a = Math.random()*Math.PI*2, r = 158 + Math.random()*76;
+    g.beginPath(); g.arc(C+Math.cos(a)*r, C+Math.sin(a)*r, 0.9, 0, Math.PI*2);
+    g.fillStyle = 'rgba(150,196,255,.24)'; g.fill();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.anisotropy = 2;
+  return tex;
+}
+
 /* A studio in a 512x256 equirect: one broad key over the left shoulder, a
    cool fill opposite and one ember kiss low and right. Metal reflects the
    room it is in, so building the room is what makes the mark's edge read as
@@ -1855,13 +1920,37 @@ function buildMark(scene){
   const bloom      = radialSprite(config.color.glow, 760, 0); bloom.position.z=-30; bloom.renderOrder=-1; group.add(bloom);
   const bloomInner = radialSprite(config.color.ember, 270, 0); bloomInner.position.z=-14; bloomInner.renderOrder=-1; group.add(bloomInner);
 
-  /* every eleven seconds the mark sends one ring outward — the only
-     event on the page, so it registers instead of becoming wallpaper */
-  const pulse = new THREE.Sprite(new THREE.SpriteMaterial({
-    map:ringTexture(), transparent:true, depthWrite:false,
+  /* ---- the board the mark is seated on ----
+     Faint, still, and behind everything else the group carries. */
+  const traces = new THREE.Sprite(new THREE.SpriteMaterial({
+    map:traceTexture(), transparent:true, depthWrite:false,
     blending:THREE.AdditiveBlending, opacity:0
   }));
-  pulse.position.z = -20; pulse.renderOrder = -1; group.add(pulse);
+  traces.position.z = -46; traces.renderOrder = -2; group.add(traces);
+
+  /* ---- the wave ----
+     The mark sends a ripple outward every nine seconds. It used to be one
+     ring, and it was gated on bloomBase — which the opening timeline drives to
+     zero so the mark reads against true black, so the condition was never true
+     and nothing had come out from behind the logo for a long time.
+
+     Three crests now, released a beat apart and travelling together. Each
+     eases outward and slows as it goes, the way a ring on water loses speed
+     against the surface, and fades as it spreads — the later crests dimmer
+     than the first, because the energy is going with them. */
+  const WAVE = [
+    { delay:0.00, gain:1.00 },
+    { delay:0.62, gain:0.62 },
+    { delay:1.24, gain:0.34 }
+  ];
+  const waveTex = ringTexture();
+  WAVE.forEach(w => {
+    w.sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+      map:waveTex, transparent:true, depthWrite:false,
+      blending:THREE.AdditiveBlending, opacity:0
+    }));
+    w.sprite.position.z = -20; w.sprite.renderOrder = -1; group.add(w.sprite);
+  });
 
   const H = 150;                       // intrinsic height at scale 1
   const api = { group, core, bloom, bloomInner, well, W:H, H, squeeze:1, spin:0, spinTarget:0, spinV:0, dragging:false, fades:[] };
@@ -2026,13 +2115,42 @@ function buildMark(scene){
 
       bloom.material.opacity = (api.bloomBase||0) * (0.86 + 0.14*Math.sin(t*0.6));
 
-      const cyc = (t % 11.0) / 2.8;
-      if (cyc <= 1 && api.bloomBase){
-        const e = 1 - Math.pow(1-cyc, 3);
-        const sz = api.H * (api.scale||1) * (1.05 + e*2.6);
-        pulse.scale.set(sz, sz, 1);
-        pulse.material.opacity = Math.sin(cyc*Math.PI) * 0.38;
-      } else pulse.material.opacity = 0;
+      /* the board turns once every four minutes or so — slow enough to read as
+         drift rather than as rotation, and it keeps the etching from ever
+         looking like a printed decal */
+      const unit = api.H * (api.scale || 1);
+      /* 1.5 keeps the outer track just past the hexagon's points, so the mark
+         sits *on* the board. Wider than that and the arcs detach from it and
+         read as unrelated geometry floating in the sky. */
+      traces.scale.set(unit * 1.5, unit * 1.5, 1);
+      traces.material.rotation = t * 0.0072;
+      /* Hairline etching at a third of an inch on a phone is detail nobody can
+         resolve, paid for on every frame — so the board is a wide-screen
+         luxury and small screens simply do not draw it. */
+      traces.material.opacity = state.lite ? 0 : (api.traceBase || 0);
+
+      /* One ripple every nine seconds, three crests a beat apart.
+
+         A crest is an additive quad, and at full travel it covers most of the
+         hero — three of them overlapping is a lot of blending for a phone to
+         do for something this quiet. This file already learned that lesson
+         once with the blue bloom. So a small screen gets the leading crest
+         only: the ripple still reads, at a third of the fill. */
+      const CRESTS = state.lite ? 1 : WAVE.length;
+      for (let i = CRESTS; i < WAVE.length; i++) WAVE[i].sprite.material.opacity = 0;
+      const PERIOD = 9.0, TRAVEL = 4.2;
+      for (let i = 0; i < CRESTS; i++){
+        const w = WAVE[i];
+        let cyc = ((t - w.delay) % PERIOD) / TRAVEL;
+        if (cyc < 0 || cyc > 1){ w.sprite.material.opacity = 0; continue; }
+        /* fast away from the mark, slowing as it spreads */
+        const e = 1 - Math.pow(1 - cyc, 2.4);
+        const sz = unit * (1.02 + e * 2.9);
+        w.sprite.scale.set(sz, sz, 1);
+        /* up quickly, then a long fall — a crest, not a blink */
+        const env = Math.sin(Math.pow(cyc, 0.7) * Math.PI);
+        w.sprite.material.opacity = env * 0.30 * w.gain * (api.waveBase || 0);
+      }
 
       /* A transparent quad at zero opacity still costs every pixel it covers:
          the fragment shader runs, blends nothing, and the frame is gone. The
@@ -2042,7 +2160,9 @@ function buildMark(scene){
          them outright is worth half the frame on a phone, and they light
          back up on their own the moment either is given an opacity. */
       bloom.visible = bloom.material.opacity > 0.003;
-      pulse.visible = pulse.material.opacity > 0.003;
+      traces.visible = traces.material.opacity > 0.003;
+      for (let i = 0; i < WAVE.length; i++)
+        WAVE[i].sprite.visible = WAVE[i].sprite.material.opacity > 0.003;
       bloomInner.visible = bloomInner.material.opacity > 0.003;
       well.visible = well.material.opacity > 0.003;
     }
@@ -2504,6 +2624,12 @@ setTimeout(function () {
       { x:mark.scale, y:mark.scale, z:mark.scale, duration:1.7, ease:'power3.out' }, .65);
     mark.bloomBase = 0;
     tl.to(mark, { bloomBase:0, duration:.1 }, .7);   /* deep black behind the mark */
+    /* The board settles in under the mark, then the first ripple leaves. Both
+       ride their own base value rather than borrowing the bloom's, which is
+       held at zero — that borrowing is what silently switched the old ring off. */
+    mark.traceBase = 0; mark.waveBase = 0;
+    tl.to(mark, { traceBase:.5, duration:2.4, ease:'power2.out' }, .75);
+    tl.to(mark, { waveBase:1,   duration:1.6, ease:'power2.out' }, 1.5);
     tl.to(mark.bloomInner.material, { opacity:.30, duration:1.9, ease:'power2.out' }, .7);
 
     tl.fromTo('#wordmark', { opacity:0, y:22, filter:'blur(16px)' },
