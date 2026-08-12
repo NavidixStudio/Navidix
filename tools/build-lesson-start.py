@@ -144,6 +144,13 @@ BODY = '''<body>
     <p class="lede">این درس برای کسی نوشته شده که تا حالا هیچ کاری با هوش مصنوعی نکرده. لازم نیست برنامه‌نویس باشی، لازم نیست انگلیسی بلد باشی، لازم نیست چیزی نصب کنی. فقط یک مرورگر لازم داری و بیست دقیقه وقت.</p>
     <p class="lede">تا آخر همین صفحه سه چیز را می‌دانی: اینکه این ابزار واقعاً چه هست و چه نیست، اینکه از بین ده‌ها ابزار کدام یکی مالِ توست، و اینکه امشب دقیقاً چه کاری با آن بکنی که به درد کار و درس خودت بخورد.</p>
     <img class="hex-wm" src="navidix-mark.png" alt="" aria-hidden="true" />
+
+    <figure class="nvx-hero" data-nvx-zoom>
+      <picture>
+        <source srcset="lessons/ai-start.webp" type="image/webp" />
+        <img src="lessons/ai-start.jpg" alt="میز کاری تاریک با یک چراغ‌مطالعه و لپ‌تاپ بسته، و نور سرخی که از درگاهی پشت سر می‌تابد" width="1600" height="685" decoding="async" />
+      </picture>
+    </figure>
   </div>
 </section>
 

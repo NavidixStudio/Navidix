@@ -47,7 +47,7 @@
      turn, which reads as a page that has not finished loading.
      =================================================================== */
   var TARGETS = [
-    '.nvx-fig',
+    '.nvx-fig', '.nvx-hero',
     '.idx .feat', '.idx .cards > a', '.idx .grp__head', '.idx .grp__sub',
     '.lesson .stat',
     '.lesson .rule', '.lesson .branch', '.lesson .step', '.lesson details',

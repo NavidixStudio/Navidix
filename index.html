@@ -785,12 +785,13 @@ html[lang="en"] .topbar__row{ padding:11px calc(var(--gutter) + 92px) 11px var(-
 }
 .band__eyebrow{
   grid-area:eyebrow; margin:0;
-  font-family:var(--f-ui); font-size:10px; font-weight:500;
-  letter-spacing:.28em; text-transform:uppercase; color:var(--paper-ghost);
+  font-family:var(--f-ui); font-size:10.5px; font-weight:600;
+  letter-spacing:.26em; text-transform:uppercase; color:rgba(237,242,250,.68);
   display:flex; align-items:center; gap:10px;
 }
 .band__eyebrow::before{ content:''; width:22px; height:1px; background:var(--ember); flex:none; }
-html[lang="fa"] .band__eyebrow{ font-family:var(--f-fa); font-size:11.5px; letter-spacing:0; text-transform:none; }
+html[lang="fa"] .band__eyebrow{ font-family:var(--f-fa); font-size:13px; font-weight:600;
+  letter-spacing:0; text-transform:none; }
 .band__title{
   grid-area:title; margin:0;
   font-family:var(--f-display); font-weight:250;
@@ -1073,8 +1074,8 @@ picture{ display:contents; }
     <section class="band" aria-labelledby="band-learn-t">
       <header class="band__head">
         <p class="band__eyebrow" data-copy2="learnEyebrow">آموزش هوش مصنوعی کاربردی</p>
-        <h2 class="band__title" id="band-learn-t" data-copy2="learnTitle">از همان‌جایی شروع کن که کار شروع می‌شود</h2>
-        <p class="band__sub" data-copy2="learnSub">آموزش‌های کامل و رایگان فارسی — از اولین پرامپت تا ساختن یک نمای سینمایی. بدون پیش‌نیاز، بدون ثبت‌نام.</p>
+        <h2 class="band__title" id="band-learn-t" data-copy2="learnTitle">از اولین پرامپت تا اولین فیلم</h2>
+        <p class="band__sub" data-copy2="learnSub">همه رایگان، بدون پیش‌نیاز و بدون ثبت‌نام — پروتکل‌هایی که در تولیدهای واقعی جواب داده‌اند، نه تئوری.</p>
         <a class="band__cta" href="training.html"><span data-copy2="learnCta">همه‌ی آموزش‌ها</span><i aria-hidden="true">←</i></a>
       </header>
       <div class="band__rail band__rail--3">
@@ -1247,8 +1248,8 @@ const NAVIDIX = (() => {
       en: { tagline:'Independent science & technology media',
             pitch:'Navidix Studio — where research, cinema and artificial intelligence meet.',
             ctaMain:'Studio services', ctaTalk:'Start a conversation', ctaTube:'Subscribe on YouTube',
-            learnEyebrow:'Applied AI training', learnTitle:'Start where the work actually starts',
-            learnSub:'Free, in-depth guides in Persian — from a first prompt to a finished cinematic shot. No prerequisites, no sign-up.',
+            learnEyebrow:'Applied AI training', learnTitle:'From a first prompt to a finished film',
+            learnSub:'All free, no prerequisites, no sign-up — protocols proven on real production work, not theory.',
             learnCta:'All training',
             seeEyebrow:'AI visuals', seeTitle:'Every frame is the prompt beneath it',
             seeSub:'Every frame is the real output of the prompt printed on its page — free to copy.',
@@ -1260,8 +1261,8 @@ const NAVIDIX = (() => {
       fa: { tagline:'رسانه مستقل علم و فناوری',
             pitch:'استودیو نویدیکس — تلاقی پژوهش، سینما و هوش مصنوعی.',
             ctaMain:'خدمات استودیو', ctaTalk:'عضویت در کانال', ctaTube:'سابسکرایب یوتیوب',
-            learnEyebrow:'آموزش هوش مصنوعی کاربردی', learnTitle:'از همان‌جایی شروع کن که کار شروع می‌شود',
-            learnSub:'آموزش‌های کامل و رایگان فارسی — از اولین پرامپت تا ساختن یک نمای سینمایی. بدون پیش‌نیاز، بدون ثبت‌نام.',
+            learnEyebrow:'آموزش هوش مصنوعی کاربردی', learnTitle:'از اولین پرامپت تا اولین فیلم',
+            learnSub:'همه رایگان، بدون پیش‌نیاز و بدون ثبت‌نام — پروتکل‌هایی که در تولیدهای واقعی جواب داده‌اند، نه تئوری.',
             learnCta:'همه‌ی آموزش‌ها',
             seeEyebrow:'تصویرهای هوش مصنوعی', seeTitle:'هر قاب، همان پرامپتِ زیرش است',
             seeSub:'هر قاب، خروجی واقعی همان پرامپتی است که در صفحه‌اش نوشته شده — آماده‌ی کپی، رایگان.',
@@ -2698,25 +2699,18 @@ setTimeout(function () {
     if (navigator.vibrate) navigator.vibrate(9);
   }, { passive:true });
 
-  /* ---- the field is only worth drawing while it can be seen ----
-     The canvas is fixed behind the whole document, so the moment the landing
-     scrolls away it is a full-screen redraw of something nobody is looking
-     at — and on a phone that redraw is the entire frame budget, which the
-     deck below then has to scroll inside. An observer on the landing switches
-     the loop off at the boundary and the clock is flushed on the way back in,
-     so the mark picks up where it was instead of jumping a scroll's worth of
-     rotation. The margin means the field is already running by the time any
-     of it is on screen. */
-  let onStage = true;
-  (function onlyWhenSeen(){
-    const landing = document.querySelector('.landing');
-    if (!landing || !('IntersectionObserver' in window)) return;
-    new IntersectionObserver(function (e){
-      const seen = e[0].isIntersecting;
-      if (seen && !onStage) state.clock.getDelta();     // drop the gap
-      onStage = seen;
-    }, { rootMargin:'200px' }).observe(landing);
-  })();
+  /* ---- the field runs the whole page ----
+     The canvas is fixed behind the whole document, so it is still on screen
+     under every band below the landing — and it reads as one continuous
+     room only if it keeps moving down there. This used to switch the loop
+     off once the landing scrolled away, to save a phone the redraw; what
+     that actually produced was a mark that froze mid-sway the moment the
+     reader started reading, which is worse than the frames it saved.
+
+     It still stops when the tab is hidden (visibilitychange, above) and
+     when the reader has asked for less motion — both invisible to someone
+     scrolling this page, which is the only case this gate was ever
+     confused with. */
 
   let drawn = 0, lastPX = null, lastPY = null, lastSky = null;
   function tick(now){
@@ -2743,7 +2737,6 @@ setTimeout(function () {
       document.documentElement.style.setProperty('--sky', String(skyQ));
     }
 
-    if (!onStage) return;
     /* A phone pays for every pixel of a full-screen field, and the mark turns
        at a fifth of a radian a second — a twenty-fifth of a degree between
        frames at sixty. Half those frames buy nothing an eye can find, so the

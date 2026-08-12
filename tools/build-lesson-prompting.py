@@ -145,6 +145,13 @@ BODY = '''<body>
     <p class="lede">در قسمت اول ابزارت را انتخاب کردی و یاد گرفتی چه هست و چه نیست. حالا می‌رویم سراغ چیزی که تفاوت بین یک جواب بی‌مصرف و یک جواب قابل‌استفاده را می‌سازد — و آن چیز، مدلِ گران‌تر نیست.</p>
     <p class="lede">تا آخر این درس یک <b>پرامپت‌ساز</b> داری که خودت پرش می‌کنی و متن آماده را برمی‌داری، بلدی جوابِ بد را نجات بدهی به‌جای اینکه از اول شروع کنی، و می‌توانی با جزوه و قرارداد و فایل‌های خودت کار کنی.</p>
     <img class="hex-wm" src="navidix-mark.png" alt="" aria-hidden="true" />
+
+    <figure class="nvx-hero" data-nvx-zoom>
+      <picture>
+        <source srcset="lessons/ai-prompting.webp" type="image/webp" />
+        <img src="lessons/ai-prompting.jpg" alt="شش قطعه‌ی فلزی تراش‌خورده در یک ردیف روی سنگ سیاه، که یکی از آن‌ها از درون سرخ می‌تابد" width="1600" height="685" decoding="async" />
+      </picture>
+    </figure>
   </div>
 </section>
 
