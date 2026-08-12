@@ -151,6 +151,38 @@ function pipeArt(w, h, titled) {
 }
 
 /* ---------------------------------------------------------------------
+   the motion lesson: one frame, given time
+
+   A push-in drawn as what it actually is — the same rectangle, sampled
+   at five moments, each one a step larger and a step further along.
+   Nothing here is a metaphor for movement; it is a movement, held still.
+   ------------------------------------------------------------------ */
+function motionArt(w, h, titled) {
+  const N = 5;
+  const cy = h * (titled ? .62 : .54);
+  const x0 = w * (titled ? .1 : .12);
+  const base = h * (titled ? .26 : .36);
+  let frames = '';
+  for (let i = 0; i < N; i++) {
+    const t = i / (N - 1);
+    const fw = base * (1 + 1.05 * t) * (16 / 9), fh = base * (1 + 1.05 * t);
+    const cxi = x0 + w * (titled ? .3 : .42) * t;
+    frames += `<rect x="${cxi - fw / 2}" y="${cy - fh / 2}" width="${fw}" height="${fh}" rx="3"
+      fill="none" stroke="${i === N - 1 ? '#EDF3FA' : '#4A5665'}"
+      stroke-width="${i === N - 1 ? Math.max(2, h * .004) : 1.3}"
+      opacity="${(.2 + .8 * t).toFixed(3)}"/>`;
+  }
+  return {
+    css: `.trail{position:absolute;border-radius:50%;background:#E5202A;
+  box-shadow:0 0 ${h * .05}px ${h * .016}px rgba(229,32,42,.65);}`,
+    html: `
+  <svg class="art" viewBox="0 0 ${w} ${h}">${frames}</svg>
+  ${titled ? '' : `<div class="trail" style="width:${h * .016}px;height:${h * .016}px;
+    left:${x0}px;top:${cy - h * .008}px"></div>`}`
+  };
+}
+
+/* ---------------------------------------------------------------------
    what gets built
    ------------------------------------------------------------------ */
 const PLATES = {
@@ -163,6 +195,11 @@ const PLATES = {
     og: 'og-pipeline.png', art: pipeArt,
     title: 'از ایده تا نمای نهایی:<br>هفت مرحله‌ای که <span>ترتیب</span>شان همه‌چیز است',
     sub: 'قسمت سوم · آموزش هوش مصنوعی کاربردی'
+  },
+  'video-motion': {
+    og: 'og-motion.png', art: motionArt,
+    title: 'پرامپت‌نویسی ویدیو:<br>از قاب ثابت تا <span>حرکت</span> کنترل‌شده',
+    sub: 'قسمت چهارم · آموزش هوش مصنوعی کاربردی'
   }
 };
 

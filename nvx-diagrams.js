@@ -882,12 +882,128 @@
   }
 
   /* =================================================================
+     10 — the three things that can move
+
+     A video model is given one instruction and asked to move a whole
+     world with it, so the reader's job is to know which of three layers
+     they are actually asking to move: the camera, the subject, or the
+     air between them. Each runs on its own here, and the fourth control
+     runs all three at once — which is the state most first prompts are
+     asking for without meaning to, and it is not a state anyone would
+     choose after watching it.
+
+     The loops are the stylesheet's, keyed off one attribute, so the
+     previous motion stops the instant the next is picked.
+     ================================================================= */
+  function buildMotion(fig) {
+    var s = stage(fig, '0 0 560 250');
+    var FX = 30, FY = 26, FW = 500, FH = 196;
+    var id = 'nvxdg' + (++uid);
+    var cx = FX + FW / 2, floor = FY + FH * .9;
+
+    s.appendChild(e('clipPath', { id: id },
+      [e('rect', { x: FX, y: FY, width: FW, height: FH, rx: 3 })]));
+    var box = e('g', { 'clip-path': 'url(#' + id + ')' });
+    s.appendChild(box);
+    box.appendChild(e('rect', { x: FX, y: FY, width: FW, height: FH, class: 'wall' }));
+
+    /* the camera layer is everything at once: when the camera moves, the
+       whole world moves with it, which is the difference the figure has
+       to show */
+    var world = e('g', { class: 'lyr-cam' });
+    box.appendChild(world);
+    world.appendChild(e('line', { class: 'horizon', x1: FX, y1: floor, x2: FX + FW, y2: floor }));
+    world.appendChild(e('rect', { class: 'prop', x: FX + 46, y: floor - 104, width: 74, height: 104, rx: 2 }));
+    world.appendChild(e('rect', { class: 'prop', x: FX + 372, y: floor - 132, width: 62, height: 132, rx: 2 }));
+
+    /* the air: three drifting banks, the cheapest thing to ask a model
+       for and the first thing that sells a shot as a place */
+    var air = e('g', { class: 'lyr-air' });
+    [[.16, .58, 84], [.52, .72, 62], [.78, .46, 70]].forEach(function (p) {
+      air.appendChild(e('ellipse', {
+        class: 'haze', cx: FX + FW * p[0], cy: FY + FH * p[1], rx: p[2], ry: p[2] * .3
+      }));
+    });
+    world.appendChild(air);
+
+    var who = e('g', { class: 'lyr-sub' }, [person(cx - 40, floor, FH * .56)]);
+    world.appendChild(who);
+
+    s.appendChild(e('rect', {
+      x: FX, y: FY, width: FW, height: FH, rx: 3, fill: 'none', stroke: '#262A31'
+    }));
+    var tag = e('text', { class: 'stamp', x: FX, y: 18 }, [txt('')]);
+    s.appendChild(tag);
+
+    var SAY = { cam: 'CAMERA MOVES', sub: 'SUBJECT MOVES', air: 'THE AIR MOVES', all: 'ALL THREE — UNREADABLE' };
+    return {
+      set: function (k) {
+        fig.setAttribute('data-run', 'm-' + k);
+        tag.firstChild.nodeValue = SAY[k] || '';
+      }
+    };
+  }
+
+  /* =================================================================
+     11 — one frame in two shots
+
+     The technique that turns a wall of five-second clips into a
+     sequence: the last frame of a shot is handed to the next shot as
+     its first. The figure exists because the idea is spatial — the
+     shared frame belongs to both shots at once, and a paragraph has to
+     say that twice where a drawing says it in one shape.
+     ================================================================= */
+  var CHAIN = ['a', 'bridge', 'b'];
+
+  function buildChain(fig) {
+    var s = stage(fig, '0 0 560 190');
+    var W = 150, H = 84, Y = 56, GAP = 28;
+    var xs = [40, 40 + W + GAP, 40 + (W + GAP) * 2];
+
+    /* the two brackets naming which shot owns which frames; the middle
+       frame sits under both, which is the whole point */
+    var span = function (x1, x2, y, label, cls) {
+      return e('g', { class: cls }, [
+        e('path', { class: 'lead', d: 'M' + x1 + ' ' + (y + 8) + 'V' + y + 'H' + x2 + 'V' + (y + 8) }),
+        e('text', { class: 'mini-lab', x: (x1 + x2) / 2 - 24, y: y - 6 }, [txt(label)])
+      ]);
+    };
+    s.appendChild(span(xs[0], xs[1] + W, 34, 'SHOT 01', 'sp-a'));
+    s.appendChild(span(xs[1], xs[2] + W, 176, 'SHOT 02', 'sp-b'));
+
+    var cells = xs.map(function (x, i) {
+      var c = mini(s, x, Y, W, H, ['ms', 'cu', 'els'][i]);
+      c.wrap = e('g', { 'data-fade': '' });
+      c.wrap.appendChild(c.g); c.wrap.appendChild(c.box);
+      s.appendChild(c.wrap);
+      return c;
+    });
+    var mark = e('text', { class: 'stamp', x: xs[1] + 34, y: Y + H + 22 }, [txt('SHARED FRAME')]);
+    s.appendChild(mark);
+
+    return {
+      set: function (k) {
+        var n = Math.max(0, CHAIN.indexOf(k));
+        cells.forEach(function (c, i) {
+          /* the bridge lights both outer frames, because it is the one
+             frame that is genuinely in two shots */
+          var on = n === 1 ? i === 1 : i === (n ? 2 : 0);
+          c.wrap.style.opacity = on ? 1 : .28;
+          c.box.setAttribute('class', on ? 'mini-box is-on' : 'mini-box');
+        });
+        mark.style.opacity = n === 1 ? 1 : .3;
+      }
+    };
+  }
+
+  /* =================================================================
      wiring
      ================================================================= */
   var BUILD = {
     angle: buildAngle, shot: buildShot, move: buildMove,
     key: buildKey, ratio: buildRatio, comp: buildComp,
-    pipe: buildPipe, beats: buildBeats, shots: buildShots
+    pipe: buildPipe, beats: buildBeats, shots: buildShots,
+    motion: buildMotion, chain: buildChain
   };
 
   function init(fig) {
