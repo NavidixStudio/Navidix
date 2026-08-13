@@ -383,10 +383,14 @@ html[lang="fa"] .hindex a span{ font-family:var(--f-fa); font-size:14.5px; }
    they were desktop rhythms being spent on a screen that has no room for
    them. */
 @media (max-width:620px){
-  /* the clearance under the 3D mark, which is the single largest number in
-     the phone's budget — a desktop's breathing room, spent on a screen
-     that has none to give */
-  .hero{ padding-top:calc(var(--logo-bottom) + clamp(20px,3.8vh,62px)); }
+  /* The clearance under the 3D mark. This was cut hard to make room for
+     the index, and on a real phone the result was the mount's lower ring
+     sitting almost on the wordmark's cap height — the two read as one
+     object. --logo-bottom is measured from the artwork's plane, which
+     runs to r=75, so the gap it describes is only honest if nothing is
+     drawn out that far; the old bezel reached 74.85 and ate all of it.
+     The orbits stop at 67.4, and this puts the rest of the room back. */
+  .hero{ padding-top:calc(var(--logo-bottom) + clamp(30px,5.4vh,78px)); }
   .tagline{ margin-top:clamp(9px,1.5vh,16px); }
   .hairline{ margin-top:clamp(12px,1.9vh,20px); }
   .pitch{ margin-top:clamp(13px,2.1vh,22px); }
@@ -399,12 +403,10 @@ html[lang="fa"] .hindex a span{ font-family:var(--f-fa); font-size:14.5px; }
   }
 }
 @media (max-width:440px){
-  /* Three then two, rather than five slivers with a broken word in each.
-     flex-grow is 0 so the short second row keeps the first row's column
-     width instead of stretching two entries across the whole strip — an
-     index whose last line is simply short reads as a grid; one whose last
-     line is twice as wide reads as a mistake. */
-  .hindex a{ flex:0 1 33.333%; padding:11px 9px 10px; }
+  /* Two and two. Four entries across a phone would be four slivers with a
+     broken word in each; two rows of two give every label its own line
+     and keep the grid square. */
+  .hindex a{ flex:0 1 50%; padding:11px 9px 10px; }
   .hindex a span{ font-size:13px; }
   html[lang="fa"] .hindex a span{ font-size:13.5px; }
 }
@@ -1175,31 +1177,32 @@ picture{ display:contents; }
           <svg class="hcta__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h14M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
         <a class="hcta" href="https://t.me/NavidixMedia" target="_blank" rel="noopener" data-copy2="ctaTalk">عضویت در کانال</a>
-        <a class="hcta hcta--tube" href="https://youtube.com/@navidix?sub_confirmation=1" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23 12s0-3.9-.5-5.8a3 3 0 0 0-2.1-2.1C18.5 3.6 12 3.6 12 3.6s-6.5 0-8.4.5A3 3 0 0 0 1.5 6.2C1 8.1 1 12 1 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 8.4.5 8.4.5s6.5 0 8.4-.5a3 3 0 0 0 2.1-2.1C23 15.9 23 12 23 12z" fill="currentColor"/><path d="M9.8 15.5V8.5l6 3.5-6 3.5z" fill="#08090B"/></svg>
-          <span data-copy2="ctaTube">سابسکرایب یوتیوب</span>
-        </a>
       </div>
 
       <!-- ---- the index ----
-           Until now the first screen offered three buttons, and not one of
-           them opened the work: the studio's services, a Telegram channel
-           and a YouTube channel. Everything this site is actually for — the
-           training, the prompt library, the gallery, the films — lived below
-           the fold behind a scroll, or in a top bar that only appears after
-           you have already left the hero.
+           The first screen used to offer three buttons and not one of them
+           opened the work. Everything this site is actually for — the
+           training, the prompt library, the gallery, the films — lived
+           below the fold, or in a top bar that only appears once you have
+           already left the hero.
 
-           So the hero carries the contents now. Numbered, ruled and set as
-           a masthead index rather than as five more pills, because five
-           more pills next to three would have flattened the hierarchy the
-           buttons above depend on. These read as somewhere to go; the
-           buttons read as something to do. -->
+           So the hero carries the contents. Numbered and ruled as a
+           masthead index rather than as more pills: these read as
+           somewhere to go, the buttons read as something to do, and
+           keeping the two kinds apart is what stops eight links from
+           becoming a wall.
+
+           Four, not five. Collections is a view assembled out of the
+           gallery and the films, so on the one screen that has to be
+           legible at a glance it was the entry that earned its place
+           least. It keeps its panel further down. YouTube left the button
+           row for the same reason — the studio's own channels have a
+           panel of their own below. -->
       <nav class="hindex" data-copy2-label="ixLabel" aria-label="بخش‌های سایت">
         <a href="training.html"><i>01</i><span data-copy2="ixLearn">آموزش</span></a>
         <a href="prompts.html"><i>02</i><span data-copy2="ixPrompts">پرامپت‌ها</span></a>
         <a href="gallery.html"><i>03</i><span data-copy2="ixGallery">گالری</span></a>
         <a href="documentaries.html"><i>04</i><span data-copy2="ixFilms">مستندها</span></a>
-        <a href="collections.html"><i>05</i><span data-copy2="ixSets">کالکشن‌ها</span></a>
       </nav>
      </div>
     </div>
@@ -1581,7 +1584,18 @@ const Stage = (() => {
   function init(){
     const small = Math.min(innerWidth, innerHeight) < 700;
     const cores = navigator.hardwareConcurrency || 4;
-    if (small || cores <= 4) config.quality = { stars:15000, dust:0, dpr:1.25, nebulae:1, streaks:1, octaves:3, bake:true, drifters:22 };
+    /* dpr was 1.25 here. On a phone with a 3x screen that renders the whole
+       stage at 42% of the panel and lets the browser scale it up, which is
+       exactly what "blurry" looks like — and the mark is the one thing in
+       this scene with a hard edge to lose. The wordmark beside it is a DOM
+       image at full resolution, so the two sat side by side and the 3D one
+       was visibly the softer.
+
+       1.75 matches the desktop cap. It is 2x the fragments of 1.25, paid
+       against a small-screen budget that already drops the dust, halves
+       the stars, bakes the nebulae to a texture and runs one streak layer
+       — the cuts that were made so this number would not have to be. */
+    if (small || cores <= 4) config.quality = { stars:15000, dust:0, dpr:1.75, nebulae:1, streaks:1, octaves:3, bake:true, drifters:22 };
     if (state.reduced) { config.quality.dust = 0; config.quality.streaks = 0; config.quality.drifters = 0; }
 
     scene  = new THREE.Scene();
@@ -1590,7 +1604,15 @@ const Stage = (() => {
     camera.position.set(0, 0, state.reduced ? config.camZ : 1500);
 
     dpr = Math.min(devicePixelRatio || 1, config.quality.dpr);
-    renderer = new THREE.WebGLRenderer({ antialias:false, alpha:false, powerPreference:'high-performance' });
+    /* Antialiasing was off because the scene used to be stars, sprites and
+       one flat plaque — none of which has an edge that steps, so MSAA
+       would have been paid for and never seen. The mark now sits inside
+       curved metal a few pixels wide, and on a phone at 1.25x that came
+       out visibly ragged: the rings crawled as they turned. This is the
+       cheapest fix by a distance — a tile-based mobile GPU resolves 4x
+       MSAA in on-chip memory, where the alternative, rendering the whole
+       starfield at a higher pixel ratio, is paid on every fragment. */
+    renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, powerPreference:'high-performance' });
     renderer.setPixelRatio(dpr);
     renderer.setSize(innerWidth, innerHeight);
     document.getElementById('stage').appendChild(renderer.domElement);
@@ -2260,167 +2282,185 @@ function buildMount(core, frame, config, state){
   const lite  = state.lite;
   const fades = [];
 
+  /* Two lists. `fades` is what the opening timeline drives; `solid` is the
+     subset that goes opaque once it has. The halo sprites are additive and
+     must stay transparent for ever — they are lights, not surfaces — so
+     they join the first list and not the second. */
+  const solid = [];
   function metal(color, metalness, roughness, target, extra){
     const m = new THREE.MeshStandardMaterial(Object.assign({
       color, metalness, roughness, envMapIntensity:2.0,
       transparent:true, opacity:0
     }, extra || {}));
     fades.push({ m, o:target });
+    solid.push(m);
     return m;
   }
-  /* Three finishes, which is what stops it reading as one extruded blob:
-     bright machined aluminium for the parts that catch the key light, a
-     dull anodised grey for the fine work, and the brand ember for the six
-     indicators and the three index tabs — the only lit parts, and the
-     only ones the eye is meant to count.
 
-     Note the metalness. The mark's own body sits at 1.0, which is right
-     for a slab that wants to be a dark mirror — but a fully metallic
-     surface has no diffuse term at all, so the two point lights in this
-     group produce nothing on it but a specular glint, and the studio
-     environment it reflects is mostly dark red. Parts this thin came out
-     invisible. Held around 0.45 they keep a real highlight while the base
-     colour still answers the key light, which is what actually reads as
-     machined at hairline widths.
+  /* Two finishes, and only two. The first build of this had five families
+     of part in it — a bezel, seventy-two divisions, six arms, three index
+     tabs, two gimbals — and on a phone it came out as grey noise around
+     the logo. Not because any one piece was wrong, but because at 260px
+     across, a scale with seventy-two divisions is a scale nobody can
+     read, and every one of those divisions was a pixel-and-a-half edge
+     with nothing to smooth it. Detail below the resolution of the screen
+     is not detail. It is aliasing with a story attached.
 
-     And each carries an emissive floor. This renderer runs linear with no
-     tone mapping, against an environment that is nearly all dark red, so
-     a lit-only material a pixel and a half wide came out the same value
-     as the sky behind it. The floor is what the part is worth in shadow;
-     the key light and the env map are then free to be highlights on top
-     of it rather than the only thing holding the part up. */
-  const steel = metal(0xCAD3DF, .46, .26, .96, {
-    emissive:new THREE.Color(0x39424E), emissiveIntensity:1, envMapIntensity:2.4
-  });
-  const dark  = metal(0x7B848F, .58, .52, .92, {
-    emissive:new THREE.Color(0x1F252C), emissiveIntensity:1, envMapIntensity:1.6
+     So: metal for the rings, ember for the lights on them.
+
+     Metalness is held near 0.45 rather than the 1.0 the mark's own body
+     uses. A fully metallic surface has no diffuse term, so this group's
+     two point lights give it nothing but a specular glint and the studio
+     environment it reflects is almost all dark red — parts this thin came
+     out invisible. Each also carries an emissive floor, because the
+     renderer runs linear with no tone mapping: the floor is what the part
+     is worth in shadow, and the key light is then a highlight on top of
+     it rather than the only thing holding it up. */
+  const steel = metal(0xC6D0DE, .44, .25, .95, {
+    emissive:new THREE.Color(0x3A4450), emissiveIntensity:1, envMapIntensity:2.2
   });
   const lamp  = metal(0x38070B, .30, .34, 1, {
-    emissive:new THREE.Color(config.color.ember), emissiveIntensity:1.8
+    emissive:new THREE.Color(config.color.ember), emissiveIntensity:2.0
   });
 
-  /* one draw call per family, however many of them there are */
-  const dummy = new THREE.Object3D();
-  function spun(geo, mat, count, radius, phase){
-    const im = new THREE.InstancedMesh(geo, mat, count);
-    for (let i = 0; i < count; i++){
-      const a = phase + i * Math.PI * 2 / count;
-      dummy.position.set(Math.cos(a) * radius, Math.sin(a) * radius, 0);
-      dummy.rotation.set(0, 0, a);          // box's local +X now points outward
-      dummy.updateMatrix();
-      im.setMatrixAt(i, dummy.matrix);
-    }
-    im.instanceMatrix.needsUpdate = true;
-    return im;
-  }
+  /* ---- two orbits, and three lights riding them ----
+     Each ring is held at a fixed tilt inside a node that precesses about
+     the mark's axis. That is the one motion that never degenerates: a
+     ring turning about an axis in its own plane goes face-on every half
+     turn, where it is just a circle, and edge-on a quarter turn later,
+     where it is a scratch across the logo. Precessed, the projection is
+     an ellipse of the same eccentricity in every frame, so the tilt is
+     always legible and the ring always reads as an object in space.
 
-  /* ---- the carrier: six arms off the hexagon's points ----
-     Set on the vertex angles of the artwork's own hexagon (pointy-top, so
-     the first one stands straight up), which is why they look bolted to
-     the logo rather than laid over it. */
-  const VERT = Math.PI / 2;
-  core.add(
-    spun(new THREE.BoxGeometry(6.0, 1.9, 2.6), steel, 6, 58.0, VERT),   // strut
-    spun(new THREE.BoxGeometry(1.9, 4.6, 3.4), dark,  6, 61.6, VERT),   // shoe
-    spun(new THREE.BoxGeometry(0.5, 2.6, 3.8), lamp,  6, 62.6, VERT)    // indicator
-  );
+     The lights travel along their ring as the ring precesses. Two motions
+     at right angles to each other, from four moving parts — which is what
+     makes this read as a system rather than as a spinning graphic, and
+     why it does not need seventy more parts to do it.
 
-  /* ---- the gimbals ----
-     Two rings held at a fixed tilt and precessed about the axis of the
-     mark, the way a gyroscope's rings nutate rather than the way a wheel
-     spins.
+     Radii are chosen against the logo artwork rather than against the
+     plane it is printed on. The printed hexagon reaches r=55.7; the plane
+     runs to 75, and --logo-bottom is measured from the plane. Ending the
+     outermost ring at 67.4 leaves the last tenth of that radius empty, so
+     the composition has air under it before the wordmark starts — which
+     it did not when the old bezel ran out to 74.85. */
+  const nodeGeo = new THREE.SphereGeometry(1.9, lite ? 14 : 20, lite ? 10 : 14);
 
-     The obvious build — a ring turning about an axis lying in its own
-     plane — was wrong twice over. It passes through face-on every half
-     turn, and at that moment it is just another circle concentric with
-     the bezel, so the reader loses the depth exactly when the ring is
-     largest. And it passes through edge-on, where it is a scratch across
-     the logo. Precession has neither: the projection is an ellipse of
-     constant eccentricity, always, so the tilt is legible in every frame
-     and the ring reads as an object in space rather than as a line.
-
-     The tilts are also what keeps them clear of everything else. A ring
-     of radius R tilted by θ crosses the mark's own plane at radius R, not
-     at R·cosθ — so at 64.5 and 67.4 both cross outside the carrier's
-     reach at 62.85, and their narrow ends ride high above it in z. The
-     clearances hold for every angle of the precession, not just for the
-     pose that happened to be on screen when this was checked. */
-  const ringMat = metal(0xB4BECC, .50, .28, .94, {
-    emissive:new THREE.Color(0x2C3540), emissiveIntensity:1, envMapIntensity:1.1
-  });
-  function gimbal(radius, tube, tilt, segs){
-    const spin = new THREE.Group();                   // precesses about z
-    const held = new THREE.Group();                   // and is held over at a fixed tilt
-    held.rotation.x = tilt;
+  function orbit(o){
+    const spin = new THREE.Group();          // precesses about the mark's axis
+    const held = new THREE.Group();          // and holds the ring over at a fixed tilt
+    held.rotation.x = o.tilt;
     spin.add(held);
     frame.add(spin);
-    held.add(new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 6, segs), ringMat));
-    /* one lit boss riding the ring, so which way it is going is never a
-       question the reader has to work at */
-    const boss = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.5, 1.5), lamp);
-    boss.position.set(radius, 0, 0);
-    held.add(boss);
-    return spin;
+    held.add(new THREE.Mesh(
+      new THREE.TorusGeometry(o.R, o.tube, lite ? 8 : 12, o.segs), steel));
+    const riders = [];
+    for (let i = 0; i < o.lights; i++){
+      const m = new THREE.Mesh(nodeGeo, lamp);
+      /* A lit sphere on a black ground is a red dot. The halo is what
+         makes it a light — one additive sprite each, three in the whole
+         scene, riding along as a child so it needs no bookkeeping of its
+         own. It fades in with the rest and never writes depth, so the
+         rings pass through it cleanly. */
+      const halo = radialSprite(config.color.ember, 13, 0, THREE.AdditiveBlending);
+      halo.renderOrder = 1;
+      fades.push({ m:halo.material, o:0.5 });
+      m.add(halo);
+      held.add(m);
+      riders.push(m);
+    }
+    return { spin, riders, radius:o.R };
   }
-  const gimA = gimbal(64.5, 0.62, 0.56, lite ? 60 : 92);   // 32°
-  /* Two gimbals are a mechanism; one is still a gimbal. On a small screen
-     the whole housing is about 260px across, the second ring is mostly
-     hidden behind the first at that size, and it is one of the largest
-     PBR surfaces here — so it is the first thing a phone gives up. */
-  const gimB = lite ? null : gimbal(67.4, 0.50, -0.77, 84);   // 44°, the other way
 
-  /* ---- the fixed bezel and its scale ----
-     Seventy-two divisions, every sixth one long, all of them ending on the
-     same outer datum at 73.15 where the bezel ring picks them up. That
-     shared datum is the detail that makes it read as a machined scale
-     instead of as spokes. */
+  /* Tube radii are the other half of the aliasing answer. A 0.35-unit ring
+     was a third of a pixel on a phone; these are wide enough to land on
+     two or three, which is what antialiasing needs to work with. */
+  /* The two tilts are far apart on purpose. At 25 and 42 degrees the rings
+     projected to almost the same ellipse and read as one doubled line —
+     two orbits that look like a drawing error rather than like two
+     orbits. Twenty degrees is nearly a circle and sixty-two is nearly an
+     edge, so the pair is legible at a glance and every pose the
+     precession puts them in has one wide and one narrow. */
+  const SPEC = [
+    { R:62.5, tube:1.15, tilt: 0.35, lights:2, segs:lite ?  96 : 160 },   //  20deg, near face-on
+    { R:60.0, tube:0.90, tilt:-1.08, lights:1, segs:lite ?  80 : 132 }    // -62deg, near edge-on
+  ];
+  const A = orbit(SPEC[0]), B = orbit(SPEC[1]);
 
-  /* The bezel is its own node so it can be dialled while the arcs turn.
-     It hangs off `frame`, the mark's outer group, so the whole housing
-     keeps the mark's pointer tilt and its drift up the page — and only
-     the parts that are supposed to move, move. */
-  const bezel = new THREE.Group();
-  frame.add(bezel);
-  /* The inner datum and the sixty minor divisions are the fine reading of
-     the scale. Below about 700px they are under a pixel apart and cost a
-     full PBR pass each, so a phone keeps the twelve majors — which is
-     still a scale — and drops the rest. */
-  if (!lite) bezel.add(new THREE.Mesh(new THREE.TorusGeometry(68.8, 0.35, 5, 96), dark));
-  bezel.add(new THREE.Mesh(new THREE.TorusGeometry(74.0, 0.85, 8, lite ? 80 : 128), steel));
-  if (!lite) bezel.add(spun(new THREE.BoxGeometry(1.7, 0.50, 1.0), dark, 60, 72.3, 0));
-  bezel.add(spun(new THREE.BoxGeometry(3.9, 0.85, 1.4), steel, 12, 71.2, 0));
-  bezel.add(spun(new THREE.BoxGeometry(2.0, 4.4, 3.0), lamp,   3, 74.0, VERT));
+  /* ---- how far down the screen this actually comes ----
+     The layout needs to know where the composition ends so the wordmark
+     can start below it, and the ring's radius is not that answer. Screen
+     position is y over distance, so the lowest point on screen is not the
+     lowest point in space — a ring's near side is closer to the camera
+     and lands further down than its bottom does. On a phone that gap was
+     60px, and it ran the lower orbit through the top of the wordmark.
 
-  let solid = false;
+     So this samples rather than derives. For any point on a ring, the
+     worst pose the precession can reach is the one that swings it
+     straight down, which puts it at radius hypot(x, y) carrying its own
+     z; a half-turn of samples therefore covers every pose either ring can
+     strike, and both signs of z are tried because the camera is pitched
+     and which side is worse depends on that pitch. The rider lights sit
+     on the ring, so their radius is added to the envelope.
+
+     Projected through a camera, not through flat arithmetic. An earlier
+     version of this computed screen y from camZ and the field of view
+     directly, which is right for a camera on the axis and wrong for this
+     one: the render loop points it at (0, baseY*0.35, 0), a pitch of
+     about four degrees, and four degrees is the whole 60px. Called from
+     fit(), not per frame. */
+  const LIGHT = 1.9;                   // the rider spheres ride the ring
+  const probe = new THREE.Vector3();
+  function reachPx(camera, s, groupY, groupZ){
+    let worst = -Infinity;
+    for (const o of SPEC){
+      for (let i = 0; i <= 24; i++){
+        const phi = i * Math.PI / 24;
+        const rxy = Math.hypot(o.R * Math.cos(phi), o.R * Math.sin(phi) * Math.cos(o.tilt)) + o.tube + LIGHT;
+        const z   = Math.abs(o.R * Math.sin(phi) * Math.sin(o.tilt)) + o.tube + LIGHT;
+        for (const sign of [1, -1]){
+          probe.set(0, groupY - rxy * s, groupZ + sign * z * s).project(camera);
+          const py = (1 - (probe.y * 0.5 + 0.5)) * innerHeight;
+          if (py > worst) worst = py;
+        }
+      }
+    }
+    return worst;
+  }
+
+  let solidified = false;
   function solidify(){
-    solid = true;
-    fades.forEach(({ m }) => { m.transparent = false; m.needsUpdate = true; });
+    solidified = true;
+    solid.forEach(m => { m.transparent = false; m.needsUpdate = true; });
   }
 
-  const DETENT = Math.PI / 36;          // five degrees, seventy-two of them
+  function ride(o, phase){
+    const n = o.riders.length;
+    for (let i = 0; i < n; i++){
+      const a = phase + i * Math.PI * 2 / n;
+      o.riders[i].position.set(Math.cos(a) * o.radius, Math.sin(a) * o.radius, 0);
+    }
+  }
+
   function update(t){
     /* Opacity is driven by the opening timeline, so the switch to opaque
-       has to wait for it rather than assume a duration. One pass over
-       eight materials per frame until it lands, then never again. */
-    if (!solid && fades.every(f => f.m.opacity >= f.o - 0.003)) solidify();
+       has to wait for it rather than assume a duration. Two materials to
+       check per frame until it lands, then never again. Opaque is what
+       makes the rings occlude per-pixel against the hexagon when they
+       pass behind it — object-sorted transparency cannot do that, and
+       that per-fragment truth is the whole three-dimensional read. */
+    if (!solidified && fades.every(f => f.m.opacity >= f.o - 0.003)) solidify();
     if (state.reduced) return;
 
-    /* The bezel is dialled, not spun. It rests, then indexes one division
-       and rests again — a dwell of two and a half seconds against a snap
-       of half of one. A ring turning at a constant rate is a decoration;
-       a ring that holds position is an instrument being read. */
-    const p = t / 2.5, i = Math.floor(p), f = p - i;
-    const snap = f < .80 ? 0 : 1 - Math.pow(1 - (f - .80) / .20, 3);
-    bezel.rotation.z = -(((i + snap) * DETENT) % (Math.PI * 2));
-
-    /* and the two gimbals precess, opposite ways at rates that divide
-       into neither each other nor the mark's own sway, so the assembly
-       never strikes the same pose twice */
-    gimA.rotation.z =  t * 0.26;
-    if (gimB) gimB.rotation.z = -t * 0.17;
+    /* Rates that divide into neither each other nor the mark's own turn,
+       so the assembly never strikes the same pose twice. All of them slow:
+       the fastest thing here takes fifteen seconds to come round. */
+    A.spin.rotation.z =  t * 0.20;
+    B.spin.rotation.z = -t * 0.13;
+    ride(A,  t * 0.42);
+    ride(B, -t * 0.29);
   }
 
-  return { fades, update };
+  return { fades, update, reachPx };
 }
 
 function buildMark(scene){
@@ -2484,6 +2524,35 @@ function buildMark(scene){
   const H = 150;                       // intrinsic height at scale 1
   const api = { group, core, bloom, bloomInner, well, W:H, H, squeeze:1, spin:0, spinTarget:0, spinV:0, dragging:false, fades:[] };
 
+  /* ---- the camera the layout is measured through ----
+     Not the one on screen. That one is flown in from z=1500 over the
+     opening 3.4s and then drifts with the pointer, so anything measured
+     through it depends on when you asked and where the cursor was — and
+     the balance pass asks at the top of the timeline, when the camera is
+     at its furthest.
+
+     This one stands where the real camera settles and looks where the
+     real camera looks. The lookAt matters as much as the position: the
+     render loop points the camera at (0, baseY*0.35, 0), which pitches it
+     about four degrees, and on a phone four degrees moves the mount's
+     apparent bottom edge 60px — the difference between the lower orbit
+     clearing the wordmark and cutting through it. */
+  const layoutCam = new THREE.PerspectiveCamera();
+  function aimLayoutCam(){
+    const c = Stage.camera;
+    layoutCam.fov = c.fov; layoutCam.aspect = c.aspect;
+    layoutCam.near = c.near; layoutCam.far = c.far;
+    layoutCam.position.set(0, 0, NAVIDIX.config.camZ);
+    layoutCam.lookAt(0, (api.baseY || 0) * 0.35, 0);
+    layoutCam.updateMatrixWorld(true);
+    layoutCam.updateProjectionMatrix();
+  }
+  const sv = new THREE.Vector3();
+  function screenY(worldY, worldZ){
+    sv.set(0, worldY, worldZ).project(layoutCam);
+    return (1 - (sv.y * 0.5 + 0.5)) * innerHeight;
+  }
+
   function fit(){
     const vp = Stage.viewport(group.position.z);
     const portrait = innerWidth < 900;
@@ -2507,20 +2576,32 @@ function buildMark(scene){
     api.baseY = split ? vp.h * 0.045 : vp.h * 0.235;
     group.position.y = api.baseY;
 
-    /* ---- hand the mark's screen-space bottom edge to the layout ----
-       Measured against camZ, like every other layout number in this scene,
-       rather than through the live camera. The opening timeline flies the
-       camera in from z=1500 over 3.4s, and the balance pass runs at the
-       top of that timeline — so a projection taken through the camera
-       reported the mark's bottom edge some 40px lower than where it would
-       settle, and the hero was sized to a mark that was never going to be
-       there. On a short phone that was the difference between the index
-       fitting on the first screen and running off it.
+    aimLayoutCam();
 
-       This is the arithmetic project() performs, minus the dependency on
-       where the camera happens to be this frame: NDC y is worldY over
-       half the viewport's world height, and screen y follows from that. */
-    const px = (0.5 - (api.baseY - (api.H*s)/2) / vp.h) * innerHeight;
+    /* ---- hand the composition's screen-space bottom edge to the layout ----
+       Measured through the settled camera rather than the live one. The
+       opening timeline flies the real camera in from z=1500 over 3.4s and
+       the balance pass runs at the top of that timeline, so a projection
+       taken through it reported the mark's bottom edge some 40px below
+       where it would end up, and the hero was sized to a mark that was
+       never going to be there. On a short phone that was the difference
+       between the index fitting on the first screen and running off it.
+
+       Then whichever reaches lower — the artwork's plane, or the orbits
+       around it. The plane is the honest floor for the logo itself, but
+       the orbits hang out of it in z, which changes where they land on
+       screen, so the mount is asked directly.
+
+       Both are measured from the bottom of the mark's idle bob rather
+       than from its rest position: it breathes about 3.5% of its own
+       height, and a clearance that only holds on the way up is not a
+       clearance. */
+    const bob = api.H * s * 0.035;
+    const low = api.baseY - bob;
+    const px  = Math.max(
+      screenY(low - (api.H * s) / 2, group.position.z),
+      mount.reachPx(layoutCam, s, low, group.position.z)
+    );
     document.documentElement.style.setProperty('--logo-bottom', Math.max(0, px) + 'px');
     api.scale = s;
   }
@@ -2617,28 +2698,26 @@ function buildMark(scene){
           if (Math.abs(api.spinV) < 1e-5) api.spinV = 0;
         }
         api.spin += (api.spinTarget - api.spin) * (1 - Math.pow(0.0001, Math.min(dt || .016, .05)));
-        /* The idle turn used to accumulate without bound, so the mark rotated
-           all the way through edge-on and spent part of every cycle as a thin
-           sliver with its back to the reader. Barely noticeable at the size a
-           phone gives it; glaring at the size the split composition does.
+        /* The full turn, on every screen.
 
-           It sways instead. Two sines at frequencies that do not divide into
-           each other, so the motion never visibly repeats, over a range that
-           keeps the face turned toward the reader the whole time — the slowest
-           of them takes about a minute and a quarter to come back. A hand can
-           still carry it right around: drag momentum is added on top, not
-           replaced by this. */
-        if (api.split){
-          const idle = Math.sin(t * 0.085) * 0.40 + Math.sin(t * 0.041 + 1.1) * 0.14;
-          core.rotation.y = idle + api.spin;
-        } else {
-          /* Narrow screens keep the full turn. The sway above exists because
-             the split composition makes the mark large enough that passing
-             through edge-on reads as a glitch; at the size a phone gives it
-             the whole revolution is the point, and always was. */
-          const w = t * 0.185 + api.spin;
-          core.rotation.y = w - Math.sin(w * 2) * 0.45;
-        }
+           A wide screen used to get a sway instead: two sines over a range
+           that kept the face toward the reader, because at the size the
+           split composition gives the mark, passing through edge-on read
+           as a glitch — a large slab briefly showing you its side, with
+           nothing around it to explain why. That reason is gone. The mark
+           now turns inside two orbits, so the profile pass reads as the
+           moment a mechanism comes side-on, which is the one moment that
+           proves the whole thing is dimensional rather than drawn.
+
+           Not at a constant rate, though. The dwell coefficient below
+           holds the mark on each face and swings it quickly through
+           profile, where the logo cannot be read anyway. It cannot go
+           past 0.5: the turn rate is 1 − 2k·cos(2w), so at k=0.5 the mark
+           stops dead at each face and beyond it the rotation reverses. At
+           0.48 it very nearly stops, which is the most dwell available
+           without the mark appearing to change its mind. */
+        const w = t * 0.185 + api.spin;
+        core.rotation.y = w - Math.sin(w * 2) * 0.48;
         core.rotation.x = Math.sin(t*0.161 + 1.3) * 0.045;   // square to camera
         core.rotation.z = Math.sin(t*0.094 + 2.7) * 0.022;
       }
