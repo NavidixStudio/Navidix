@@ -542,3 +542,75 @@ html[lang="fa"] .xstage__hint{ font-family:var(--xp-f-fa); letter-spacing:0; fon
   font-family:var(--xp-f-mono); font-size:clamp(17px,2vw,22px); font-weight:500;
   color:var(--xp-paper); font-variant-numeric:tabular-nums;
 }
+
+/* =====================================================================
+   THE KEY
+   Every one of these scenes carries its meaning in colour and line
+   weight, and a reader who cannot tell which is which is looking at a
+   pretty picture instead of a diagram. The key sits above the stage,
+   before the tour starts, because it has to be read first.
+   ===================================================================== */
+.xlegend{
+  list-style:none; margin:0 0 12px; padding:0;
+  display:flex; flex-wrap:wrap; gap:9px 18px; align-items:center;
+}
+.xlegend li{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--xp-dim); }
+.xlegend i{ flex:0 0 auto; display:block; }
+.xlegend__dot{ width:9px; height:9px; border-radius:50%; background:var(--k); }
+.xlegend__line{ width:22px; height:2px; border-radius:2px; background:var(--k); }
+.xlegend__ring{
+  width:11px; height:11px; border-radius:50%;
+  border:1.5px solid var(--k); background:transparent;
+}
+.xlegend__hair{ width:22px; height:1px; background:var(--k); opacity:.7; }
+
+/* =====================================================================
+   FULL SCREEN
+   The wrapper holds the stage and everything needed to drive it, so
+   going full screen hands over the instrument rather than a picture of
+   it. Out of full screen it is a plain block and changes nothing.
+   ===================================================================== */
+.xfs:fullscreen,
+.xfs.is-full{
+  display:flex; flex-direction:column; gap:0;
+  width:100vw; height:100vh; padding:0;
+  background:var(--xp-void);
+}
+/* the canvas takes every pixel that is going spare */
+.xfs.is-full .xstage{
+  flex:1 1 auto; min-height:0; border:0; border-radius:0;
+}
+.xfs.is-full .xstage__canvas{ width:100%; height:100%; aspect-ratio:auto; min-height:0; }
+
+/* and the controls become a compact deck along the bottom */
+.xfs.is-full .xlegend,
+.xfs.is-full .xchapters,
+.xfs.is-full .xchapter__body,
+.xfs.is-full .xctl,
+.xfs.is-full .xparams{
+  flex:0 0 auto; margin:0;
+  padding-inline:clamp(14px,2.4vw,28px);
+}
+.xfs.is-full .xlegend{
+  order:1; padding-block:10px 0;
+}
+.xfs.is-full .xchapters{ order:2; padding-block:10px 0; }
+.xfs.is-full .xchapter__body{
+  order:3; margin:10px clamp(14px,2.4vw,28px) 0; padding:11px 14px;
+  font-size:13px; line-height:1.9; max-height:22vh; overflow:auto;
+}
+.xfs.is-full .xctl{ order:4; padding-block:10px 0; }
+.xfs.is-full .xparams{
+  order:5; padding-block:10px 14px;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+}
+.xfs.is-full .xnote{ display:none; }     /* the chapter line already says it */
+.xfs.is-full .xstage__hint{ font-size:12px; }
+
+/* On a phone in landscape there is almost no vertical room, so the deck
+   sheds everything that is not a control. */
+@media (max-height:520px){
+  .xfs.is-full .xchapter__body{ max-height:16vh; font-size:12px; }
+  .xfs.is-full .xlegend{ display:none; }
+  .xfs.is-full .xparams{ grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); padding-block:8px 10px; }
+}

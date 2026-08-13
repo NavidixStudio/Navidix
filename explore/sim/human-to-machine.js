@@ -142,6 +142,29 @@
       scene.add(l); authors.push(l);
     }
 
+    /* ---- the time axis ----
+       The diagram was unreadable for one concrete reason: nothing said
+       what a horizontal position meant. A reader saw dots on two lines
+       and had no way to know the left edge was three hundred thousand
+       years ago. An axis with real numbers on it fixes that, and it has
+       to be an axis rather than a caption, because the numbers change
+       with the zoom. */
+    var AX_Y = BIO_Y - 46;
+    var axisGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-SPAN / 2, AX_Y, 0), new THREE.Vector3(SPAN / 2, AX_Y, 0)]);
+    scene.add(new THREE.Line(axisGeo, lineMat(0x9AA6BC, 0.34)));
+
+    var TICK_U = [0, 0.5, 1];                    /* left edge, middle, now */
+    var tickAxGeo = new THREE.BufferGeometry();
+    var tickAxPos = new Float32Array(TICK_U.length * 6);
+    TICK_U.forEach(function (u, i) {
+      var x = (u - 0.5) * SPAN, o = i * 6;
+      tickAxPos[o] = x; tickAxPos[o + 1] = AX_Y - 7; tickAxPos[o + 2] = 0;
+      tickAxPos[o + 3] = x; tickAxPos[o + 4] = AX_Y + 7; tickAxPos[o + 5] = 0;
+    });
+    tickAxGeo.setAttribute('position', new THREE.BufferAttribute(tickAxPos, 3));
+    scene.add(new THREE.LineSegments(tickAxGeo, lineMat(0x9AA6BC, 0.5)));
+
     /* the present, marked once */
     var nowGeo = new THREE.BufferGeometry().setFromPoints([
       new THREE.Vector3(SPAN / 2, BIO_Y - 26, 0), new THREE.Vector3(SPAN / 2, TECH_Y + 26, 0)]);
@@ -156,20 +179,33 @@
       color: 0x5A6B88, size: 1.7, sizeAttenuation: false, transparent: true, opacity: 0.5
     })));
 
+    /* Anchors the shell pins DOM labels to. There are more of them than
+       before, and that is the fix: a diagram nobody can read is not a
+       diagram. The two rails say what they are, the axis says what the
+       horizontal position means, and three events are named at any zoom
+       instead of one. */
     var anchors = {
-      techA: { position: new THREE.Vector3(), hidden: true, text: '' },
-      techB: { position: new THREE.Vector3(), hidden: true, text: '' },
-      bioA:  { position: new THREE.Vector3(), hidden: true, text: '', dim: true },
-      /* Below the axis, not above it. The two most recent artefacts are
-         always crowded into the right-hand end, and a label for "now"
-         sitting up there collided with them at every zoom level. */
-      now:   { position: new THREE.Vector3(SPAN / 2, BIO_Y - 42, 0), hidden: false, dim: true, text: 'اکنون' }
+      railTech: { position: new THREE.Vector3(-SPAN / 2 + 4, TECH_Y + 56, 0), hidden: false, text: 'ساخته‌ی انسان' },
+      railBio:  { position: new THREE.Vector3(-SPAN / 2 + 4, BIO_Y - 20, 0), hidden: false, text: 'خودِ انسان' },
+      ax0:      { position: new THREE.Vector3(-SPAN / 2, AX_Y - 20, 0), hidden: false, dim: true, text: '' },
+      ax1:      { position: new THREE.Vector3(0, AX_Y - 20, 0), hidden: false, dim: true, text: '' },
+      ax2:      { position: new THREE.Vector3(SPAN / 2, AX_Y - 20, 0), hidden: false, dim: true, text: 'همین امروز' },
+      techA:    { position: new THREE.Vector3(), hidden: true, text: '' },
+      techB:    { position: new THREE.Vector3(), hidden: true, text: '' },
+      techC:    { position: new THREE.Vector3(), hidden: true, text: '' },
+      bioA:     { position: new THREE.Vector3(), hidden: true, text: '' }
     };
 
     /* live figures the page reads for its readout — one source, so the
        picture and the numbers cannot drift apart */
     var state = { span: 0, tech: 0, bio: 0, generations: 0, ticksShown: false };
     var chapter = '';
+
+    function fmtYears(y) {
+      var fa = function (n) { return String(n).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
+      if (y >= 1000) return fa(Math.round(y / 1000)) + ' هزار سال';
+      return fa(Math.round(y)) + ' سال';
+    }
 
     function xOf(yearsAgo, span) { return (1 - yearsAgo / span) * SPAN - SPAN / 2; }
 
@@ -257,18 +293,27 @@
         /* ---- the two most recent artefacts get named, and the most
                recent biological adaptation, so the reader can see that
                both tracks have entries in the same window ---- */
+        /* the axis numbers, which change with the zoom */
+        anchors.ax0.text = fmtYears(span) + ' پیش';
+        anchors.ax1.text = fmtYears(span / 2) + ' پیش';
+
+        /* three artefacts named rather than one, spread across the
+           window instead of all bunched at the recent end */
         named.sort(function (u, v) { return v.x - u.x; });
-        [['techA', 0], ['techB', 1]].forEach(function (pair) {
-          var an = anchors[pair[0]], src = named[pair[1]];
-          if (!src) { an.hidden = true; return; }
+        var pick = [named[0], named[Math.floor(named.length / 2)], named[named.length - 1]];
+        [['techA', 0], ['techB', 1], ['techC', 2]].forEach(function (pair) {
+          var an = anchors[pair[0]], src = pick[pair[1]];
+          if (!src || (pair[1] > 0 && pick[0] && Math.abs(src.x - pick[0].x) < 26)) { an.hidden = true; return; }
           an.hidden = false; an.text = src.n;
-          an.position.set(src.x, TECH_Y + 20 + pair[1] * 30, 0);
+          an.position.set(src.x, TECH_Y + 20 + (pair[1] === 0 ? 12 : 0), 0);
         });
+
         if (lastBio) {
           anchors.bioA.hidden = false;
           anchors.bioA.text = lastBio.n;
           anchors.bioA.position.set(lastBio.x, BIO_Y - 20, 0);
-        } else anchors.bioA.hidden = true;
+          anchors.railBio.hidden = Math.abs(lastBio.x - (-SPAN / 2 + 4)) < 60;
+        } else { anchors.bioA.hidden = true; anchors.railBio.hidden = false; }
       },
 
       resize: function (w, h) { camera.aspect = w / h; camera.updateProjectionMatrix(); },

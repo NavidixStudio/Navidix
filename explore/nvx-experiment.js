@@ -86,7 +86,9 @@
   var ICON = {
     play:  '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6L19 12z"/></svg>',
     pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.4v14H7zM13.6 5H17v14h-3.4z"/></svg>',
-    reset: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4.2V9h-4.8"/></svg>'
+    reset: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4.2V9h-4.8"/></svg>',
+    full:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>',
+    exit:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h5V4M20 9h-5V4M4 15h5v5M20 15h-5v5"/></svg>'
   };
 
   /* =====================================================================
@@ -238,6 +240,43 @@
       params: params, scene: null
     };
 
+    /* =====================================================================
+       FULL SCREEN
+
+       An experiment squeezed into a column beside a page of text is a
+       diagram you glance at. The same thing filling the screen is
+       something you use. This wraps the stage together with everything
+       needed to drive it — the chapters, the sentence explaining the
+       chapter, the controls, the sliders and the key — so going full
+       screen hands over the whole instrument rather than a picture of it.
+
+       The wrapper is built here rather than written into each page, so no
+       page has to know this feature exists.
+       ===================================================================== */
+    var fsWrap = el('div', 'xfs');
+    stage.parentNode.insertBefore(fsWrap, stage);
+    ['.xstage', '.xlegend', '.xchapters', '.xchapter__body', '.xctl', '.xparams', '.xnote']
+      .forEach(function (sel) {
+        var n = root.querySelector(sel);
+        if (n) fsWrap.appendChild(n);
+      });
+
+    /* ---- the key ----
+       Colours and lines carry the meaning in every one of these scenes,
+       and a reader who cannot tell which is which is looking at a pretty
+       picture. Named up front, before the tour starts. */
+    if (opts.legend && opts.legend.length) {
+      var lg = el('ul', 'xlegend');
+      lg.setAttribute('aria-label', copy.legendLabel || 'Key');
+      opts.legend.forEach(function (k) {
+        var li = el('li');
+        li.innerHTML = '<i class="xlegend__' + (k.kind || 'dot') + '" style="--k:' + k.color + '"></i>' +
+                       '<span>' + k.label + '</span>';
+        lg.appendChild(li);
+      });
+      fsWrap.insertBefore(lg, fsWrap.firstChild.nextSibling);
+    }
+
     /* ---- controls ---- */
     var ctl = root.querySelector('.xctl');
     var btnPlay = null, btnReset = null;
@@ -252,8 +291,36 @@
       group.appendChild(btnReset);
       ctl.insertBefore(group, ctl.firstChild);
 
+      if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
+        var btnFull = el('button', 'xbtn xbtn--icon xbtn--full');
+        btnFull.type = 'button';
+        var paintFull = function () {
+          var on = isFull();
+          btnFull.innerHTML = (on ? ICON.exit : ICON.full) +
+            '<span>' + (on ? (copy.exitFull || 'Exit full screen') : (copy.full || 'Full screen')) + '</span>';
+          btnFull.setAttribute('aria-pressed', String(on));
+        };
+        btnFull.addEventListener('click', function () {
+          if (isFull()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+          else (fsWrap.requestFullscreen || fsWrap.webkitRequestFullscreen).call(fsWrap);
+        });
+        ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
+          document.addEventListener(ev, function () {
+            fsWrap.classList.toggle('is-full', isFull());
+            paintFull();
+            onResize();
+          });
+        });
+        paintFull();
+        ctl.appendChild(btnFull);
+      }
+
       btnPlay.addEventListener('click', function () { api.running ? pause() : play(); });
       btnReset.addEventListener('click', reset);
+    }
+
+    function isFull() {
+      return (document.fullscreenElement || document.webkitFullscreenElement) === fsWrap;
     }
 
     function paintPlay() {
