@@ -529,9 +529,23 @@
         if (!src || src.hidden) { n.style.opacity = '0'; continue; }
         _v.copy(src.position).project(sc.camera);
         if (_v.z > 1) { n.style.opacity = '0'; continue; }
+        /* An anchor may rename itself between frames — a scene whose
+           contents depend on a zoom window has a different set of things
+           worth naming at every scale, and re-creating the elements to
+           say so would throw away their transitions. Written only on
+           change, so this is not a per-frame DOM write. */
+        if (src.text != null && n._t !== src.text) {
+          n._t = src.text;
+          n.querySelector('b').textContent = src.text;
+        }
         n.style.opacity = src.dim ? '.45' : '1';
-        n.style.transform = 'translate(-50%,-50%) translate(' +
-          ((_v.x * 0.5 + 0.5) * r.width) + 'px,' + ((-_v.y * 0.5 + 0.5) * r.height) + 'px)';
+        /* Kept inside the frame. An anchor sitting on the scene's own edge
+           — "now", at the right-hand end of a timeline — would otherwise
+           hang half its label outside the canvas and read as clipped. */
+        var lw = n.offsetWidth || 90, lh = n.offsetHeight || 24;
+        var lx = Math.max(lw / 2 + 6, Math.min(r.width - lw / 2 - 6, (_v.x * 0.5 + 0.5) * r.width));
+        var ly = Math.max(lh / 2 + 6, Math.min(r.height - lh / 2 - 6, (-_v.y * 0.5 + 0.5) * r.height));
+        n.style.transform = 'translate(-50%,-50%) translate(' + lx + 'px,' + ly + 'px)';
       }
     }
 
