@@ -1,0 +1,448 @@
+/* =====================================================================
+   NAVIDIX — INTERACTIVE SCIENCE PLATFORM
+
+   The design system for /explore/. It is the site's own palette and type,
+   held to a stricter grid: this section has to read as an instrument
+   rather than as an article, and the difference is mostly restraint —
+   fewer surfaces, thinner rules, one accent used sparingly.
+
+   The tokens below are the homepage's, restated here so the section can
+   be styled without loading the homepage's stylesheet. Deep blue carries
+   the science, red carries the brand and is spent only on state that
+   matters: what is live, what is running, what you are about to click.
+   ===================================================================== */
+:root{
+  --xp-void:      #05070B;
+  --xp-ink:       #0A0E15;
+  --xp-panel:     #0D121B;
+  --xp-panel-hi:  #111827;
+  --xp-line:      #1D2635;
+  --xp-line-hi:   #2C3purpose;
+  --xp-deep:      #0B1A3A;
+  --xp-blue:      #2B6CFF;
+  --xp-ion:       #8FDBFF;
+  --xp-red:       #E31B23;
+  --xp-red-soft:  #FF6A5A;
+  --xp-paper:     #EDF2FA;
+  --xp-dim:       rgba(237,242,250,.56);
+  --xp-ghost:     rgba(237,242,250,.20);
+  --xp-f-display: "Sora","SF Pro Display","Helvetica Neue",system-ui,sans-serif;
+  --xp-f-ui:      "Inter","SF Pro Text","Helvetica Neue",system-ui,sans-serif;
+  --xp-f-fa:      "Vazirmatn","IRANSansX","IRANSans","Segoe UI",Tahoma,sans-serif;
+  --xp-f-mono:    ui-monospace,SFMono-Regular,Menlo,"Vazirmatn",monospace;
+  --xp-ease:      cubic-bezier(.16,1,.3,1);
+  --xp-gutter:    clamp(20px,4.4vw,64px);
+  --xp-measure:   1240px;
+}
+/* the token above is a typo guard — a bad value would silently fall back,
+   so the one place it is used names a real colour instead */
+:root{ --xp-line-hi: #2C3648; }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ background:var(--xp-void); }
+body{
+  margin:0; background:var(--xp-void); color:var(--xp-paper);
+  font-family:var(--xp-f-fa);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  /* every canvas in this section is sized to its own box, so nothing here
+     may widen the page */
+  overflow-x:hidden;
+}
+img,canvas,svg{ max-width:100%; }
+a{ color:inherit; }
+:focus-visible{ outline:1px solid var(--xp-ion); outline-offset:3px; }
+
+/* ---------- the bar every page in the section carries ---------- */
+.xbar{
+  position:sticky; top:0; z-index:30;
+  background:rgba(5,7,11,.86); border-bottom:1px solid var(--xp-line);
+  -webkit-backdrop-filter:blur(10px) saturate(1.2); backdrop-filter:blur(10px) saturate(1.2);
+}
+.xbar__row{
+  max-width:var(--xp-measure); margin:0 auto; padding:11px var(--xp-gutter);
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+}
+.xbar a{ color:var(--xp-dim); text-decoration:none; font-size:13px; transition:color .3s ease; }
+.xbar a:hover{ color:var(--xp-red-soft); }
+.xbar__home{ display:flex; align-items:center; gap:9px; color:var(--xp-paper); font-size:14px; letter-spacing:.04em; }
+.xbar__home img{ width:22px; height:22px; display:block; }
+
+/* ---------- breadcrumb ----------
+   A real <nav> with a real list, because it is the crawlable statement of
+   where the page sits as well as the visible one. */
+.crumb{
+  max-width:var(--xp-measure); margin:0 auto;
+  padding:clamp(14px,2.4vh,22px) var(--xp-gutter) 0;
+  font-family:var(--xp-f-mono); font-size:11px; letter-spacing:.1em;
+  color:var(--xp-ghost);
+}
+.crumb ol{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px; }
+.crumb li{ display:flex; align-items:center; gap:8px; }
+.crumb li+li::before{ content:'/'; color:var(--xp-line-hi); }
+.crumb a{ color:var(--xp-dim); text-decoration:none; transition:color .3s ease; }
+.crumb a:hover{ color:var(--xp-paper); }
+.crumb [aria-current]{ color:var(--xp-paper); }
+
+/* ---------- shared section rhythm ---------- */
+.xwrap{ max-width:var(--xp-measure); margin:0 auto; padding-inline:var(--xp-gutter); }
+.xeyebrow{
+  margin:0 0 14px; font-family:var(--xp-f-mono);
+  font-size:11px; letter-spacing:.26em; text-transform:uppercase;
+  color:var(--xp-dim);
+}
+.xrule{
+  height:1px; border:0; margin:0;
+  background:linear-gradient(to left, var(--xp-red) 0%, rgba(227,27,35,.35) 26%, var(--xp-line) 62%, transparent 100%);
+}
+html[dir="ltr"] .xrule{
+  background:linear-gradient(to right, var(--xp-red) 0%, rgba(227,27,35,.35) 26%, var(--xp-line) 62%, transparent 100%);
+}
+
+/* =====================================================================
+   HERO
+   One statement, one rule, one line of support. The visual behind it is a
+   canvas that costs nothing when it cannot run.
+   ===================================================================== */
+.xhero{ position:relative; padding:clamp(48px,9vh,110px) 0 clamp(38px,6vh,72px); }
+/* CSS, not a canvas. The hero's job is to state what the section is; a
+   third animated context to say "science" behind text that already says
+   it would be the clutter this section is meant to avoid. Two gradients
+   and a hairline grid cost nothing and never drop a frame. */
+.xhero__field{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(74% 58% at 74% 12%, rgba(43,108,255,.13), transparent 62%),
+    radial-gradient(52% 44% at 16% 0%,  rgba(227,27,35,.10), transparent 66%),
+    repeating-linear-gradient(to right, rgba(150,180,225,.05) 0 1px, transparent 1px 74px),
+    repeating-linear-gradient(to bottom, rgba(150,180,225,.05) 0 1px, transparent 1px 74px);
+  -webkit-mask-image:radial-gradient(122% 94% at 50% 30%, #000 26%, transparent 80%);
+          mask-image:radial-gradient(122% 94% at 50% 30%, #000 26%, transparent 80%);
+}
+.xhero__in{ position:relative; z-index:1; }
+.xhero h1{
+  margin:0; max-width:19ch;
+  font-family:var(--xp-f-fa); font-weight:600;
+  font-size:clamp(30px,5.6vw,62px); line-height:1.28; letter-spacing:-.01em;
+}
+.xhero__en{
+  display:block; margin-top:10px;
+  font-family:var(--xp-f-display); font-weight:200; letter-spacing:.01em;
+  font-size:clamp(15px,2.1vw,25px); color:var(--xp-dim);
+}
+.xhero__lede{
+  margin:clamp(20px,3.4vh,32px) 0 0; max-width:52ch;
+  font-size:clamp(14.5px,1.5vw,18px); line-height:2.05; color:rgba(237,242,250,.78);
+}
+.xhero .xrule{ margin:clamp(22px,3.6vh,34px) 0 0; width:min(280px,52%); }
+
+/* =====================================================================
+   THE THREE CARDS
+   Not bulky: a card here is a rule, a number, two titles, a sentence, a
+   preview and one button. The preview does the selling, so the frame
+   around it stays quiet.
+   ===================================================================== */
+.xcards{
+  display:grid; gap:clamp(16px,2.2vw,26px);
+  grid-template-columns:1fr;
+  padding-block:clamp(30px,5vh,58px) clamp(56px,10vh,120px);
+}
+@media (min-width:760px){ .xcards{ grid-template-columns:repeat(2,1fr); } }
+@media (min-width:1120px){ .xcards{ grid-template-columns:repeat(3,1fr); } }
+
+.xcard{
+  position:relative; display:flex; flex-direction:column; min-width:0;
+  border:1px solid var(--xp-line); border-radius:5px;
+  background:linear-gradient(180deg, var(--xp-panel), var(--xp-ink));
+  overflow:hidden;
+  transition:border-color .5s var(--xp-ease), transform .5s var(--xp-ease), box-shadow .5s var(--xp-ease);
+}
+.xcard:hover, .xcard:focus-within{
+  border-color:rgba(227,27,35,.42); transform:translateY(-2px);
+  box-shadow:0 18px 50px -30px rgba(0,0,0,.95);
+}
+/* the preview sits at the top and keeps a fixed ratio so three cards line
+   up whatever their copy does */
+.xcard__view{
+  position:relative; aspect-ratio:16/10; background:#070A10;
+  border-bottom:1px solid var(--xp-line);
+}
+.xcard__view canvas{ display:block; width:100%; height:100%; }
+/* Named so it is obvious in the DOM that this is decoration. It carries no
+   information the copy does not also carry in text. */
+.xcard__view[data-decorative]{ }
+.xcard__body{ padding:clamp(18px,2vw,26px); display:flex; flex-direction:column; flex:1; }
+.xcard__no{
+  font-family:var(--xp-f-mono); font-size:11px; letter-spacing:.22em;
+  color:var(--xp-ghost);
+}
+.xcard h2{
+  margin:10px 0 0; font-family:var(--xp-f-fa); font-weight:600;
+  font-size:clamp(18px,1.6vw,22px); line-height:1.5;
+}
+.xcard__en{
+  display:block; margin-top:5px;
+  font-family:var(--xp-f-display); font-weight:200; font-size:13px; letter-spacing:.02em;
+  color:var(--xp-dim);
+}
+.xcard__desc{
+  margin:14px 0 0; font-size:13.5px; line-height:2; color:rgba(237,242,250,.7);
+}
+.xcard__foot{
+  margin-top:auto; padding-top:clamp(18px,2.4vh,26px);
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+}
+
+/* ---------- status ----------
+   Three of these say the same thing today. They exist because they will
+   not, and a reader deserves to know which experiences are finished
+   before clicking rather than after. */
+.xstatus{
+  display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--xp-f-mono); font-size:10.5px; letter-spacing:.14em;
+  color:var(--xp-dim); text-transform:uppercase;
+}
+.xstatus::before{
+  content:''; width:6px; height:6px; border-radius:50%;
+  background:var(--xp-red); box-shadow:0 0 0 3px rgba(227,27,35,.14);
+}
+.xstatus--soon::before{ background:var(--xp-line-hi); box-shadow:0 0 0 3px rgba(140,170,220,.08); }
+html[lang="fa"] .xstatus{ font-family:var(--xp-f-fa); letter-spacing:0; font-size:11.5px; text-transform:none; }
+
+/* =====================================================================
+   BUTTONS
+   One shape, two weights. Small, legible, with an indicator that moves a
+   few pixels on approach — enough to answer the cursor, not enough to
+   perform.
+   ===================================================================== */
+.xbtn{
+  position:relative; display:inline-flex; align-items:center; gap:9px;
+  padding:10px 17px; border-radius:3px; text-decoration:none;
+  border:1px solid var(--xp-line-hi);
+  background:linear-gradient(180deg, rgba(190,214,244,.07), rgba(150,176,210,.025));
+  color:var(--xp-paper);
+  font-family:var(--xp-f-fa); font-size:13px; line-height:1;
+  white-space:nowrap; cursor:pointer;
+  transition:border-color .45s var(--xp-ease), background .45s var(--xp-ease),
+             box-shadow .45s var(--xp-ease), transform .45s var(--xp-ease);
+}
+.xbtn:hover{ border-color:rgba(180,215,255,.44); background:rgba(140,170,220,.11); }
+.xbtn:active{ transform:translateY(1px); }
+.xbtn--go{
+  border-color:rgba(227,27,35,.5); background:rgba(227,27,35,.11);
+}
+.xbtn--go:hover{
+  border-color:rgba(255,120,110,.78); background:rgba(227,27,35,.2);
+  box-shadow:0 0 34px -12px rgba(227,27,35,.75);
+}
+.xbtn__ind{
+  width:15px; height:15px; flex:0 0 auto; opacity:.8;
+  transition:transform .45s var(--xp-ease), opacity .45s var(--xp-ease);
+}
+html[dir="rtl"] .xbtn__ind{ transform:scaleX(-1); }
+.xbtn:hover .xbtn__ind{ opacity:1; transform:translateX(3px); }
+html[dir="rtl"] .xbtn:hover .xbtn__ind{ transform:scaleX(-1) translateX(3px); }
+.xbtn[disabled], .xbtn[aria-disabled="true"]{ opacity:.42; pointer-events:none; }
+
+/* =====================================================================
+   THE EXPERIMENT SHELL
+   The frame every experience is poured into: a question, a stage, a set
+   of controls, then the written science underneath it. The order is
+   deliberate — the stage is the argument, the prose is the evidence, and
+   the prose is real HTML so it can be read by someone who never sees the
+   stage at all.
+   ===================================================================== */
+.xp{ padding-block:clamp(26px,4vh,48px) clamp(56px,10vh,120px); }
+.xp__q{
+  margin:0 0 clamp(18px,2.6vh,28px); max-width:56ch;
+  font-family:var(--xp-f-fa); font-weight:500;
+  font-size:clamp(16px,1.9vw,23px); line-height:1.85; color:rgba(237,242,250,.82);
+}
+.xp__q b{ color:var(--xp-paper); font-weight:600; }
+
+/* ---- the stage ---- */
+.xstage{
+  position:relative; border:1px solid var(--xp-line); border-radius:5px;
+  background:radial-gradient(120% 130% at 50% 0%, #0B1120 0%, #05070B 68%);
+  overflow:hidden;
+}
+.xstage__canvas{
+  display:block; width:100%; aspect-ratio:16/9; min-height:260px;
+  touch-action:pan-y;                 /* a vertical swipe still scrolls */
+}
+@media (max-width:620px){ .xstage__canvas{ aspect-ratio:4/3; min-height:0; } }
+/* what the stage says before three.js has loaded, and what it keeps
+   saying if three.js never can */
+.xstage__note{
+  position:absolute; inset:0; display:grid; place-items:center; padding:24px;
+  text-align:center; font-size:13px; line-height:2; color:var(--xp-dim);
+  background:linear-gradient(180deg, rgba(11,17,32,.5), rgba(5,7,11,.86));
+}
+.xstage__note[hidden]{ display:none; }
+.xstage__note b{ display:block; color:var(--xp-paper); font-weight:500; margin-bottom:6px; }
+.xstage__hint{
+  position:absolute; inset-inline-start:14px; bottom:12px;
+  font-family:var(--xp-f-mono); font-size:10.5px; letter-spacing:.1em;
+  color:var(--xp-ghost); pointer-events:none;
+}
+html[lang="fa"] .xstage__hint{ font-family:var(--xp-f-fa); letter-spacing:0; font-size:11.5px; }
+/* It tells you to move a cursor. On a touch screen there is no cursor to
+   move, and an instruction you cannot follow is worse than no
+   instruction — the stage still answers a finger, it just does not need
+   to be announced. */
+@media (hover:none), (pointer:coarse){ .xstage__hint{ display:none; } }
+
+/* ---- controls ---- */
+.xctl{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+  padding:14px 0 0;
+}
+.xctl__group{ display:flex; gap:8px; }
+.xctl__spacer{ flex:1 1 auto; }
+.xbtn--icon{ padding:9px 13px; gap:7px; }
+.xbtn--icon svg{ width:14px; height:14px; flex:0 0 auto; }
+
+/* ---- parameters ---- */
+.xparams{
+  display:grid; gap:clamp(14px,2vw,22px); margin-top:clamp(16px,2.4vh,24px);
+  grid-template-columns:1fr;
+}
+@media (min-width:680px){ .xparams{ grid-template-columns:repeat(2,1fr); } }
+@media (min-width:1000px){ .xparams{ grid-template-columns:repeat(3,1fr); } }
+.xparam{
+  border:1px solid var(--xp-line); border-radius:4px;
+  padding:14px 16px 16px; background:var(--xp-panel);
+}
+.xparam__top{
+  display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  margin-bottom:11px;
+}
+.xparam__name{ font-size:13px; color:rgba(237,242,250,.82); }
+.xparam__val{
+  font-family:var(--xp-f-mono); font-size:11.5px; letter-spacing:.06em;
+  color:var(--xp-red-soft); font-variant-numeric:tabular-nums;
+}
+/* A range input styled by hand in both engines. Kept a real <input> so it
+   arrives with keyboard support, an accessible name and a value already
+   working. */
+.xparam input[type=range]{
+  -webkit-appearance:none; appearance:none; width:100%; height:18px;
+  background:transparent; cursor:pointer; display:block; margin:0;
+}
+.xparam input[type=range]::-webkit-slider-runnable-track{
+  height:2px; border-radius:2px;
+  background:linear-gradient(to right, rgba(227,27,35,.55), var(--xp-line-hi));
+}
+.xparam input[type=range]::-moz-range-track{
+  height:2px; border-radius:2px;
+  background:linear-gradient(to right, rgba(227,27,35,.55), var(--xp-line-hi));
+}
+.xparam input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:13px; height:13px; margin-top:-5.5px; border-radius:50%;
+  background:var(--xp-paper); border:1px solid rgba(5,7,11,.8);
+  box-shadow:0 0 0 3px rgba(227,27,35,.18);
+  transition:box-shadow .3s ease;
+}
+.xparam input[type=range]::-moz-range-thumb{
+  width:13px; height:13px; border-radius:50%;
+  background:var(--xp-paper); border:1px solid rgba(5,7,11,.8);
+  box-shadow:0 0 0 3px rgba(227,27,35,.18);
+}
+.xparam input[type=range]:hover::-webkit-slider-thumb{ box-shadow:0 0 0 5px rgba(227,27,35,.24); }
+.xparam input[type=range]:focus-visible::-webkit-slider-thumb{ box-shadow:0 0 0 5px rgba(143,219,255,.4); }
+
+/* ---- annotations: what the stage is currently showing, in words ---- */
+.xnote{
+  margin-top:clamp(16px,2.4vh,24px); padding:14px 16px;
+  border:1px solid var(--xp-line); border-inline-start:2px solid rgba(227,27,35,.55);
+  border-radius:4px; background:rgba(13,18,27,.7);
+  font-size:13px; line-height:2; color:rgba(237,242,250,.74);
+}
+.xnote b{ color:var(--xp-paper); font-weight:500; }
+
+/* =====================================================================
+   THE WRITTEN SCIENCE
+   Below the stage, and never inside the canvas. If the WebGL never runs,
+   everything true on this page is still here.
+   ===================================================================== */
+.xprose{ padding-block:clamp(40px,7vh,86px); max-width:74ch; }
+.xprose h2{
+  margin:clamp(30px,5vh,56px) 0 16px;
+  font-family:var(--xp-f-fa); font-weight:600;
+  font-size:clamp(19px,2.1vw,26px); line-height:1.6;
+}
+.xprose h2:first-child{ margin-top:0; }
+.xprose h3{
+  margin:clamp(22px,3.4vh,34px) 0 10px;
+  font-family:var(--xp-f-fa); font-weight:500; font-size:clamp(15.5px,1.5vw,18px); line-height:1.7;
+  color:rgba(237,242,250,.9);
+}
+.xprose p{ margin:0 0 15px; font-size:14.5px; line-height:2.15; color:rgba(237,242,250,.72); }
+.xprose ul{ margin:0 0 15px; padding-inline-start:1.15em; }
+.xprose li{ font-size:14.5px; line-height:2.1; color:rgba(237,242,250,.72); margin-bottom:7px; }
+.xprose strong{ color:var(--xp-paper); font-weight:500; }
+.xprose a{ color:var(--xp-red-soft); text-decoration:none; border-bottom:1px solid rgba(255,106,90,.32); }
+.xprose a:hover{ border-bottom-color:var(--xp-red-soft); }
+
+/* observations read as findings, so they get a list that looks like one */
+.xobs{ list-style:none; margin:0; padding:0; display:grid; gap:12px; }
+.xobs li{
+  display:flex; gap:13px; align-items:flex-start; margin:0;
+  padding:13px 15px; border:1px solid var(--xp-line); border-radius:4px;
+  background:var(--xp-panel);
+}
+.xobs i{
+  flex:0 0 auto; font-style:normal; font-family:var(--xp-f-mono);
+  font-size:10.5px; letter-spacing:.14em; color:var(--xp-red-soft); padding-top:4px;
+}
+
+/* sources: plain, cited, and honest about what they are */
+.xsrc{ list-style:none; margin:0; padding:0; display:grid; gap:9px; }
+.xsrc li{ font-size:13px; line-height:1.95; color:var(--xp-dim); margin:0; }
+.xsrc a{ color:rgba(237,242,250,.82); border-bottom-color:var(--xp-line-hi); }
+
+/* =====================================================================
+   RELATED / NEXT
+   ===================================================================== */
+.xnext{
+  display:grid; gap:14px; grid-template-columns:1fr;
+  padding-block:clamp(20px,3vh,34px) clamp(56px,10vh,110px);
+}
+@media (min-width:720px){ .xnext{ grid-template-columns:repeat(2,1fr); } }
+.xnext a{
+  display:block; text-decoration:none; min-width:0;
+  border:1px solid var(--xp-line); border-radius:4px; padding:17px 19px;
+  background:var(--xp-panel);
+  transition:border-color .4s var(--xp-ease), background .4s var(--xp-ease);
+}
+.xnext a:hover{ border-color:rgba(227,27,35,.45); background:var(--xp-panel-hi); }
+.xnext small{
+  display:block; font-family:var(--xp-f-mono); font-size:10.5px;
+  letter-spacing:.16em; color:var(--xp-ghost); margin-bottom:8px; text-transform:uppercase;
+}
+.xnext b{ font-weight:500; font-size:14.5px; line-height:1.8; }
+
+/* ---------- footer ---------- */
+.xfoot{
+  border-top:1px solid var(--xp-line);
+  padding:clamp(26px,4vh,44px) var(--xp-gutter) clamp(32px,5vh,56px);
+  text-align:center;
+}
+.xfoot p{ margin:0 auto; max-width:62ch; font-size:12px; line-height:2.1; color:var(--xp-dim); }
+.xfoot b{ color:rgba(237,242,250,.72); font-weight:500; }
+.xfoot a{ color:inherit; text-decoration:none; border-bottom:1px solid var(--xp-line-hi); }
+
+/* =====================================================================
+   MOTION
+   Everything above is legible standing still. These are the only moving
+   parts in the CSS, and the reader's preference switches them off — the
+   canvases honour it too, in JS, by holding a single settled frame.
+   ===================================================================== */
+@keyframes xpIn{ from{ opacity:0; transform:translateY(9px); } to{ opacity:1; transform:none; } }
+.xin{ animation:xpIn .66s var(--xp-ease) both; }
+.xin--2{ animation-delay:.07s; }
+.xin--3{ animation-delay:.14s; }
+@media (prefers-reduced-motion:reduce){
+  .xin{ animation:none; }
+  .xcard, .xcard:hover, .xbtn, .xbtn:hover, .xbtn__ind, .xnext a{ transition:none; transform:none; }
+}

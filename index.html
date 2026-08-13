@@ -509,16 +509,21 @@ body.is-grabbing, body.is-grabbing *{ cursor:grabbing !important; user-select:no
 }
 /* the glass itself never moves — only the light inside it does, so each
    portal still breathes without resampling the blur under it */
+/* Seven panels over a six-column grid. The first takes a row to itself —
+   it is the section where the reader does something rather than reads
+   something — and the six behind it keep the rhythm they had, shifted by
+   one: three across, then two, then one full-width. */
 .panel{ grid-column:span 2; }
-.panel:nth-child(4), .panel:nth-child(5){ grid-column:span 3; }
-.panel:nth-child(6){ grid-column:1 / -1; }
-.panel:nth-child(1) .panel__aura{ animation-duration:29s; animation-delay:-4s; }
-.panel:nth-child(2) .panel__aura{ animation-duration:36s; animation-delay:-11s; }
-.panel:nth-child(3) .panel__aura{ animation-duration:31s; animation-delay:-19s; }
-.panel:nth-child(4) .panel__aura{ animation-duration:41s; animation-delay:-7s; }
-.panel:nth-child(5) .panel__aura{ animation-duration:33s; animation-delay:-24s; }
-.panel:nth-child(6) .panel__aura{ animation-duration:39s; animation-delay:-9s; }
-.panel:nth-child(6) .panel__aura{ animation-duration:38s; animation-delay:-14s; }
+.panel:nth-child(1){ grid-column:1 / -1; }
+.panel:nth-child(5), .panel:nth-child(6){ grid-column:span 3; }
+.panel:nth-child(7){ grid-column:1 / -1; }
+.panel:nth-child(1) .panel__aura{ animation-duration:34s; animation-delay:-2s; }
+.panel:nth-child(2) .panel__aura{ animation-duration:29s; animation-delay:-4s; }
+.panel:nth-child(3) .panel__aura{ animation-duration:36s; animation-delay:-11s; }
+.panel:nth-child(4) .panel__aura{ animation-duration:31s; animation-delay:-19s; }
+.panel:nth-child(5) .panel__aura{ animation-duration:41s; animation-delay:-7s; }
+.panel:nth-child(6) .panel__aura{ animation-duration:33s; animation-delay:-24s; }
+.panel:nth-child(7) .panel__aura{ animation-duration:38s; animation-delay:-14s; }
 .panel__aura{
   position:absolute; inset:-50%; z-index:0; opacity:.5;
   background:conic-gradient(from 0deg,
@@ -1526,6 +1531,15 @@ const NAVIDIX = (() => {
             ixGallery:'گالری', ixFilms:'مستندها', ixSets:'کالکشن‌ها' }
     },
     nav: [
+      /* First, and the full width of the deck. It is the one section on
+         the site where the reader does something rather than reads
+         something, which is worth a row of its own — and it is new, so
+         nobody is looking for it yet. The hero index above stays at four:
+         its whole layout is two rows of two on a phone, and a fifth entry
+         would break that to advertise this once more on the same screen. */
+      { id:'explore',
+        en:{ t:'Interactive Science',    d:'Three live scientific models — space-time, human to machine, atoms and molecules. Change a parameter and watch the physics answer.' },
+        fa:{ t:'پلتفرم علمی تعاملی',      d:'سه مدل علمی زنده — فضا-زمان، از انسان تا ماشین، و دنیای اتم‌ها و مولکول‌ها. پارامتر را عوض کن و ببین مدل چه پاسخی می‌دهد.' } },
       { id:'training',
         en:{ t:'Applied AI Training',    d:'Field notes and protocols for using AI in real production work.' },
         fa:{ t:'آموزش هوش مصنوعی کاربردی', d:'یادداشت‌ها و پروتکل‌های عملی برای به‌کارگیری هوش مصنوعی در تولید واقعی.' } },
@@ -3111,7 +3125,7 @@ function buildDeck(){
        the homepage and its cover, Google could not index a word of them, and
        opening one animated a full-screen overlay on top of a running WebGL
        scene — the slowest thing a phone here can be asked to do. */
-    const EXTERNAL = { system:'system.html', training:'training.html',
+    const EXTERNAL = { explore:'explore/', system:'system.html', training:'training.html',
                        documentaries:'documentaries.html', collections:'collections.html',
                        gallery:'gallery.html', social:'channels.html' };
     a.className = 'panel';
