@@ -2077,6 +2077,207 @@ function studioEnvironment(renderer){
   return env;
 }
 
+/* =====================================================================
+   THE MOUNT — the instrument the mark is held in.
+
+   The logo used to sit in the sky on its own. This gives it a housing:
+   a fixed calibrated bezel, a rotating carrier bolted to the hexagon's
+   six points, and two gimbal arcs sweeping through on their own axes.
+   Read together it says the same thing the studio says about its work —
+   that this was built to a tolerance, not arranged until it looked nice.
+
+   Two rules held the whole design:
+
+   1. NOTHING GETS SMALLER. The logo texture is a 512px square with a
+      pointy-top hexagon of circumradius 190 inside it, so at H=150 the
+      artwork's own hexagon only reaches r=55.7 while the plane it is
+      printed on runs to r=75. Every part below lives in that unused
+      margin — the outermost point of the bezel is r=74.85. The mark's
+      fit(), its screen footprint and --logo-bottom are all computed from
+      H, so none of them move. The logo is exactly the size it was.
+
+   2. NOTHING TOUCHES. The carrier turns with the mark and the bezel does
+      not, so the two run in radial bands that never meet: arms out to
+      62.85, gimbals 63.95–67.85, frame from 68.45 out. A mechanism whose
+      parts intersect reads as a graphic; one whose parts clear each other
+      by a hair reads as a machine.
+
+   Depth: everything here is opaque once the opening fade is done — see
+   solidify() — so the gimbal arcs are occluded by the hexagon per-pixel
+   when they pass behind it, and draw over it when they pass in front.
+   That per-fragment truth is the entire 3D read; object-sorted
+   transparency cannot produce it.
+
+   Every radius below is in the mark's local units, where the logo plane
+   is 150 tall and its printed hexagon has a circumradius of 55.7.
+   ===================================================================== */
+function buildMount(core, frame, config, state){
+  const lite  = state.lite;
+  const fades = [];
+
+  function metal(color, metalness, roughness, target, extra){
+    const m = new THREE.MeshStandardMaterial(Object.assign({
+      color, metalness, roughness, envMapIntensity:2.0,
+      transparent:true, opacity:0
+    }, extra || {}));
+    fades.push({ m, o:target });
+    return m;
+  }
+  /* Three finishes, which is what stops it reading as one extruded blob:
+     bright machined aluminium for the parts that catch the key light, a
+     dull anodised grey for the fine work, and the brand ember for the six
+     indicators and the three index tabs — the only lit parts, and the
+     only ones the eye is meant to count.
+
+     Note the metalness. The mark's own body sits at 1.0, which is right
+     for a slab that wants to be a dark mirror — but a fully metallic
+     surface has no diffuse term at all, so the two point lights in this
+     group produce nothing on it but a specular glint, and the studio
+     environment it reflects is mostly dark red. Parts this thin came out
+     invisible. Held around 0.45 they keep a real highlight while the base
+     colour still answers the key light, which is what actually reads as
+     machined at hairline widths.
+
+     And each carries an emissive floor. This renderer runs linear with no
+     tone mapping, against an environment that is nearly all dark red, so
+     a lit-only material a pixel and a half wide came out the same value
+     as the sky behind it. The floor is what the part is worth in shadow;
+     the key light and the env map are then free to be highlights on top
+     of it rather than the only thing holding the part up. */
+  const steel = metal(0xCAD3DF, .46, .26, .96, {
+    emissive:new THREE.Color(0x39424E), emissiveIntensity:1, envMapIntensity:2.4
+  });
+  const dark  = metal(0x7B848F, .58, .52, .92, {
+    emissive:new THREE.Color(0x1F252C), emissiveIntensity:1, envMapIntensity:1.6
+  });
+  const lamp  = metal(0x38070B, .30, .34, 1, {
+    emissive:new THREE.Color(config.color.ember), emissiveIntensity:1.8
+  });
+
+  /* one draw call per family, however many of them there are */
+  const dummy = new THREE.Object3D();
+  function spun(geo, mat, count, radius, phase){
+    const im = new THREE.InstancedMesh(geo, mat, count);
+    for (let i = 0; i < count; i++){
+      const a = phase + i * Math.PI * 2 / count;
+      dummy.position.set(Math.cos(a) * radius, Math.sin(a) * radius, 0);
+      dummy.rotation.set(0, 0, a);          // box's local +X now points outward
+      dummy.updateMatrix();
+      im.setMatrixAt(i, dummy.matrix);
+    }
+    im.instanceMatrix.needsUpdate = true;
+    return im;
+  }
+
+  /* ---- the carrier: six arms off the hexagon's points ----
+     Set on the vertex angles of the artwork's own hexagon (pointy-top, so
+     the first one stands straight up), which is why they look bolted to
+     the logo rather than laid over it. */
+  const VERT = Math.PI / 2;
+  core.add(
+    spun(new THREE.BoxGeometry(6.0, 1.9, 2.6), steel, 6, 58.0, VERT),   // strut
+    spun(new THREE.BoxGeometry(1.9, 4.6, 3.4), dark,  6, 61.6, VERT),   // shoe
+    spun(new THREE.BoxGeometry(0.5, 2.6, 3.8), lamp,  6, 62.6, VERT)    // indicator
+  );
+
+  /* ---- the gimbals ----
+     Two rings held at a fixed tilt and precessed about the axis of the
+     mark, the way a gyroscope's rings nutate rather than the way a wheel
+     spins.
+
+     The obvious build — a ring turning about an axis lying in its own
+     plane — was wrong twice over. It passes through face-on every half
+     turn, and at that moment it is just another circle concentric with
+     the bezel, so the reader loses the depth exactly when the ring is
+     largest. And it passes through edge-on, where it is a scratch across
+     the logo. Precession has neither: the projection is an ellipse of
+     constant eccentricity, always, so the tilt is legible in every frame
+     and the ring reads as an object in space rather than as a line.
+
+     The tilts are also what keeps them clear of everything else. A ring
+     of radius R tilted by θ crosses the mark's own plane at radius R, not
+     at R·cosθ — so at 64.5 and 67.4 both cross outside the carrier's
+     reach at 62.85, and their narrow ends ride high above it in z. The
+     clearances hold for every angle of the precession, not just for the
+     pose that happened to be on screen when this was checked. */
+  const ringMat = metal(0xB4BECC, .50, .28, .94, {
+    emissive:new THREE.Color(0x2C3540), emissiveIntensity:1, envMapIntensity:1.1
+  });
+  function gimbal(radius, tube, tilt, segs){
+    const spin = new THREE.Group();                   // precesses about z
+    const held = new THREE.Group();                   // and is held over at a fixed tilt
+    held.rotation.x = tilt;
+    spin.add(held);
+    frame.add(spin);
+    held.add(new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 6, segs), ringMat));
+    /* one lit boss riding the ring, so which way it is going is never a
+       question the reader has to work at */
+    const boss = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.5, 1.5), lamp);
+    boss.position.set(radius, 0, 0);
+    held.add(boss);
+    return spin;
+  }
+  const gimA = gimbal(64.5, 0.62, 0.56, lite ? 60 : 92);   // 32°
+  /* Two gimbals are a mechanism; one is still a gimbal. On a small screen
+     the whole housing is about 260px across, the second ring is mostly
+     hidden behind the first at that size, and it is one of the largest
+     PBR surfaces here — so it is the first thing a phone gives up. */
+  const gimB = lite ? null : gimbal(67.4, 0.50, -0.77, 84);   // 44°, the other way
+
+  /* ---- the fixed bezel and its scale ----
+     Seventy-two divisions, every sixth one long, all of them ending on the
+     same outer datum at 73.15 where the bezel ring picks them up. That
+     shared datum is the detail that makes it read as a machined scale
+     instead of as spokes. */
+
+  /* The bezel is its own node so it can be dialled while the arcs turn.
+     It hangs off `frame`, the mark's outer group, so the whole housing
+     keeps the mark's pointer tilt and its drift up the page — and only
+     the parts that are supposed to move, move. */
+  const bezel = new THREE.Group();
+  frame.add(bezel);
+  /* The inner datum and the sixty minor divisions are the fine reading of
+     the scale. Below about 700px they are under a pixel apart and cost a
+     full PBR pass each, so a phone keeps the twelve majors — which is
+     still a scale — and drops the rest. */
+  if (!lite) bezel.add(new THREE.Mesh(new THREE.TorusGeometry(68.8, 0.35, 5, 96), dark));
+  bezel.add(new THREE.Mesh(new THREE.TorusGeometry(74.0, 0.85, 8, lite ? 80 : 128), steel));
+  if (!lite) bezel.add(spun(new THREE.BoxGeometry(1.7, 0.50, 1.0), dark, 60, 72.3, 0));
+  bezel.add(spun(new THREE.BoxGeometry(3.9, 0.85, 1.4), steel, 12, 71.2, 0));
+  bezel.add(spun(new THREE.BoxGeometry(2.0, 4.4, 3.0), lamp,   3, 74.0, VERT));
+
+  let solid = false;
+  function solidify(){
+    solid = true;
+    fades.forEach(({ m }) => { m.transparent = false; m.needsUpdate = true; });
+  }
+
+  const DETENT = Math.PI / 36;          // five degrees, seventy-two of them
+  function update(t){
+    /* Opacity is driven by the opening timeline, so the switch to opaque
+       has to wait for it rather than assume a duration. One pass over
+       eight materials per frame until it lands, then never again. */
+    if (!solid && fades.every(f => f.m.opacity >= f.o - 0.003)) solidify();
+    if (state.reduced) return;
+
+    /* The bezel is dialled, not spun. It rests, then indexes one division
+       and rests again — a dwell of two and a half seconds against a snap
+       of half of one. A ring turning at a constant rate is a decoration;
+       a ring that holds position is an instrument being read. */
+    const p = t / 2.5, i = Math.floor(p), f = p - i;
+    const snap = f < .80 ? 0 : 1 - Math.pow(1 - (f - .80) / .20, 3);
+    bezel.rotation.z = -(((i + snap) * DETENT) % (Math.PI * 2));
+
+    /* and the two gimbals precess, opposite ways at rates that divide
+       into neither each other nor the mark's own sway, so the assembly
+       never strikes the same pose twice */
+    gimA.rotation.z =  t * 0.26;
+    if (gimB) gimB.rotation.z = -t * 0.17;
+  }
+
+  return { fades, update };
+}
+
 function buildMark(scene){
   const { config, state } = NAVIDIX;
   const group = new THREE.Group();
@@ -2084,6 +2285,13 @@ function buildMark(scene){
   scene.add(group);
   scene.environment = studioEnvironment(Stage.renderer);
   const core = new THREE.Group(); group.add(core);
+
+  /* The housing. Built here rather than inside plaque() so it does not
+     depend on the logo texture arriving — if that load fails the mount is
+     still there around the placeholder. Its materials are appended to
+     api.fades by whichever of the two paths runs, because the opening
+     timeline reads that array once. */
+  const mount = buildMount(core, group, config, state);
 
   group.add(new THREE.AmbientLight(0x101722, 1.1));
   const key = new THREE.PointLight(0xffe4d6, 1.15, 1000, 2); key.position.set(-160,130,240);
@@ -2168,7 +2376,7 @@ function buildMark(scene){
     const ring = new THREE.Mesh(new THREE.TorusGeometry(H*0.5, 2.4, 18, 6), m1);
     ring.rotation.z = Math.PI/2;
     core.add(ring);
-    api.fades = [{ m:m1, o:1 }];
+    api.fades = [{ m:m1, o:1 }].concat(mount.fades);
   }
 
   function plaque(tex){
@@ -2222,7 +2430,7 @@ function buildMark(scene){
     const back  = new THREE.Mesh(new THREE.PlaneGeometry(W,H), backMat); back.position.z  = -faceZ; back.rotation.y = Math.PI;
 
     core.add(body, front, back);
-    api.fades = [{ m:bodyMat, o:1 }, { m:faceMat, o:1 }, { m:backMat, o:1 }];
+    api.fades = [{ m:bodyMat, o:1 }, { m:faceMat, o:1 }, { m:backMat, o:1 }].concat(mount.fades);
     fit();
   }
 
@@ -2237,6 +2445,7 @@ function buildMark(scene){
   NAVIDIX.register('mark', Object.assign(api, {
     layout: fit,
     update(t, dt){
+      mount.update(t);
       /* It turns all the way round, but not at a constant rate: the mark
          dwells on each face and swings quickly through profile, where it is
          only a slab and the logo cannot be read. Same period either way —
