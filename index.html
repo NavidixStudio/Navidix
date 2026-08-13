@@ -310,6 +310,11 @@ html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0
    to be repeated in the hover rule: a transform replaces its element's
    whole transform, it does not add to it, so a bare translateX on hover
    would silently un-flip the arrow mid-gesture. */
+/* The glyph carries the identity so the pill does not have to: a third
+   button style beside the red one and the plain one would read as three
+   competing offers rather than one action and two channels. */
+.hcta--tube svg{ color:var(--ember-soft); opacity:.9; transition:color .5s var(--ease), opacity .5s var(--ease); }
+.hcta--tube:hover svg{ color:var(--ember); opacity:1; }
 .hcta__arrow{ width:16px; height:16px; opacity:.85; transition:transform .5s var(--ease), opacity .5s var(--ease); }
 html[lang="fa"] .hcta__arrow{ transform:scaleX(-1); }
 .hcta--main:hover .hcta__arrow{ transform:translateX(3px); opacity:1; }
@@ -396,6 +401,15 @@ html[lang="fa"] .hindex a span{ font-family:var(--f-fa); font-size:14.5px; }
   .pitch{ margin-top:clamp(13px,2.1vh,22px); }
   .cta-row{ margin-top:clamp(15px,2.5vh,26px); gap:10px; }
   .hcta{ padding:11px 18px; }
+  /* ---- one action, then two channels ----
+     Three pills cannot sit on one phone row, so they wrap. Left to itself
+     the break fell after the second, which put the studio's own button
+     next to Telegram and left YouTube stranded alone on the line below
+     looking like an afterthought. Giving the main call its own full row
+     forces the break where it means something: what the studio wants you
+     to do, then the two places you can follow it. Same two rows either
+     way, so it costs no height. */
+  .cta-row .hcta--main{ flex:1 0 100%; justify-content:center; }
   .hindex{ margin-top:clamp(13px,2.1vh,22px); }
   .hindex a{
     flex-direction:row; align-items:baseline; gap:7px;
@@ -409,6 +423,37 @@ html[lang="fa"] .hindex a span{ font-family:var(--f-fa); font-size:14.5px; }
   .hindex a{ flex:0 1 50%; padding:11px 9px 10px; }
   .hindex a span{ font-size:13px; }
   html[lang="fa"] .hindex a span{ font-size:13.5px; }
+}
+/* ---- the short phone ----
+   A 375x667 or 320x680 screen is 180px shorter than the tall phones the
+   rhythm above was set against, and the third button costs a whole extra
+   row. Measured on both: the mark hits its 0.55 shrink floor and the hero
+   still ran 20-30px past the fold, so the balance pass had nothing left
+   to give and the index went under the bottom edge.
+
+   The mark is not the thing to cut further — at the floor it is already
+   as small as the design allows. This takes the 30px out of the gaps
+   instead, which on a screen this short were desktop rhythms being spent
+   where there is no room for them. Height-triggered, not width: it is the
+   short screen that has the problem, and a 390x844 phone must not pay for
+   it. */
+@media (max-width:1099px) and (max-height:730px){
+  .tagline{ margin-top:8px; }
+  .hairline{ margin-top:11px; }
+  .pitch{ margin-top:12px; }
+  .cta-row{ margin-top:14px; gap:8px; }
+  .hcta{ padding:9px 15px; }
+  .hindex{ margin-top:11px; }
+  .hindex a{ padding:9px 9px 8px; }
+}
+/* Under 360px the two channels cannot share a row with their labels on,
+   and a third row is height this screen does not have. The wordmark is
+   the one label a reader does not need — nobody has to be told what the
+   YouTube glyph is. The accessible name stays on the anchor, in whichever
+   language is loaded. */
+@media (max-width:360px){
+  .hcta--tube span{ display:none; }
+  .hcta--tube{ padding-inline:13px; }
 }
 @media (prefers-reduced-motion:reduce){
   .hindex a::before, .hindex a, .hcta__arrow{ transition:none; }
@@ -695,24 +740,53 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
   .hero{
     /* the mark no longer pushes the type down the page, so the padding that
        cleared it goes — that single line is what made this a queue */
-    padding-top:0; padding-bottom:0;
+    padding-top:0; padding-bottom:clamp(8px,2.2vh,30px);
     display:grid; align-items:center;
     grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    /* Two rows now. The first takes every pixel that is going spare, so the
+       type still centres against the mark exactly as it did; the second is
+       only as tall as the index, which puts the index on the floor of the
+       screen. */
+    grid-template-rows:1fr auto;
     max-width:1500px; width:100%; margin:0 auto;
     padding-inline:clamp(48px,6vw,110px);
   }
   /* the type takes the reading-side half; the mark has the other, and is put
      there by the scene itself */
   .hero__col{
-    grid-column:1; justify-self:start; text-align:start;
+    grid-column:1; grid-row:1; justify-self:start; text-align:start;
     display:flex; flex-direction:column; align-items:flex-start;
     max-width:34rem;
   }
+  /* ---- the index, on the floor ----
+     It used to sit directly under the buttons inside the type column, four
+     entries crammed into a 34rem measure with the pitch and the two pills
+     right on top of them. That is the crowding: not one gap too small but
+     six things stacked in half a screen while the other half stood empty
+     below the mark.
+
+     Down here it spans both halves, so each entry gets a quarter of the
+     full measure instead of a quarter of the column, and it reads as what
+     the comment above always claimed it was — a masthead index along the
+     foot of the page rather than a fourth row of buttons. The margin is a
+     floor, not a gap: the 1fr row above normally holds it well clear, and
+     the margin only does anything on a viewport short enough to run out of
+     slack. */
+  .hindex{
+    grid-column:1 / -1; grid-row:2;
+    margin-top:clamp(28px,5vh,70px);
+  }
+  .hindex a{ padding:15px 16px 13px; gap:8px; }
   .plate{ justify-content:flex-start; width:auto; }
   .wordmark{ width:min(430px,30vw); }
-  .tagline{ margin-top:clamp(12px,1.8vh,20px); }
+  /* ---- the column breathes ----
+     Every step below is wider than it was. With the index gone to the foot
+     of the screen the column has the room, and at this size the old
+     spacing had the wordmark, the rule, the sentence and the buttons
+     reading as one block instead of four things in sequence. */
+  .tagline{ margin-top:clamp(14px,2.2vh,24px); }
   .hairline{
-    margin-top:clamp(18px,2.6vh,28px);
+    margin-top:clamp(24px,3.4vh,36px);
     width:min(240px,26vw);
     /* it starts at the reading edge now rather than fading in from both */
     background:linear-gradient(to left, var(--ember) 0%, rgba(227,27,35,.5) 34%, var(--glass-edge) 70%, transparent 100%);
@@ -723,11 +797,11 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
     transform-origin:left center;
   }
   .pitch{
-    margin-top:clamp(20px,2.8vh,30px);
+    margin-top:clamp(26px,3.6vh,40px);
     max-width:26ch; font-size:clamp(20px,1.85vw,29px); line-height:1.42;
   }
   html[lang="fa"] .pitch{ line-height:1.8; font-size:clamp(19px,1.7vw,27px); }
-  .cta-row{ justify-content:flex-start; margin-top:clamp(24px,3.4vh,40px); }
+  .cta-row{ justify-content:flex-start; margin-top:clamp(34px,4.8vh,56px); gap:14px; }
 
   /* ---- the frame ---- */
   .frame{ position:absolute; inset:0; pointer-events:none; z-index:1; }
@@ -802,8 +876,13 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
 @media (min-width:1100px){
   html.nostage .hero{
     grid-template-columns:1fr; place-items:center;
+    /* no mark to centre the type against, so the stack sizes to its own
+       content and the index follows the buttons instead of dropping to a
+       floor that has nothing above it */
+    grid-template-rows:auto auto; align-content:center;
     padding-top:clamp(40px,9vh,110px); padding-bottom:clamp(30px,6vh,70px);
   }
+  html.nostage .hindex{ margin-top:clamp(26px,4vh,44px); }
   html.nostage .hero__col{
     justify-self:center; text-align:center; align-items:center; max-width:38rem;
   }
@@ -1177,7 +1256,16 @@ picture{ display:contents; }
           <svg class="hcta__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h14M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
         <a class="hcta" href="https://t.me/NavidixMedia" target="_blank" rel="noopener" data-copy2="ctaTalk">عضویت در کانال</a>
+        <!-- The channel that matters most, so it sits beside the other one
+             rather than waiting in the panel below. Label in a span for the
+             same reason as the main button: Lang writes copy with
+             textContent and would erase the glyph otherwise. -->
+        <a class="hcta hcta--tube" href="https://youtube.com/@navidix" target="_blank" rel="noopener" data-copy2-label="ctaTube">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6z"/></svg>
+          <span data-copy2="ctaTube">سابسکرایب یوتیوب</span>
+        </a>
       </div>
+     </div>
 
       <!-- ---- the index ----
            The first screen used to offer three buttons and not one of them
@@ -1195,16 +1283,19 @@ picture{ display:contents; }
            Four, not five. Collections is a view assembled out of the
            gallery and the films, so on the one screen that has to be
            legible at a glance it was the entry that earned its place
-           least. It keeps its panel further down. YouTube left the button
-           row for the same reason — the studio's own channels have a
-           panel of their own below. -->
+           least. It keeps its panel further down.
+
+           It is a sibling of the type column rather than a child of it,
+           which is what lets the wide layout drop it to the foot of the
+           screen across both halves. On a phone nothing changes: .hero is
+           a centred flex column there too, and the index is still the
+           last thing in it at the same full width. -->
       <nav class="hindex" data-copy2-label="ixLabel" aria-label="بخش‌های سایت">
         <a href="training.html"><i>01</i><span data-copy2="ixLearn">آموزش</span></a>
         <a href="prompts.html"><i>02</i><span data-copy2="ixPrompts">پرامپت‌ها</span></a>
         <a href="gallery.html"><i>03</i><span data-copy2="ixGallery">گالری</span></a>
         <a href="documentaries.html"><i>04</i><span data-copy2="ixFilms">مستندها</span></a>
       </nav>
-     </div>
     </div>
     <div class="cue" id="cue" aria-hidden="true"><span></span></div>
   </section>
@@ -2652,13 +2743,48 @@ function buildMark(scene){
     });
     bodyGeo.translate(0, 0, -DEPTH / 2);                  // turn about its middle
 
-    /* dark machined metal with an ember filament in it, the way the edge
-       glows in the brand's own motion */
-    const bodyMat = new THREE.MeshStandardMaterial({
+    /* ---- two materials, because the caps and the edge have different jobs ----
+
+       ExtrudeGeometry writes two groups: index 0 is the front and back
+       caps, index 1 is the side wall and its bevel. They used to share one
+       dark material, and that is what made the mark go black as it came
+       side-on.
+
+       The reason is worth writing down, because it looks like a lighting
+       bug and is not one. The artwork is printed on two zero-thickness
+       planes. At the profile pass those planes have no projected area at
+       all — measured with the body hidden, the logo collapses to a single
+       column of pixels — so for that moment the only thing on screen is
+       the extruded hexagon's side. A metal reflects the environment
+       *tinted by its own base colour*, and at 0x24272c that colour is
+       about 14% grey, so with metalness 1 and envMapIntensity 0.85 the
+       edge returned almost nothing. A dark maroon slab, no logo on it.
+       Read as the logo switching off for a few hundredths of a second,
+       which is exactly what it was.
+
+       The caps keep the dark treatment: they sit behind the artwork and
+       are never seen. The edge gets metal that can actually return the
+       ember key — a machined graphite bright enough to reflect, a tighter
+       roughness so the key draws a specular streak down the length of the
+       blade rather than a flat wash, and the scene's own envMapIntensity
+       instead of a third of it. The profile pass then reads as a
+       mechanism coming side-on, which is what it was always supposed to
+       be, and which is the one moment that proves the mark is dimensional
+       rather than drawn. */
+    const capMat = new THREE.MeshStandardMaterial({
       color:0x24272c, metalness:1.0, roughness:.46, envMapIntensity:0.85,
       emissive:new THREE.Color(0x36060a), emissiveIntensity:1.0,
       transparent:true, opacity:0
     });
+    /* Tuned against the profile frame rather than guessed: brighter than
+       this and the edge fills with flat emissive and reads as red plastic,
+       darker and the slab goes back to being a silhouette. */
+    const rimMat = new THREE.MeshStandardMaterial({
+      color:0x7c848d, metalness:1.0, roughness:.22, envMapIntensity:1.5,
+      emissive:new THREE.Color(0x33070d), emissiveIntensity:1.0,
+      transparent:true, opacity:0
+    });
+    const bodyMat = [capMat, rimMat];
     const body = new THREE.Mesh(bodyGeo, bodyMat);
 
     /* both faces carry the same artwork at the same strength — the back is
@@ -2670,7 +2796,7 @@ function buildMark(scene){
     const back  = new THREE.Mesh(new THREE.PlaneGeometry(W,H), backMat); back.position.z  = -faceZ; back.rotation.y = Math.PI;
 
     core.add(body, front, back);
-    api.fades = [{ m:bodyMat, o:1 }, { m:faceMat, o:1 }, { m:backMat, o:1 }].concat(mount.fades);
+    api.fades = [{ m:capMat, o:1 }, { m:rimMat, o:1 }, { m:faceMat, o:1 }, { m:backMat, o:1 }].concat(mount.fades);
     fit();
   }
 
@@ -2841,14 +2967,25 @@ function buildMark(scene){
 function buildBalance(mark){
   const MARGIN = 16, MIN = 0.55;
   function run(){
-    /* The whole column, not the button row. This used to measure .cta-row
-       because the buttons were the last thing under the mark; the index
-       now sits below them, so measuring the buttons would have declared
-       the hero to fit while the contents ran off the bottom of a short
-       screen. The column's own box is the honest answer and stays honest
-       whatever gets added to it next. */
-    const foot = document.querySelector('.hero__col');
-    if (!foot) return;
+    /* The lowest thing in the hero, whatever that currently is.
+
+       This has now been wrong twice in the same way. First it measured
+       .cta-row, and the index — added below the buttons — ran off a short
+       screen while the pass reported a fit. So it was widened to
+       .hero__col, which contained both. Then the index moved out of the
+       column to become its own row along the foot of the wide layout, and
+       .hero__col stopped containing the lowest thing all over again: on a
+       375x667 phone the index sat 63px below the fold and nothing
+       squeezed, because the box being measured ended above it.
+
+       Naming one element was the bug both times. Ask the hero's own
+       children where the bottom is and the answer survives the next
+       rearrangement. */
+    const parts = document.querySelectorAll('.hero > *');
+    if (!parts.length) return;
+    const foot = { getBoundingClientRect: () => ({
+      bottom: Math.max(...[...parts].map(el => el.getBoundingClientRect().bottom))
+    }) };
     mark.squeeze = 1; mark.fit();
     /* This shrinks the mark when the copy below it would push the buttons off
        the bottom of the screen. In the split composition there is nothing
