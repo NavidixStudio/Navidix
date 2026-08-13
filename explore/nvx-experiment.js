@@ -99,13 +99,125 @@
   }
 
   /* =====================================================================
+     THE ORBIT RIG
+
+     three r128 ships OrbitControls as a separate file the site does not
+     carry, and pulling one in for this would mean a second network
+     request to get a behaviour that is forty lines. So it lives here, in
+     the shell, where every scene gets it for free.
+
+     Spherical coordinates around a target: drag turns, wheel or pinch
+     dollies, and everything is damped toward a goal rather than set
+     directly, so a chapter change and a hand on the mouse move the camera
+     through the same path instead of one snapping and the other gliding.
+
+     phi is clamped off both poles. At exactly vertical the up-vector is
+     undefined and the view rolls, which reads as the scene lurching.
+     ===================================================================== */
+  function makeOrbit(THREE, canvas, o) {
+    var g = {                                        /* where it is going */
+      target: new THREE.Vector3().fromArray(o.target || [0, 0, 0]),
+      dist: o.distance || 400, phi: o.phi != null ? o.phi : 1.0,
+      theta: o.theta != null ? o.theta : 0
+    };
+    var c = {                                        /* where it is now */
+      target: g.target.clone(), dist: g.dist, phi: g.phi, theta: g.theta
+    };
+    var minD = o.minDistance || 80, maxD = o.maxDistance || 1400;
+    var minP = o.minPhi != null ? o.minPhi : 0.12, maxP = o.maxPhi != null ? o.maxPhi : Math.PI - 0.12;
+    var drag = false, lastX = 0, lastY = 0, pinch = 0, touched = false;
+
+    function goTo(t, immediate) {
+      if (t.target) g.target.fromArray(t.target);
+      if (t.distance != null) g.dist = t.distance;
+      if (t.phi != null) g.phi = t.phi;
+      if (t.theta != null) g.theta = t.theta;
+      g.dist = Math.max(minD, Math.min(maxD, g.dist));
+      g.phi = Math.max(minP, Math.min(maxP, g.phi));
+      if (immediate) { c.target.copy(g.target); c.dist = g.dist; c.phi = g.phi; c.theta = g.theta; }
+    }
+
+    canvas.addEventListener('pointerdown', function (e) {
+      drag = true; touched = true; lastX = e.clientX; lastY = e.clientY;
+      canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
+      canvas.style.cursor = 'grabbing';
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      g.theta -= (e.clientX - lastX) * 0.0055;
+      g.phi = Math.max(minP, Math.min(maxP, g.phi - (e.clientY - lastY) * 0.0042));
+      lastX = e.clientX; lastY = e.clientY;
+      if (o.onUser) o.onUser();
+    });
+    function stop(e) {
+      drag = false; canvas.style.cursor = '';
+      if (e && e.pointerId != null && canvas.releasePointerCapture)
+        try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+    }
+    canvas.addEventListener('pointerup', stop);
+    canvas.addEventListener('pointercancel', stop);
+    canvas.addEventListener('pointerleave', stop);
+
+    /* Not passive, because the whole point is to stop the page scrolling
+       while the wheel is dollying the camera. */
+    canvas.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      g.dist = Math.max(minD, Math.min(maxD, g.dist * (1 + (e.deltaY > 0 ? 0.12 : -0.12))));
+      touched = true;
+      if (o.onUser) o.onUser();
+    }, { passive: false });
+
+    /* Two fingers dolly; one finger is left to the page so a phone can
+       still scroll past a stage it is not trying to use. */
+    canvas.addEventListener('touchmove', function (e) {
+      if (e.touches.length !== 2) return;
+      e.preventDefault();
+      var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX,
+                         e.touches[0].clientY - e.touches[1].clientY);
+      if (pinch) {
+        g.dist = Math.max(minD, Math.min(maxD, g.dist * (pinch / d)));
+        touched = true;
+        if (o.onUser) o.onUser();
+      }
+      pinch = d;
+    }, { passive: false });
+    canvas.addEventListener('touchend', function () { pinch = 0; });
+
+    return {
+      goTo: goTo,
+      touched: function () { return touched; },
+      clearTouched: function () { touched = false; },
+      update: function (dt, camera) {
+        var k = 1 - Math.pow(0.0015, Math.min(dt || 0.016, 0.05));
+        c.dist += (g.dist - c.dist) * k;
+        c.phi += (g.phi - c.phi) * k;
+        c.theta += (g.theta - c.theta) * k;
+        c.target.lerp(g.target, k);
+        var sp = Math.sin(c.phi);
+        camera.position.set(
+          c.target.x + c.dist * sp * Math.sin(c.theta),
+          c.target.y + c.dist * Math.cos(c.phi),
+          c.target.z + c.dist * sp * Math.cos(c.theta)
+        );
+        camera.lookAt(c.target);
+      }
+    };
+  }
+
+  /* =====================================================================
      mount(opts)
 
-     opts.root     selector or element for the .xp block
-     opts.scene    registered scene name
-     opts.params   [{ key, label, min, max, step, value, format }]
-     opts.note     function(params) -> HTML for the annotation line
-     opts.copy     { play, pause, reset, loading, noGL, slow, hint }
+     opts.root      selector or element for the .xp block
+     opts.scene     registered scene name
+     opts.params    [{ key, label, min, max, step, value, format }]
+     opts.note      function(params) -> HTML for the annotation line
+     opts.copy      { play, pause, reset, loading, noGL, slow, hint }
+     opts.orbit     camera rig config — see makeOrbit. Given, the shell
+                    drives the camera and the scene must not.
+     opts.chapters  [{ id, title, body, camera:{}, params:{} }] — a guided
+                    read that ends by handing the controls over.
+     opts.labels    true if the scene exposes anchors to pin DOM labels to
+     opts.readout   function(params, t) -> HTML, written every frame
      ===================================================================== */
   function mount(opts) {
     var root = typeof opts.root === 'string' ? document.querySelector(opts.root) : opts.root;
@@ -197,6 +309,91 @@
     var renderer = null, THREE = null, sc = null, raf = 0, last = 0, clock = 0;
     var visible = false, hidden = document.hidden;
     var slowFrames = 0;
+    var orbit = null, labelBox = null, labels = {}, chapterIdx = -1, freed = false;
+    var readoutBox = root.querySelector('.xreadout');
+    var _v = null;
+
+    /* =====================================================================
+       CHAPTERS — the part that makes this a lesson rather than a toy.
+
+       A 3D model in the middle of a page is a thing to fiddle with. What
+       turns it into something you learn from is being walked through it
+       first: here is what you are looking at, now here is the one thing
+       that changes when I move this, now look at that. Each chapter is a
+       camera position, a set of parameter values and a sentence, and the
+       shell moves all three together.
+
+       Then it gets out of the way. The last chapter hands the controls
+       over explicitly, and touching the camera at any point does the same
+       thing early — a tour that keeps grabbing the camera back from
+       someone who has started exploring is worse than no tour.
+
+       Chapters are addressable (?c=<id>), so a chapter can be linked to
+       and lands with its camera and parameters already set.
+       ===================================================================== */
+    var rail = root.querySelector('.xchapters');
+    var chapterBtns = [];
+    var chapters = opts.chapters || [];
+
+    function freeControls() {
+      if (freed) return;
+      freed = true;
+      chapterIdx = -1;
+      chapterBtns.forEach(function (b) { b.setAttribute('aria-current', 'false'); });
+      if (rail) rail.classList.add('is-free');
+      var body = root.querySelector('.xchapter__body');
+      if (body && copy.freeBody) body.innerHTML = copy.freeBody;
+    }
+
+    function goChapter(i, fromUser) {
+      var ch = chapters[i];
+      if (!ch) return;
+      freed = false;
+      chapterIdx = i;
+      if (rail) rail.classList.remove('is-free');
+      chapterBtns.forEach(function (b, n) { b.setAttribute('aria-current', String(n === i)); });
+
+      var body = root.querySelector('.xchapter__body');
+      if (body) body.innerHTML = ch.body;
+
+      if (ch.params) Object.keys(ch.params).forEach(function (k) {
+        params[k] = ch.params[k];
+        if (readouts[k]) {
+          readouts[k].input.value = ch.params[k];
+          readouts[k].val.textContent = fmt(readouts[k].spec, ch.params[k]);
+        }
+      });
+      paintNote();
+      if (orbit && ch.camera) orbit.goTo(ch.camera);
+      if (sc && sc.chapter) sc.chapter(ch.id, params);
+      if (api.ready && !api.running) draw(0);
+
+      if (fromUser) {
+        try {
+          var u = new URL(location.href);
+          u.searchParams.set('c', ch.id);
+          history.replaceState(null, '', u);
+        } catch (_) {}
+      }
+    }
+
+    if (rail && chapters.length) {
+      chapters.forEach(function (ch, i) {
+        var b = el('button', 'xchapter');
+        b.type = 'button';
+        b.innerHTML = '<i>' + (ch.no || (i + 1)) + '</i><span>' + ch.title + '</span>';
+        b.setAttribute('aria-current', 'false');
+        b.addEventListener('click', function () { goChapter(i, true); });
+        rail.appendChild(b);
+        chapterBtns.push(b);
+      });
+      var free = el('button', 'xchapter xchapter--free');
+      free.type = 'button';
+      free.innerHTML = '<i>◆</i><span>' + (copy.free || 'Free look') + '</span>';
+      free.addEventListener('click', function () { freeControls(); });
+      rail.appendChild(free);
+    }
+    api.goChapter = goChapter;
 
     function say(html, keep) {
       if (!note) return;
@@ -248,12 +445,48 @@
         sc = scenes[opts.scene]({ THREE: THREE, renderer: renderer, width: d.w, height: d.h,
                                   params: params, reduced: REDUCED });
         api.scene = sc;
+
+        if (opts.orbit) {
+          orbit = makeOrbit(THREE, canvas, Object.assign({}, opts.orbit, {
+            /* A hand on the camera means the reader has taken over, so the
+               tour stops steering and says so rather than fighting them
+               for control of the same camera. */
+            onUser: function () { if (chapterIdx >= 0 && !freed) freeControls(); }
+          }));
+          orbit.goTo(opts.orbit, true);
+          orbit.update(0, sc.camera);
+          api.orbit = orbit;
+          stage.classList.add('is-grabbable');
+        }
+
+        if (opts.labels && sc.anchors) {
+          _v = new THREE.Vector3();
+          labelBox = el('div', 'xlabels');
+          labelBox.setAttribute('aria-hidden', 'true');
+          stage.appendChild(labelBox);
+          Object.keys(sc.anchors).forEach(function (k) {
+            var n = el('span', 'xlabel');
+            n.innerHTML = '<i></i><b>' + ((opts.labelText && opts.labelText[k]) || k) + '</b>';
+            labelBox.appendChild(n);
+            labels[k] = n;
+          });
+        }
+
         api.ready = true;
         silence();
         draw(0);                                  /* one settled frame */
 
         /* Reduced motion, or a reader who arrived paused, gets that frame
            and a Play button. Everyone else starts moving. */
+        if (chapters.length) {
+          var want = 0;
+          try {
+            var q = new URL(location.href).searchParams.get('c');
+            if (q) { var f = chapters.findIndex(function (c) { return c.id === q; }); if (f >= 0) want = f; }
+          } catch (_) {}
+          goChapter(want, false);
+        }
+
         if (!REDUCED && visible) play();
         else paintPlay();
       }).catch(function (e) {
@@ -267,8 +500,39 @@
     function draw(dt) {
       if (!sc || !renderer) return;
       clock += dt;
+      if (orbit) orbit.update(dt, sc.camera);
       sc.update(dt, clock, params);
       renderer.render(sc.scene, sc.camera);
+      if (labelBox) paintLabels();
+      /* The readout runs whether or not the page gave it a box to write
+         into: it is a per-frame hook, and a page may well drive its own
+         elements from it — the clocks on the space-time page do exactly
+         that. Gating it on the container being present made those clocks
+         sit at zero while everything around them ran. */
+      if (opts.readout) {
+        var out = opts.readout(params, clock, sc);
+        if (readoutBox && out != null) readoutBox.innerHTML = out;
+      }
+    }
+
+    /* ---- labels, pinned to the scene rather than drawn in it ----
+       DOM rather than sprites: real text stays selectable, scales with the
+       reader's font size, and never renders as a blurry quad. Each anchor
+       is projected once a frame and the element is moved with a transform,
+       which is the one property that does not force layout. Anything
+       behind the camera, or behind the object it names, is hidden. */
+    function paintLabels() {
+      var r = canvas.getBoundingClientRect();
+      var a = sc.anchors;
+      for (var k in labels) {
+        var n = labels[k], src = a[k];
+        if (!src || src.hidden) { n.style.opacity = '0'; continue; }
+        _v.copy(src.position).project(sc.camera);
+        if (_v.z > 1) { n.style.opacity = '0'; continue; }
+        n.style.opacity = src.dim ? '.45' : '1';
+        n.style.transform = 'translate(-50%,-50%) translate(' +
+          ((_v.x * 0.5 + 0.5) * r.width) + 'px,' + ((-_v.y * 0.5 + 0.5) * r.height) + 'px)';
+      }
     }
 
     function frame(t) {
@@ -311,7 +575,8 @@
       });
       paintNote();
       if (sc && sc.reset) sc.reset(params);
-      if (api.ready && !api.running) draw(0);
+      if (chapters.length) goChapter(0, false);
+      else if (api.ready && !api.running) draw(0);
     }
 
     /* ---- only draw what is on screen ---- */

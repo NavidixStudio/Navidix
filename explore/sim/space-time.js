@@ -2,22 +2,29 @@
    SPACE-TIME — curvature as an embedding diagram.
 
    A sheet of grid lines sagging around a mass, with a test particle
-   orbiting in the well. It is the picture everyone has seen, and it is
-   worth being exact about what it is and is not, because the page's prose
-   makes the same point in words:
+   orbiting in the well, and two clocks that come apart while you watch.
+
+   What it is and is not, stated here because the page's prose says the
+   same thing in words:
 
      - The sheet is a two-dimensional *slice* of space, drawn bulging into
        a third dimension that does not exist. It is a way of plotting the
-       spatial geometry, not a picture of gravity pulling downward.
-     - The depth used here is Flamm's paraboloid, the real embedding of
-       the Schwarzschild spatial slice: z proportional to sqrt(r - rs).
-       Softened near the centre so a single vertex does not shoot to
-       infinity, which is a drawing decision, not physics.
-     - The orbiting particle is on a circular Keplerian orbit, which is
-       the weak-field limit. It is not solving the geodesic equation.
+       spatial geometry, not a picture of gravity pulling downward. The
+       usual animation has a ball roll into a dip because Earth's gravity
+       pulls it there — explaining gravity with gravity.
+     - The depth is Flamm's paraboloid, the real embedding of the
+       Schwarzschild spatial slice: z = 2*sqrt(rs*(r - rs)), rising with r,
+       plotted relative to the rim so the throat hangs lowest. One axis is
+       exaggerated for legibility; the shape is not.
+     - The orbiting particle is on a circular Keplerian orbit — the weak
+       field limit, not a solved geodesic.
+     - The clocks and the dilation figure are the exact Schwarzschild
+       factor, sqrt(1 - rs/r). Those numbers are true.
 
-   The time-dilation figure in the readout, however, is the real
-   Schwarzschild factor, so the number a reader takes away is true.
+   The camera belongs to the shell's orbit rig, so nothing here touches
+   camera position. This scene exposes anchors for the shell to pin labels
+   to, and a chapter() hook so the guided read can change what is shown
+   rather than only where it is seen from.
    ===================================================================== */
 (function () {
   'use strict';
@@ -27,150 +34,157 @@
     var THREE = ctx.THREE;
 
     var scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x05070B, 0.0022);
+    scene.fog = new THREE.FogExp2(0x05070B, 0.0016);
 
-    var camera = new THREE.PerspectiveCamera(42, ctx.width / ctx.height, 1, 4000);
-    /* far enough back that the full 460-unit sheet clears the frame at
-       this field of view, and high enough to look down into the well
-       rather than along the surface */
-    camera.position.set(0, 300, 404);
-    camera.lookAt(0, -96, 0);
+    var camera = new THREE.PerspectiveCamera(42, ctx.width / ctx.height, 1, 5000);
+
+    var SPAN = 420, N = 44, RIM = SPAN * 0.72;
+    /* Vertical exaggeration. At these radii Flamm's paraboloid is a
+       shallow dish, and a shallow dish photographs as a flat sheet. The
+       shape is the real one; only the axis that is not a real direction
+       anyway is stretched. */
+    var EXAG = 2.15;
 
     /* ---- the sheet ----
-       Drawn as lines rather than a filled surface: a grid says "this is a
-       coordinate system being deformed", a solid says "this is a rubber
-       sheet", and only the first one is what a metric means. */
-    var SPAN = 420, N = 44;                     /* 44x44 cells, ~3.9k verts */
-    /* Vertical exaggeration. Flamm's paraboloid at these radii is a
-       shallow dish, and a shallow dish photographs as a flat sheet — the
-       well has to be readable as a well. The shape is the real one; only
-       the scale on one axis is stretched, which is what an embedding
-       diagram is free to do since that axis is not a real direction. */
-    var EXAG = 2.15;
+       Lines, not a filled surface: a grid says "this is a coordinate
+       system being deformed", a solid says "this is a rubber sheet", and
+       only the first is what a metric means. */
     var geo = new THREE.BufferGeometry();
     var pos = [], idx = [], base = [];
-    for (var j = 0; j <= N; j++) {
+    for (var j = 0; j <= N; j++)
       for (var i = 0; i <= N; i++) {
         var x = (i / N - 0.5) * SPAN, z = (j / N - 0.5) * SPAN;
-        base.push(x, z);
-        pos.push(x, 0, z);
+        base.push(x, z); pos.push(x, 0, z);
       }
-    }
-    for (var j2 = 0; j2 <= N; j2++) {
+    for (var j2 = 0; j2 <= N; j2++)
       for (var i2 = 0; i2 <= N; i2++) {
         var a = j2 * (N + 1) + i2;
         if (i2 < N) idx.push(a, a + 1);
         if (j2 < N) idx.push(a, a + N + 1);
       }
-    }
     var posAttr = new THREE.Float32BufferAttribute(pos, 3);
     posAttr.setUsage && posAttr.setUsage(THREE.DynamicDrawUsage);
     geo.setAttribute('position', posAttr);
     geo.setIndex(idx);
+    var gridMat = new THREE.LineBasicMaterial({ color: 0x3E6BA8, transparent: true, opacity: 0.5 });
+    scene.add(new THREE.LineSegments(geo, gridMat));
 
-    var grid = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({
-      color: 0x3E6BA8, transparent: true, opacity: 0.5
+    /* ---- a flat reference grid, for the chapter that needs one ----
+       You cannot see that something is bent without seeing what straight
+       looks like. This is the same grid with no mass in it, held at the
+       rim's height, and it is only shown when a chapter asks. */
+    var flatGeo = new THREE.BufferGeometry();
+    var fpos = [];
+    for (var k2 = 0, b2 = 0; k2 < pos.length; k2 += 3, b2 += 2) fpos.push(base[b2], 0, base[b2 + 1]);
+    flatGeo.setAttribute('position', new THREE.Float32BufferAttribute(fpos, 3));
+    flatGeo.setIndex(idx);
+    var flat = new THREE.LineSegments(flatGeo, new THREE.LineBasicMaterial({
+      color: 0x8FDBFF, transparent: true, opacity: 0.0
     }));
-    scene.add(grid);
+    scene.add(flat);
+    var flatWant = 0;
 
     /* ---- the mass ---- */
-    var mass = new THREE.Mesh(
-      new THREE.SphereGeometry(1, 32, 24),
-      new THREE.MeshBasicMaterial({ color: 0xE31B23 })
-    );
-    scene.add(mass);
-    var halo = new THREE.Mesh(
-      new THREE.SphereGeometry(1, 24, 18),
-      new THREE.MeshBasicMaterial({ color: 0xE31B23, transparent: true, opacity: 0.13 })
-    );
-    scene.add(halo);
+    var massGeo = new THREE.SphereGeometry(1, 32, 24);
+    var mass = new THREE.Mesh(massGeo, new THREE.MeshBasicMaterial({ color: 0xE31B23 }));
+    var halo = new THREE.Mesh(massGeo, new THREE.MeshBasicMaterial({
+      color: 0xE31B23, transparent: true, opacity: 0.13, depthWrite: false
+    }));
+    scene.add(mass, halo);
 
-    /* ---- the test particle and the path it has taken ---- */
-    var probe = new THREE.Mesh(
-      new THREE.SphereGeometry(3.4, 20, 14),
-      new THREE.MeshBasicMaterial({ color: 0xEDF2FA })
-    );
+    /* ---- the test particle, its trail, and its orbit ring ---- */
+    var probe = new THREE.Mesh(new THREE.SphereGeometry(4.6, 20, 14),
+      new THREE.MeshBasicMaterial({ color: 0xEDF2FA }));
     scene.add(probe);
 
-    var TRAIL = 150;
-    var trailGeo = new THREE.BufferGeometry();
+    var TRAIL = 190;
     var trailPos = new Float32Array(TRAIL * 3);
+    var trailGeo = new THREE.BufferGeometry();
     var tAttr = new THREE.BufferAttribute(trailPos, 3);
     tAttr.setUsage && tAttr.setUsage(THREE.DynamicDrawUsage);
     trailGeo.setAttribute('position', tAttr);
     var trail = new THREE.Line(trailGeo, new THREE.LineBasicMaterial({
-      color: 0x8FDBFF, transparent: true, opacity: 0.5
+      color: 0x8FDBFF, transparent: true, opacity: 0.55
     }));
     trail.frustumCulled = false;
     scene.add(trail);
     var trailN = 0;
 
-    /* ---- a few stars, so the sheet is clearly sitting in space ---- */
+    /* ---- stars, so the sheet is clearly sitting in space ---- */
     var sGeo = new THREE.BufferGeometry(), sp = [];
-    for (var s = 0; s < 260; s++) {
-      var r = 700 + Math.random() * 1400, th = Math.random() * Math.PI * 2,
+    for (var s = 0; s < 300; s++) {
+      var rr = 900 + Math.random() * 1800, th = Math.random() * Math.PI * 2,
           ph = Math.acos(2 * Math.random() - 1);
-      sp.push(r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph) * 0.55 + 120, r * Math.sin(ph) * Math.sin(th));
+      sp.push(rr * Math.sin(ph) * Math.cos(th), rr * Math.cos(ph) * 0.6 + 140, rr * Math.sin(ph) * Math.sin(th));
     }
     sGeo.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
     scene.add(new THREE.Points(sGeo, new THREE.PointsMaterial({
       color: 0x9FB6D8, size: 2, sizeAttenuation: false, transparent: true, opacity: 0.5
     })));
 
-    var px = 0, py = 0, theta = 0;
-
-    /* Flamm's paraboloid: z = 2*sqrt(rs*(r - rs)), which *rises* with r —
-       the throat is the low point and the surface flares out to flat.
-       Everything below plots it relative to the rim, so the far field
-       sits at zero and the well hangs beneath it.
-
-       Getting the sqrt argument wrong here is not a cosmetic slip: with
-       sqrt(r) instead of sqrt(r - rs) the whole sheet inverts and the
-       mass sits on top of a hill, which says the exact opposite of what
-       the page says. rs is the Schwarzschild radius in the arbitrary
-       units the sheet is drawn in. */
-    var RIM = SPAN * 0.72;
     function depth(r, rs) {
-      var soft = Math.max(r - rs, rs * 0.05);   /* stay off the singular throat */
+      var soft = Math.max(r - rs, rs * 0.05);      /* stay off the singular throat */
       return 2 * Math.sqrt(rs) * Math.sqrt(soft) * EXAG;
     }
+    function sheetY(r, rs) { return depth(r, rs) - depth(RIM, rs); }
 
     function shape(rs) {
       var p = geo.attributes.position.array;
       for (var k = 0, b = 0; k < p.length; k += 3, b += 2) {
         var x = base[b], z = base[b + 1];
-        var r = Math.sqrt(x * x + z * z) + 0.0001;
-        p[k + 1] = depth(r, rs) - depth(RIM, rs);
+        p[k + 1] = sheetY(Math.sqrt(x * x + z * z) + 0.0001, rs);
       }
       geo.attributes.position.needsUpdate = true;
     }
 
-    var lastRs = -1;
+    var theta = 0, lastRs = -1, chapter = '';
+
+    /* Anchors are world positions the shell pins DOM labels to. They are
+       objects rather than bare vectors so the scene can also say "this one
+       is not relevant right now" without the shell knowing why. */
+    var anchors = {
+      mass:  { position: new THREE.Vector3(), hidden: false },
+      probe: { position: new THREE.Vector3(), hidden: false },
+      rim:   { position: new THREE.Vector3(), hidden: false, dim: true }
+    };
 
     return {
       scene: scene,
       camera: camera,
+      anchors: anchors,
+
+      /* The tour changes what is drawn, not only where it is seen from. */
+      chapter: function (id) {
+        chapter = id;
+        flatWant = (id === 'sheet') ? 0.34 : 0;
+        anchors.probe.hidden = (id === 'sheet');
+        anchors.rim.hidden = (id !== 'sheet');
+        trailN = 0; trailGeo.setDrawRange(0, 0);
+      },
 
       update: function (dt, t, p) {
-        var rs = p.mass;                          /* Schwarzschild radius */
-        var orbit = p.orbit;                      /* orbital radius       */
-
+        var rs = p.mass, orbit = p.orbit;
         if (rs !== lastRs) { shape(rs); lastRs = rs; }
+
+        flat.material.opacity += (flatWant - flat.material.opacity) * Math.min(1, dt * 3);
+        flat.visible = flat.material.opacity > 0.004;
 
         mass.scale.setScalar(rs);
         halo.scale.setScalar(rs * 3.4);
-        mass.position.y = depth(rs * 1.06, rs) - depth(RIM, rs);
-        halo.position.y = mass.position.y;
+        var my = sheetY(rs * 1.06, rs);
+        mass.position.y = halo.position.y = my;
+        anchors.mass.position.set(0, my + rs * 3.6, 0);
 
-        /* circular orbit, weak-field: omega = sqrt(GM/r^3), and with
-           GM = rs/2 in these units the speed falls off as it should */
+        /* circular orbit, weak field: omega = sqrt(GM/r^3), with GM = rs/2
+           in these units so the speed falls off as it should */
         var omega = Math.sqrt(Math.max(rs, 0.001) * 0.5 / Math.pow(orbit, 3));
         theta += omega * dt * 62;
 
-        var ox = Math.cos(theta) * orbit, oz = Math.sin(theta) * orbit;
-        probe.position.set(ox, depth(orbit, rs) - depth(RIM, rs) + 4, oz);
+        var py = sheetY(orbit, rs) + 5;
+        probe.position.set(Math.cos(theta) * orbit, py, Math.sin(theta) * orbit);
+        anchors.probe.position.copy(probe.position).add(new THREE.Vector3(0, 20, 0));
+        anchors.rim.position.set(RIM * 0.7, sheetY(RIM, rs) + 12, RIM * 0.7);
 
-        /* the trail is a ring buffer drawn as one polyline */
         if (dt > 0) {
           for (var i = TRAIL - 1; i > 0; i--) {
             trailPos[i * 3]     = trailPos[(i - 1) * 3];
@@ -184,31 +198,16 @@
           trailGeo.setDrawRange(0, trailN);
           trailGeo.attributes.position.needsUpdate = true;
         }
-
-        /* the pointer tilts the view; it never takes the camera over */
-        var ty = 300 - py * 78, tz = 404 + py * 40;
-        camera.position.x += (px * 84 - camera.position.x) * Math.min(1, dt * 3);
-        camera.position.y += (ty - camera.position.y) * Math.min(1, dt * 3);
-        camera.position.z += (tz - camera.position.z) * Math.min(1, dt * 3);
-        camera.lookAt(0, -96, 0);
       },
 
-      resize: function (w, h) {
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-      },
-
-      pointer: function (x, y) { px = x; py = y; },
+      resize: function (w, h) { camera.aspect = w / h; camera.updateProjectionMatrix(); },
 
       reset: function () {
-        theta = 0; trailN = 0;
-        trailPos.fill(0);
-        trailGeo.setDrawRange(0, 0);
-        px = py = 0;
+        theta = 0; trailN = 0; trailPos.fill(0); trailGeo.setDrawRange(0, 0);
       },
 
       dispose: function () {
-        geo.dispose(); trailGeo.dispose(); sGeo.dispose();
+        geo.dispose(); flatGeo.dispose(); trailGeo.dispose(); sGeo.dispose(); massGeo.dispose();
       }
     };
   });

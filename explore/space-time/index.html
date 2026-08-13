@@ -82,11 +82,34 @@
   <div class="xstage">
     <canvas class="xstage__canvas" role="img" aria-label="نمایش تعاملی خمیدگی فضا-زمان اطراف یک جرم، با یک جسم در مدار"></canvas>
     <div class="xstage__note"></div>
-    <p class="xstage__hint">نشانگر را حرکت بده تا زاویه‌ی دید عوض شود</p>
+    <p class="xstage__hint">بکش تا بچرخانی · اسکرول تا نزدیک شوی</p>
   </div>
+
+  <nav class="xchapters" aria-label="فصل‌های تجربه"></nav>
+  <p class="xchapter__body"></p>
 
   <div class="xctl"></div>
   <div class="xparams"></div>
+
+  <!-- The two clocks. A percentage in a caption is a fact you read; two
+       clocks visibly coming apart is the same fact, watched. They are
+       real <time>-shaped readouts driven from the scene's own elapsed
+       time, so what you see and the number below it cannot disagree. -->
+  <div class="xclocks">
+    <div class="xclock">
+      <p class="xclock__name">ساعتِ ناظرِ بسیار دور</p>
+      <p class="xclock__t" data-clock="far">۰۰:۰۰٫۰۰</p>
+    </div>
+    <div class="xclock xclock--near">
+      <p class="xclock__name">ساعتِ روی مدار</p>
+      <p class="xclock__t" data-clock="near">۰۰:۰۰٫۰۰</p>
+    </div>
+    <div class="xclock__lag">
+      <span>اختلاف</span>
+      <b data-clock="lag">۰٫۰۰ ثانیه</b>
+    </div>
+  </div>
+
   <div class="xnote"></div>
 </section>
 
@@ -142,12 +165,59 @@
 <script>
 window.addEventListener('DOMContentLoaded', function () {
   var fa = function (s) { return String(s).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
+  var A = 26;
+
+  /* The Schwarzschild factor, used by the readout, the annotation and the
+     clocks alike so the three can never disagree with each other. */
+  function tick(p) { var q = p.mass / p.orbit; return q < 1 ? Math.sqrt(1 - q) : 0; }
+
+  function mmss(sec) {
+    var m = Math.floor(sec / 60), r = sec - m * 60;
+    return fa((m < 10 ? '0' : '') + m) + ':' + fa((r < 10 ? '0' : '') + r.toFixed(2)).replace('.', '٫');
+  }
+
+  var far = document.querySelector('[data-clock=far]'),
+      near = document.querySelector('[data-clock=near]'),
+      lag  = document.querySelector('[data-clock=lag]');
 
   NVXExperiment.mount({
     root: '#stage',
     scene: 'space-time',
+    labels: true,
+    labelText: { mass: 'جرم', probe: 'جسم در مدار', rim: 'دوردست — فضای تخت' },
+
+    /* The camera is the reader's. The rig damps toward whatever the tour
+       or the hand last asked for, so a chapter change and a drag move it
+       along the same path. */
+    orbit: { target: [0, -70, 0], distance: 470, phi: 0.82, theta: 0,
+             minDistance: 130, maxDistance: 1100, minPhi: 0.16, maxPhi: 1.46 },
+
+    chapters: [
+      { id: 'sheet', no: '۰۱', title: 'این چیست',
+        camera: { target: [0, -46, 0], distance: 640, phi: 0.72, theta: 0.5 },
+        params: { mass: 6, orbit: 150 },
+        body: 'آنچه می‌بینی یک <b>برش دوبعدی از فضا</b>ست که در بعد سومی خم شده تا هندسه‌اش دیدنی شود. آن بعد سوم وجود خارجی ندارد. شبکه‌ی آبی کمرنگ، همان فضاست اگر هیچ جرمی در کار نبود — تخت. دوربین در دست توست: بکش تا بچرخانی.' },
+
+      { id: 'well', no: '۰۲', title: 'جرم چه می‌کند',
+        camera: { target: [0, -110, 0], distance: 400, phi: 1.16, theta: 0.9 },
+        params: { mass: 20, orbit: 150 },
+        body: 'جرم را بالا بردیم. خمیدگی فقط زیر جسم نیست — تا دوردست ادامه دارد و فقط کم‌کم محو می‌شود. این همان چیزی است که معادلات اینشتین می‌گویند: <b>جرم به فضا-زمان می‌گوید چطور خم شود.</b> در این صحنه هیچ چیز نمی‌افتد — پایینی در کار نیست.' },
+
+      { id: 'orbit', no: '۰۳', title: 'مدار',
+        camera: { target: [0, -62, 0], distance: 400, phi: 1.10, theta: 2.1 },
+        params: { mass: 14, orbit: 96 },
+        body: 'جسم سفید کشیده نمی‌شود. دارد <b>مستقیم‌ترین مسیر ممکن</b> را در این هندسه طی می‌کند — مسیری که فقط از بیرون کج به‌نظر می‌رسد. شعاع مدار را کم کن و ببین تندتر می‌چرخد: قانون سوم کپلر، بیرون‌آمده از هندسه و نه از یک نیروی جداگانه.' },
+
+      { id: 'time', no: '۰۴', title: 'زمان',
+        camera: { target: [0, -104, 0], distance: 372, phi: 1.16, theta: 3.5 },
+        params: { mass: 22, orbit: 62 },
+        body: 'حالا به دو ساعت پایین نگاه کن. هر دو سالم‌اند و هر دو درست کار می‌کنند؛ اما دارند از هم جدا می‌شوند. <b>عمق میدان گرانشی، سرعت گذشت زمان را عوض می‌کند.</b> همین اثر را ماهواره‌های GPS هر روز تصحیح می‌کنند — وگرنه موقعیت‌یابی ظرف چند ساعت کیلومترها خطا پیدا می‌کرد.' }
+    ],
+
     copy: {
       play: 'اجرا', pause: 'توقف', reset: 'بازنشانی',
+      free: 'کنترل آزاد',
+      freeBody: 'کنترل حالا دست توست. دوربین را بکش، اسکرول کن تا نزدیک شوی، و هر دو پارامتر را آزادانه عوض کن. هر وقت خواستی، روی یکی از فصل‌ها بزن تا برگردی.',
       loading: 'در حال بارگذاری صحنه…',
       noGLTitle: 'این تجربه به WebGL نیاز دارد',
       noGL: 'مرورگر یا دستگاه تو WebGL را در دسترس نگذاشته. توضیح علمی کامل، پایین همین صفحه است.',
@@ -156,22 +226,32 @@ window.addEventListener('DOMContentLoaded', function () {
       slowTitle: 'متوقف شد — این دستگاه به سختی می‌کشد',
       slow: 'توضیح علمی کامل، پایین همین صفحه است.'
     },
+
     params: [
-      { key: 'mass',  label: 'جرم جسم مرکزی', min: 4, max: 26, step: 0.5, value: 10,
+      { key: 'mass',  label: 'جرم جسم مرکزی', min: 4, max: 26, step: 0.5, value: 9,
         format: function (v) { return fa(v.toFixed(1)) + ' واحد'; } },
-      { key: 'orbit', label: 'شعاع مدار',      min: 46, max: 200, step: 2, value: 118,
+      { key: 'orbit', label: 'شعاع مدار', min: 46, max: 200, step: 2, value: 150,
         format: function (v) { return fa(v.toFixed(0)) + ' واحد'; } }
     ],
+
+    /* Written every frame, which is what makes the clocks clocks rather
+       than two more numbers. The orbiting one advances by the elapsed
+       scene time multiplied by the dilation factor, so the gap between
+       them opens at exactly the rate the physics says. */
+    readout: function (p, t) {
+      var f = tick(p);
+      if (far)  far.textContent  = mmss(t);
+      if (near) near.textContent = mmss(t * f);
+      if (lag)  lag.textContent  = fa((t * (1 - f)).toFixed(2)).replace('.', '٫') + ' ثانیه';
+      return '';
+    },
+
     note: function (p) {
-      /* the real Schwarzschild factor, not a stand-in */
-      var ratio = p.mass / p.orbit;
-      var safe = ratio < 1;
-      var f = safe ? Math.sqrt(1 - ratio) : 0;
-      var slow = (1 - f) * 100;
-      return safe
+      var q = p.mass / p.orbit, f = tick(p);
+      return q < 1
         ? 'یک ساعت روی این مدار، به ازای هر ثانیه‌ای که برای ناظرِ بسیار دور می‌گذرد، <b>' +
-          fa(f.toFixed(4)) + ' ثانیه</b> جلو می‌رود — یعنی حدود <b>' + fa(slow.toFixed(2)) +
-          '٪</b> کندتر. نسبت شعاع شوارتزشیلد به شعاع مدار: ' + fa(ratio.toFixed(3)) + '.'
+          fa(f.toFixed(4)) + ' ثانیه</b> جلو می‌رود — یعنی حدود <b>' + fa(((1 - f) * 100).toFixed(2)) +
+          '٪</b> کندتر. نسبت شعاع شوارتزشیلد به شعاع مدار: ' + fa(q.toFixed(3)) + '.'
         : 'در این نسبت، مدار داخل شعاع شوارتزشیلد می‌افتد — جایی که دیگر مدارِ پایداری وجود ندارد.';
     }
   });
