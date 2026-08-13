@@ -378,6 +378,27 @@ html[lang="fa"] .hindex a span{ font-family:var(--f-fa); font-size:14.5px; }
 .hindex a:hover i, .hindex a:focus-visible i{ color:var(--ember-soft); }
 .hindex a:hover span, .hindex a:focus-visible span{ color:var(--paper); }
 .hindex a:focus-visible{ outline:1px solid var(--ion); outline-offset:-1px; }
+/* ---- two leads, then three archives ----
+   The index used to be four equal entries, which said all four matter the
+   same. They do not: the interactive science section and the training are
+   where the work went, and the gallery, the prompt library and the films
+   are archives you go to when you already know you want them.
+
+   So the first two take a row of their own at nearly twice the type size,
+   with the number set above the label the way a lead item in a masthead
+   index is set, and the remaining three share the row beneath at the size
+   the whole list used to be. Same component, same rules, same hover — the
+   hierarchy is carried entirely by size and by which row you are on. */
+.hindex__lead{ flex:0 0 50% !important; }
+.hindex a:not(.hindex__lead){ flex:1 1 33.333%; }
+.hindex__lead{ padding:18px 16px 16px; gap:9px; }
+.hindex__lead i{ font-size:11px; color:rgba(237,242,250,.46); }
+.hindex__lead span{ font-size:19px; font-weight:500; color:var(--paper); }
+html[lang="fa"] .hindex__lead span{ font-size:21px; }
+/* the lead rule is the brand's, at rest — the archives' stays structural
+   and only fills on approach */
+.hindex__lead{ border-top-color:rgba(227,27,35,.42); }
+.hindex__lead:hover, .hindex__lead:focus-visible{ background:rgba(227,27,35,.06); }
 /* ---- the phone's height budget ----
    The index cost the first screen about 120px, and on a 390x844 phone the
    column ran 80px past the fold — the mark's balance pass was already at
@@ -420,7 +441,13 @@ html[lang="fa"] .hindex a span{ font-family:var(--f-fa); font-size:14.5px; }
   /* Two and two. Four entries across a phone would be four slivers with a
      broken word in each; two rows of two give every label its own line
      and keep the grid square. */
-  .hindex a{ flex:0 1 50%; padding:11px 9px 10px; }
+  /* A lead is worth a full row here — at 50% its label wraps and stops
+     looking like the largest thing in the list, which is the only job it
+     has. The three archives still fit one row between them. */
+  .hindex__lead{ flex:0 0 100% !important; padding:14px 10px 13px; }
+  .hindex__lead span{ font-size:17px; }
+  html[lang="fa"] .hindex__lead span{ font-size:18.5px; }
+  .hindex a:not(.hindex__lead){ flex:1 1 33.333%; padding:11px 6px 10px; }
   .hindex a span{ font-size:13px; }
   html[lang="fa"] .hindex a span{ font-size:13.5px; }
 }
@@ -782,6 +809,9 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
     margin-top:clamp(28px,5vh,70px);
   }
   .hindex a{ padding:15px 16px 13px; gap:8px; }
+  .hindex__lead{ padding:22px 18px 19px; gap:11px; }
+  .hindex__lead span{ font-size:24px; }
+  html[lang="fa"] .hindex__lead span{ font-size:26px; }
   .plate{ justify-content:flex-start; width:auto; }
   .wordmark{ width:min(430px,30vw); }
   /* ---- the column breathes ----
@@ -1253,13 +1283,13 @@ picture{ display:contents; }
       <div class="hairline" id="hairline"></div>
       <p class="pitch" data-copy2="pitch">استودیو نویدیکس — تلاقی پژوهش، سینما و هوش مصنوعی.</p>
       <div class="cta-row">
-        <!-- The label moved into a span the moment this button grew an arrow:
-             Lang writes copy with textContent, which would erase any element
-             sibling it found. The tube button has always worked this way. -->
-        <a class="hcta hcta--main" href="system.html">
-          <span data-copy2="ctaMain">خدمات استودیو</span>
-          <svg class="hcta__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h14M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+        <!-- Studio services used to lead this row. It is the studio's
+             commercial offer, and it was standing in front of the work the
+             studio actually wants read — so it moved to the last panel of
+             the deck, at the foot of the page, where someone who has gone
+             through everything else arrives at it. The row keeps the two
+             channels, which is also what lets them share one line on a
+             phone instead of wrapping. -->
         <a class="hcta" href="https://t.me/NavidixMedia" target="_blank" rel="noopener" data-copy2="ctaTalk">عضویت در کانال</a>
         <!-- The channel that matters most, so it sits beside the other one
              rather than waiting in the panel below. Label in a span for the
@@ -1296,10 +1326,11 @@ picture{ display:contents; }
            a centred flex column there too, and the index is still the
            last thing in it at the same full width. -->
       <nav class="hindex" data-copy2-label="ixLabel" aria-label="بخش‌های سایت">
-        <a href="training.html"><i>01</i><span data-copy2="ixLearn">آموزش</span></a>
-        <a href="prompts.html"><i>02</i><span data-copy2="ixPrompts">پرامپت‌ها</span></a>
-        <a href="gallery.html"><i>03</i><span data-copy2="ixGallery">گالری</span></a>
-        <a href="documentaries.html"><i>04</i><span data-copy2="ixFilms">مستندها</span></a>
+        <a class="hindex__lead" href="explore/"><i>01</i><span data-copy2="ixScience">علمی تعاملی</span></a>
+        <a class="hindex__lead" href="training.html"><i>02</i><span data-copy2="ixLearn">آموزش</span></a>
+        <a href="prompts.html"><i>03</i><span data-copy2="ixPrompts">پرامپت‌ها</span></a>
+        <a href="gallery.html"><i>04</i><span data-copy2="ixGallery">گالری</span></a>
+        <a href="documentaries.html"><i>05</i><span data-copy2="ixFilms">مستندها</span></a>
       </nav>
     </div>
     <div class="cue" id="cue" aria-hidden="true"><span></span></div>
@@ -1512,7 +1543,7 @@ const NAVIDIX = (() => {
             filmCta:'All documentaries',
             railA:'Research', railB:'Cinema', railC:'Artificial intelligence',
             /* the hero's index of the site — see .hindex */
-            ixLabel:'Sections', ixLearn:'Training', ixPrompts:'Prompts',
+            ixLabel:'Sections', ixScience:'Interactive Science', ixLearn:'Training', ixPrompts:'Prompts',
             ixGallery:'Gallery', ixFilms:'Documentaries', ixSets:'Collections' },
       fa: { tagline:'رسانه مستقل علم و فناوری',
             pitch:'استودیو نویدیکس — تلاقی پژوهش، سینما و هوش مصنوعی.',
@@ -1527,7 +1558,7 @@ const NAVIDIX = (() => {
             filmSub:'نوشته، تولید و روایت‌شده در خود استودیو.',
             filmCta:'همه‌ی مستندها',
             railA:'پژوهش', railB:'سینما', railC:'هوش مصنوعی',
-            ixLabel:'بخش‌های سایت', ixLearn:'آموزش', ixPrompts:'پرامپت‌ها',
+            ixLabel:'بخش‌های سایت', ixScience:'علمی تعاملی', ixLearn:'آموزش', ixPrompts:'پرامپت‌ها',
             ixGallery:'گالری', ixFilms:'مستندها', ixSets:'کالکشن‌ها' }
     },
     nav: [
@@ -1552,12 +1583,15 @@ const NAVIDIX = (() => {
       { id:'gallery',
         en:{ t:'AI Gallery',             d:'Cinematic AI artwork, concept art and posters from the Navidix studio.' },
         fa:{ t:'گالری هوش مصنوعی',        d:'آثار سینمایی هوش مصنوعی، کانسپت‌آرت و پوسترهای استودیوی Navidix.' } },
-      { id:'system',
-        en:{ t:'Navidix Studio Services', d:'What the studio builds for brands — starting with a content production system your own team can run.' },
-        fa:{ t:'خدمات استودیو نویدیکس',    d:'آنچه استودیو برای برندها می‌سازد — از سیستم تولید محتوا با هوش مصنوعی که یک بار ساخته می‌شود و تیم خودت اجرایش می‌کند.' } },
       { id:'social',
         en:{ t:'Social Media',           d:'Every official Navidix channel, gathered in one place.' },
-        fa:{ t:'شبکه‌های اجتماعی',         d:'همه کانال‌های رسمی Navidix، یک‌جا.' } }
+        fa:{ t:'شبکه‌های اجتماعی',         d:'همه کانال‌های رسمی Navidix، یک‌جا.' } },
+      /* Last on purpose. It is the commercial offer, and it reads best to
+         someone who has already been through the work — not as the first
+         thing asked of a reader who has just arrived. */
+      { id:'system',
+        en:{ t:'Navidix Studio Services', d:'What the studio builds for brands — starting with a content production system your own team can run.' },
+        fa:{ t:'خدمات استودیو نویدیکس',    d:'آنچه استودیو برای برندها می‌سازد — از سیستم تولید محتوا با هوش مصنوعی که یک بار ساخته می‌شود و تیم خودت اجرایش می‌کند.' } }
     ],
 
 
