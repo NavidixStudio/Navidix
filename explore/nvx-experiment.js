@@ -293,7 +293,12 @@
         });
         wrap.appendChild(top); wrap.appendChild(input);
         panel.appendChild(wrap);
-        readouts[p.key] = { input: input, val: val, spec: p };
+        readouts[p.key] = { input: input, val: val, spec: p, wrap: wrap };
+        /* A control that does nothing in the current chapter is worse than
+           no control: it invites a reader to move it and then reports
+           nothing back. `only` names the chapters a parameter belongs to,
+           and it is hidden everywhere else. */
+        if (p.only) wrap.hidden = true;
       });
     }
 
@@ -343,6 +348,8 @@
       if (rail) rail.classList.add('is-free');
       var body = root.querySelector('.xchapter__body');
       if (body && copy.freeBody) body.innerHTML = copy.freeBody;
+      /* Once the tour is over nothing is out of scope. */
+      Object.keys(readouts).forEach(function (k) { readouts[k].wrap.hidden = false; });
     }
 
     function goChapter(i, fromUser) {
@@ -355,6 +362,11 @@
 
       var body = root.querySelector('.xchapter__body');
       if (body) body.innerHTML = ch.body;
+
+      Object.keys(readouts).forEach(function (k) {
+        var only = readouts[k].spec.only;
+        readouts[k].wrap.hidden = !!only && only.indexOf(ch.id) < 0;
+      });
 
       if (ch.params) Object.keys(ch.params).forEach(function (k) {
         params[k] = ch.params[k];
