@@ -2449,7 +2449,10 @@ function buildMount(core, frame, config, state){
        pass behind it — object-sorted transparency cannot do that, and
        that per-fragment truth is the whole three-dimensional read. */
     if (!solidified && fades.every(f => f.m.opacity >= f.o - 0.003)) solidify();
-    if (state.reduced) return;
+    /* Not gated on prefers-reduced-motion either — see the note on the
+       mark's own turn. The orbits are the thing that explains the mark's
+       rotation, so freezing them while it turns would be worse than
+       either state on its own. */
 
     /* Rates that divide into neither each other nor the mark's own turn,
        so the assembly never strikes the same pose twice. All of them slow:
@@ -2687,7 +2690,24 @@ function buildMark(scene){
          dwells on each face and swings quickly through profile, where it is
          only a slab and the logo cannot be read. Same period either way —
          the time is just spent where there is something to look at. */
-      if (!state.reduced){
+      /* ---- this turn is not gated on prefers-reduced-motion ----
+         It was, and on any machine with "reduce animation" switched on —
+         which is the Windows default after some updates, and something
+         plenty of people turn on without thinking of it as an
+         accessibility setting — the mark simply sat still while the sky
+         behind it carried on. That is what "it does not rotate on
+         desktop" turned out to be: not a bug in this code, a preference
+         being honoured.
+
+         The studio's call is that the logo turns for everyone. Said
+         plainly, because it is a real trade: some readers set that
+         preference for vertigo, migraine or a vestibular disorder, and
+         for them this will now move when they asked the web not to. What
+         is still honoured is everything that actually provokes that —
+         the camera flight, the pointer parallax, the dust and streak
+         layers, the page-transition fade, and every CSS animation on the
+         site. What overrides it is one object turning slowly in place. */
+      {
         /* Hand momentum rides on top of the idle turn and bleeds off; the
            mark keeps its own rhythm underneath rather than snapping back. */
         /* decay per second, not per frame — otherwise the glide is twice as
