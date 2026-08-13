@@ -61,7 +61,7 @@
    it in. If that timeline can never run, these are simply shown. Not a
    degraded page — the same page, without the canvas behind it. */
 html.nostage .lang, html.nostage .wordmark, html.nostage .tagline,
-html.nostage .pitch, html.nostage .hcta, html.nostage .cue,
+html.nostage .pitch, html.nostage .hcta, html.nostage .cue, html.nostage .hindex a,
 html.nostage .rail, html.nostage .panel{ opacity:1; animation:nvxIn .7s cubic-bezier(.16,1,.3,1) both; }
 html.nostage .panel{ animation-delay:.06s; }
 @keyframes nvxIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
@@ -72,7 +72,7 @@ html.nostage .landing{ min-height:auto; }
 html.nostage .hero{ padding-top:clamp(56px,12vh,120px); justify-content:center; }
 @media (prefers-reduced-motion:reduce){
   html.nostage .lang, html.nostage .wordmark, html.nostage .tagline, html.nostage .pitch,
-  html.nostage .hcta, html.nostage .cue, html.nostage .panel{ animation:none; }
+  html.nostage .hcta, html.nostage .cue, html.nostage .hindex a, html.nostage .panel{ animation:none; }
 }
 </style>
 
@@ -248,7 +248,12 @@ html[lang="fa"] .pitch{ font-family:var(--f-fa); font-weight:300; letter-spacing
 .cta-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:clamp(20px,3.4vh,34px); }
 .hcta{
   opacity:0; display:inline-flex; align-items:center; gap:9px;
-  padding:12px 22px; border-radius:999px; text-decoration:none; color:var(--paper);
+  /* Square-ish, not a pill. Every other surface this brand owns has a hard
+     corner — the 4px cards on every inner page, the machined bezel around
+     the mark, the ruled index below — and a fully rounded pill was the one
+     consumer-app shape left in the composition. 6px keeps it a button
+     without pretending to be a tag. */
+  padding:13px 24px; border-radius:6px; text-decoration:none; color:var(--paper);
   white-space:nowrap;              /* a tracked label must never break mid-phrase */
   border:1px solid var(--glass-edge); background:rgba(140,170,220,.06);
   font-family:var(--f-ui); font-size:11px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
@@ -298,6 +303,114 @@ html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0
    either blows up or collapses depending on the room the label leaves */
 .hcta svg{ flex:0 0 auto; display:block; width:17px; height:17px; }
 .hcta--tube svg{ width:20px; height:20px; }
+
+/* ---- the primary action points somewhere ----
+   The arrow is drawn pointing right and flipped for Persian rather than
+   swapped for a second glyph, so there is one path to keep. The flip has
+   to be repeated in the hover rule: a transform replaces its element's
+   whole transform, it does not add to it, so a bare translateX on hover
+   would silently un-flip the arrow mid-gesture. */
+.hcta__arrow{ width:16px; height:16px; opacity:.85; transition:transform .5s var(--ease), opacity .5s var(--ease); }
+html[lang="fa"] .hcta__arrow{ transform:scaleX(-1); }
+.hcta--main:hover .hcta__arrow{ transform:translateX(3px); opacity:1; }
+html[lang="fa"] .hcta--main:hover .hcta__arrow{ transform:scaleX(-1) translateX(3px); opacity:1; }
+
+/* ---- the index ----
+   A masthead contents rather than a second row of buttons. Each entry is a
+   number, a label and a rule above it that fills with the brand colour on
+   approach — the rule is the whole interaction, which is why the rest of
+   the entry barely moves.
+
+   The rule is drawn as a ::before over the border rather than as a border
+   colour change, because a border cannot be animated from one side to the
+   other, and filling from the reading edge is what makes it read as a
+   line being drawn instead of a lamp being switched on.
+
+   Each entry carries its own top border, not the container. That way the
+   row can wrap on a narrow screen and the second line still arrives with
+   its rules intact instead of hanging under a single stranded border. */
+.hindex{
+  display:flex; flex-wrap:wrap; width:100%;
+  margin-top:clamp(22px,3.6vh,42px);
+}
+.hindex a{
+  position:relative; flex:1 1 96px; min-width:0;
+  display:flex; flex-direction:column; gap:6px;
+  padding:13px 14px 12px;
+  border-top:1px solid rgba(150,180,225,.17);
+  text-decoration:none; color:var(--paper-dim);
+  opacity:0;                        /* the opening timeline brings these in */
+  transition:background .5s var(--ease);
+}
+.hindex a::before{
+  content:''; position:absolute; top:-1px; inset-inline:0; height:1px;
+  background:linear-gradient(to left, var(--ember), rgba(255,106,90,.35));
+  transform:scaleX(0); transform-origin:right center;
+  transition:transform .55s var(--ease);
+}
+html[lang="en"] .hindex a::before{
+  background:linear-gradient(to right, var(--ember), rgba(255,106,90,.35));
+  transform-origin:left center;
+}
+.hindex a i{
+  font-family:var(--f-ui); font-style:normal;
+  font-size:10px; font-weight:600; letter-spacing:.18em;
+  /* tracking adds its space after the last glyph too, so a tracked number
+     hangs short of the edge its untracked label sits on. Pulled back by
+     exactly the tracking, the two line up. */
+  margin-inline-end:-.18em;
+  /* --paper-ghost is the site's 16% and it is meant for structure nobody
+     needs to read. These are meant to be read, quietly. */
+  color:rgba(237,242,250,.34); transition:color .5s var(--ease);
+}
+.hindex a span{
+  font-family:var(--f-ui); font-size:13.5px; font-weight:500; line-height:1.4;
+  color:rgba(237,242,250,.82); transition:color .5s var(--ease);
+}
+html[lang="fa"] .hindex a span{ font-family:var(--f-fa); font-size:14.5px; }
+.hindex a:hover::before, .hindex a:focus-visible::before{ transform:scaleX(1); }
+.hindex a:hover, .hindex a:focus-visible{ background:rgba(140,170,220,.055); }
+.hindex a:hover i, .hindex a:focus-visible i{ color:var(--ember-soft); }
+.hindex a:hover span, .hindex a:focus-visible span{ color:var(--paper); }
+.hindex a:focus-visible{ outline:1px solid var(--ion); outline-offset:-1px; }
+/* ---- the phone's height budget ----
+   The index cost the first screen about 120px, and on a 390x844 phone the
+   column ran 80px past the fold — the mark's balance pass was already at
+   its floor, so nothing upstream could absorb it. Rather than shrink the
+   mark further, the hero tightens: the index sets its number beside its
+   label instead of above it, which halves each row, and every gap in the
+   stack comes in by about a third. Neither is a compromise at this size —
+   they were desktop rhythms being spent on a screen that has no room for
+   them. */
+@media (max-width:620px){
+  /* the clearance under the 3D mark, which is the single largest number in
+     the phone's budget — a desktop's breathing room, spent on a screen
+     that has none to give */
+  .hero{ padding-top:calc(var(--logo-bottom) + clamp(20px,3.8vh,62px)); }
+  .tagline{ margin-top:clamp(9px,1.5vh,16px); }
+  .hairline{ margin-top:clamp(12px,1.9vh,20px); }
+  .pitch{ margin-top:clamp(13px,2.1vh,22px); }
+  .cta-row{ margin-top:clamp(15px,2.5vh,26px); gap:10px; }
+  .hcta{ padding:11px 18px; }
+  .hindex{ margin-top:clamp(13px,2.1vh,22px); }
+  .hindex a{
+    flex-direction:row; align-items:baseline; gap:7px;
+    padding:11px 12px 10px;
+  }
+}
+@media (max-width:440px){
+  /* Three then two, rather than five slivers with a broken word in each.
+     flex-grow is 0 so the short second row keeps the first row's column
+     width instead of stretching two entries across the whole strip — an
+     index whose last line is simply short reads as a grid; one whose last
+     line is twice as wide reads as a mistake. */
+  .hindex a{ flex:0 1 33.333%; padding:11px 9px 10px; }
+  .hindex a span{ font-size:13px; }
+  html[lang="fa"] .hindex a span{ font-size:13.5px; }
+}
+@media (prefers-reduced-motion:reduce){
+  .hindex a::before, .hindex a, .hcta__arrow{ transition:none; }
+}
 .panel{ transition:border-color .5s var(--ease), box-shadow .6s var(--ease),
                    background .6s var(--ease), transform .6s var(--ease); }
 .panel:hover, .panel:focus-visible{ transform:translateY(-2px); }
@@ -1054,13 +1167,40 @@ picture{ display:contents; }
       <div class="hairline" id="hairline"></div>
       <p class="pitch" data-copy2="pitch">استودیو نویدیکس — تلاقی پژوهش، سینما و هوش مصنوعی.</p>
       <div class="cta-row">
-        <a class="hcta hcta--main" href="system.html" data-copy2="ctaMain">خدمات استودیو</a>
+        <!-- The label moved into a span the moment this button grew an arrow:
+             Lang writes copy with textContent, which would erase any element
+             sibling it found. The tube button has always worked this way. -->
+        <a class="hcta hcta--main" href="system.html">
+          <span data-copy2="ctaMain">خدمات استودیو</span>
+          <svg class="hcta__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h14M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
         <a class="hcta" href="https://t.me/NavidixMedia" target="_blank" rel="noopener" data-copy2="ctaTalk">عضویت در کانال</a>
         <a class="hcta hcta--tube" href="https://youtube.com/@navidix?sub_confirmation=1" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23 12s0-3.9-.5-5.8a3 3 0 0 0-2.1-2.1C18.5 3.6 12 3.6 12 3.6s-6.5 0-8.4.5A3 3 0 0 0 1.5 6.2C1 8.1 1 12 1 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 8.4.5 8.4.5s6.5 0 8.4-.5a3 3 0 0 0 2.1-2.1C23 15.9 23 12 23 12z" fill="currentColor"/><path d="M9.8 15.5V8.5l6 3.5-6 3.5z" fill="#08090B"/></svg>
           <span data-copy2="ctaTube">سابسکرایب یوتیوب</span>
         </a>
       </div>
+
+      <!-- ---- the index ----
+           Until now the first screen offered three buttons, and not one of
+           them opened the work: the studio's services, a Telegram channel
+           and a YouTube channel. Everything this site is actually for — the
+           training, the prompt library, the gallery, the films — lived below
+           the fold behind a scroll, or in a top bar that only appears after
+           you have already left the hero.
+
+           So the hero carries the contents now. Numbered, ruled and set as
+           a masthead index rather than as five more pills, because five
+           more pills next to three would have flattened the hierarchy the
+           buttons above depend on. These read as somewhere to go; the
+           buttons read as something to do. -->
+      <nav class="hindex" data-copy2-label="ixLabel" aria-label="بخش‌های سایت">
+        <a href="training.html"><i>01</i><span data-copy2="ixLearn">آموزش</span></a>
+        <a href="prompts.html"><i>02</i><span data-copy2="ixPrompts">پرامپت‌ها</span></a>
+        <a href="gallery.html"><i>03</i><span data-copy2="ixGallery">گالری</span></a>
+        <a href="documentaries.html"><i>04</i><span data-copy2="ixFilms">مستندها</span></a>
+        <a href="collections.html"><i>05</i><span data-copy2="ixSets">کالکشن‌ها</span></a>
+      </nav>
      </div>
     </div>
     <div class="cue" id="cue" aria-hidden="true"><span></span></div>
@@ -1271,7 +1411,10 @@ const NAVIDIX = (() => {
             filmEyebrow:'Documentaries', filmTitle:'Long-form, research-led films',
             filmSub:'Written, produced and narrated in-house.',
             filmCta:'All documentaries',
-            railA:'Research', railB:'Cinema', railC:'Artificial intelligence' },
+            railA:'Research', railB:'Cinema', railC:'Artificial intelligence',
+            /* the hero's index of the site — see .hindex */
+            ixLabel:'Sections', ixLearn:'Training', ixPrompts:'Prompts',
+            ixGallery:'Gallery', ixFilms:'Documentaries', ixSets:'Collections' },
       fa: { tagline:'رسانه مستقل علم و فناوری',
             pitch:'استودیو نویدیکس — تلاقی پژوهش، سینما و هوش مصنوعی.',
             ctaMain:'خدمات استودیو', ctaTalk:'عضویت در کانال', ctaTube:'سابسکرایب یوتیوب',
@@ -1284,7 +1427,9 @@ const NAVIDIX = (() => {
             filmEyebrow:'مستندها', filmTitle:'فیلم‌های بلندِ پژوهش‌محور',
             filmSub:'نوشته، تولید و روایت‌شده در خود استودیو.',
             filmCta:'همه‌ی مستندها',
-            railA:'پژوهش', railB:'سینما', railC:'هوش مصنوعی' }
+            railA:'پژوهش', railB:'سینما', railC:'هوش مصنوعی',
+            ixLabel:'بخش‌های سایت', ixLearn:'آموزش', ixPrompts:'پرامپت‌ها',
+            ixGallery:'گالری', ixFilms:'مستندها', ixSets:'کالکشن‌ها' }
     },
     nav: [
       { id:'training',
@@ -2077,6 +2222,207 @@ function studioEnvironment(renderer){
   return env;
 }
 
+/* =====================================================================
+   THE MOUNT — the instrument the mark is held in.
+
+   The logo used to sit in the sky on its own. This gives it a housing:
+   a fixed calibrated bezel, a rotating carrier bolted to the hexagon's
+   six points, and two gimbal arcs sweeping through on their own axes.
+   Read together it says the same thing the studio says about its work —
+   that this was built to a tolerance, not arranged until it looked nice.
+
+   Two rules held the whole design:
+
+   1. NOTHING GETS SMALLER. The logo texture is a 512px square with a
+      pointy-top hexagon of circumradius 190 inside it, so at H=150 the
+      artwork's own hexagon only reaches r=55.7 while the plane it is
+      printed on runs to r=75. Every part below lives in that unused
+      margin — the outermost point of the bezel is r=74.85. The mark's
+      fit(), its screen footprint and --logo-bottom are all computed from
+      H, so none of them move. The logo is exactly the size it was.
+
+   2. NOTHING TOUCHES. The carrier turns with the mark and the bezel does
+      not, so the two run in radial bands that never meet: arms out to
+      62.85, gimbals 63.95–67.85, frame from 68.45 out. A mechanism whose
+      parts intersect reads as a graphic; one whose parts clear each other
+      by a hair reads as a machine.
+
+   Depth: everything here is opaque once the opening fade is done — see
+   solidify() — so the gimbal arcs are occluded by the hexagon per-pixel
+   when they pass behind it, and draw over it when they pass in front.
+   That per-fragment truth is the entire 3D read; object-sorted
+   transparency cannot produce it.
+
+   Every radius below is in the mark's local units, where the logo plane
+   is 150 tall and its printed hexagon has a circumradius of 55.7.
+   ===================================================================== */
+function buildMount(core, frame, config, state){
+  const lite  = state.lite;
+  const fades = [];
+
+  function metal(color, metalness, roughness, target, extra){
+    const m = new THREE.MeshStandardMaterial(Object.assign({
+      color, metalness, roughness, envMapIntensity:2.0,
+      transparent:true, opacity:0
+    }, extra || {}));
+    fades.push({ m, o:target });
+    return m;
+  }
+  /* Three finishes, which is what stops it reading as one extruded blob:
+     bright machined aluminium for the parts that catch the key light, a
+     dull anodised grey for the fine work, and the brand ember for the six
+     indicators and the three index tabs — the only lit parts, and the
+     only ones the eye is meant to count.
+
+     Note the metalness. The mark's own body sits at 1.0, which is right
+     for a slab that wants to be a dark mirror — but a fully metallic
+     surface has no diffuse term at all, so the two point lights in this
+     group produce nothing on it but a specular glint, and the studio
+     environment it reflects is mostly dark red. Parts this thin came out
+     invisible. Held around 0.45 they keep a real highlight while the base
+     colour still answers the key light, which is what actually reads as
+     machined at hairline widths.
+
+     And each carries an emissive floor. This renderer runs linear with no
+     tone mapping, against an environment that is nearly all dark red, so
+     a lit-only material a pixel and a half wide came out the same value
+     as the sky behind it. The floor is what the part is worth in shadow;
+     the key light and the env map are then free to be highlights on top
+     of it rather than the only thing holding the part up. */
+  const steel = metal(0xCAD3DF, .46, .26, .96, {
+    emissive:new THREE.Color(0x39424E), emissiveIntensity:1, envMapIntensity:2.4
+  });
+  const dark  = metal(0x7B848F, .58, .52, .92, {
+    emissive:new THREE.Color(0x1F252C), emissiveIntensity:1, envMapIntensity:1.6
+  });
+  const lamp  = metal(0x38070B, .30, .34, 1, {
+    emissive:new THREE.Color(config.color.ember), emissiveIntensity:1.8
+  });
+
+  /* one draw call per family, however many of them there are */
+  const dummy = new THREE.Object3D();
+  function spun(geo, mat, count, radius, phase){
+    const im = new THREE.InstancedMesh(geo, mat, count);
+    for (let i = 0; i < count; i++){
+      const a = phase + i * Math.PI * 2 / count;
+      dummy.position.set(Math.cos(a) * radius, Math.sin(a) * radius, 0);
+      dummy.rotation.set(0, 0, a);          // box's local +X now points outward
+      dummy.updateMatrix();
+      im.setMatrixAt(i, dummy.matrix);
+    }
+    im.instanceMatrix.needsUpdate = true;
+    return im;
+  }
+
+  /* ---- the carrier: six arms off the hexagon's points ----
+     Set on the vertex angles of the artwork's own hexagon (pointy-top, so
+     the first one stands straight up), which is why they look bolted to
+     the logo rather than laid over it. */
+  const VERT = Math.PI / 2;
+  core.add(
+    spun(new THREE.BoxGeometry(6.0, 1.9, 2.6), steel, 6, 58.0, VERT),   // strut
+    spun(new THREE.BoxGeometry(1.9, 4.6, 3.4), dark,  6, 61.6, VERT),   // shoe
+    spun(new THREE.BoxGeometry(0.5, 2.6, 3.8), lamp,  6, 62.6, VERT)    // indicator
+  );
+
+  /* ---- the gimbals ----
+     Two rings held at a fixed tilt and precessed about the axis of the
+     mark, the way a gyroscope's rings nutate rather than the way a wheel
+     spins.
+
+     The obvious build — a ring turning about an axis lying in its own
+     plane — was wrong twice over. It passes through face-on every half
+     turn, and at that moment it is just another circle concentric with
+     the bezel, so the reader loses the depth exactly when the ring is
+     largest. And it passes through edge-on, where it is a scratch across
+     the logo. Precession has neither: the projection is an ellipse of
+     constant eccentricity, always, so the tilt is legible in every frame
+     and the ring reads as an object in space rather than as a line.
+
+     The tilts are also what keeps them clear of everything else. A ring
+     of radius R tilted by θ crosses the mark's own plane at radius R, not
+     at R·cosθ — so at 64.5 and 67.4 both cross outside the carrier's
+     reach at 62.85, and their narrow ends ride high above it in z. The
+     clearances hold for every angle of the precession, not just for the
+     pose that happened to be on screen when this was checked. */
+  const ringMat = metal(0xB4BECC, .50, .28, .94, {
+    emissive:new THREE.Color(0x2C3540), emissiveIntensity:1, envMapIntensity:1.1
+  });
+  function gimbal(radius, tube, tilt, segs){
+    const spin = new THREE.Group();                   // precesses about z
+    const held = new THREE.Group();                   // and is held over at a fixed tilt
+    held.rotation.x = tilt;
+    spin.add(held);
+    frame.add(spin);
+    held.add(new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 6, segs), ringMat));
+    /* one lit boss riding the ring, so which way it is going is never a
+       question the reader has to work at */
+    const boss = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.5, 1.5), lamp);
+    boss.position.set(radius, 0, 0);
+    held.add(boss);
+    return spin;
+  }
+  const gimA = gimbal(64.5, 0.62, 0.56, lite ? 60 : 92);   // 32°
+  /* Two gimbals are a mechanism; one is still a gimbal. On a small screen
+     the whole housing is about 260px across, the second ring is mostly
+     hidden behind the first at that size, and it is one of the largest
+     PBR surfaces here — so it is the first thing a phone gives up. */
+  const gimB = lite ? null : gimbal(67.4, 0.50, -0.77, 84);   // 44°, the other way
+
+  /* ---- the fixed bezel and its scale ----
+     Seventy-two divisions, every sixth one long, all of them ending on the
+     same outer datum at 73.15 where the bezel ring picks them up. That
+     shared datum is the detail that makes it read as a machined scale
+     instead of as spokes. */
+
+  /* The bezel is its own node so it can be dialled while the arcs turn.
+     It hangs off `frame`, the mark's outer group, so the whole housing
+     keeps the mark's pointer tilt and its drift up the page — and only
+     the parts that are supposed to move, move. */
+  const bezel = new THREE.Group();
+  frame.add(bezel);
+  /* The inner datum and the sixty minor divisions are the fine reading of
+     the scale. Below about 700px they are under a pixel apart and cost a
+     full PBR pass each, so a phone keeps the twelve majors — which is
+     still a scale — and drops the rest. */
+  if (!lite) bezel.add(new THREE.Mesh(new THREE.TorusGeometry(68.8, 0.35, 5, 96), dark));
+  bezel.add(new THREE.Mesh(new THREE.TorusGeometry(74.0, 0.85, 8, lite ? 80 : 128), steel));
+  if (!lite) bezel.add(spun(new THREE.BoxGeometry(1.7, 0.50, 1.0), dark, 60, 72.3, 0));
+  bezel.add(spun(new THREE.BoxGeometry(3.9, 0.85, 1.4), steel, 12, 71.2, 0));
+  bezel.add(spun(new THREE.BoxGeometry(2.0, 4.4, 3.0), lamp,   3, 74.0, VERT));
+
+  let solid = false;
+  function solidify(){
+    solid = true;
+    fades.forEach(({ m }) => { m.transparent = false; m.needsUpdate = true; });
+  }
+
+  const DETENT = Math.PI / 36;          // five degrees, seventy-two of them
+  function update(t){
+    /* Opacity is driven by the opening timeline, so the switch to opaque
+       has to wait for it rather than assume a duration. One pass over
+       eight materials per frame until it lands, then never again. */
+    if (!solid && fades.every(f => f.m.opacity >= f.o - 0.003)) solidify();
+    if (state.reduced) return;
+
+    /* The bezel is dialled, not spun. It rests, then indexes one division
+       and rests again — a dwell of two and a half seconds against a snap
+       of half of one. A ring turning at a constant rate is a decoration;
+       a ring that holds position is an instrument being read. */
+    const p = t / 2.5, i = Math.floor(p), f = p - i;
+    const snap = f < .80 ? 0 : 1 - Math.pow(1 - (f - .80) / .20, 3);
+    bezel.rotation.z = -(((i + snap) * DETENT) % (Math.PI * 2));
+
+    /* and the two gimbals precess, opposite ways at rates that divide
+       into neither each other nor the mark's own sway, so the assembly
+       never strikes the same pose twice */
+    gimA.rotation.z =  t * 0.26;
+    if (gimB) gimB.rotation.z = -t * 0.17;
+  }
+
+  return { fades, update };
+}
+
 function buildMark(scene){
   const { config, state } = NAVIDIX;
   const group = new THREE.Group();
@@ -2084,6 +2430,13 @@ function buildMark(scene){
   scene.add(group);
   scene.environment = studioEnvironment(Stage.renderer);
   const core = new THREE.Group(); group.add(core);
+
+  /* The housing. Built here rather than inside plaque() so it does not
+     depend on the logo texture arriving — if that load fails the mount is
+     still there around the placeholder. Its materials are appended to
+     api.fades by whichever of the two paths runs, because the opening
+     timeline reads that array once. */
+  const mount = buildMount(core, group, config, state);
 
   group.add(new THREE.AmbientLight(0x101722, 1.1));
   const key = new THREE.PointLight(0xffe4d6, 1.15, 1000, 2); key.position.set(-160,130,240);
@@ -2154,9 +2507,20 @@ function buildMark(scene){
     api.baseY = split ? vp.h * 0.045 : vp.h * 0.235;
     group.position.y = api.baseY;
 
-    /* hand the mark's screen-space bottom edge to the layout */
-    const bottom = new THREE.Vector3(api.baseX, api.baseY - (api.H*s)/2, group.position.z).project(Stage.camera);
-    const px = (1 - (bottom.y*0.5 + 0.5)) * innerHeight;
+    /* ---- hand the mark's screen-space bottom edge to the layout ----
+       Measured against camZ, like every other layout number in this scene,
+       rather than through the live camera. The opening timeline flies the
+       camera in from z=1500 over 3.4s, and the balance pass runs at the
+       top of that timeline — so a projection taken through the camera
+       reported the mark's bottom edge some 40px lower than where it would
+       settle, and the hero was sized to a mark that was never going to be
+       there. On a short phone that was the difference between the index
+       fitting on the first screen and running off it.
+
+       This is the arithmetic project() performs, minus the dependency on
+       where the camera happens to be this frame: NDC y is worldY over
+       half the viewport's world height, and screen y follows from that. */
+    const px = (0.5 - (api.baseY - (api.H*s)/2) / vp.h) * innerHeight;
     document.documentElement.style.setProperty('--logo-bottom', Math.max(0, px) + 'px');
     api.scale = s;
   }
@@ -2168,7 +2532,7 @@ function buildMark(scene){
     const ring = new THREE.Mesh(new THREE.TorusGeometry(H*0.5, 2.4, 18, 6), m1);
     ring.rotation.z = Math.PI/2;
     core.add(ring);
-    api.fades = [{ m:m1, o:1 }];
+    api.fades = [{ m:m1, o:1 }].concat(mount.fades);
   }
 
   function plaque(tex){
@@ -2222,7 +2586,7 @@ function buildMark(scene){
     const back  = new THREE.Mesh(new THREE.PlaneGeometry(W,H), backMat); back.position.z  = -faceZ; back.rotation.y = Math.PI;
 
     core.add(body, front, back);
-    api.fades = [{ m:bodyMat, o:1 }, { m:faceMat, o:1 }, { m:backMat, o:1 }];
+    api.fades = [{ m:bodyMat, o:1 }, { m:faceMat, o:1 }, { m:backMat, o:1 }].concat(mount.fades);
     fit();
   }
 
@@ -2237,6 +2601,7 @@ function buildMark(scene){
   NAVIDIX.register('mark', Object.assign(api, {
     layout: fit,
     update(t, dt){
+      mount.update(t);
       /* It turns all the way round, but not at a constant rate: the mark
          dwells on each face and swings quickly through profile, where it is
          only a slab and the logo cannot be read. Same period either way —
@@ -2366,8 +2731,14 @@ function buildMark(scene){
 function buildBalance(mark){
   const MARGIN = 16, MIN = 0.55;
   function run(){
-    const cta = document.querySelector('.cta-row');
-    if (!cta) return;
+    /* The whole column, not the button row. This used to measure .cta-row
+       because the buttons were the last thing under the mark; the index
+       now sits below them, so measuring the buttons would have declared
+       the hero to fit while the contents ran off the bottom of a short
+       screen. The column's own box is the honest answer and stays honest
+       whatever gets added to it next. */
+    const foot = document.querySelector('.hero__col');
+    if (!foot) return;
     mark.squeeze = 1; mark.fit();
     /* This shrinks the mark when the copy below it would push the buttons off
        the bottom of the screen. In the split composition there is nothing
@@ -2375,8 +2746,13 @@ function buildBalance(mark){
        each other would shrink the mark to answer a collision that cannot
        happen. */
     if (mark.split) return;
-    for (let pass = 0; pass < 6; pass++){
-      const over = cta.getBoundingClientRect().bottom - (innerHeight - MARGIN);
+    /* Ten passes, not six. Each one only closes about 5% of the gap, so six
+       of them left a hero that was still a couple of pixels over on a phone
+       while the mark had plenty of squeeze left to give. This runs on
+       resize, not per frame — the extra iterations cost nothing that
+       anybody can feel. */
+    for (let pass = 0; pass < 10; pass++){
+      const over = foot.getBoundingClientRect().bottom - (innerHeight - MARGIN);
       if (over <= 0) break;
       const lb = parseFloat(getComputedStyle(document.documentElement)
                    .getPropertyValue('--logo-bottom')) || 0;
@@ -2409,6 +2785,10 @@ const Lang = (() => {
     const copy = config.copy[l];
     document.getElementById('tagline').textContent = copy.tagline;
     document.querySelectorAll('[data-copy2]').forEach(el => { el.textContent = copy[el.dataset.copy2]; });
+    /* labels that are read rather than shown — a landmark's accessible name
+       has to change with the language too, and textContent cannot carry it */
+    document.querySelectorAll('[data-copy2-label]').forEach(el =>
+      el.setAttribute('aria-label', copy[el.dataset.copy2Label]));
     const bal = NAVIDIX.find('balance');
     if (bal) requestAnimationFrame(bal.run);      // the copy just changed height
 
@@ -2419,7 +2799,7 @@ const Lang = (() => {
     });
 
     if (animate && !NAVIDIX.state.reduced){
-      gsap.fromTo('.pitch, .hcta', { opacity:0, y:8, filter:'blur(6px)' },
+      gsap.fromTo('.pitch, .hcta, .hindex a', { opacity:0, y:8, filter:'blur(6px)' },
         { opacity:1, y:0, filter:'blur(0px)', duration:.8, ease:'power3.out', stagger:.05, clearProps:'filter' });
       gsap.fromTo('#tagline', { opacity:0 }, { opacity:1, duration:.8, ease:'power2.out' });
       gsap.fromTo(panels.map(p => p.querySelector('.panel__title')),
@@ -2845,6 +3225,11 @@ setTimeout(function () {
       { opacity:1, y:0, filter:'blur(0px)', duration:1.1, ease:'power3.out', clearProps:'filter' }, 1.7);
     tl.fromTo('.hcta', { opacity:0, y:16 },
       { opacity:1, y:0, duration:.95, ease:'power3.out', stagger:.08 }, 1.9);
+    /* The index arrives last and quickest — it is the contents page, and a
+       contents page that makes an entrance is a contents page nobody reads.
+       Each entry's rule wipes in under it rather than the entry sliding. */
+    tl.fromTo('.hindex a', { opacity:0, y:10 },
+      { opacity:1, y:0, duration:.7, ease:'power3.out', stagger:.055 }, 2.15);
     tl.to('#lang', { opacity:1, duration:1, ease:'power2.out' }, 1.2);
     tl.to('.rail', { opacity:1, duration:1.1, ease:'power2.out' }, 1.75);
 
