@@ -2715,7 +2715,13 @@ function buildMark(scene){
     const rtl = document.documentElement.dir !== 'ltr';
     api.baseX = split ? (rtl ? -1 : 1) * vp.w * 0.235 : 0;
     group.position.x = api.baseX;
-    api.baseY = split ? vp.h * 0.045 : vp.h * 0.235;
+    /* Both numbers went up by about six percent of the viewport. On a wide
+       screen the mark was sitting a little below the centre of the type
+       beside it, which reads as sagging rather than as balance; on a phone
+       it hung low enough that the space above it was doing nothing. Raising
+       it also lifts --logo-bottom, so the copy underneath gains the room
+       rather than losing it. */
+    api.baseY = split ? vp.h * 0.105 : vp.h * 0.30;
     group.position.y = api.baseY;
 
     aimLayoutCam();
