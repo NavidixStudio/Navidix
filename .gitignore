@@ -7,3 +7,9 @@ tools/plates.local.json
 node_modules/
 package.json
 package-lock.json
+
+# raw model output for the plates; the repo ships the cropped result
+tools/plates/
+
+# raw model output for the plates; the repo ships the cropped result
+tools/plates/

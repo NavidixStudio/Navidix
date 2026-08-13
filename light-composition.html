@@ -339,6 +339,21 @@ body::before{
 <link rel="stylesheet" href="nvx-diagrams.css" />
 <script src="nvx-training.js" defer></script>
 <script src="nvx-diagrams.js" defer></script>
+<style>
+/* the three worked examples, in a row: one subject, three lighting and
+   framing decisions, each labelled with the prompt it belongs to */
+.lesson .trio{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:0 0 18px; }
+.lesson .trio span{ position:relative; display:block; }
+.lesson .trio img{ display:block; width:100%; height:auto; border-radius:4px;
+  border:1px solid var(--line); background:#0B0E14; }
+.lesson .trio b{
+  position:absolute; inset-block-start:8px; inset-inline-start:8px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.1em;
+  color:#fff; background:rgba(8,9,11,.72); border:1px solid rgba(255,255,255,.14);
+  border-radius:3px; padding:2px 7px;
+}
+@media(max-width:720px){ .lesson .trio{ grid-template-columns:1fr; gap:8px } }
+</style>
 </head>
 <body>
 <header class="sitebar"><div class="row">
@@ -363,7 +378,7 @@ body::before{
     <p class="lede">در قسمت اول دوربین را جابه‌جا کردیم و <b>معنا</b> عوض شد. حالا دوربین را دقیقاً سرِ جایش نگه می‌داریم و فقط دو چیز را تغییر می‌دهیم: <b>نور از کجا می‌تابد</b> و <b>سوژه کجای قاب ایستاده است</b> — و باز هم همه‌چیز عوض می‌شود. زاویه می‌گوید مخاطب کجا ایستاده؛ نور می‌گوید باید چه حسی داشته باشد.</p>    <figure class="nvx-hero" data-nvx-zoom>
       <picture>
         <source srcset="lessons/light-composition.webp" type="image/webp" />
-        <img src="lessons/light-composition.jpg" alt="سیلوئت تیره‌ی یک سوژه با لبه‌ی روشن، و منبع نور در دوردستِ سمت راستِ قاب" width="1600" height="685" decoding="async" />
+        <img src="lessons/light-composition.jpg" alt="نیم‌رخ یک مرد در تاریکی، که فقط از یک سمت نور می‌گیرد، و یک فانوس کوچک در دوردستِ قاب" width="2000" height="857" decoding="async" />
       </picture>
     </figure>
 
@@ -657,6 +672,11 @@ body::before{
 
     <p>سه نسخه از یک سوژه‌ی واحد، فقط با تغییرِ بلوکِ نور و ترکیب‌بندی — همان چیزی که در جدول بالا خواندی، این‌بار به زبانی که مدل می‌فهمد:</p>
 
+    <figure class="trio">
+      <span><picture><source srcset="lessons/light-a.webp" type="image/webp" /><img src="lessons/light-a.jpg" alt="نور نرم پنجره از سمت چپ، سوژه روی یک‌سوم راست با فضای نگاه" width="2000" height="1125" loading="lazy" decoding="async" /></picture><b>A</b></span>
+      <span><picture><source srcset="lessons/light-b.webp" type="image/webp" /><img src="lessons/light-b.jpg" alt="نور جانبی سخت با کنتراست هشت به یک، قاب قرینه و مرکزی" width="2000" height="1125" loading="lazy" decoding="async" /></picture><b>B</b></span>
+      <span><picture><source srcset="lessons/light-c.webp" type="image/webp" /><img src="lessons/light-c.jpg" alt="بک‌لایت و سیلوئت روی مه روشن، سوژه کوچک در پایین چپ" width="2000" height="1125" loading="lazy" decoding="async" /></picture><b>C</b></span>
+    </figure>
     <pre><b>A ·</b> soft window light from camera left, large source,
     2:1 ratio, 5600K daylight, gentle falloff
     subject on right third, look room to the left
