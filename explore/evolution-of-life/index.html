@@ -209,11 +209,16 @@ window.addEventListener('DOMContentLoaded', function () {
     ],
 
     orbit: { target: [-20, 0, 0], distance: 490, phi: 1.48, theta: 0,
-             minDistance: 150, maxDistance: 900, minPhi: 0.5, maxPhi: 2.3 },
+             minDistance: 150, maxDistance: 1200, minPhi: 0.5, maxPhi: 2.3,
+             /* From the time axis on one side to the "today" label on the
+                other is about 524 units, and a tree with its branches cut
+                off at both edges teaches nothing. Chapter one opts out —
+                it is a deliberate close-up on the root. */
+             fitWidth: 560 },
 
     chapters: [
       { id: 'root', no: '۰۱', title: 'یک شروع',
-        camera: { target: [-70, -95, 0], distance: 290, phi: 1.5, theta: 0 },
+        camera: { target: [-70, -95, 0], distance: 290, phi: 1.5, theta: 0, fitWidth: 0 },
         params: { time: 0.3, lineage: ME },
         body: 'حدود <b>۳٫۸ میلیارد سال پیش</b>، یک چیز زنده بود. همه‌ی چیزهایی که امروز زنده‌اند — تو، درخت حیاطتان، باکتری روی دستت — از همان یکی می‌آیند.<br><br>لغزنده‌ی <b>زمان</b> را آرام بکش و ببین چه می‌شود.' },
 
@@ -236,6 +241,7 @@ window.addEventListener('DOMContentLoaded', function () {
     copy: {
       play: 'اجرا', pause: 'توقف', reset: 'بازنشانی',
       free: 'کنترل آزاد',
+      hintTouch: 'بکش تا بچرخد · با دو انگشت زوم کن',
       full: 'تمام‌صفحه', exitFull: 'خروج از تمام‌صفحه', legendLabel: 'راهنمای درخت',
       freeBody: 'کنترل حالا دست توست. هر سرشاخه‌ای را انتخاب کن و مسیرش را از ریشه تا امروز ببین، زمان را عقب و جلو ببر، و درخت را بچرخان. هر وقت خواستی روی یکی از فصل‌ها بزن تا برگردی.',
       loading: 'در حال بارگذاری صحنه…',

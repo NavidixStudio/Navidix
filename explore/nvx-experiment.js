@@ -120,7 +120,10 @@
     var g = {                                        /* where it is going */
       target: new THREE.Vector3().fromArray(o.target || [0, 0, 0]),
       dist: o.distance || 400, phi: o.phi != null ? o.phi : 1.0,
-      theta: o.theta != null ? o.theta : 0
+      theta: o.theta != null ? o.theta : 0,
+      /* World units of width that must stay in frame. Optional, and only
+         wide scenes set it — see fitDist. */
+      fit: o.fitWidth || 0
     };
     var c = {                                        /* where it is now */
       target: g.target.clone(), dist: g.dist, phi: g.phi, theta: g.theta
@@ -129,14 +132,41 @@
     var minP = o.minPhi != null ? o.minPhi : 0.12, maxP = o.maxPhi != null ? o.maxPhi : Math.PI - 0.12;
     var drag = false, lastX = 0, lastY = 0, pinch = 0, touched = false;
 
+    var snap = false;
+
     function goTo(t, immediate) {
       if (t.target) g.target.fromArray(t.target);
       if (t.distance != null) g.dist = t.distance;
       if (t.phi != null) g.phi = t.phi;
       if (t.theta != null) g.theta = t.theta;
+      /* A chapter that says nothing about width falls back to the page
+         default rather than inheriting whatever the previous chapter
+         needed; a close-up opts out with fitWidth: 0. */
+      g.fit = (t.fitWidth !== undefined ? t.fitWidth : o.fitWidth) || 0;
       g.dist = Math.max(minD, Math.min(maxD, g.dist));
       g.phi = Math.max(minP, Math.min(maxP, g.phi));
-      if (immediate) { c.target.copy(g.target); c.dist = g.dist; c.phi = g.phi; c.theta = g.theta; }
+      if (immediate) { c.target.copy(g.target); c.phi = g.phi; c.theta = g.theta; snap = true; }
+    }
+
+    /* ---- keeping a wide scene inside a narrow frame ----
+       Every chapter distance in this project was framed on a 16:9 stage,
+       and a phone is not one. The vertical field of view is fixed, so a
+       narrower stage shows proportionally less *width* at the same
+       distance — which is why a timeline authored to fill a laptop had
+       most of its length outside a phone's canvas, and why the tree of
+       life arrived cropped on both sides.
+
+       Pulling the camera back by a flat factor would fix those and ruin
+       everything else: a roughly spherical scene that already fits
+       vertically fits horizontally too, and moving it further away just
+       makes it small for no reason. So the compensation is content-aware.
+       A scene that is wider than it is tall declares the width it needs;
+       everything else declares nothing and is left exactly as authored. */
+    function fitDist(camera) {
+      if (!g.fit || !camera.fov) return g.dist;
+      var need = (g.fit / 2) /
+                 (Math.tan(camera.fov * Math.PI / 360) * (camera.aspect || 1));
+      return Math.min(maxD, Math.max(g.dist, need));
     }
 
     canvas.addEventListener('pointerdown', function (e) {
@@ -190,8 +220,10 @@
       touched: function () { return touched; },
       clearTouched: function () { touched = false; },
       update: function (dt, camera) {
+        var goal = fitDist(camera);
+        if (snap) { c.dist = goal; snap = false; }
         var k = 1 - Math.pow(0.0015, Math.min(dt || 0.016, 0.05));
-        c.dist += (g.dist - c.dist) * k;
+        c.dist += (goal - c.dist) * k;
         c.phi += (g.phi - c.phi) * k;
         c.theta += (g.theta - c.theta) * k;
         c.target.lerp(g.target, k);
@@ -229,6 +261,28 @@
     var canvas = root.querySelector('.xstage__canvas');
     var note   = root.querySelector('.xstage__note');
     var copy   = opts.copy || {};
+
+    /* ---- what the stage says it can do, phrased for the input at hand ----
+       The hint printed in the markup tells the reader to drag a cursor and
+       scroll a wheel, and it used to be hidden outright on a touch screen
+       on the grounds that an instruction you cannot follow is worse than
+       none. But the stage does answer a finger — it just answers a
+       different gesture — and saying nothing left the whole scene reading
+       as a picture rather than something to touch. So the instruction is
+       rewritten for the device instead of withheld from it. */
+    var hint = root.querySelector('.xstage__hint');
+    if (hint && global.matchMedia && global.matchMedia('(pointer:coarse)').matches) {
+      hint.textContent = copy.hintTouch || 'Drag to turn · pinch to zoom';
+      hint.classList.add('xstage__hint--touch');
+    }
+    /* It has one job and it is done the moment it has been read or acted
+       on. On a phone the stage is small enough that a line of standing
+       text sits on top of the diagram it is describing, so it leaves. */
+    if (hint) {
+      var dismiss = function () { hint.classList.add('is-gone'); };
+      setTimeout(dismiss, 7000);
+      if (canvas) canvas.addEventListener('pointerdown', dismiss, { once: true, passive: true });
+    }
 
     /* ---- parameters: the shell's own state, handed to the scene ---- */
     var params = {};
@@ -291,29 +345,62 @@
       group.appendChild(btnReset);
       ctl.insertBefore(group, ctl.firstChild);
 
-      if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
-        var btnFull = el('button', 'xbtn xbtn--icon xbtn--full');
-        btnFull.type = 'button';
-        var paintFull = function () {
-          var on = isFull();
-          btnFull.innerHTML = (on ? ICON.exit : ICON.full) +
-            '<span>' + (on ? (copy.exitFull || 'Exit full screen') : (copy.full || 'Full screen')) + '</span>';
-          btnFull.setAttribute('aria-pressed', String(on));
-        };
-        btnFull.addEventListener('click', function () {
-          if (isFull()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-          else (fsWrap.requestFullscreen || fsWrap.webkitRequestFullscreen).call(fsWrap);
-        });
-        ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
-          document.addEventListener(ev, function () {
-            fsWrap.classList.toggle('is-full', isFull());
-            paintFull();
-            onResize();
-          });
-        });
+      /* ---- full screen, including where there is no Fullscreen API ----
+         This used to be gated on document.fullscreenEnabled, which meant
+         the button did not exist on an iPhone: Safari on iOS implements
+         element full screen for <video> and nothing else. The one place
+         the reader most needs the extra room — a tree of life or a
+         timeline on a 390px screen — was the one place the button was
+         missing.
+
+         So the API is now an optimisation rather than a requirement. Where
+         it exists it is used, and the browser's own affordances (Escape,
+         the system gesture) work as expected. Where it does not, or where
+         the request is refused, the same layout is achieved by pinning the
+         block over the viewport, which needs no permission and no API. */
+      var btnFull = el('button', 'xbtn xbtn--icon xbtn--full');
+      btnFull.type = 'button';
+      var faux = false;
+      var canNative = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled) &&
+                      !!(fsWrap.requestFullscreen || fsWrap.webkitRequestFullscreen);
+
+      var paintFull = function () {
+        var on = isFull() || faux;
+        btnFull.innerHTML = (on ? ICON.exit : ICON.full) +
+          '<span>' + (on ? (copy.exitFull || 'Exit full screen') : (copy.full || 'Full screen')) + '</span>';
+        btnFull.setAttribute('aria-pressed', String(on));
+      };
+      var applyFull = function () {
+        var on = isFull() || faux;
+        fsWrap.classList.toggle('is-full', on);
+        fsWrap.classList.toggle('is-faux', faux);
+        document.documentElement.classList.toggle('xp-locked', faux);
         paintFull();
-        ctl.appendChild(btnFull);
-      }
+        onResize();
+      };
+      var setFaux = function (on) { faux = on; applyFull(); };
+
+      btnFull.addEventListener('click', function () {
+        if (faux) { setFaux(false); return; }
+        if (isFull()) {
+          (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+          return;
+        }
+        if (!canNative) { setFaux(true); return; }
+        try {
+          var p = (fsWrap.requestFullscreen || fsWrap.webkitRequestFullscreen).call(fsWrap);
+          if (p && p.catch) p.catch(function () { setFaux(true); });
+        } catch (_) { setFaux(true); }
+      });
+      ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
+        document.addEventListener(ev, function () { if (!faux) applyFull(); });
+      });
+      /* Escape leaves the stand-in the same way it leaves the real thing. */
+      document.addEventListener('keydown', function (e) {
+        if (faux && (e.key === 'Escape' || e.key === 'Esc')) setFaux(false);
+      });
+      paintFull();
+      ctl.appendChild(btnFull);
 
       btnPlay.addEventListener('click', function () { api.running ? pause() : play(); });
       btnReset.addEventListener('click', reset);
@@ -603,6 +690,7 @@
     function paintLabels() {
       var r = canvas.getBoundingClientRect();
       var a = sc.anchors;
+      var placed = [];
       for (var k in labels) {
         var n = labels[k], src = a[k];
         if (!src || src.hidden) { n.style.opacity = '0'; continue; }
@@ -617,14 +705,46 @@
           n._t = src.text;
           n.querySelector('b').textContent = src.text;
         }
-        n.style.opacity = src.dim ? '.45' : '1';
         /* Kept inside the frame. An anchor sitting on the scene's own edge
            — "now", at the right-hand end of a timeline — would otherwise
            hang half its label outside the canvas and read as clipped. */
         var lw = n.offsetWidth || 90, lh = n.offsetHeight || 24;
         var lx = Math.max(lw / 2 + 6, Math.min(r.width - lw / 2 - 6, (_v.x * 0.5 + 0.5) * r.width));
         var ly = Math.max(lh / 2 + 6, Math.min(r.height - lh / 2 - 6, (-_v.y * 0.5 + 0.5) * r.height));
-        n.style.transform = 'translate(-50%,-50%) translate(' + lx + 'px,' + ly + 'px)';
+        placed.push({ n: n, x: lx, y: ly, w: lw, h: lh, dim: !!src.dim });
+      }
+
+      /* ---- and then stop them sitting on top of each other ----
+         On a laptop these never collide; on a phone the same anchors land
+         in a third of the width and the tree's era labels ended up printed
+         through its branch names, which is worse than saying nothing.
+
+         So each label is offered its true position first and a short
+         ladder of vertical offsets after it. A label is only ever moved
+         along y — nudging one sideways would slide it off the thing it
+         names — and one that cannot find room anywhere on the ladder is
+         hidden rather than stacked. Full-strength labels are placed before
+         dimmed ones, so when something has to go it is the label the scene
+         itself marked as secondary. */
+      placed.sort(function (p, q) { return (p.dim ? 1 : 0) - (q.dim ? 1 : 0); });
+      var taken = [];
+      for (var i = 0; i < placed.length; i++) {
+        var p = placed[i], step = p.h + 5, best = null;
+        for (var s = 0; s < 7 && best === null; s++) {
+          var cand = p.y + (s === 0 ? 0 : (s % 2 ? -1 : 1) * Math.ceil(s / 2) * step);
+          if (cand < p.h / 2 + 4 || cand > r.height - p.h / 2 - 4) continue;
+          var clash = false;
+          for (var t = 0; t < taken.length; t++) {
+            var q = taken[t];
+            if (Math.abs(p.x - q.x) < (p.w + q.w) / 2 + 4 &&
+                Math.abs(cand - q.y) < (p.h + q.h) / 2 + 3) { clash = true; break; }
+          }
+          if (!clash) best = cand;
+        }
+        if (best === null) { p.n.style.opacity = '0'; continue; }
+        taken.push({ x: p.x, y: best, w: p.w, h: p.h });
+        p.n.style.opacity = p.dim ? '.45' : '1';
+        p.n.style.transform = 'translate(-50%,-50%) translate(' + p.x + 'px,' + best + 'px)';
       }
     }
 

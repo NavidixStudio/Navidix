@@ -219,7 +219,13 @@ window.addEventListener('DOMContentLoaded', function () {
     ],
 
     orbit: { target: [0, 0, 0], distance: 340, phi: 1.52, theta: 0,
-             minDistance: 250, maxDistance: 640, minPhi: 1.16, maxPhi: 1.94 },
+             minDistance: 250, maxDistance: 860, minPhi: 1.16, maxPhi: 1.94,
+             /* The two rails are 372 units end to end and the whole point
+                of the scene is reading them against each other, so the
+                full length has to stay in frame on a narrow screen. The
+                distances below were framed on a 16:9 stage and are left
+                exactly as they are; this only ever pulls back further. */
+             fitWidth: 400 },
 
     chapters: [
       { id: 'scale', no: '۰۱', title: 'مقیاس گونه‌ی ما',
@@ -246,6 +252,7 @@ window.addEventListener('DOMContentLoaded', function () {
     copy: {
       play: 'اجرا', pause: 'توقف', reset: 'بازنشانی',
       free: 'کنترل آزاد',
+      hintTouch: 'بکش تا بچرخد · با دو انگشت زوم کن',
       full: 'تمام‌صفحه', exitFull: 'خروج از تمام‌صفحه', legendLabel: 'راهنمای نمودار',
       freeBody: 'کنترل حالا دست توست. بازه‌ی زمانی را آزادانه عوض کن، دوربین را بکش و اسکرول کن. هر وقت خواستی، روی یکی از فصل‌ها بزن تا برگردی.',
       loading: 'در حال بارگذاری صحنه…',
