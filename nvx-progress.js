@@ -64,6 +64,10 @@
 
   function save(s) {
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+    /* The account layer, if the page loaded one, listens for this to know
+       there is something new worth pushing. Nothing here depends on
+       anybody listening. */
+    try { dispatchEvent(new CustomEvent('nvx:progress')); } catch (e) {}
   }
 
   /* ---- days, in the reader's own week ----
@@ -314,6 +318,7 @@
     });
 
     paint();
+    repaint = paint;
     if (pager) pager.parentNode.insertBefore(box, pager);
     else main.appendChild(box);
   }
@@ -325,6 +330,24 @@
      mark it. On training.html the slug is in the card's href; on
      journey.html it is written out as data-slug.
      =================================================================== */
+  var repaint = null, strip = null;
+
+  function stripText(st) {
+    var t = document.createElement('p');
+    t.className = 'nvxs__t';
+    if (!st.done) {
+      t.textContent = 'هنوز درسی را تکمیل نکرده‌ای. مسیر پیشنهادی شش مرحله دارد و از مبانی شروع می‌شود.';
+      return t;
+    }
+    t.appendChild(document.createTextNode('تا اینجا '));
+    var b = document.createElement('b');
+    b.textContent = fa(st.done) + ' از ' + fa(st.all);
+    t.appendChild(b);
+    t.appendChild(document.createTextNode(' درس را تمام کرده‌ای — ' + hours(st.total) +
+      (st.streak > 1 ? ' · زنجیره‌ی ' + fa(st.streak) + ' روزه' : '')));
+    return t;
+  }
+
   function index() {
     var idx = document.querySelector('main.idx');
     if (!idx) return;
@@ -332,39 +355,34 @@
     var st = stats();
     if (!st.all) return;
 
-    /* tick the finished cards */
+    /* tick the finished cards — toggle rather than add, so a lesson that
+       arrives from a sync as not-done loses its tick too */
     [].slice.call(idx.querySelectorAll('.cards > a[href]')).forEach(function (a) {
-      var s = slugOf(a.getAttribute('href'));
-      if (known(s) && isDone(s)) a.classList.add('nvx-done');
+      var sl = slugOf(a.getAttribute('href'));
+      a.classList.toggle('nvx-done', known(sl) && isDone(sl));
     });
 
-    /* and say where the reader is, above the search box */
+    /* Built once and updated thereafter. A sync finishing after the page
+       has painted calls straight back in here, and inserting a second
+       strip instead of rewriting the first is the obvious way to get this
+       wrong. */
+    if (strip) {
+      strip.replaceChild(stripText(st), strip.firstChild);
+      return;
+    }
+
     var anchor = idx.querySelector('.find') || idx.querySelector('.feat');
     if (!anchor) return;
 
-    var strip = document.createElement('div');
+    strip = document.createElement('div');
     strip.className = 'nvxs';
-
-    var t = document.createElement('p');
-    t.className = 'nvxs__t';
-    if (st.done) {
-      t.innerHTML = '';
-      t.appendChild(document.createTextNode('تا اینجا '));
-      var b1 = document.createElement('b');
-      b1.textContent = fa(st.done) + ' از ' + fa(st.all);
-      t.appendChild(b1);
-      t.appendChild(document.createTextNode(' درس را تمام کرده‌ای — ' + hours(st.total) +
-        (st.streak > 1 ? ' · زنجیره‌ی ' + fa(st.streak) + ' روزه' : '')));
-    } else {
-      t.textContent = 'هنوز درسی را تکمیل نکرده‌ای. مسیر پیشنهادی شش مرحله دارد و از مبانی شروع می‌شود.';
-    }
 
     var go = document.createElement('a');
     go.className = 'nvxs__go';
     go.href = 'journey.html';
     go.textContent = 'مسیر یادگیری ←';
 
-    strip.appendChild(t);
+    strip.appendChild(stripText(st));
     strip.appendChild(go);
     anchor.parentNode.insertBefore(strip, anchor);
   }
@@ -376,12 +394,13 @@
     var st = stats();
 
     [].slice.call(jr.querySelectorAll('.lrow[data-slug]')).forEach(function (a) {
-      if (isDone(a.getAttribute('data-slug'))) a.classList.add('is-done');
+      a.classList.toggle('is-done', isDone(a.getAttribute('data-slug')));
     });
 
     [].slice.call(jr.querySelectorAll('.stg')).forEach(function (sec) {
       var rows = [].slice.call(sec.querySelectorAll('.lrow'));
       var n = rows.filter(function (r) { return r.classList.contains('is-done'); }).length;
+      sec.classList.remove('is-done', 'is-part');
       if (!n) return;
       sec.classList.add(n === rows.length ? 'is-done' : 'is-part');
     });
@@ -402,7 +421,8 @@
     var bar = document.getElementById('jbar'), pct = document.getElementById('jpct');
     if (bar) {
       bar.hidden = false;
-      requestAnimationFrame(function () { bar.querySelector('i').style.width = st.pct + '%'; });
+      var fill = bar.querySelector('i');
+      requestAnimationFrame(function () { fill.style.width = st.pct + '%'; });
     }
     if (pct) {
       pct.hidden = false;
@@ -410,6 +430,17 @@
         ? fa(st.pct) + '٪ از مسیر طی شده' + (st.best > 1 ? ' · بلندترین زنجیره: ' + fa(st.best) + ' روز' : '')
         : 'هنوز شروع نکرده‌ای — از مرحله‌ی ۰۱ بردار.';
     }
+  }
+
+  /* Everything the page shows, drawn again from whatever state is in the
+     store right now. The account layer calls this the moment a sync has
+     merged something in — without it a reader signs in on a new phone,
+     the merge lands, and the page still shows the empty path until they
+     think to reload. */
+  function refresh() {
+    if (repaint) repaint();
+    index();
+    journey();
   }
 
   /* ===================================================================
@@ -438,5 +469,8 @@
 
   /* The one thing worth exposing: a later auth layer needs to read this
      state whole in order to merge it into an account on first sign-in. */
-  window.NVX_PROGRESS = { stats: stats, read: load, isDone: isDone, setDone: setDone, KEY: KEY };
+  window.NVX_PROGRESS = {
+    stats: stats, read: load, write: save, isDone: isDone, setDone: setDone,
+    today: today, shift: shift, hours: hours, refresh: refresh, KEY: KEY
+  };
 })();
