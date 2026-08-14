@@ -1066,6 +1066,10 @@ html[lang="en"] .band__cta:hover i{ transform:scaleX(-1) translateX(-5px); }
 .band__rail{ display:grid; gap:clamp(11px,1.3vw,18px); }
 .band__rail--4{ grid-template-columns:repeat(4,1fr); }
 .band__rail--3{ grid-template-columns:repeat(3,1fr); }
+/* There are five experiences, and five in a four-column grid leaves one
+   stranded on a row of its own beside a hole three tiles wide. They get
+   their own row width instead. */
+.band__rail--5{ grid-template-columns:repeat(5,1fr); }
 /* ---- the archive grid ----
    Six equal thumbnails is a contact sheet, not a gallery: nothing leads, so
    the eye has no way in and every picture is too small to be worth looking
@@ -1189,6 +1193,7 @@ picture{ display:contents; }
   .band__rail--gal{ grid-template-columns:repeat(3,1fr); }
   .band__rail--gal > :first-child{ grid-column:span 2; grid-row:span 2; }
   .band__rail--4{ grid-template-columns:repeat(2,1fr); }
+  .band__rail--5{ grid-template-columns:repeat(2,1fr); }
 }
 @media (max-width:760px){
   .band__head{ grid-template-areas:'eyebrow' 'title' 'sub' 'cta'; grid-template-columns:1fr; }
@@ -1341,6 +1346,52 @@ picture{ display:contents; }
        they have to survive a failed WebGL boot, be readable by a crawler, and
        paint without waiting on anything. -->
   <div id="sections">
+
+    <!-- ---------- what the reader can do, not read ----------
+         First band on the page, above the training rail, because it is the
+         one section where the visitor operates something instead of reading
+         it. Same shape as the rail below it deliberately: the reader has
+         already learned how this row behaves by the time they reach it. -->
+    <section class="band" aria-labelledby="band-x-t">
+      <header class="band__head">
+        <p class="band__eyebrow" data-copy2="xEyebrow">پلتفرم علمی تعاملی</p>
+        <h2 class="band__title" id="band-x-t" data-copy2="xTitle">علم را بخوان، یا خودت اجرایش کن</h2>
+        <p class="band__sub" data-copy2="xSub">پنج آزمایش زنده در مرورگر. کنترل را جابه‌جا کن و ببین جواب واقعی چه می‌شود — نه انیمیشنِ از پیش‌ساخته، محاسبه‌ی همان لحظه.</p>
+        <a class="band__cta" href="explore/"><span data-copy2="xCta">همه‌ی تجربه‌ها</span><i aria-hidden="true">←</i></a>
+      </header>
+      <div class="band__rail band__rail--5">
+        <a class="tile" href="explore/space-time/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>نسبیت عام</span><span class="dot"></span><span>۵ فصل</span></span>
+            <h3 class="tile__title">فضا-زمان: چرا جرم، زمان را کند می‌کند</h3>
+          </span>
+        </a>
+        <a class="tile" href="explore/hidden-network/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>علم شبکه</span><span class="dot"></span><span>۶ فصل</span></span>
+            <h3 class="tile__title">شبکه‌ی پنهان: چرا اینترنت هم مقاوم است هم شکننده</h3>
+          </span>
+        </a>
+        <a class="tile" href="explore/atoms-and-molecules/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>کوانتوم</span><span class="dot"></span><span>۵ فصل</span></span>
+            <h3 class="tile__title">دنیای اتم‌ها: شکل واقعی ابر الکترون</h3>
+          </span>
+        </a>
+        <a class="tile" href="explore/evolution-of-life/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>زیست‌شناسی</span><span class="dot"></span><span>۵ فصل</span></span>
+            <h3 class="tile__title">تکامل حیات: همه‌ی زندگانِ امروز هم‌سن‌اند</h3>
+          </span>
+        </a>
+        <a class="tile" href="explore/human-to-machine/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>فناوری</span><span class="dot"></span><span>۵ فصل</span></span>
+            <h3 class="tile__title">از انسان تا ماشین: دو سرعتِ ناهم‌خوان</h3>
+          </span>
+        </a>
+      </div>
+    </section>
 
     <!-- ---------- what the studio teaches ---------- -->
     <section class="band" aria-labelledby="band-learn-t">
@@ -1532,6 +1583,9 @@ const NAVIDIX = (() => {
       en: { tagline:'Independent science & technology media',
             pitch:'Navidix Studio — where research, cinema and artificial intelligence meet.',
             ctaMain:'Studio services', ctaTalk:'Start a conversation', ctaTube:'Subscribe on YouTube',
+            xEyebrow:'Interactive science platform', xTitle:'Read the science, or run it yourself',
+            xSub:'Five live experiments in the browser. Move a control and see the real answer — computed on the spot, not a pre-rendered animation.',
+            xCta:'All experiences',
             learnEyebrow:'Applied AI training', learnTitle:'From a first prompt to a finished film',
             learnSub:'All free, no prerequisites, no sign-up — protocols proven on real production work, not theory.',
             learnCta:'All training',
@@ -1548,6 +1602,9 @@ const NAVIDIX = (() => {
       fa: { tagline:'رسانه مستقل علم و فناوری',
             pitch:'استودیو نویدیکس — تلاقی پژوهش، سینما و هوش مصنوعی.',
             ctaMain:'خدمات استودیو', ctaTalk:'عضویت در کانال', ctaTube:'سابسکرایب یوتیوب',
+            xEyebrow:'پلتفرم علمی تعاملی', xTitle:'علم را بخوان، یا خودت اجرایش کن',
+            xSub:'پنج آزمایش زنده در مرورگر. کنترل را جابه‌جا کن و ببین جواب واقعی چه می‌شود — نه انیمیشنِ از پیش‌ساخته، محاسبه‌ی همان لحظه.',
+            xCta:'همه‌ی تجربه‌ها',
             learnEyebrow:'آموزش هوش مصنوعی کاربردی', learnTitle:'از اولین پرامپت تا اولین فیلم',
             learnSub:'همه رایگان، بدون پیش‌نیاز و بدون ثبت‌نام — پروتکل‌هایی که در تولیدهای واقعی جواب داده‌اند، نه تئوری.',
             learnCta:'همه‌ی آموزش‌ها',
