@@ -635,10 +635,23 @@ body::before{
 .gs[hidden]{ display:none; }
 .gs:last-child{ border-bottom:0; }
 
+/* Two samples where there are two.
+   One picture of a style is a picture. Two pictures of the same style with
+   different subjects in them is an argument — it separates what belongs to
+   the style from what belongs to the thing being painted, which is the one
+   idea a reader has to hold to use any of this. So the pair is the point,
+   and the caption under it says so out loud. */
+.gs__shots{ position:sticky; top:74px; display:grid; gap:10px; }
 .gs__shot{
   display:block; border:1px solid var(--line); border-radius:6px;
   overflow:hidden; background:var(--ink-2); position:sticky; top:74px;
 }
+.gs__shots .gs__shot{ position:static; }
+.gs__pair{
+  margin:0; font-size:12.5px; line-height:1.85; color:#8C939B;
+  border-inline-start:2px solid rgba(229,32,42,.5); padding-inline-start:10px;
+}
+.gs__pair b{ color:#B6BDC5; font-weight:600; }
 .gs__shot img{ display:block; width:100%; height:auto; }
 .gs__shot:hover{ border-color:#454B55; }
 
@@ -754,7 +767,7 @@ body::before{
 /* ---- narrow ---- */
 @media (max-width:860px){
   .gs{ grid-template-columns:1fr; }
-  .gs__shot{ position:static; }
+  .gs__shot, .gs__shots{ position:static; }
   .gs__facts div{ grid-template-columns:66px minmax(0,1fr); gap:9px; }
   .thread li + li::before{ display:none; }
   .thread li{ flex:1 1 100%; }
@@ -795,6 +808,7 @@ body::before{
     <h1>جهانِ سبک‌ها<span>The World of Styles</span></h1>
     <p class="gx__lede">بیست‌وهفت زبانِ تصویری، از کهن‌ترین سنتِ زنده‌ی نقاشی تا نورِ نئونِ دیشب. هر کدام یک <b>تاریخ</b> دارد، یک <b>جغرافیا</b>، و آدم‌هایی که ساختندش — و همه‌شان، پرامپتی که با آن می‌شود همین امروز چیزی در همان زبان ساخت.</p>
     <p class="gx__lede">این صفحه یک شبکه‌ی عکس نیست. <b>یک خطِ زمان است.</b></p>
+    <p class="gx__lede">و بیشترشان <b>دو نمونه</b> دارند، با دو سوژه‌ی کاملاً متفاوت و یک پرامپت. چون تا وقتی یک سبک را فقط روی یک تصویر ببینی، نمی‌دانی کدام بخشش <em>سبک</em> بود و کدام بخشش <em>سوژه</em>.</p>
     <div class="gx__key">
       و دلیلش این است: مینیاتور ایرانی و رنسانس ایتالیا <b>هم‌زمان‌اند</b>. اوکیو-ئه ژاپنی هم‌دوره‌ی باروک است. نوری که کاراواجو در سال ۱۶۰۰ در رم ساخت، همان نوری است که چهار قرن بعد در فیلم نوآر و بعد در «بلید رانر» می‌بینی. در یک شبکه‌ی مرتبِ عکس، هیچ‌کدام از این‌ها دیده نمی‌شود. روی یک خطِ زمان، خودشان را نشان می‌دهند.
     </div>
@@ -821,12 +835,21 @@ body::before{
   </header>
 
   <article class="gs" id="inkwash" data-fam="east">
-    <a class="gs__shot" href="style/inkwash.html" aria-label="شناسنامه‌ی کامل مرکب چینی">
-      <picture>
-        <source srcset="prompts/inkwash.webp" type="image/webp" />
-        <img src="prompts/inkwash.jpg" alt="مرکب چینی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/inkwash.html" aria-label="شناسنامه‌ی کامل مرکب چینی">
+        <picture>
+          <source srcset="prompts/inkwash.webp" type="image/webp" />
+          <img src="prompts/inkwash.jpg" alt="مرکب چینی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/inkwash.html" aria-label="شناسنامه‌ی کامل مرکب چینی">
+        <picture>
+          <source srcset="prompts/inkwash-b.webp" type="image/webp" />
+          <img src="prompts/inkwash-b.jpg" alt="مرکب چینی — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">تک‌رنگ · ضربه‌ی برگشت‌ناپذیر · فضای خالی · کاغذ شوان · کوه‌های محو</p>
       <h3 class="gs__t">مرکب چینی<span>Chinese Ink Wash</span></h3>
@@ -862,12 +885,21 @@ body::before{
   </header>
 
   <article class="gs" id="renaissance" data-fam="classic">
-    <a class="gs__shot" href="style/renaissance.html" aria-label="شناسنامه‌ی کامل رنسانس">
-      <picture>
-        <source srcset="prompts/renaissance.webp" type="image/webp" />
-        <img src="prompts/renaissance.jpg" alt="رنسانس — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/renaissance.html" aria-label="شناسنامه‌ی کامل رنسانس">
+        <picture>
+          <source srcset="prompts/renaissance.webp" type="image/webp" />
+          <img src="prompts/renaissance.jpg" alt="رنسانس — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/renaissance.html" aria-label="شناسنامه‌ی کامل رنسانس">
+        <picture>
+          <source srcset="prompts/renaissance-b.webp" type="image/webp" />
+          <img src="prompts/renaissance-b.jpg" alt="رنسانس — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">سفوماتو · پرسپکتیو یک‌نقطه‌ای · ترکیب‌بندی هرمی · نور یکدست از چپ</p>
       <h3 class="gs__t">رنسانس<span>Renaissance</span></h3>
@@ -896,12 +928,21 @@ body::before{
   </article>
 
   <article class="gs" id="oil" data-fam="classic">
-    <a class="gs__shot" href="style/oil.html" aria-label="شناسنامه‌ی کامل رنگ روغن کلاسیک">
-      <picture>
-        <source srcset="prompts/oil.webp" type="image/webp" />
-        <img src="prompts/oil.jpg" alt="رنگ روغن کلاسیک — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/oil.html" aria-label="شناسنامه‌ی کامل رنگ روغن کلاسیک">
+        <picture>
+          <source srcset="prompts/oil.webp" type="image/webp" />
+          <img src="prompts/oil.jpg" alt="رنگ روغن کلاسیک — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/oil.html" aria-label="شناسنامه‌ی کامل رنگ روغن کلاسیک">
+        <picture>
+          <source srcset="prompts/oil-b.webp" type="image/webp" />
+          <img src="prompts/oil-b.jpg" alt="رنگ روغن کلاسیک — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">ایمپاستو · سایه‌ی لعابی · پالت خاکی · بافت بوم کتانی</p>
       <h3 class="gs__t">رنگ روغن کلاسیک<span>Classical Oil Painting</span></h3>
@@ -929,12 +970,21 @@ body::before{
   </article>
 
   <article class="gs" id="miniature" data-fam="east">
-    <a class="gs__shot" href="style/miniature.html" aria-label="شناسنامه‌ی کامل مینیاتور ایرانی">
-      <picture>
-        <source srcset="prompts/miniature.webp" type="image/webp" />
-        <img src="prompts/miniature.jpg" alt="مینیاتور ایرانی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/miniature.html" aria-label="شناسنامه‌ی کامل مینیاتور ایرانی">
+        <picture>
+          <source srcset="prompts/miniature.webp" type="image/webp" />
+          <img src="prompts/miniature.jpg" alt="مینیاتور ایرانی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/miniature.html" aria-label="شناسنامه‌ی کامل مینیاتور ایرانی">
+        <picture>
+          <source srcset="prompts/miniature-b.webp" type="image/webp" />
+          <img src="prompts/miniature-b.jpg" alt="مینیاتور ایرانی — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">پرسپکتیو تخت · باز شدن به بالا · لاجورد و شنگرف · ورق طلا · حاشیه‌ی مذهّب</p>
       <h3 class="gs__t">مینیاتور ایرانی<span>Persian Miniature</span></h3>
@@ -1003,12 +1053,21 @@ body::before{
   </header>
 
   <article class="gs" id="baroque" data-fam="classic">
-    <a class="gs__shot" href="style/baroque.html" aria-label="شناسنامه‌ی کامل باروک">
-      <picture>
-        <source srcset="prompts/baroque.webp" type="image/webp" />
-        <img src="prompts/baroque.jpg" alt="باروک — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/baroque.html" aria-label="شناسنامه‌ی کامل باروک">
+        <picture>
+          <source srcset="prompts/baroque.webp" type="image/webp" />
+          <img src="prompts/baroque.jpg" alt="باروک — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/baroque.html" aria-label="شناسنامه‌ی کامل باروک">
+        <picture>
+          <source srcset="prompts/baroque-b.webp" type="image/webp" />
+          <img src="prompts/baroque-b.jpg" alt="باروک — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">تنبریسم · تک‌منبع نور تند · سیاهِ فراگیر · ترکیب‌بندی قطری</p>
       <h3 class="gs__t">باروک<span>Baroque</span></h3>
@@ -1037,12 +1096,21 @@ body::before{
   </article>
 
   <article class="gs" id="window" data-fam="light">
-    <a class="gs__shot" href="style/window.html" aria-label="شناسنامه‌ی کامل نور نرم پنجره">
-      <picture>
-        <source srcset="prompts/window.webp" type="image/webp" />
-        <img src="prompts/window.jpg" alt="نور نرم پنجره — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/window.html" aria-label="شناسنامه‌ی کامل نور نرم پنجره">
+        <picture>
+          <source srcset="prompts/window.webp" type="image/webp" />
+          <img src="prompts/window.jpg" alt="نور نرم پنجره — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/window.html" aria-label="شناسنامه‌ی کامل نور نرم پنجره">
+        <picture>
+          <source srcset="prompts/window-b.webp" type="image/webp" />
+          <img src="prompts/window-b.jpg" alt="نور نرم پنجره — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">پنجره‌ی شمالی · افتِ نرم · فیل سفید · حال‌وهوای خانگی</p>
       <h3 class="gs__t">نور نرم پنجره<span>Soft Window Light</span></h3>
@@ -1070,12 +1138,21 @@ body::before{
   </article>
 
   <article class="gs" id="ukiyoe" data-fam="east">
-    <a class="gs__shot" href="style/ukiyoe.html" aria-label="شناسنامه‌ی کامل اوکیو-ئه ژاپنی">
-      <picture>
-        <source srcset="prompts/ukiyoe.webp" type="image/webp" />
-        <img src="prompts/ukiyoe.jpg" alt="اوکیو-ئه ژاپنی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/ukiyoe.html" aria-label="شناسنامه‌ی کامل اوکیو-ئه ژاپنی">
+        <picture>
+          <source srcset="prompts/ukiyoe.webp" type="image/webp" />
+          <img src="prompts/ukiyoe.jpg" alt="اوکیو-ئه ژاپنی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/ukiyoe.html" aria-label="شناسنامه‌ی کامل اوکیو-ئه ژاپنی">
+        <picture>
+          <source srcset="prompts/ukiyoe-b.webp" type="image/webp" />
+          <img src="prompts/ukiyoe-b.jpg" alt="اوکیو-ئه ژاپنی — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">خط قاطع · رنگ تخت بدون سایه · آبی پروس · کاغذ واشی · کادربندی جسور</p>
       <h3 class="gs__t">اوکیو-ئه ژاپنی<span>Ukiyo-e</span></h3>
@@ -1112,12 +1189,21 @@ body::before{
   </header>
 
   <article class="gs" id="romantic" data-fam="classic">
-    <a class="gs__shot" href="style/romantic.html" aria-label="شناسنامه‌ی کامل رمانتیسم">
-      <picture>
-        <source srcset="prompts/romantic.webp" type="image/webp" />
-        <img src="prompts/romantic.jpg" alt="رمانتیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/romantic.html" aria-label="شناسنامه‌ی کامل رمانتیسم">
+        <picture>
+          <source srcset="prompts/romantic.webp" type="image/webp" />
+          <img src="prompts/romantic.jpg" alt="رمانتیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/romantic.html" aria-label="شناسنامه‌ی کامل رمانتیسم">
+        <picture>
+          <source srcset="prompts/romantic-b.webp" type="image/webp" />
+          <img src="prompts/romantic-b.jpg" alt="رمانتیسم — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">منظره‌ی والا · پیکره‌ی کوچک · آسمان طوفانی · شکافِ نور طلایی</p>
       <h3 class="gs__t">رمانتیسم<span>Romanticism</span></h3>
@@ -1145,12 +1231,21 @@ body::before{
   </article>
 
   <article class="gs" id="watercolor" data-fam="craft">
-    <a class="gs__shot" href="style/watercolor.html" aria-label="شناسنامه‌ی کامل آبرنگ">
-      <picture>
-        <source srcset="prompts/watercolor.webp" type="image/webp" />
-        <img src="prompts/watercolor.jpg" alt="آبرنگ — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/watercolor.html" aria-label="شناسنامه‌ی کامل آبرنگ">
+        <picture>
+          <source srcset="prompts/watercolor.webp" type="image/webp" />
+          <img src="prompts/watercolor.jpg" alt="آبرنگ — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/watercolor.html" aria-label="شناسنامه‌ی کامل آبرنگ">
+        <picture>
+          <source srcset="prompts/watercolor-b.webp" type="image/webp" />
+          <img src="prompts/watercolor-b.jpg" alt="آبرنگ — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">خیس در خیس · سفیدیِ کاغذ · بافت کاغذ · رسوب رنگدانه</p>
       <h3 class="gs__t">آبرنگ<span>Watercolour</span></h3>
@@ -1211,12 +1306,21 @@ body::before{
   </article>
 
   <article class="gs" id="qajar" data-fam="east">
-    <a class="gs__shot" href="style/qajar.html" aria-label="شناسنامه‌ی کامل نقاشی قاجار">
-      <picture>
-        <source srcset="prompts/qajar.webp" type="image/webp" />
-        <img src="prompts/qajar.jpg" alt="نقاشی قاجار — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/qajar.html" aria-label="شناسنامه‌ی کامل نقاشی قاجار">
+        <picture>
+          <source srcset="prompts/qajar.webp" type="image/webp" />
+          <img src="prompts/qajar.jpg" alt="نقاشی قاجار — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/qajar.html" aria-label="شناسنامه‌ی کامل نقاشی قاجار">
+        <picture>
+          <source srcset="prompts/qajar-b.webp" type="image/webp" />
+          <img src="prompts/qajar-b.jpg" alt="نقاشی قاجار — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">پیکره‌ی رو به جلو · نور بی‌سایه · یاقوتی و زمردی و طلا · جزئیات پارچه و جواهر</p>
       <h3 class="gs__t">نقاشی قاجار<span>Qajar Painting</span></h3>
@@ -1285,12 +1389,21 @@ body::before{
   </header>
 
   <article class="gs" id="impressionist" data-fam="modern">
-    <a class="gs__shot" href="style/impressionist.html" aria-label="شناسنامه‌ی کامل امپرسیونیسم">
-      <picture>
-        <source srcset="prompts/impressionist.webp" type="image/webp" />
-        <img src="prompts/impressionist.jpg" alt="امپرسیونیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/impressionist.html" aria-label="شناسنامه‌ی کامل امپرسیونیسم">
+        <picture>
+          <source srcset="prompts/impressionist.webp" type="image/webp" />
+          <img src="prompts/impressionist.jpg" alt="امپرسیونیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/impressionist.html" aria-label="شناسنامه‌ی کامل امپرسیونیسم">
+        <picture>
+          <source srcset="prompts/impressionist-b.webp" type="image/webp" />
+          <img src="prompts/impressionist-b.jpg" alt="امپرسیونیسم — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">رنگ شکسته · لکه‌های کوتاه پیدا · نور لکه‌لکه · لبه‌های نرم · پالت روشن</p>
       <h3 class="gs__t">امپرسیونیسم<span>Impressionism</span></h3>
@@ -1318,12 +1431,21 @@ body::before{
   </article>
 
   <article class="gs" id="postimp" data-fam="modern">
-    <a class="gs__shot" href="style/postimp.html" aria-label="شناسنامه‌ی کامل پست‌امپرسیونیسم">
-      <picture>
-        <source srcset="prompts/postimp.webp" type="image/webp" />
-        <img src="prompts/postimp.jpg" alt="پست‌امپرسیونیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/postimp.html" aria-label="شناسنامه‌ی کامل پست‌امپرسیونیسم">
+        <picture>
+          <source srcset="prompts/postimp.webp" type="image/webp" />
+          <img src="prompts/postimp.jpg" alt="پست‌امپرسیونیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/postimp.html" aria-label="شناسنامه‌ی کامل پست‌امپرسیونیسم">
+        <picture>
+          <source srcset="prompts/postimp-b.webp" type="image/webp" />
+          <img src="prompts/postimp-b.jpg" alt="پست‌امپرسیونیسم — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">ایمپاستوی پیچان · رنگ مکمل اشباع · کانتور سنگین · سطح برجسته</p>
       <h3 class="gs__t">پست‌امپرسیونیسم<span>Post-Impressionism</span></h3>
@@ -1352,12 +1474,21 @@ body::before{
   </article>
 
   <article class="gs" id="artnouveau" data-fam="modern">
-    <a class="gs__shot" href="style/artnouveau.html" aria-label="شناسنامه‌ی کامل آر نوو">
-      <picture>
-        <source srcset="prompts/artnouveau.webp" type="image/webp" />
-        <img src="prompts/artnouveau.jpg" alt="آر نوو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/artnouveau.html" aria-label="شناسنامه‌ی کامل آر نوو">
+        <picture>
+          <source srcset="prompts/artnouveau.webp" type="image/webp" />
+          <img src="prompts/artnouveau.jpg" alt="آر نوو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/artnouveau.html" aria-label="شناسنامه‌ی کامل آر نوو">
+        <picture>
+          <source srcset="prompts/artnouveau-b.webp" type="image/webp" />
+          <img src="prompts/artnouveau-b.jpg" alt="آر نوو — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">خط شلاقی · رنگ تزیینی تخت · حاشیه‌ی گیاهی · بافت کاغذ لیتو</p>
       <h3 class="gs__t">آر نوو<span>Art Nouveau</span></h3>
@@ -1394,12 +1525,21 @@ body::before{
   </header>
 
   <article class="gs" id="artdeco" data-fam="modern">
-    <a class="gs__shot" href="style/artdeco.html" aria-label="شناسنامه‌ی کامل آر دکو">
-      <picture>
-        <source srcset="prompts/artdeco.webp" type="image/webp" />
-        <img src="prompts/artdeco.jpg" alt="آر دکو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/artdeco.html" aria-label="شناسنامه‌ی کامل آر دکو">
+        <picture>
+          <source srcset="prompts/artdeco.webp" type="image/webp" />
+          <img src="prompts/artdeco.jpg" alt="آر دکو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/artdeco.html" aria-label="شناسنامه‌ی کامل آر دکو">
+        <picture>
+          <source srcset="prompts/artdeco-b.webp" type="image/webp" />
+          <img src="prompts/artdeco-b.jpg" alt="آر دکو — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">تقارن سخت · فرم پله‌ای · رنگِ تختِ سرمه‌ای و طلا · خطوط سرعت</p>
       <h3 class="gs__t">آر دکو<span>Art Deco</span></h3>
@@ -1427,12 +1567,21 @@ body::before{
   </article>
 
   <article class="gs" id="surreal" data-fam="modern">
-    <a class="gs__shot" href="style/surreal.html" aria-label="شناسنامه‌ی کامل سوررئالیسم">
-      <picture>
-        <source srcset="prompts/surreal.webp" type="image/webp" />
-        <img src="prompts/surreal.jpg" alt="سوررئالیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/surreal.html" aria-label="شناسنامه‌ی کامل سوررئالیسم">
+        <picture>
+          <source srcset="prompts/surreal.webp" type="image/webp" />
+          <img src="prompts/surreal.jpg" alt="سوررئالیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/surreal.html" aria-label="شناسنامه‌ی کامل سوررئالیسم">
+        <picture>
+          <source srcset="prompts/surreal-b.webp" type="image/webp" />
+          <img src="prompts/surreal-b.jpg" alt="سوررئالیسم — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">دقتِ آکادمیک در صحنه‌ی ناممکن · افقِ خالی · مقیاسِ جابه‌جا · سایه‌ی بلند</p>
       <h3 class="gs__t">سوررئالیسم<span>Surrealism</span></h3>
@@ -1493,12 +1642,21 @@ body::before{
   </article>
 
   <article class="gs" id="chiaro" data-fam="light">
-    <a class="gs__shot" href="style/chiaro.html" aria-label="شناسنامه‌ی کامل کیاروسکورو و نور نوآر">
-      <picture>
-        <source srcset="prompts/chiaro.webp" type="image/webp" />
-        <img src="prompts/chiaro.jpg" alt="کیاروسکورو و نور نوآر — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/chiaro.html" aria-label="شناسنامه‌ی کامل کیاروسکورو و نور نوآر">
+        <picture>
+          <source srcset="prompts/chiaro.webp" type="image/webp" />
+          <img src="prompts/chiaro.jpg" alt="کیاروسکورو و نور نوآر — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/chiaro.html" aria-label="شناسنامه‌ی کامل کیاروسکورو و نور نوآر">
+        <picture>
+          <source srcset="prompts/chiaro-b.webp" type="image/webp" />
+          <img src="prompts/chiaro-b.jpg" alt="کیاروسکورو و نور نوآر — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">تک‌منبع تند از بالا-چپ · سیاهِ فراگیر · افتِ سریع · کنتراست ۸:۱</p>
       <h3 class="gs__t">کیاروسکورو و نور نوآر<span>Chiaroscuro</span></h3>
@@ -1592,12 +1750,21 @@ body::before{
   </article>
 
   <article class="gs" id="film35" data-fam="photo">
-    <a class="gs__shot" href="style/film35.html" aria-label="شناسنامه‌ی کامل قاب سینمایی ۳۵ میلی‌متری">
-      <picture>
-        <source srcset="prompts/film35.webp" type="image/webp" />
-        <img src="prompts/film35.jpg" alt="قاب سینمایی ۳۵ میلی‌متری — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/film35.html" aria-label="شناسنامه‌ی کامل قاب سینمایی ۳۵ میلی‌متری">
+        <picture>
+          <source srcset="prompts/film35.webp" type="image/webp" />
+          <img src="prompts/film35.jpg" alt="قاب سینمایی ۳۵ میلی‌متری — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/film35.html" aria-label="شناسنامه‌ی کامل قاب سینمایی ۳۵ میلی‌متری">
+        <picture>
+          <source srcset="prompts/film35-b.webp" type="image/webp" />
+          <img src="prompts/film35-b.jpg" alt="قاب سینمایی ۳۵ میلی‌متری — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">۲.۳۹:۱ · فوکوس کم‌عمق · هاله دور هایلایت · دانه‌ی ارگانیک</p>
       <h3 class="gs__t">قاب سینمایی ۳۵ میلی‌متری<span>Cinematic 35mm</span></h3>
@@ -1633,12 +1800,21 @@ body::before{
   </header>
 
   <article class="gs" id="concept" data-fam="modern">
-    <a class="gs__shot" href="style/concept.html" aria-label="شناسنامه‌ی کامل کنسپت‌آرت سینمایی">
-      <picture>
-        <source srcset="prompts/concept.webp" type="image/webp" />
-        <img src="prompts/concept.jpg" alt="کنسپت‌آرت سینمایی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/concept.html" aria-label="شناسنامه‌ی کامل کنسپت‌آرت سینمایی">
+        <picture>
+          <source srcset="prompts/concept.webp" type="image/webp" />
+          <img src="prompts/concept.jpg" alt="کنسپت‌آرت سینمایی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/concept.html" aria-label="شناسنامه‌ی کامل کنسپت‌آرت سینمایی">
+        <picture>
+          <source srcset="prompts/concept-b.webp" type="image/webp" />
+          <img src="prompts/concept-b.jpg" alt="کنسپت‌آرت سینمایی — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">نمای معرف · مهِ عمق‌ساز · سیلوئت خوانا · یک لهجه‌ی گرم · آدمِ کوچکِ مقیاس</p>
       <h3 class="gs__t">کنسپت‌آرت سینمایی<span>Cinematic Concept Art</span></h3>
@@ -1666,12 +1842,21 @@ body::before{
   </article>
 
   <article class="gs" id="golden" data-fam="light">
-    <a class="gs__shot" href="style/golden.html" aria-label="شناسنامه‌ی کامل نور طلایی (گلدن آور)">
-      <picture>
-        <source srcset="prompts/golden.webp" type="image/webp" />
-        <img src="prompts/golden.jpg" alt="نور طلایی (گلدن آور) — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/golden.html" aria-label="شناسنامه‌ی کامل نور طلایی (گلدن آور)">
+        <picture>
+          <source srcset="prompts/golden.webp" type="image/webp" />
+          <img src="prompts/golden.jpg" alt="نور طلایی (گلدن آور) — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/golden.html" aria-label="شناسنامه‌ی کامل نور طلایی (گلدن آور)">
+        <picture>
+          <source srcset="prompts/golden-b.webp" type="image/webp" />
+          <img src="prompts/golden-b.jpg" alt="نور طلایی (گلدن آور) — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">آفتابِ کم‌ارتفاع · سایه‌ی بلند · کنتره‌ی کهربایی · ذرات معلق · ۳۲۰۰ کلوین</p>
       <h3 class="gs__t">نور طلایی (گلدن آور)<span>Golden Hour</span></h3>
@@ -1699,12 +1884,21 @@ body::before{
   </article>
 
   <article class="gs" id="neon" data-fam="light">
-    <a class="gs__shot" href="style/neon.html" aria-label="شناسنامه‌ی کامل نئون شبانه">
-      <picture>
-        <source srcset="prompts/neon.webp" type="image/webp" />
-        <img src="prompts/neon.jpg" alt="نئون شبانه — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
-      </picture>
-    </a>
+    <div class="gs__shots">
+      <a class="gs__shot" href="style/neon.html" aria-label="شناسنامه‌ی کامل نئون شبانه">
+        <picture>
+          <source srcset="prompts/neon.webp" type="image/webp" />
+          <img src="prompts/neon.jpg" alt="نئون شبانه — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <a class="gs__shot" href="style/neon.html" aria-label="شناسنامه‌ی کامل نئون شبانه">
+        <picture>
+          <source srcset="prompts/neon-b.webp" type="image/webp" />
+          <img src="prompts/neon-b.jpg" alt="نئون شبانه — همان پرامپت، با سوژه‌ای دیگر" width="800" height="520" loading="lazy" decoding="async" />
+        </picture>
+      </a>
+      <p class="gs__pair">یک سبک، دو سوژه. <b>آنچه ثابت مانده، خودِ سبک است</b> — همان پرامپت، فقط سوژه عوض شده.</p>
+    </div>
     <div class="gs__body">
       <p class="gs__kw">فقط نورِ تابلو · سرخابی و فیروزه‌ای · بازتاب آسفالت خیس · مهِ پخش‌کننده</p>
       <h3 class="gs__t">نئون شبانه<span>Neon Night</span></h3>
