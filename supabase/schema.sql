@@ -91,7 +91,7 @@ set search_path = public
 as $$
   select exists (
     select 1 from public.profiles
-    where id = auth.uid() and role = 'admin'
+    where id = (select auth.uid()) and role = 'admin'
   );
 $$;
 
@@ -140,12 +140,18 @@ drop policy if exists profiles_update_own on public.profiles;
 
 create policy profiles_read_own on public.profiles
   for select to authenticated
-  using (id = auth.uid() or public.is_admin());
+  using (id = (select auth.uid()) or (select public.is_admin()));
 
 create policy profiles_update_own on public.profiles
   for update to authenticated
-  using (id = auth.uid())
-  with check (id = auth.uid() and role = (select role from public.profiles where id = auth.uid()));
+  using (id = (select auth.uid()))
+  with check (id = (select auth.uid()));
+
+-- ستون role از دسترس مرورگر بیرون است، در سطح دسترسی و نه در سطح سیاست.
+-- Supabase به‌طور پیش‌فرض update کامل می‌دهد؛ اینجا پس گرفته و فقط یک ستون
+-- برگردانده می‌شود. ادمین‌شدن فقط از SQL Editor ممکن است.
+revoke update on public.profiles from authenticated;
+grant  update (display_name) on public.profiles to authenticated;
 
 
 -- ---- lesson_progress ----
@@ -156,16 +162,16 @@ drop policy if exists lp_update on public.lesson_progress;
 
 create policy lp_read on public.lesson_progress
   for select to authenticated
-  using (user_id = auth.uid() or public.is_admin());
+  using (user_id = (select auth.uid()) or (select public.is_admin()));
 
 create policy lp_write on public.lesson_progress
   for insert to authenticated
-  with check (user_id = auth.uid());
+  with check (user_id = (select auth.uid()));
 
 create policy lp_update on public.lesson_progress
   for update to authenticated
-  using (user_id = auth.uid())
-  with check (user_id = auth.uid());
+  using (user_id = (select auth.uid()))
+  with check (user_id = (select auth.uid()));
 
 
 -- ---- learning_days ----
@@ -176,27 +182,33 @@ drop policy if exists ld_update on public.learning_days;
 
 create policy ld_read on public.learning_days
   for select to authenticated
-  using (user_id = auth.uid() or public.is_admin());
+  using (user_id = (select auth.uid()) or (select public.is_admin()));
 
 create policy ld_write on public.learning_days
   for insert to authenticated
-  with check (user_id = auth.uid());
+  with check (user_id = (select auth.uid()));
 
 create policy ld_update on public.learning_days
   for update to authenticated
-  using (user_id = auth.uid())
-  with check (user_id = auth.uid());
+  using (user_id = (select auth.uid()))
+  with check (user_id = (select auth.uid()));
 
 
 -- ---- page_views ----
--- مهمان و کاربر هر دو می‌توانند بنویسند، ولی هیچ‌کس نمی‌تواند بخواند.
--- خواندنش فقط از راه نماهای ادمین پایین ممکن است.
+-- مهمان و کاربر هر دو می‌توانند بنویسند و هیچ‌کس جز ادمین نمی‌تواند بخواند.
+-- سیاست خواندن لازم است چون نماها با دسترسی خودِ کاربر اجرا می‌شوند و دیگر
+-- RLS را دور نمی‌زنند.
 
 drop policy if exists pv_write on public.page_views;
 
 create policy pv_write on public.page_views
   for insert to anon, authenticated
   with check (true);
+
+drop policy if exists pv_read on public.page_views;
+create policy pv_read on public.page_views
+  for select to authenticated
+  using ((select public.is_admin()));
 
 
 -- =====================================================================
@@ -273,3 +285,13 @@ grant select on public.admin_overview, public.admin_daily, public.admin_lessons,
 --   where id = (select id from auth.users where email = 'fmarvasti@gmail.com');
 --
 -- =====================================================================
+
+
+-- نماها با دسترسی خودِ کاربر اجرا می‌شوند، نه سازنده‌شان. یعنی RLS جدول‌های
+-- زیرین اعمال می‌شود و امنیت یک دروازه دارد نه دو تا. شرط is_admin() داخل
+-- خودِ نماها هم می‌ماند — حالا اضافی است، و همان اضافه‌بودن نکته‌اش است.
+alter view public.admin_overview set (security_invoker = on);
+alter view public.admin_daily    set (security_invoker = on);
+alter view public.admin_lessons  set (security_invoker = on);
+alter view public.admin_signups  set (security_invoker = on);
+alter view public.admin_traffic  set (security_invoker = on);
