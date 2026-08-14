@@ -1453,6 +1453,59 @@ picture{ display:contents; }
       </div>
     </section>
 
+    <!-- ---------- where the visual languages came from ----------
+         Same plate layout as the library row below it, deliberately: the
+         two rows are the same material seen from two sides, and making
+         them look alike says so. What must not be alike is the pictures.
+         Five styles that do not appear in that row, and the second sample
+         of each rather than the one the library shows, so a reader
+         scrolling past sees ten different frames and not five twice. -->
+    <section class="band" aria-labelledby="band-gal-t">
+      <header class="band__head">
+        <p class="band__eyebrow" data-copy2="galEyebrow">گالری سبک‌ها</p>
+        <h2 class="band__title" id="band-gal-t" data-copy2="galTitle">هر سبک، از کجا آمده</h2>
+        <p class="band__sub" data-copy2="galSub">خط زمانِ زبان‌های تصویری — چه سالی، در کدام کشور، کارِ چه کسانی. هر کدام با دو نمونه از یک پرامپت، تا ببینی چه چیزی سبک بود و چه چیزی سوژه.</p>
+        <a class="band__cta" href="gallery.html"><span data-copy2="galCta">ورود به گالری</span><i aria-hidden="true">←</i></a>
+      </header>
+      <div class="band__rail band__rail--gal">
+        <a class="tile tile--shot" href="gallery.html#baroque">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/baroque-b.webp" type="image/webp" /><img src="prompts/baroque-b.jpg" alt="باروک — نقشه‌کشی در نور شمع، خروجی واقعی پرامپت این سبک" width="800" height="520" loading="lazy" decoding="async" /></picture>
+            <span class="tile__pin">Baroque</span>
+            <span class="tile__cap"><b>باروک · رم، ۱۶۰۰</b><small>recraft v4.1</small></span>
+          </span>
+        </a>
+        <a class="tile tile--shot" href="gallery.html#miniature">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/miniature-b.webp" type="image/webp" /><img src="prompts/miniature-b.jpg" alt="مینیاتور ایرانی — بزم در باغ، خروجی واقعی پرامپت این سبک" width="800" height="520" loading="lazy" decoding="async" /></picture>
+            <span class="tile__pin">Persian</span>
+            <span class="tile__cap"><b>مینیاتور · تبریز، ۱۵۰۰</b><small>recraft v4.1</small></span>
+          </span>
+        </a>
+        <a class="tile tile--shot" href="gallery.html#postimp">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/postimp-b.webp" type="image/webp" /><img src="prompts/postimp-b.jpg" alt="پست‌امپرسیونیسم — گندم‌زار زیر آسمان پرتلاطم، خروجی واقعی پرامپت این سبک" width="800" height="520" loading="lazy" decoding="async" /></picture>
+            <span class="tile__pin">Post-Imp</span>
+            <span class="tile__cap"><b>پست‌امپرسیونیسم · ۱۸۸۹</b><small>recraft v4.1</small></span>
+          </span>
+        </a>
+        <a class="tile tile--shot" href="gallery.html#inkwash">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/inkwash-b.webp" type="image/webp" /><img src="prompts/inkwash-b.jpg" alt="مرکب چینی — قایقران میان قله‌های مه‌گرفته، خروجی واقعی پرامپت این سبک" width="800" height="520" loading="lazy" decoding="async" /></picture>
+            <span class="tile__pin">Ink Wash</span>
+            <span class="tile__cap"><b>مرکب چینی · سده‌ی ۸</b><small>recraft v4.1</small></span>
+          </span>
+        </a>
+        <a class="tile tile--shot" href="gallery.html#gouache">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/gouache-b.webp" type="image/webp" /><img src="prompts/gouache-b.jpg" alt="گواش و پوستر رترو — پوستر راه‌آهن کوهستانی، خروجی واقعی پرامپت این سبک" width="800" height="520" loading="lazy" decoding="async" /></picture>
+            <span class="tile__pin">Gouache</span>
+            <span class="tile__cap"><b>پوستر گواش · ۱۹۳۰</b><small>recraft v4.1</small></span>
+          </span>
+        </a>
+      </div>
+    </section>
+
     <!-- ---------- what the studio makes ----------
          Every plate here is the real output of the prompt printed on its own
          page in the library — same model, same wording, the studio's own
@@ -1589,6 +1642,9 @@ const NAVIDIX = (() => {
             learnEyebrow:'Applied AI training', learnTitle:'From a first prompt to a finished film',
             learnSub:'All free, no prerequisites, no sign-up — protocols proven on real production work, not theory.',
             learnCta:'All training',
+            galEyebrow:'The gallery of styles', galTitle:'Where each style came from',
+            galSub:'A timeline of visual languages — what year, which country, whose work. Each with two samples from one prompt, so you can see which part was the style and which was the subject.',
+            galCta:'Enter the gallery',
             seeEyebrow:'AI visuals', seeTitle:'Every frame is the prompt beneath it',
             seeSub:'Every frame is the real output of the prompt printed on its page — free to copy.',
             seeCta:'Explore the library',
@@ -1608,6 +1664,9 @@ const NAVIDIX = (() => {
             learnEyebrow:'آموزش هوش مصنوعی کاربردی', learnTitle:'از اولین پرامپت تا اولین فیلم',
             learnSub:'همه رایگان، بدون پیش‌نیاز و بدون ثبت‌نام — پروتکل‌هایی که در تولیدهای واقعی جواب داده‌اند، نه تئوری.',
             learnCta:'همه‌ی آموزش‌ها',
+            galEyebrow:'گالری سبک‌ها', galTitle:'هر سبک، از کجا آمده',
+            galSub:'خط زمانِ زبان‌های تصویری — چه سالی، در کدام کشور، کارِ چه کسانی. هر کدام با دو نمونه از یک پرامپت، تا ببینی چه چیزی سبک بود و چه چیزی سوژه.',
+            galCta:'ورود به گالری',
             seeEyebrow:'تصویرهای هوش مصنوعی', seeTitle:'هر قاب، همان پرامپتِ زیرش است',
             seeSub:'هر قاب، خروجی واقعی همان پرامپتی است که در صفحه‌اش نوشته شده — آماده‌ی کپی، رایگان.',
             seeCta:'کاوش کتابخانه',
