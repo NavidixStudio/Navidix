@@ -80,6 +80,8 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
 <link rel="stylesheet" href="{depth}nvx-training.css" />
 <script src="{depth}nvx-ui.js" defer></script>
 <script src="{depth}nvx-training.js" defer></script>
+<script src="{depth}nvx-config.js" defer></script>
+<script src="{depth}nvx-auth.js" defer></script>
 <script type="application/ld+json">
 {ld}
 </script>

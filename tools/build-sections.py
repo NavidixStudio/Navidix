@@ -207,6 +207,8 @@ def page(slug, title, desc, img, alt, ld, body, back=('index.html', 'صفحه‌
 {EXTRA_CSS}
 </style>
 <script src="nvx-ui.js" defer></script>
+<script src="nvx-config.js" defer></script>
+<script src="nvx-auth.js" defer></script>
 </head>
 <body>
 

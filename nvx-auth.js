@@ -216,7 +216,7 @@
      request, not four. */
   var pending = null;
   addEventListener('nvx:progress', function () {
-    if (!signedIn()) return;
+    if (!signedIn() || !P) return;
     clearTimeout(pending);
     pending = setTimeout(sync, 2500);
   });
@@ -396,8 +396,12 @@
     }
   }
 
+  /* Three header shapes across the site: the sitebar every ordinary page
+     carries, the xbar in explore/, and the homepage's topbar — which is
+     deliberately absent over the hero and arrives once the reader has
+     scrolled past it. First one found wins. */
   function mount() {
-    var row = document.querySelector('.sitebar .row');
+    var row = document.querySelector('.sitebar .row, .xbar__row, .topbar__links');
     if (!row) return;
     btn = document.createElement('button');
     btn.type = 'button';
@@ -433,12 +437,16 @@
   }
 
   function boot() {
-    P = window.NVX_PROGRESS;
-    if (!P) return;                       // no progress layer, nothing to carry
+    /* The progress layer is optional here. Most of the site — the gallery,
+       the style pages, the homepage — has no lesson to track, but a reader
+       standing on any of them should still be able to sign in, and a reader
+       already signed in should see that they are. Without a progress layer
+       there is simply nothing to sync. */
+    P = window.NVX_PROGRESS || null;
     styles();
     mount();
     invite();
-    if (signedIn()) sync();
+    if (P && signedIn()) sync();
   }
 
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);
