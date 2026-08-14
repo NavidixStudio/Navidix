@@ -301,6 +301,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://navidixstudio.com/explore/hidden-network/</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://navidixstudio.com/explore/evolution-of-life/</loc>
     <lastmod>2026-08-14</lastmod>
     <changefreq>monthly</changefreq>

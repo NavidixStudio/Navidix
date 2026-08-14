@@ -220,8 +220,57 @@
     g.fillStyle = 'rgba(' + RED + ',.9)'; g.fill();
   }
 
+  /* ---- 05 — the hidden network: hubs, and what happens when they go ---- */
+  var net = null;
+  function network(g, w, h, t) {
+    g.clearRect(0, 0, w, h);
+    var cx = w * 0.5, cy = h * 0.5, R = Math.min(w, h) * 0.42;
+
+    if (!net) {
+      /* preferential attachment in miniature, so the sketch has real hubs */
+      net = { n: [], e: [] };
+      for (var i = 0; i < 54; i++) net.n.push({ d: 0 });
+      var stubs = [0, 1, 2];
+      net.e.push([0, 1], [1, 2]); net.n[0].d = 1; net.n[1].d = 2; net.n[2].d = 1;
+      for (var k = 3; k < 54; k++) {
+        var tgt = stubs[(Math.random() * stubs.length) | 0];
+        net.e.push([k, tgt]); net.n[k].d++; net.n[tgt].d++;
+        stubs.push(k, tgt);
+      }
+      var maxd = 1;
+      net.n.forEach(function (o) { maxd = Math.max(maxd, o.d); });
+      net.n.forEach(function (o, i) {
+        var rr = R * (1 - Math.pow(o.d / maxd, 0.6) * 0.72);
+        var a = (i * 2.399);                       /* golden-angle spread */
+        o.x = cx + Math.cos(a) * rr;
+        o.y = cy + Math.sin(a) * rr * 0.86;
+        o.hub = o.d >= maxd * 0.45;
+      });
+    }
+
+    /* the sweep: hubs blink out, then come back — the whole idea in one loop */
+    var phase = (Math.sin(t * 0.5) * 0.5 + 0.5);
+    var cut = phase > 0.55;
+
+    net.e.forEach(function (e) {
+      var a = net.n[e[0]], b = net.n[e[1]];
+      if (cut && (a.hub || b.hub)) return;
+      g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y);
+      g.strokeStyle = 'rgba(' + ION + ',' + (a.hub || b.hub ? .3 : .16) + ')';
+      g.lineWidth = 1; g.stroke();
+    });
+
+    net.n.forEach(function (o) {
+      var gone = cut && o.hub;
+      g.beginPath(); g.arc(o.x, o.y, o.hub ? 4.6 : 2, 0, 7);
+      g.fillStyle = gone ? 'rgba(26,36,51,.9)'
+                  : o.hub ? 'rgba(255,106,90,.95)' : 'rgba(' + ION + ',.72)';
+      g.fill();
+    });
+  }
+
   var PAINTERS = { 'space-time': spaceTime, 'human-to-machine': humanMachine,
-                   'atoms': atoms, 'evolution': evolution };
+                   'atoms': atoms, 'evolution': evolution, 'network': network };
 
   /* ---- drive them ---- */
   var live = [];
