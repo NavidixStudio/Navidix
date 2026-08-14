@@ -175,7 +175,53 @@
     });
   }
 
-  var PAINTERS = { 'space-time': spaceTime, 'human-to-machine': humanMachine, 'atoms': atoms };
+  /* ---- 04 — the tree of life: branching, and every tip on one line ---- */
+  var twigs = null;
+  function evolution(g, w, h, t) {
+    g.clearRect(0, 0, w, h);
+    var top = h * 0.16, bot = h * 0.9, L = w * 0.12, R2 = w * 0.88;
+
+    if (!twigs) {
+      /* a small recursive tree, built once so it does not shimmer */
+      twigs = [];
+      (function grow(x0, y0, x1, y1, depth) {
+        twigs.push({ x0: x0, y0: y0, x1: x1, y1: y1, d: depth });
+        if (depth >= 4) return;
+        var span = (R2 - L) / Math.pow(2, depth + 2);
+        var mid = (y1 + top) / 2;
+        grow(x1, y1, x1 - span, mid, depth + 1);
+        grow(x1, y1, x1 + span, mid, depth + 1);
+      })(w * 0.5, bot, w * 0.5, bot - (bot - top) * 0.3, 0);
+    }
+
+    twigs.forEach(function (b) {
+      g.beginPath(); g.moveTo(b.x0, b.y0); g.lineTo(b.x1, b.y1);
+      g.strokeStyle = 'rgba(' + ION + ',' + (0.5 - b.d * 0.06) + ')';
+      g.lineWidth = Math.max(1, 2.4 - b.d * 0.5);
+      g.stroke();
+    });
+
+    /* every living tip sits on the same line — the whole point */
+    g.beginPath(); g.moveTo(L * 0.6, top); g.lineTo(R2 + L * 0.4, top);
+    g.strokeStyle = 'rgba(' + PAPER + ',.22)'; g.lineWidth = 1; g.stroke();
+
+    var tips = twigs.filter(function (b) { return b.d === 4; });
+    var pulse = Math.floor(t * 0.7) % Math.max(1, tips.length);
+    tips.forEach(function (b, i) {
+      g.beginPath(); g.arc(b.x1, top, i === pulse ? 4 : 2.6, 0, 7);
+      g.fillStyle = i === pulse ? 'rgba(255,106,90,.95)' : 'rgba(' + ION + ',.75)';
+      g.fill();
+      g.beginPath(); g.moveTo(b.x1, b.y1); g.lineTo(b.x1, top);
+      g.strokeStyle = i === pulse ? 'rgba(255,106,90,.5)' : 'rgba(' + ION + ',.22)';
+      g.lineWidth = 1; g.stroke();
+    });
+
+    g.beginPath(); g.arc(w * 0.5, bot, 3.4, 0, 7);
+    g.fillStyle = 'rgba(' + RED + ',.9)'; g.fill();
+  }
+
+  var PAINTERS = { 'space-time': spaceTime, 'human-to-machine': humanMachine,
+                   'atoms': atoms, 'evolution': evolution };
 
   /* ---- drive them ---- */
   var live = [];
