@@ -358,7 +358,10 @@
   /* Supabase answers in English. These are the four a reader actually
      meets; anything else is passed through rather than guessed at. */
   function translate(m) {
-    if (/Invalid login credentials/i.test(m)) return 'ایمیل یا رمز عبور درست نیست.';
+    if (/Invalid login credentials/i.test(m)) return 'ایمیل یا رمز عبور درست نیست. اگر تازه آمده‌ای، اول حساب بساز.';
+    if (/Email not confirmed/i.test(m))       return 'این حساب هنوز تأیید نشده. ایمیلت را باز کن و روی لینک تأیید بزن.';
+    if (/signups? not allowed|Signups not allowed/i.test(m)) return 'ثبت‌نام روی این پروژه بسته است.';
+    if (/rate limit|too many/i.test(m))       return 'درخواست‌ها زیاد شد. چند دقیقه صبر کن و دوباره امتحان کن.';
     if (/User already registered/i.test(m))   return 'این ایمیل قبلاً ثبت شده. وارد شو.';
     if (/Password should be at least/i.test(m)) return 'رمز عبور باید دست‌کم ۸ نویسه باشد.';
     if (/Unable to validate email/i.test(m))  return 'ایمیل معتبر نیست.';
