@@ -996,6 +996,145 @@
     };
   }
 
+
+  /* =================================================================
+     12 — where the cut lands
+
+     A cut is the only tool on this track that costs nothing and changes
+     everything, and it is invisible in a still. So the figure holds one
+     pair of shots and moves only the boundary between them: the reader
+     watches the same two clips become dead, tight, or seamless purely by
+     where the join sits. The dead tail is drawn rather than described
+     because on a generated clip that is exactly where the picture starts
+     to come apart, and a reader who has seen it once starts trimming.
+     ================================================================= */
+  var CUTS = {
+    late:   { at: .78, dead: true },
+    motion: { at: .52 },
+    match:  { at: .52, match: true },
+    jcut:   { at: .52, pre: .34 }
+  };
+
+  function buildCut(fig) {
+    var s = stage(fig, '0 0 560 158');
+    var X0 = 34, X1 = 526, W = X1 - X0, Y = 46, H = 46;
+    var ACT = .52;                     /* where the action in shot 1 peaks */
+
+    s.appendChild(e('rect', { class: 'track', x: X0, y: Y, width: W, height: H, rx: 3 }));
+
+    /* shot one fills up to the join; shot two takes the rest */
+    var a = s.appendChild(e('rect', { class: 'beat', 'data-move': '', x: X0 + 1, y: Y + 1, width: 10, height: H - 2, rx: 2 }));
+    var b = s.appendChild(e('rect', { class: 'beat peak', 'data-move': '', x: X0, y: Y + 1, width: 10, height: H - 2, rx: 2 }));
+
+    /* the stretch of shot one after its action is over — the part a
+       generated clip spends drifting */
+    var dead = s.appendChild(e('rect', { class: 'cut-dead', 'data-fade': '', x: X0, y: Y + 1, width: 0, height: H - 2 }));
+
+    /* the action itself, so "cut on the motion" has something to be on */
+    var peak = s.appendChild(e('path', { class: 'cut-act', d: '' }));
+
+    var join = s.appendChild(e('line', { class: 'cut-line', 'data-move': '', x1: 0, y1: Y - 14, x2: 0, y2: Y + H + 14 }));
+
+    /* the shapes that rhyme across a match cut */
+    var m1 = s.appendChild(e('circle', { class: 'cut-rhyme', 'data-fade': '', cx: 0, cy: Y + H / 2, r: 7 }));
+    var m2 = s.appendChild(e('circle', { class: 'cut-rhyme', 'data-fade': '', cx: 0, cy: Y + H / 2, r: 7 }));
+
+    /* sound running ahead of picture */
+    var snd = s.appendChild(e('rect', { class: 'cut-snd', 'data-fade': '', 'data-move': '', x: X0, y: Y + H + 22, width: 10, height: 8, rx: 2 }));
+    var sndLab = s.appendChild(e('text', { class: 'mid', 'data-fade': '', x: 0, y: Y + H + 46 }, [txt('AUDIO LEADS')]));
+
+    var la = s.appendChild(e('text', { class: 'fa', 'data-move': '', x: 0, y: Y - 20 }, [txt('نمای ۱')]));
+    var lb = s.appendChild(e('text', { class: 'fa', 'data-move': '', x: 0, y: Y - 20 }, [txt('نمای ۲')]));
+
+    /* the action arc is fixed: only the join moves against it */
+    var ax = X0 + W * ACT;
+    peak.setAttribute('d', 'M' + (ax - 46) + ' ' + (Y - 4) + ' Q' + ax + ' ' + (Y - 30) + ' ' + (ax + 46) + ' ' + (Y - 4));
+
+    return {
+      set: function (k) {
+        var c = CUTS[k] || CUTS.motion, x = X0 + W * c.at;
+
+        a.setAttribute('width', Math.max(2, x - X0 - 2));
+        b.setAttribute('x', x + 1);
+        b.setAttribute('width', Math.max(2, X1 - x - 2));
+        join.setAttribute('x1', x); join.setAttribute('x2', x);
+        la.style.transform = 'translateX(' + ((X0 + x) / 2) + 'px)';
+        lb.style.transform = 'translateX(' + ((x + X1) / 2) + 'px)';
+
+        dead.setAttribute('x', ax);
+        dead.setAttribute('width', c.dead ? Math.max(0, x - ax) : 0);
+        dead.style.opacity = c.dead ? 1 : 0;
+
+        m1.style.opacity = m2.style.opacity = c.match ? 1 : 0;
+        m1.setAttribute('cx', x - 34);
+        m2.setAttribute('cx', x + 34);
+
+        var on = c.pre != null;
+        snd.style.opacity = sndLab.style.opacity = on ? 1 : 0;
+        snd.setAttribute('x', on ? X0 + W * c.pre : x);
+        snd.setAttribute('width', on ? Math.max(2, X1 - (X0 + W * c.pre)) : 2);
+        sndLab.setAttribute('x', X0 + W * (c.pre != null ? c.pre : .5) + 4);
+      }
+    };
+  }
+
+  /* =================================================================
+     13 — the three layers of sound
+
+     The claim this figure has to carry is the one that surprises people:
+     continuous sound is what lets a viewer forgive a picture that is not
+     quite continuous. Drawn as three lanes against the picture's cuts,
+     the reason is visible rather than asserted — the ambience is the only
+     thing on the stage that does not break where the picture does.
+     ================================================================= */
+  var SND = { none: [0,0,0], amb: [1,0,0], fx: [1,1,0], all: [1,1,1] };
+
+  function buildSound(fig) {
+    var s = stage(fig, '0 0 560 206');
+    var X0 = 34, X1 = 526, W = X1 - X0;
+    var CUT = [.22, .41, .58, .79];          /* where the picture cuts */
+
+    /* the picture strip, which does break */
+    s.appendChild(e('rect', { class: 'track', x: X0, y: 18, width: W, height: 26, rx: 3 }));
+    CUT.forEach(function (f) {
+      s.appendChild(e('line', { class: 'cut-line', x1: X0 + W * f, y1: 14, x2: X0 + W * f, y2: 48 }));
+    });
+    s.appendChild(e('text', { x: X0, y: 60 }, [txt('PICTURE — CUTS HERE')]));
+
+    var lanes = [];
+    var Y = [86, 132, 178];
+    var NAME = ['آمبیانس', 'افکت', 'موسیقی'];
+    var LAT = ['AMBIENCE — never stops', 'EFFECTS — on what you can see', 'MUSIC — one shape, under it all'];
+
+    for (var i = 0; i < 3; i++) {
+      var g = e('g', { 'data-fade': '' });
+      if (i === 0) {
+        g.appendChild(e('rect', { class: 'snd-amb', x: X0, y: Y[i] - 12, width: W, height: 16, rx: 2 }));
+      } else if (i === 1) {
+        [.16, .3, .46, .63, .74, .88].forEach(function (f) {
+          var h = 8 + (f * 41 % 13);
+          g.appendChild(e('rect', { class: 'snd-fx', x: X0 + W * f, y: Y[1] + 4 - h, width: 4, height: h, rx: 1 }));
+        });
+      } else {
+        var d = 'M' + X0 + ' ' + Y[2], n;
+        for (n = 1; n <= 24; n++) {
+          d += ' L' + (X0 + W * n / 24) + ' ' + (Y[2] - 9 * Math.sin(n / 24 * Math.PI * 1.6) - 2);
+        }
+        g.appendChild(e('path', { class: 'snd-mus', d: d }));
+      }
+      g.appendChild(e('text', { class: 'fa', x: X1 - 46, y: Y[i] - 20 }, [txt(NAME[i])]));
+      g.appendChild(e('text', { x: X0, y: Y[i] + 22 }, [txt(LAT[i])]));
+      lanes.push(s.appendChild(g));
+    }
+
+    return {
+      set: function (k) {
+        var on = SND[k] || SND.none;
+        lanes.forEach(function (g, i) { g.style.opacity = on[i] ? 1 : .14; });
+      }
+    };
+  }
+
   /* =================================================================
      wiring
      ================================================================= */
@@ -1003,7 +1142,8 @@
     angle: buildAngle, shot: buildShot, move: buildMove,
     key: buildKey, ratio: buildRatio, comp: buildComp,
     pipe: buildPipe, beats: buildBeats, shots: buildShots,
-    motion: buildMotion, chain: buildChain
+    motion: buildMotion, chain: buildChain,
+    cut: buildCut, sound: buildSound
   };
 
   function init(fig) {

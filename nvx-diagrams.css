@@ -256,3 +256,19 @@
   .nvx-dg [data-move], .nvx-dg [data-fade], .nvx-dg .crop, .nvx-dg .veil{ transition:none; }
   .nvx-dg .runner{ animation:none !important; }
 }
+
+/* ---- the cut, and the three layers under it ----
+   Shot one is the neutral block the beats figure already uses; shot two
+   borrows the ember so the join is legible at a glance. Everything else
+   here exists to make one invisible decision visible. */
+.nvx-dg .cut-line{ stroke:#E5202A; stroke-width:2; }
+.nvx-dg .cut-act{ fill:none; stroke:#7FB8FF; stroke-width:1.6; stroke-linecap:round; }
+/* the stretch after the action is over — where a generated clip drifts */
+.nvx-dg .cut-dead{ fill:rgba(232,163,61,.16); stroke:rgba(232,163,61,.5);
+  stroke-width:1; stroke-dasharray:3 3; }
+.nvx-dg .cut-rhyme{ fill:none; stroke:#7FB8FF; stroke-width:1.6; }
+.nvx-dg .cut-snd{ fill:rgba(127,184,255,.35); stroke:#7FB8FF; stroke-width:1; }
+
+.nvx-dg .snd-amb{ fill:rgba(127,184,255,.22); stroke:#7FB8FF; stroke-width:1; }
+.nvx-dg .snd-fx{ fill:#E8A33D; }
+.nvx-dg .snd-mus{ fill:none; stroke:#8FE3C4; stroke-width:1.6; stroke-linejoin:round; }
