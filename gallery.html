@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>گالری هوش مصنوعی | کانسپت‌آرت و پوستر سینمایی — استودیو نویدیکس</title>
-<meta name="description" content="آثار سینمایی هوش مصنوعی، کانسپت‌آرت و پوسترهای استودیو نویدیکس، به‌همراه کتابخانه‌ی ۲۷ سبک تصویری برای ساختن نمونه‌های مشابه." />
+<title>گالری سبک‌های تصویری | از رنسانس تا نئون — استودیو نویدیکس</title>
+<meta name="description" content="خط زمان ۲۷ سبک تصویری: تاریخ، جغرافیا، هنرمندان، زیرسبک‌ها و پرامپت هر سبک — از مرکب چینی و مینیاتور ایرانی تا باروک، امپرسیونیسم، آر دکو و نئون سینمایی." />
 <meta name="author" content="محمد نویدی" />
 <link rel="canonical" href="https://navidixstudio.com/gallery.html" />
 <meta name="theme-color" content="#08090B" />
@@ -12,8 +12,8 @@
 <meta property="og:site_name" content="Navidix" />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="fa_IR" />
-<meta property="og:title" content="گالری هوش مصنوعی | کانسپت‌آرت و پوستر سینمایی — استودیو نویدیکس" />
-<meta property="og:description" content="آثار سینمایی هوش مصنوعی، کانسپت‌آرت و پوسترهای استودیو نویدیکس، به‌همراه کتابخانه‌ی ۲۷ سبک تصویری برای ساختن نمونه‌های مشابه." />
+<meta property="og:title" content="گالری سبک‌های تصویری | از رنسانس تا نئون — استودیو نویدیکس" />
+<meta property="og:description" content="خط زمان ۲۷ سبک تصویری: تاریخ، جغرافیا، هنرمندان، زیرسبک‌ها و پرامپت هر سبک — از مرکب چینی و مینیاتور ایرانی تا باروک، امپرسیونیسم، آر دکو و نئون سینمایی." />
 <meta property="og:url" content="https://navidixstudio.com/gallery.html" />
 <meta property="og:image" content="https://navidixstudio.com/og-prompts.png" />
 <meta property="og:image:secure_url" content="https://navidixstudio.com/og-prompts.png" />
@@ -40,7 +40,7 @@
 @font-face{font-family:'Inter';src:url('/assets/inter-var.woff2')format('woff2');
   font-weight:100 900;font-display:swap;font-style:normal}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"گالری هوش مصنوعی نویدیکس","inLanguage":"fa-IR","description":"آثار سینمایی هوش مصنوعی، کانسپت‌آرت و پوسترهای استودیو نویدیکس.","url":"https://navidixstudio.com/gallery.html","publisher":{"@type":"Organization","name":"Navidix","url":"https://navidixstudio.com/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","@id":"https://navidixstudio.com/gallery.html#page","name":"گالری سبک‌های تصویری نویدیکس","inLanguage":"fa-IR","description":"خط زمان ۲۷ سبک تصویری با تاریخ، جغرافیا، هنرمندان، زیرسبک‌ها و پرامپت هر سبک.","url":"https://navidixstudio.com/gallery.html","publisher":{"@type":"Organization","name":"Navidix","url":"https://navidixstudio.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"صفحه‌ی اصلی","item":"https://navidixstudio.com/"},{"@type":"ListItem","position":2,"name":"گالری سبک‌ها","item":"https://navidixstudio.com/gallery.html"}]}]}</script>
 <style>
 
 
@@ -535,6 +535,250 @@ body::before{
 
 </style>
 <script src="nvx-ui.js" defer></script>
+<style>
+/* =====================================================================
+   THE GALLERY — a chronology, not a grid.
+
+   The obvious build for a page of 27 styles is a masonry grid with a
+   filter bar, which is what every AI-art gallery on the internet is. The
+   trouble is that a grid throws away the only thing that makes this
+   material teachable. Baroque is Rome around 1600. Ukiyo-e is Edo. Art
+   Deco is Paris, 1925. Persian miniature and the Italian Renaissance are
+   contemporaries — and a reader who sees that once never again thinks of
+   one as ahead of the other.
+
+   So the spine of this page is time. The styles sit in the century they
+   were made in, the eras carry the story between them, and the lineage
+   section at the end draws the threads that cross four hundred years.
+   The filter is a convenience laid on top; it is not the structure.
+   ===================================================================== */
+
+.gx{ max-width:1120px; margin:0 auto; padding:0 22px 10px; }
+
+/* ---- opening ---- */
+.gx__hero{ padding:clamp(26px,5vh,54px) 0 clamp(18px,3vh,30px); }
+.gx__eyebrow{
+  margin:0 0 12px; font-family:var(--mono); font-size:11.5px;
+  letter-spacing:.16em; color:var(--amber); text-transform:uppercase;
+}
+.gx__hero h1{
+  margin:0 0 16px; font-size:clamp(30px,5.4vw,52px); line-height:1.22;
+  font-weight:700; letter-spacing:-.01em;
+}
+.gx__hero h1 span{
+  display:block; font-family:'Sora',var(--fa); font-weight:300;
+  font-size:.42em; letter-spacing:.06em; color:var(--bone-dim);
+  margin-top:10px; direction:ltr; text-align:right;
+}
+.gx__lede{ margin:0 0 14px; max-width:64ch; font-size:17.5px; line-height:2.05; color:#C7CDD4; }
+.gx__lede b{ color:var(--bone); font-weight:600; }
+
+/* the one paragraph that explains why the page is shaped the way it is */
+.gx__key{
+  margin:22px 0 0; padding:16px 18px; max-width:70ch;
+  border:1px solid var(--line); border-inline-start:2px solid var(--amber);
+  border-radius:4px; background:rgba(255,255,255,.018);
+  font-size:15.5px; line-height:1.95; color:#B6BDC5;
+}
+.gx__key b{ color:var(--bone); font-weight:600; }
+
+/* ---- the filter ---- */
+.gx__filter{
+  position:sticky; top:0; z-index:20;
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  margin:26px 0 4px; padding:12px 0;
+  /* Matched to the page's own ground rather than to --ink. These pages
+     let the ambient light through, so a strip painted brand-black sat on
+     top of the gradient as a visible rectangle. */
+  background:linear-gradient(to bottom, rgba(11,14,20,.95) 64%, rgba(11,14,20,0));
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+}
+.gx__filter b{
+  font-family:var(--mono); font-size:11px; letter-spacing:.1em;
+  color:var(--bone-dim); margin-inline-end:4px;
+}
+.fchip{
+  appearance:none; cursor:pointer; font-family:var(--fa); font-size:13.5px;
+  padding:7px 14px; border-radius:999px; color:#AEB6BF;
+  border:1px solid var(--line); background:rgba(255,255,255,.02);
+  transition:border-color .18s, color .18s, background .18s;
+}
+.fchip:hover{ color:var(--bone); border-color:#3A4049; }
+.fchip[aria-pressed="true"]{
+  color:#fff; border-color:var(--amber); background:rgba(229,32,42,.14);
+}
+.gx__count{ font-family:var(--mono); font-size:11.5px; color:var(--bone-dim); margin-inline-start:auto; }
+
+/* ---- an era ---- */
+.era{ margin:clamp(38px,6vh,66px) 0 0; }
+.era:first-of-type{ margin-top:clamp(20px,3vh,34px); }
+.era[hidden]{ display:none; }
+.era__head{
+  padding:0 0 10px; margin:0 0 8px;
+  border-bottom:1px solid var(--line);
+}
+.era__when{
+  margin:0 0 8px; font-family:var(--mono); font-size:12px;
+  letter-spacing:.12em; color:var(--amber);
+}
+.era__t{ margin:0 0 10px; font-size:clamp(21px,3.2vw,30px); line-height:1.4; font-weight:650; }
+.era__blurb{ margin:0; max-width:68ch; font-size:15.5px; line-height:2; color:#A9B1BA; }
+
+/* ---- one style ---- */
+.gs{
+  display:grid; gap:clamp(16px,2.4vw,30px);
+  grid-template-columns:minmax(0,440px) minmax(0,1fr);
+  align-items:start;
+  padding:clamp(22px,3.4vh,34px) 0;
+  border-bottom:1px solid rgba(38,42,49,.66);
+}
+.gs[hidden]{ display:none; }
+.gs:last-child{ border-bottom:0; }
+
+.gs__shot{
+  display:block; border:1px solid var(--line); border-radius:6px;
+  overflow:hidden; background:var(--ink-2); position:sticky; top:74px;
+}
+.gs__shot img{ display:block; width:100%; height:auto; }
+.gs__shot:hover{ border-color:#454B55; }
+
+.gs__body{ min-width:0; }
+/* The keywords come first, before the name, because they are the part a
+   reader can act on — and because seeing them next to the picture is how
+   you learn to read a style rather than memorise its label. */
+.gs__kw{
+  margin:0 0 10px; font-family:var(--mono); font-size:12px; line-height:1.9;
+  letter-spacing:.02em; color:#7FD0C4; direction:rtl;
+}
+.gs__t{ margin:0 0 14px; font-size:clamp(22px,3vw,30px); font-weight:700; line-height:1.3; }
+.gs__t span{
+  display:block; font-family:'Sora',var(--fa); font-weight:300; font-size:.5em;
+  letter-spacing:.05em; color:var(--bone-dim); margin-top:6px; direction:ltr; text-align:right;
+}
+
+.gs__facts{ margin:0 0 16px; display:grid; gap:7px; }
+.gs__facts div{ display:grid; grid-template-columns:78px minmax(0,1fr); gap:12px; align-items:baseline; }
+.gs__facts dt{
+  font-family:var(--mono); font-size:11px; letter-spacing:.08em;
+  color:var(--bone-dim); padding-top:2px;
+}
+.gs__facts dd{ margin:0; font-size:15px; line-height:1.85; color:#C3CAD2; }
+
+/* A measure, not a column width. Left to the grid these ran to about
+   ninety characters, which is past the point where the eye reliably finds
+   the start of the next line. */
+.gs__what, .gs__subs, .gs__prompt, .gs__facts{ max-width:60ch; }
+.gs__what{ margin:0 0 18px; font-size:16px; line-height:2.05; color:#BFC6CE; }
+.gs__what b{ color:#fff; font-weight:600; }
+
+.gs__subs{ margin:0 0 18px; }
+.gs__subs-h{
+  margin:0 0 9px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.1em; color:var(--bone-dim);
+}
+.gs__subs ul{ margin:0; padding:0; list-style:none; display:grid; gap:7px; }
+.gs__subs li{
+  display:grid; gap:2px; padding:9px 12px;
+  border:1px solid rgba(38,42,49,.8); border-radius:4px;
+  background:rgba(255,255,255,.015);
+}
+.gs__subs b{ font-size:14.5px; font-weight:600; color:var(--bone); }
+.gs__subs span{ font-size:13.5px; line-height:1.8; color:#98A0A9; }
+
+.gs__prompt{ margin:0 0 14px; }
+.gs__prompt-h{
+  margin:0 0 8px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.1em; color:var(--bone-dim);
+}
+.gs__prompt pre{
+  margin:0; padding:13px 15px; border:1px solid var(--line); border-radius:4px;
+  background:#0C0E12; direction:ltr; text-align:left;
+  font-family:var(--mono); font-size:12.5px; line-height:1.95; color:#C9D2DB;
+  white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere;
+}
+.gs__copy{
+  appearance:none; cursor:pointer; margin-top:9px;
+  font-family:var(--fa); font-size:13px; padding:8px 16px; border-radius:4px;
+  color:#C6CDD5; border:1px solid var(--line); background:rgba(255,255,255,.02);
+  transition:border-color .18s, color .18s;
+}
+.gs__copy:hover{ color:#fff; border-color:var(--amber); }
+.gs__copy.is-done{ color:#8FE3C4; border-color:#2F7A5E; }
+
+.gs__more{ margin:0; font-size:14px; }
+
+/* ---- the threads ----
+   The payoff. Everything above is 27 separate boxes; this is the section
+   that says they were never separate. */
+.thr{ margin:clamp(48px,8vh,88px) 0 0; }
+.thr__head{ margin:0 0 6px; }
+.thr h2{ margin:0 0 12px; font-size:clamp(22px,3.4vw,32px); font-weight:700; }
+.thr__lede{ margin:0 0 26px; max-width:66ch; font-size:16px; line-height:2.05; color:#AAB2BB; }
+.thread{
+  margin:0 0 14px; padding:18px 20px;
+  border:1px solid var(--line); border-radius:6px;
+  background:rgba(255,255,255,.016);
+}
+.thread h3{ margin:0 0 14px; font-size:16.5px; font-weight:650; color:var(--bone); }
+.thread ol{
+  margin:0 0 12px; padding:0; list-style:none;
+  display:flex; flex-wrap:wrap; align-items:stretch; gap:8px;
+}
+.thread li{
+  display:grid; gap:2px; flex:1 1 168px; min-width:0;
+  padding:10px 13px; border-radius:4px;
+  border:1px solid rgba(38,42,49,.9); background:#0C0E12;
+  position:relative;
+}
+/* The connector belongs in the gap *before* this step, which on a
+   right-to-left row is its start edge — the right one. With
+   inset-inline-end it landed past the step instead, and the last one in
+   each chain pointed at nothing outside the row. */
+.thread li + li::before{
+  content:'←'; position:absolute; inset-inline-start:-13px; top:50%;
+  transform:translateY(-50%); color:#3E454F; font-size:12px;
+}
+.thread li b{ font-size:14px; font-weight:600; color:var(--bone); }
+.thread li span{ font-family:var(--mono); font-size:11px; color:var(--bone-dim); }
+.thread p{ margin:0; font-size:14.5px; line-height:1.95; color:#9FA7B1; }
+
+/* ---- close ---- */
+.gx__end{
+  margin:clamp(44px,7vh,76px) 0 0; padding:24px 22px;
+  border:1px solid var(--line); border-radius:6px;
+  background:rgba(255,255,255,.016);
+}
+.gx__end h2{ margin:0 0 10px; font-size:20px; font-weight:650; }
+.gx__end p{ margin:0 0 8px; font-size:15.5px; line-height:2; color:#A9B1BA; }
+
+/* ---- narrow ---- */
+@media (max-width:860px){
+  .gs{ grid-template-columns:1fr; }
+  .gs__shot{ position:static; }
+  .gs__facts div{ grid-template-columns:66px minmax(0,1fr); gap:9px; }
+  .thread li + li::before{ display:none; }
+  .thread li{ flex:1 1 100%; }
+}
+@media (max-width:560px){
+  .gx{ padding-inline:16px; }
+  /* Wrapped, this was three rows of chips pinned to the top of a phone —
+     a third of the screen spent on a control the reader uses once. One
+     row that scrolls sideways costs a line and keeps the rest. */
+  .gx__filter{
+    gap:6px; padding:9px 0; flex-wrap:nowrap; overflow-x:auto;
+    scrollbar-width:none; -ms-overflow-style:none;
+    margin-inline:-16px; padding-inline:16px;
+  }
+  .gx__filter::-webkit-scrollbar{ display:none; }
+  .gx__filter b{ flex:0 0 auto; }
+  .fchip{ font-size:12.5px; padding:6px 11px; flex:0 0 auto; }
+  .gx__count{ display:none; }
+  .gs__prompt pre{ font-size:11.5px; }
+}
+@media (prefers-reduced-motion:reduce){
+  .fchip, .gs__copy, .gs__shot{ transition:none; }
+}
+</style>
 </head>
 <body>
 
@@ -544,14 +788,1097 @@ body::before{
 </div></header>
 
 <div class="lesson">
-<div class="lesson__main">
-<section class="sect">
-  <p class="eyebrow">آرشیو تصویری</p>
-  <h1>گالری هوش مصنوعی</h1>
-  <p class="sub">این بخش در حال آماده شدن است. گالری قرار است کارِ خودِ استودیو را نشان دهد — پوستر یک مستند، طراحی یک نما، آزمودن یک زبان تصویری پیش از آنکه به فیلم برسد — با هنر-کارگردانی مخصوص خودش. تا آن‌وقت، اگر دنبال ساختن تصویر با هوش مصنوعی هستی، شناسنامه‌ی کامل ۲۷ سبک در <a href="prompts.html">کتابخانه‌ی پرامپت</a> آماده است.</p>
+<div class="gx">
+
+  <section class="gx__hero">
+    <p class="gx__eyebrow">گالری نویدیکس</p>
+    <h1>جهانِ سبک‌ها<span>The World of Styles</span></h1>
+    <p class="gx__lede">بیست‌وهفت زبانِ تصویری، از کهن‌ترین سنتِ زنده‌ی نقاشی تا نورِ نئونِ دیشب. هر کدام یک <b>تاریخ</b> دارد، یک <b>جغرافیا</b>، و آدم‌هایی که ساختندش — و همه‌شان، پرامپتی که با آن می‌شود همین امروز چیزی در همان زبان ساخت.</p>
+    <p class="gx__lede">این صفحه یک شبکه‌ی عکس نیست. <b>یک خطِ زمان است.</b></p>
+    <div class="gx__key">
+      و دلیلش این است: مینیاتور ایرانی و رنسانس ایتالیا <b>هم‌زمان‌اند</b>. اوکیو-ئه ژاپنی هم‌دوره‌ی باروک است. نوری که کاراواجو در سال ۱۶۰۰ در رم ساخت، همان نوری است که چهار قرن بعد در فیلم نوآر و بعد در «بلید رانر» می‌بینی. در یک شبکه‌ی مرتبِ عکس، هیچ‌کدام از این‌ها دیده نمی‌شود. روی یک خطِ زمان، خودشان را نشان می‌دهند.
+    </div>
+  </section>
+
+  <nav class="gx__filter" aria-label="فیلتر سبک‌ها">
+    <b>خانواده</b>
+    <button class="fchip" type="button" data-fam="all" aria-pressed="true">همه</button>
+    <button class="fchip" type="button" data-fam="classic" aria-pressed="false">نقاشی کلاسیک</button>
+    <button class="fchip" type="button" data-fam="east" aria-pressed="false">سنتی و شرقی</button>
+    <button class="fchip" type="button" data-fam="modern" aria-pressed="false">مدرن و انتزاعی</button>
+    <button class="fchip" type="button" data-fam="craft" aria-pressed="false">متریال و تکنیک</button>
+    <button class="fchip" type="button" data-fam="light" aria-pressed="false">نورپردازی سینمایی</button>
+    <button class="fchip" type="button" data-fam="photo" aria-pressed="false">عکاسی</button>
+    <span class="gx__count" data-count>۲۷ سبک</span>
+  </nav>
+
+
+<section class="era" id="e0">
+  <header class="era__head">
+    <p class="era__when">تا سده‌ی ۱۴</p>
+    <h2 class="era__t">پیش از هر چیز</h2>
+    <p class="era__blurb">وقتی اروپا هنوز روی چوب می‌کَند، یک سنتِ نقاشی در شرق آسیا صدها سال است که کار می‌کند و قواعدش را نوشته.</p>
+  </header>
+
+  <article class="gs" id="inkwash" data-fam="east">
+    <a class="gs__shot" href="style/inkwash.html" aria-label="شناسنامه‌ی کامل مرکب چینی">
+      <picture>
+        <source srcset="prompts/inkwash.webp" type="image/webp" />
+        <img src="prompts/inkwash.jpg" alt="مرکب چینی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">تک‌رنگ · ضربه‌ی برگشت‌ناپذیر · فضای خالی · کاغذ شوان · کوه‌های محو</p>
+      <h3 class="gs__t">مرکب چینی<span>Chinese Ink Wash</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>از سده‌ی ۸ میلادی تا امروز</dd></div>
+        <div><dt>کجا</dt><dd>چین، سپس کره و ژاپن</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>وانگ وی، مي فو، ني زان، شي‌تائو، بادا شان‌رن؛ در ژاپن سسشو</dd></div>
+      </dl>
+      <p class="gs__what">کهن‌ترین سنتِ زنده‌ی این صفحه. نقاش با یک قلم‌مو و یک رنگ کار می‌کند — مرکب سیاه، رقیق‌شده تا هر درجه‌ای از خاکستری. قلم که روی کاغذ نشست، برگشتی ندارد: خطا را نمی‌شود پاک کرد یا رویش رنگ گذاشت، پس هر ضربه باید همان بار اول درست باشد. و مهم‌تر از خودِ خط، <b>جای خالی</b> است؛ کاغذِ دست‌نخورده در این سنت «هیچی» نیست، مه است و آب و فاصله.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>شان‌شویی (کوه و آب)</b><span>منظره‌ی عمودی با کوه‌های محوشونده — رایج‌ترین شکل</span></li>
+          <li><b>نقاشی ادیبان (ون‌رن‌هوا)</b><span>کارِ شاعران و دیوانیان، نه نقاشان حرفه‌ای؛ ارزشش به بیانِ شخصی بود نه دقت</span></li>
+          <li><b>سومي-ئه</b><span>شاخه‌ی ژاپنی، از سده‌ی ۱۴ به بعد، مینیمال‌تر و ذن‌ی‌تر</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Chinese ink wash painting of {SUBJECT}, single decisive unrepeatable brushstrokes, monochrome ink from dense black to pale grey wash, ink bleeding into absorbent xuan paper, vast areas of deliberate empty space, misty layered mountains receding into nothing</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/inkwash.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
 </section>
+
+<section class="era" id="e1">
+  <header class="era__head">
+    <p class="era__when">۱۴۰۰ تا ۱۶۰۰</p>
+    <h2 class="era__t">تصویر، جهان را اندازه می‌گیرد</h2>
+    <p class="era__blurb">در فلورانس پرسپکتیو کشف می‌شود و در هرات تصمیم می‌گیرند اصلاً پرسپکتیو نداشته باشند. این دو، هم‌زمان‌اند — و هیچ‌کدام عقب‌تر از آن یکی نیست.</p>
+  </header>
+
+  <article class="gs" id="renaissance" data-fam="classic">
+    <a class="gs__shot" href="style/renaissance.html" aria-label="شناسنامه‌ی کامل رنسانس">
+      <picture>
+        <source srcset="prompts/renaissance.webp" type="image/webp" />
+        <img src="prompts/renaissance.jpg" alt="رنسانس — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">سفوماتو · پرسپکتیو یک‌نقطه‌ای · ترکیب‌بندی هرمی · نور یکدست از چپ</p>
+      <h3 class="gs__t">رنسانس<span>Renaissance</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۴۰۰ تا ۱۶۰۰</dd></div>
+        <div><dt>کجا</dt><dd>ایتالیا (فلورانس، رم، ونیز)، سپس فلاندر و آلمان</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>لئوناردو داوینچی، رافائل، میکل‌آنژ، بوتیچلی؛ در شمال یان فان آیک و دورر</dd></div>
+      </dl>
+      <p class="gs__what">دوره‌ای که نقاشی تصمیم گرفت جهان را <b>اندازه بگیرد</b>. پرسپکتیو خطی — کشف برونلسکی در فلورانس حدود ۱۴۲۰ — یعنی برای اولین بار می‌شد عمق را حساب کرد، نه حدس زد. نور یکدست و آرام است، ترکیب‌بندی متقارن و هرمی، و انتقال سایه به روشنایی آن‌قدر نرم که ردِ قلم دیده نمی‌شود؛ به این کار لئوناردو می‌گفت <b>سفوماتو</b>، یعنی «مثل دود».</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>رنسانس متقدم</b><span>فلورانس، ۱۴۰۰–۱۴۹۰؛ کشف پرسپکتیو و آناتومی</span></li>
+          <li><b>رنسانس عالی</b><span>رم، ۱۴۹۰–۱۵۲۷؛ لئوناردو، رافائل، میکل‌آنژ در یک شهر</span></li>
+          <li><b>رنسانس شمالی</b><span>فلاندر و آلمان؛ جزئیات وسواسی و رنگ روغن به‌جای گچ‌بری</span></li>
+          <li><b>مانیریسم</b><span>۱۵۲۰–۱۶۰۰؛ عمداً کشیده، پیچیده و ناآرام — واکنشی به کمالِ رنسانس عالی</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Renaissance painting of {SUBJECT}, sfumato soft transitions with no visible brush marks, balanced pyramidal composition, precise one-point linear perspective, gentle even light from the left, olive green and pale ochre palette, thin glazed panel surface, serene humanist atmosphere</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/renaissance.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="oil" data-fam="classic">
+    <a class="gs__shot" href="style/oil.html" aria-label="شناسنامه‌ی کامل رنگ روغن کلاسیک">
+      <picture>
+        <source srcset="prompts/oil.webp" type="image/webp" />
+        <img src="prompts/oil.jpg" alt="رنگ روغن کلاسیک — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">ایمپاستو · سایه‌ی لعابی · پالت خاکی · بافت بوم کتانی</p>
+      <h3 class="gs__t">رنگ روغن کلاسیک<span>Classical Oil Painting</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>از ۱۴۲۰ تا سده‌ی ۱۹</dd></div>
+        <div><dt>کجا</dt><dd>فلاندر، سپس ایتالیا و تمام اروپا</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>یان فان آیک، تیسین، رامبراند، ولاسکس، انگر</dd></div>
+      </dl>
+      <p class="gs__what">این یک «سبک» نیست، یک <b>متریال</b> است — اما متریالی که سبک‌ها را ممکن کرد. رنگدانه با روغن بزرک مخلوط می‌شود؛ برخلاف تمپرا که تند خشک می‌شد، روغن ساعت‌ها و روزها مرطوب می‌ماند. یعنی نقاش می‌تواند سایه‌ها را نرم درهم ببرد، لایه‌های شفاف (<b>لعاب</b>) روی هم بگذارد تا رنگ از عمق بدرخشد، و رنگ را غلیظ روی بوم بنشاند تا خودش بافت شود. تقریباً هر چیزی که در موزه به آن می‌گویی «نقاشی کلاسیک»، این است.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>لعاب‌کاری</b><span>لایه‌های نازک شفاف روی هم؛ رنگ از زیر می‌درخشد</span></li>
+          <li><b>ایمپاستو</b><span>رنگ غلیظ و برجسته که ردِ قلم و کاردک در آن می‌ماند</span></li>
+          <li><b>آلا پریما</b><span>تمام‌کردن کار در یک نشست، پیش از خشک‌شدن لایه‌ی زیرین</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>classical oil painting of {SUBJECT}, visible impasto brushwork, glazed transparent shadows, warm earth palette of raw umber and ochre, chiaroscuro lighting from a single high window, aged linen canvas texture, museum photograph</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/oil.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="miniature" data-fam="east">
+    <a class="gs__shot" href="style/miniature.html" aria-label="شناسنامه‌ی کامل مینیاتور ایرانی">
+      <picture>
+        <source srcset="prompts/miniature.webp" type="image/webp" />
+        <img src="prompts/miniature.jpg" alt="مینیاتور ایرانی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">پرسپکتیو تخت · باز شدن به بالا · لاجورد و شنگرف · ورق طلا · حاشیه‌ی مذهّب</p>
+      <h3 class="gs__t">مینیاتور ایرانی<span>Persian Miniature</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>تیموری و صفوی — ۱۴۰۰ تا ۱۶۰۰</dd></div>
+        <div><dt>کجا</dt><dd>هرات، تبریز، قزوین، اصفهان</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>کمال‌الدین بهزاد، سلطان محمد، رضا عباسی</dd></div>
+      </dl>
+      <p class="gs__what">دقیقاً هم‌زمان با رنسانس ایتالیا، و با یک تصمیم کاملاً متفاوت: مینیاتور <b>عمداً</b> پرسپکتیو ندارد. صحنه به‌جای اینکه به عقب فرو برود، به بالا باز می‌شود — بام و حیاط و اتاق را با هم می‌بینی، چون قرار نیست از یک چشم نگاه کنی، قرار است <b>روایت</b> را کامل ببینی. رنگ‌ها سنگ‌اند نه رنگدانه‌ی معمولی: لاجورد واقعی، شنگرف، و طلای ورق‌شده. و کار برای دیوار نبود؛ صفحه‌ی یک کتاب بود که در دست گرفته می‌شد.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>مکتب هرات</b><span>اواخر سده‌ی ۱۵، دربار تیموری؛ بهزاد و اوجِ ترکیب‌بندی</span></li>
+          <li><b>مکتب تبریز</b><span>اوایل صفوی؛ شاهنامه‌ی شاه‌طهماسبی، پرجمعیت‌ترین و پرخرج‌ترین نسخه‌ی تصویری تاریخ ایران</span></li>
+          <li><b>مکتب اصفهان</b><span>رضا عباسی، سده‌ی ۱۷؛ تک‌چهره و تک‌پیکره به‌جای صحنه‌ی شلوغ</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Persian miniature painting of {SUBJECT}, flattened perspective with no vanishing point, scene opening upward rather than receding, intricate gold leaf detailing, lapis lazuli blue turquoise and vermilion, ornamental illuminated border, fine even brush linework, Safavid manuscript page</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/miniature.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="woodcut" data-fam="craft">
+    <a class="gs__shot" href="style/woodcut.html" aria-label="شناسنامه‌ی کامل چاپ چوبی و لینوکات">
+      <picture>
+        <source srcset="prompts/woodcut.webp" type="image/webp" />
+        <img src="prompts/woodcut.jpg" alt="چاپ چوبی و لینوکات — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">خط کنده‌شده · سیاه تخت بدون میانه · لبه‌ی ناهموار · مرکب ناهمگون</p>
+      <h3 class="gs__t">چاپ چوبی و لینوکات<span>Woodcut / Linocut</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>از ۱۴۰۰؛ احیای بزرگ در ۱۹۰۵</dd></div>
+        <div><dt>کجا</dt><dd>آلمان و هلند، سپس همه‌جا</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>آلبرشت دورر؛ بعدها گروه دی بروکه، و پیکاسو و ماتیس در لینوکات</dd></div>
+      </dl>
+      <p class="gs__what">قدیمی‌ترین راه تکثیر تصویر در اروپا. نقاش روی چوب می‌کَند و هر چه <b>کَنده شود سفید می‌ماند</b> — یعنی برعکسِ کشیدن فکر می‌کنی. ابزار خشن است، پس نتیجه هم خشن است: خط ضخیم، سیاهِ تخت، بدون هیچ خاکستریِ میانه. همین محدودیت باعث شد اکسپرسیونیست‌های آلمانی در ۱۹۰۵ دوباره سراغش بروند؛ آنها دقیقاً دنبال چیزی می‌گشتند که نتواند مؤدب باشد.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>چاپ چوبی سنتی</b><span>روی چوب سخت، خط‌های ضخیم و شکسته</span></li>
+          <li><b>لینوکات</b><span>روی لینولئوم، نرم‌تر و آزادتر؛ از حدود ۱۹۰۰</span></li>
+          <li><b>موکو-هانگا</b><span>روش ژاپنی با مرکب آبی و کاغذ واشی — همان تکنیک اوکیو-ئه</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>woodcut print of {SUBJECT}, bold gouged lines carved with a chisel, stark black ink on cream paper with no mid-tones, rough irregular edges where the block bit, uneven ink coverage, high contrast simplified forms, single spot colour</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/woodcut.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+</section>
+
+<section class="era" id="e2">
+  <header class="era__head">
+    <p class="era__when">۱۶۰۰ تا ۱۸۰۰</p>
+    <h2 class="era__t">نور، به‌عنوان درام</h2>
+    <p class="era__blurb">کاراواجو چراغ را خاموش می‌کند و فقط یکی را روشن می‌گذارد. ورمیر کنار پنجره می‌نشیند. و در ادو، چاپ ارزانِ مردم عادی دارد کادربندی را از نو اختراع می‌کند.</p>
+  </header>
+
+  <article class="gs" id="baroque" data-fam="classic">
+    <a class="gs__shot" href="style/baroque.html" aria-label="شناسنامه‌ی کامل باروک">
+      <picture>
+        <source srcset="prompts/baroque.webp" type="image/webp" />
+        <img src="prompts/baroque.jpg" alt="باروک — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">تنبریسم · تک‌منبع نور تند · سیاهِ فراگیر · ترکیب‌بندی قطری</p>
+      <h3 class="gs__t">باروک<span>Baroque</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۶۰۰ تا ۱۷۵۰</dd></div>
+        <div><dt>کجا</dt><dd>رم، سپس اسپانیا، فلاندر، هلند و فرانسه</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>کاراواجو، روبنس، رامبراند، ولاسکس، آرتمیزیا جنتیلسکی</dd></div>
+      </dl>
+      <p class="gs__what">رنسانس آرام و متعادل بود؛ باروک آمد که <b>تکانت بدهد</b>. کاراواجو در رم حدود سال ۱۶۰۰ کاری کرد که تا آن روز کسی نکرده بود: بیشترِ قاب را در سیاهی مطلق گذاشت و فقط یک نور تند از یک طرف انداخت. اسمش <b>تنبریسم</b> است. ترکیب‌بندی از تقارن درآمد و قطری و پرحرکت شد، انگار لحظه‌ای از وسطِ یک اتفاق بریده شده. این نور، چهارصد سال بعد، مستقیماً به فیلم نوآر رسید.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>کاراواجیسم</b><span>پیروان مستقیم کاراواجو در ایتالیا، اسپانیا و هلند</span></li>
+          <li><b>عصر طلایی هلند</b><span>رامبراند و ورمیر؛ همان نور، ولی خانگی و آرام به‌جای مذهبی و پرصدا</span></li>
+          <li><b>باروک فلاندری</b><span>روبنس؛ پرجمعیت، گوشتی، پررنگ</span></li>
+          <li><b>باروک اسپانیایی</b><span>ولاسکس و سوربران؛ خشک‌تر، جدی‌تر، با سیاهِ عمیق‌تر</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Baroque oil painting of {SUBJECT}, tenebrism with a single hard light source, deep crushed shadows filling most of the frame, dynamic diagonal composition, theatrical staging, rich warm reds and muted gold, luminous flesh tones, controlled painterly brushwork</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/baroque.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="window" data-fam="light">
+    <a class="gs__shot" href="style/window.html" aria-label="شناسنامه‌ی کامل نور نرم پنجره">
+      <picture>
+        <source srcset="prompts/window.webp" type="image/webp" />
+        <img src="prompts/window.jpg" alt="نور نرم پنجره — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">پنجره‌ی شمالی · افتِ نرم · فیل سفید · حال‌وهوای خانگی</p>
+      <h3 class="gs__t">نور نرم پنجره<span>Soft Window Light</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>حدود ۱۶۵۰؛ هنوز زنده</dd></div>
+        <div><dt>کجا</dt><dd>دلفتِ هلند — و از آن به بعد همه‌جا</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>یوهانس ورمیر؛ امروز تقریباً هر پرتره‌گرِ طبیعی‌نورپرداز</dd></div>
+      </dl>
+      <p class="gs__what">ورمیر تقریباً همه‌ی کارهایش را کنار یک پنجره‌ی رو به شمال کشید، و دلیلش فنی بود: پنجره‌ی شمالی هیچ‌وقت آفتاب مستقیم نمی‌گیرد، پس نورش تمام روز <b>یکدست و نرم</b> می‌ماند. نتیجه‌اش نوری است که از یک سمت می‌آید و به‌آرامی روی صورت محو می‌شود — نه سایه‌ی تند دارد، نه تختیِ فلاش. امروز به این می‌گویند «نور طبیعیِ درست»، و هنوز همان پنجره است.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>نور شمالی</b><span>منبع ثابت و بی‌آفتاب؛ استاندارد آتلیه‌ی نقاشی تا پیش از برق</span></li>
+          <li><b>لوپ و رامبراند</b><span>دو الگوی سایه روی صورت که از همین نور جانبی درمی‌آید</span></li>
+          <li><b>بازتاب سفید</b><span>یک سطح روشن سمت سایه، برای اینکه تاریکی بسته نشود</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>{SUBJECT} beside a large north-facing window, soft directional daylight, gentle gradient falloff across the subject, white bounce fill on the shadow side, calm muted palette, quiet domestic mood</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/window.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="ukiyoe" data-fam="east">
+    <a class="gs__shot" href="style/ukiyoe.html" aria-label="شناسنامه‌ی کامل اوکیو-ئه ژاپنی">
+      <picture>
+        <source srcset="prompts/ukiyoe.webp" type="image/webp" />
+        <img src="prompts/ukiyoe.jpg" alt="اوکیو-ئه ژاپنی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">خط قاطع · رنگ تخت بدون سایه · آبی پروس · کاغذ واشی · کادربندی جسور</p>
+      <h3 class="gs__t">اوکیو-ئه ژاپنی<span>Ukiyo-e</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۶۷۰ تا ۱۸۶۰</dd></div>
+        <div><dt>کجا</dt><dd>ادو (توکیوی امروز)، ژاپن</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>هوکوسای، هیروشیگه، اوتامارو، شاراکو</dd></div>
+      </dl>
+      <p class="gs__what">«اوکیو-ئه» یعنی «تصویرهای جهانِ شناور» — یعنی تصویرِ زندگیِ شهری و زودگذر: بازیگر، تماشاخانه، محله‌ی خوش‌گذرانی، سفر. اینها هنرِ اشرافی نبودند؛ <b>چاپ ارزانِ مردم عادی</b> بودند، به قیمت یک وعده غذا. سایه ندارند، حجم ندارند، رنگ تخت است و خط قاطع — و کادربندی‌شان چنان جسورانه است که وقتی این چاپ‌ها در دهه‌ی ۱۸۶۰ به پاریس رسیدند، امپرسیونیست‌ها را زیر و رو کردند.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>بی‌جین-گا</b><span>تصویر زنان زیبا — اوتامارو</span></li>
+          <li><b>یاکوشا-ئه</b><span>پرتره‌ی بازیگران کابوکی — شاراکو</span></li>
+          <li><b>فوکه‌ای-گا</b><span>منظره — هوکوسای و هیروشیگه؛ «موج بزرگ» حدود ۱۸۳۱</span></li>
+          <li><b>شونگا</b><span>شاخه‌ی اروتیک، که سهم بزرگی از تیراژ داشت</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Japanese ukiyo-e woodblock print of {SUBJECT}, confident even outline, flat colour areas with no shading, Prussian blue coral pink and mustard on cream washi paper, visible woodgrain texture, bold cropping and generous negative space, layered flat planes</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/ukiyoe.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+</section>
+
+<section class="era" id="e3">
+  <header class="era__head">
+    <p class="era__when">۱۸۰۰ تا ۱۸۷۰</p>
+    <h2 class="era__t">طوفان، و بعد دوربین</h2>
+    <p class="era__blurb">نقاشی به طبیعت پناه می‌برد، درست وقتی که دستگاهی از راه می‌رسد و کارِ «شبیه‌سازی» را برای همیشه از دستش می‌گیرد.</p>
+  </header>
+
+  <article class="gs" id="romantic" data-fam="classic">
+    <a class="gs__shot" href="style/romantic.html" aria-label="شناسنامه‌ی کامل رمانتیسم">
+      <picture>
+        <source srcset="prompts/romantic.webp" type="image/webp" />
+        <img src="prompts/romantic.jpg" alt="رمانتیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">منظره‌ی والا · پیکره‌ی کوچک · آسمان طوفانی · شکافِ نور طلایی</p>
+      <h3 class="gs__t">رمانتیسم<span>Romanticism</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۷۸۰ تا ۱۸۵۰</dd></div>
+        <div><dt>کجا</dt><dd>آلمان، بریتانیا، فرانسه، اسپانیا</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>کاسپار داوید فریدریش، ترنر، دلاکروا، ژریکو، گویا</dd></div>
+      </dl>
+      <p class="gs__what">واکنشی بود به عقلِ خشکِ عصر روشنگری و به دودِ انقلاب صنعتی. حرفش این بود: طبیعت از تو <b>بزرگ‌تر</b> است، و همین ترس‌آور بودنش زیباست — به این حس می‌گویند «والا» (sublime). به همین دلیل در این نقاشی‌ها آدم همیشه کوچک است و آسمان همیشه در حال کاری کردن. ترنر تا جایی پیش رفت که شکل‌ها را در نور و بخار حل کرد؛ نیم‌قرن پیش از امپرسیونیست‌ها.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>منظره‌ی والا</b><span>فریدریش و ترنر؛ آدمِ کوچک روبه‌روی طبیعتِ بی‌کران</span></li>
+          <li><b>رمانتیسم تاریخی</b><span>دلاکروا و ژریکو؛ صحنه‌ی پرحرکت و سیاسی</span></li>
+          <li><b>مکتب رودخانه‌ی هادسون</b><span>آمریکا، ۱۸۲۵–۱۸۷۰؛ همان ایده در منظره‌ی آمریکای شمالی</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Romantic painting of {SUBJECT}, vast sublime landscape dwarfing a small human figure, stormy sky with a break of golden light, cold blue-grey against warm gold, energetic loose brushwork in the clouds, dramatic atmospheric depth</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/romantic.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="watercolor" data-fam="craft">
+    <a class="gs__shot" href="style/watercolor.html" aria-label="شناسنامه‌ی کامل آبرنگ">
+      <picture>
+        <source srcset="prompts/watercolor.webp" type="image/webp" />
+        <img src="prompts/watercolor.jpg" alt="آبرنگ — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">خیس در خیس · سفیدیِ کاغذ · بافت کاغذ · رسوب رنگدانه</p>
+      <h3 class="gs__t">آبرنگ<span>Watercolour</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>اوجِ مکتب بریتانیا: ۱۷۵۰ تا ۱۸۵۰</dd></div>
+        <div><dt>کجا</dt><dd>بریتانیا، پیش‌تر آلمان</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>ترنر، توماس گرتین، جان سل کاتمن؛ پیش از همه دورر</dd></div>
+      </dl>
+      <p class="gs__what">آبرنگ سبک نیست، یک <b>شرط</b> است: رنگ شفاف است، پس سفیدی از کاغذ می‌آید نه از رنگِ سفید. یعنی هر جایی که قرار است روشن بماند، باید <b>دست‌نخورده</b> رها شود — از اول باید بدانی کجا را نمی‌کشی. رنگ روی کاغذ خیس پخش می‌شود و کنترلش تا حدی از دستت خارج است؛ همین «تا حدی از دست خارج» چیزی است که کارِ خوبِ آبرنگ را زنده نگه می‌دارد. مکتب بریتانیا آن را از یک ابزارِ یادداشت‌برداری به یک هنر مستقل تبدیل کرد.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>خیس در خیس</b><span>رنگ روی کاغذ نمناک؛ لبه‌های پخش‌شده</span></li>
+          <li><b>لایه‌ی شفاف</b><span>گذاشتن لایه‌های نازک روی هم پس از خشک‌شدن</span></li>
+          <li><b>گرانوله</b><span>رسوب رنگدانه در بافت کاغذ سرد-فشرده</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>delicate watercolour painting of {SUBJECT}, wet-on-wet bleeding edges, visible cold-press paper grain, pigment granulation settling in the texture, large areas of untouched white paper, loose confident washes, muted pastel palette</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/watercolor.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="graphite" data-fam="craft">
+    <a class="gs__shot" href="style/graphite.html" aria-label="شناسنامه‌ی کامل طراحی با مداد">
+      <picture>
+        <source srcset="prompts/graphite.webp" type="image/webp" />
+        <img src="prompts/graphite.jpg" alt="طراحی با مداد — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">هاشور متقاطع · خطوط ساخت پاک‌نشده · میانه‌ی محو · بدون رنگ</p>
+      <h3 class="gs__t">طراحی با مداد<span>Graphite Sketch</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>مدادِ امروزی از ۱۷۹۵</dd></div>
+        <div><dt>کجا</dt><dd>بریتانیا و فرانسه؛ سپس هر آکادمی هنری</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>انگر (پرتره‌های مدادی)، و عملاً هر نقاشی پیش از شروع کار</dd></div>
+      </dl>
+      <p class="gs__what">گرافیت در ۱۵۶۴ در انگلستان پیدا شد، ولی مدادِ امروزی را کُنته در ۱۷۹۵ ساخت: گرافیت را با خاک رس مخلوط کرد تا سختی‌اش قابل تنظیم شود — از همین‌جاست که ۲B و ۶H داریم. طراحی مدادی معمولاً <b>مقصد نیست، مرحله است</b>؛ جایی که هنرمند دارد فکر می‌کند. به همین دلیل خط‌های ساختاری و اشتباه‌های پاک‌نشده در آن باقی می‌مانند، و همان‌ها جذاب‌ترین بخشش‌اند.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>مطالعه‌ی ارزش</b><span>فقط روشن و تاریک، بدون خط بیرونی</span></li>
+          <li><b>هاشور متقاطع</b><span>ساختن حجم با تراکم خط</span></li>
+          <li><b>طرح اولیه</b><span>خطوط ساخت که عمداً پاک نمی‌شوند</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>graphite pencil study of {SUBJECT}, cross-hatched shading building form, visible construction lines left unerased, soft smudged mid-tones, bright paper highlights, tonal value study, sketchbook page, no colour</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/graphite.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="qajar" data-fam="east">
+    <a class="gs__shot" href="style/qajar.html" aria-label="شناسنامه‌ی کامل نقاشی قاجار">
+      <picture>
+        <source srcset="prompts/qajar.webp" type="image/webp" />
+        <img src="prompts/qajar.jpg" alt="نقاشی قاجار — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">پیکره‌ی رو به جلو · نور بی‌سایه · یاقوتی و زمردی و طلا · جزئیات پارچه و جواهر</p>
+      <h3 class="gs__t">نقاشی قاجار<span>Qajar Painting</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>اوج: ۱۷۹۷ تا ۱۸۳۴</dd></div>
+        <div><dt>کجا</dt><dd>ایران — تهران، شیراز، اصفهان</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>مهرعلی، ابوالحسن غفاری (صنیع‌الملک)، و در پایان دوره کمال‌الملک</dd></div>
+      </dl>
+      <p class="gs__what">لحظه‌ای در تاریخ تصویر ایران که دو سنت به هم برخوردند. اندازه و متریال اروپایی شد — بوم بزرگ، رنگ روغن، پرتره‌ی تمام‌قد — ولی <b>منطق تصویر ایرانی ماند</b>: نور یکدست و بی‌سایه، صورت آرمانی به‌جای واقعی، و وسواسی عجیب روی پارچه و جواهر و نقش. فتحعلی‌شاه از این پرتره‌ها ابزار سیاست ساخت و نسخه‌هایشان را به دربارهای دیگر می‌فرستاد. تا کمال‌الملک که سبک را کاملاً به رئالیسم اروپایی چرخاند و این دوره را بست.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>پرتره‌ی درباری</b><span>تمام‌قد، تمام‌رو، در اندازه‌ی واقعی</span></li>
+          <li><b>نقاشیِ گل و مرغ</b><span>شاخه‌ی تزیینی، روی جلد و قلمدان و لاکی</span></li>
+          <li><b>مکتب کمال‌الملک</b><span>پایان دوره؛ چرخش کامل به پرسپکتیو و سایه‌ی اروپایی</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Qajar-era Persian oil painting of {SUBJECT}, frontal full-length courtly figure, even frontal light with minimal shadow, ruby red emerald green and gold palette, extremely detailed textiles jewellery and ornament, polished surface, formal symmetrical staging</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/qajar.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="studio" data-fam="photo">
+    <a class="gs__shot" href="style/studio.html" aria-label="شناسنامه‌ی کامل پرتره‌ی استودیویی">
+      <picture>
+        <source srcset="prompts/studio.webp" type="image/webp" />
+        <img src="prompts/studio.jpg" alt="پرتره‌ی استودیویی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">لنز ۸۵ · سافت‌باکس ۴۵ درجه · نور مو · عمق میدان کم · برق چشم</p>
+      <h3 class="gs__t">پرتره‌ی استودیویی<span>Studio Portrait</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>از ۱۸۵۰؛ قواعدش از ۱۹۳۰</dd></div>
+        <div><dt>کجا</dt><dd>پاریس، سپس هالیوود و نیویورک</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>نادار (پاریس، دهه‌ی ۱۸۵۰)، جرج هارل (هالیوود، دهه‌ی ۱۹۳۰)، ایروینگ پن و ریچارد آودون</dd></div>
+      </dl>
+      <p class="gs__what">وقتی نور را از آسمان گرفتی و در یک اتاق ساختی، باید تصمیم بگیری دقیقاً از کجا بتابد. جوابی که هالیوودِ دهه‌ی ۱۹۳۰ به آن رسید هنوز استاندارد است: یک نور اصلی کمی از بالا و کنار، یک پرکننده‌ی ملایم در سمت سایه، و یک نور از پشت که مو را از پس‌زمینه جدا کند. جرج هارل با همین سه چراغ چهره‌ی ستاره‌های سینما را ساخت — و «پرتره‌ی حرفه‌ای» تا امروز یعنی همین.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>نور سه‌نقطه‌ای</b><span>اصلی، پرکننده، و نور مو — پایه‌ی همه‌چیز</span></li>
+          <li><b>نور رامبراند</b><span>مثلث کوچک نور روی گونه‌ی سمت سایه</span></li>
+          <li><b>پروانه‌ای</b><span>نور از بالا و روبه‌رو؛ سایه‌ی کوچک زیر بینی — سبک گلامور</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>studio portrait photograph of {SUBJECT}, 85mm lens at f/1.8, large softbox key light at 45 degrees, subtle hair light from behind, seamless charcoal backdrop, shallow depth of field, crisp catchlight in the eyes, natural skin texture retained, neutral colour grade</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/studio.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+</section>
+
+<section class="era" id="e4">
+  <header class="era__head">
+    <p class="era__when">۱۸۷۰ تا ۱۹۱۰</p>
+    <h2 class="era__t">رنگ از قید شکل آزاد می‌شود</h2>
+    <p class="era__blurb">حالا که دوربین کارِ ثبت را می‌کند، نقاشی می‌پرسد پس کارِ من چیست؟ سه جواب پشت سر هم، در سی سال.</p>
+  </header>
+
+  <article class="gs" id="impressionist" data-fam="modern">
+    <a class="gs__shot" href="style/impressionist.html" aria-label="شناسنامه‌ی کامل امپرسیونیسم">
+      <picture>
+        <source srcset="prompts/impressionist.webp" type="image/webp" />
+        <img src="prompts/impressionist.jpg" alt="امپرسیونیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">رنگ شکسته · لکه‌های کوتاه پیدا · نور لکه‌لکه · لبه‌های نرم · پالت روشن</p>
+      <h3 class="gs__t">امپرسیونیسم<span>Impressionism</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۸۷۴ تا ۱۸۸۶</dd></div>
+        <div><dt>کجا</dt><dd>پاریس و حومه‌اش</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>مونه، رنوار، دگا، پیسارو، برت موریزو، مری کاسات</dd></div>
+      </dl>
+      <p class="gs__what">اسمش را یک منتقد به‌عنوان <b>فحش</b> ساخت: مونه تابلویی داشت به نام «برداشت، طلوع آفتاب» و منتقد نوشت اینها فقط «برداشت»اند، نه نقاشی. گروه اسم را برداشتند و رویش گذاشتند. کارشان این بود که رنگ‌ها را روی پالت با هم مخلوط نکنند، بلکه لکه‌های خالص را کنار هم بگذارند و بگذارند چشمِ بیننده آنها را ترکیب کند. و از آتلیه زدند بیرون — رنگِ لوله‌ای تازه اختراع شده بود و برای اولین بار می‌شد رنگ را با خود بیرون برد.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>پلن‌ار</b><span>نقاشی در فضای باز، جلوی خودِ سوژه</span></li>
+          <li><b>سری‌های نور</b><span>یک سوژه، بارها، در ساعت‌های مختلف — انبار کاه و کلیسای روئنِ مونه</span></li>
+          <li><b>نئوامپرسیونیسم</b><span>سورا؛ همان ایده ولی با نقطه‌های منظم و نظام‌مند</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Impressionist painting of {SUBJECT}, broken colour applied in short visible dabs of pure unmixed pigment, dappled natural daylight, soft edges dissolving into atmosphere, high-key palette, painted en plein air</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/impressionist.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="postimp" data-fam="modern">
+    <a class="gs__shot" href="style/postimp.html" aria-label="شناسنامه‌ی کامل پست‌امپرسیونیسم">
+      <picture>
+        <source srcset="prompts/postimp.webp" type="image/webp" />
+        <img src="prompts/postimp.jpg" alt="پست‌امپرسیونیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">ایمپاستوی پیچان · رنگ مکمل اشباع · کانتور سنگین · سطح برجسته</p>
+      <h3 class="gs__t">پست‌امپرسیونیسم<span>Post-Impressionism</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۸۸۶ تا ۱۹۰۵</dd></div>
+        <div><dt>کجا</dt><dd>فرانسه — پاریس، آرل، پرووانس، و برتانی</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>ون‌گوگ، سزان، گوگن، سورا</dd></div>
+      </dl>
+      <p class="gs__what">نسل بعدی گفت امپرسیونیسم زیباست ولی <b>سطحی</b> است: فقط نور را ثبت می‌کند، نه چیزی را که هنرمند حس می‌کند. پس هر کدام یک راه جدا رفتند. ون‌گوگ رنگ را غلیظ و پیچان مستقیم از لوله روی بوم گذاشت تا خودِ رنگ حرکت داشته باشد. سزان شکل‌ها را به احجام ساده شکست — و همین بعداً کوبیسم شد. گوگن رنگ را از واقعیت آزاد کرد. اینها یک گروه نبودند؛ یک نقطه‌ی انشعاب بودند.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>ایمپاستوی جهت‌دار</b><span>ون‌گوگ؛ ضربه‌های پیچان که مسیر دارند</span></li>
+          <li><b>کلوازونیسم</b><span>گوگن؛ رنگِ تخت با کانتور تیره، مثل شیشه‌ی رنگی</span></li>
+          <li><b>پوانتیلیسم</b><span>سورا؛ نقطه‌های ریز و منظم رنگ خالص</span></li>
+          <li><b>ساخت‌گرایی سزان</b><span>شکستن طبیعت به مکعب و کره و استوانه</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Post-Impressionist painting of {SUBJECT}, thick swirling directional impasto straight from the tube, saturated complementary colour, simplified bold forms with heavy contour, expressive non-naturalistic light, tactile ridged paint surface</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/postimp.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="artnouveau" data-fam="modern">
+    <a class="gs__shot" href="style/artnouveau.html" aria-label="شناسنامه‌ی کامل آر نوو">
+      <picture>
+        <source srcset="prompts/artnouveau.webp" type="image/webp" />
+        <img src="prompts/artnouveau.jpg" alt="آر نوو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">خط شلاقی · رنگ تزیینی تخت · حاشیه‌ی گیاهی · بافت کاغذ لیتو</p>
+      <h3 class="gs__t">آر نوو<span>Art Nouveau</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۸۹۰ تا ۱۹۱۰</dd></div>
+        <div><dt>کجا</dt><dd>پاریس، بروکسل، وین، بارسلونا، پراگ</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>آلفونس موشا، گوستاو کلیمت، آنتونی گائودی، ویکتور اورتا</dd></div>
+      </dl>
+      <p class="gs__what">اولین سبکی که عمداً می‌خواست <b>همه‌جا</b> باشد — پوستر، شیشه، صندلی، نرده‌ی پله، ورودی مترو. حرفش این بود که در دنیای ماشینی، فرم باید از <b>طبیعت</b> بیاید: ساقه، پیچک، مو، موج. خط، مشخصه‌ی اصلی‌اش است — خطی که ضخامتش کم و زیاد می‌شود و مثل شلاق می‌پیچد. در هر کشور اسم دیگری داشت: در آلمان یوگندشتیل، در وین سسسیون، در کاتالونیا مدرنیسمه.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>یوگندشتیل</b><span>آلمان؛ هندسی‌تر و خشک‌تر</span></li>
+          <li><b>سسسیون وین</b><span>کلیمت؛ طلا، الگو، و تخت‌بودگی</span></li>
+          <li><b>مدرنیسمه</b><span>کاتالونیا؛ گائودی و معماریِ استخوانی</span></li>
+          <li><b>پوستر لیتوگرافی</b><span>موشا؛ جایی که این سبک به دستِ مردم رسید</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Art Nouveau poster of {SUBJECT}, flowing whiplash contour lines of varying weight, flat decorative colour without volumetric shading, ornamental botanical border framing the composition, muted olive and gold palette, lithographic paper texture</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/artnouveau.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+</section>
+
+<section class="era" id="e5">
+  <header class="era__head">
+    <p class="era__when">۱۹۲۰ تا ۱۹۶۰</p>
+    <h2 class="era__t">ماشین، رؤیا، و پرده‌ی سینما</h2>
+    <p class="era__blurb">خط صاف و هندسه از یک سو، ناخودآگاه و خواب از سوی دیگر — و در همین سال‌ها، نورِ کاراواجو از نقاشی به پرده‌ی سینما مهاجرت می‌کند.</p>
+  </header>
+
+  <article class="gs" id="artdeco" data-fam="modern">
+    <a class="gs__shot" href="style/artdeco.html" aria-label="شناسنامه‌ی کامل آر دکو">
+      <picture>
+        <source srcset="prompts/artdeco.webp" type="image/webp" />
+        <img src="prompts/artdeco.jpg" alt="آر دکو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">تقارن سخت · فرم پله‌ای · رنگِ تختِ سرمه‌ای و طلا · خطوط سرعت</p>
+      <h3 class="gs__t">آر دکو<span>Art Deco</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۹۲۵ تا ۱۹۳۹</dd></div>
+        <div><dt>کجا</dt><dd>پاریس، نیویورک، شانگهای، بمبئی</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>کاساندر (پوستر)، تامارا دو لمپیتسکا، ویلیام ون آلن (ساختمان کرایسلر، ۱۹۳۰)</dd></div>
+      </dl>
+      <p class="gs__what">اسمش از نمایشگاه بین‌المللی هنرهای تزیینیِ پاریس در سال ۱۹۲۵ می‌آید. دقیقاً <b>عکسِ</b> آر نوو است: آن‌یکی منحنیِ گیاهی بود، این‌یکی خطِ صاف و پله‌پله و متقارن. سبکِ عصرِ ماشین و سرعت و برق و آسمان‌خراش — خوش‌بین، پرزرق‌وبرق، و بدون هیچ عذاب وجدانی درباره‌ی تجمل. بعد جنگ جهانی دوم آمد و این خوش‌بینی دیگر قابل فروش نبود.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>استریم‌لاین مدرن</b><span>دهه‌ی ۱۹۳۰ آمریکا؛ فرم‌های آیرودینامیک و گِرد</span></li>
+          <li><b>دکوی گرمسیری</b><span>میامی و شانگهای؛ همان هندسه با پالت روشن</span></li>
+          <li><b>پوستر سفر</b><span>کاساندر؛ کشتی و قطار در نمای بسیار پایین</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Art Deco poster of {SUBJECT}, strict symmetry, stepped geometric forms, sharp mechanical edges, flat colour fills in navy gold brick red and cream, stylised speed lines, streamlined machine-age elegance, no texture</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/artdeco.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="surreal" data-fam="modern">
+    <a class="gs__shot" href="style/surreal.html" aria-label="شناسنامه‌ی کامل سوررئالیسم">
+      <picture>
+        <source srcset="prompts/surreal.webp" type="image/webp" />
+        <img src="prompts/surreal.jpg" alt="سوررئالیسم — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">دقتِ آکادمیک در صحنه‌ی ناممکن · افقِ خالی · مقیاسِ جابه‌جا · سایه‌ی بلند</p>
+      <h3 class="gs__t">سوررئالیسم<span>Surrealism</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>از ۱۹۲۴</dd></div>
+        <div><dt>کجا</dt><dd>پاریس، سپس بروکسل، مادرید و مکزیکوسیتی</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>دالی، ماگریت، ماکس ارنست، میرو، لئونورا کرینگتون، رمدیوس وارو</dd></div>
+      </dl>
+      <p class="gs__what">آندره برتون در ۱۹۲۴ در پاریس بیانیه‌اش را منتشر کرد، و ایده‌اش مستقیماً از فروید می‌آمد: منطقِ بیداری دروغ می‌گوید، حقیقت در <b>خواب</b> است. ترفند تصویریِ این سبک همین است که صحنه‌ی غیرممکن را با <b>دقتِ کاملاً واقع‌گرایانه</b> بکشی؛ اگر بد کشیده شود، فقط خیال‌پردازی است، و اگر بی‌نقص کشیده شود، مغز مجبور می‌شود باورش کند و همان‌جا آزارش شروع می‌شود.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>وریستیک</b><span>دالی و ماگریت؛ رندرِ دقیقِ صحنه‌ی ناممکن</span></li>
+          <li><b>اتوماتیسم</b><span>میرو و ماسون؛ کشیدنِ بدون کنترلِ آگاهانه</span></li>
+          <li><b>فروتاژ و کلاژ</b><span>ماکس ارنست؛ ساختن تصویر از تصادف و تکه‌چسبانی</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>Surrealist oil painting of {SUBJECT}, academically precise rendering of an impossible scene, vast empty horizon, unexpected juxtaposition and shifted scale, long dreamlike shadows, deep blue sky against desert ochre, seamless smooth finish</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/surreal.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="gouache" data-fam="craft">
+    <a class="gs__shot" href="style/gouache.html" aria-label="شناسنامه‌ی کامل گواش و پوستر رترو">
+      <picture>
+        <source srcset="prompts/gouache.webp" type="image/webp" />
+        <img src="prompts/gouache.jpg" alt="گواش و پوستر رترو — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">بلوک‌های رنگِ مات · پالت چهاررنگ · فرم ساده‌شده · بافت کاغذ چاپ</p>
+      <h3 class="gs__t">گواش و پوستر رترو<span>Gouache / Retro Poster</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۹۲۰ تا ۱۹۶۰</dd></div>
+        <div><dt>کجا</dt><dd>فرانسه، بریتانیا، آمریکا، سوئیس</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>کاساندر، راجر برودر، تام پرویس؛ و در تیتراژ فیلم، سال باس</dd></div>
+      </dl>
+      <p class="gs__what">گواش همان آبرنگ است ولی مات و کدر — رنگ روی رنگ می‌نشیند و پشتش را نمی‌شود دید. برای پوستر عالی بود: سطحِ تختِ یکدست، بدون براقی، و آماده‌ی چاپ. عصر طلایی‌اش دورانی است که پوستر <b>رسانه‌ی اصلیِ تبلیغ</b> بود — راه‌آهن، کشتی، خطوط هوایی. محدودیت چاپ باعث می‌شد پالت به سه چهار رنگ محدود بماند، و همان محدودیت چیزی است که این پوسترها را هنوز خوش‌ترکیب نگه داشته.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>پوستر سفر</b><span>منظره‌ی ساده‌شده با یک بلوک رنگ غالب</span></li>
+          <li><b>پوستر تبلیغاتی سوئیسی</b><span>دهه‌ی ۱۹۵۰؛ شبکه‌بندی و تایپ‌گرافیِ منظم</span></li>
+          <li><b>تیتراژ گرافیکی</b><span>سال باس؛ همان زبان، در حرکت</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>mid-century gouache poster illustration of {SUBJECT}, flat matte colour blocks, limited four-colour palette, bold simplified shapes, subtle paper print texture, slight halftone misregistration, travel poster composition</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/gouache.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="chiaro" data-fam="light">
+    <a class="gs__shot" href="style/chiaro.html" aria-label="شناسنامه‌ی کامل کیاروسکورو و نور نوآر">
+      <picture>
+        <source srcset="prompts/chiaro.webp" type="image/webp" />
+        <img src="prompts/chiaro.jpg" alt="کیاروسکورو و نور نوآر — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">تک‌منبع تند از بالا-چپ · سیاهِ فراگیر · افتِ سریع · کنتراست ۸:۱</p>
+      <h3 class="gs__t">کیاروسکورو و نور نوآر<span>Chiaroscuro</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>۱۶۰۰ در نقاشی؛ ۱۹۴۰ در سینما</dd></div>
+        <div><dt>کجا</dt><dd>رم؛ سپس برلین و هالیوود</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>کاراواجو؛ در سینما جان آلتون، گرگ تولند، و بعدتر گوردون ویلیس</dd></div>
+      </dl>
+      <p class="gs__what">«کیارو-اسکورو» یعنی «روشن-تاریک». قاعده‌اش یک جمله است: <b>بیشتر قاب را تاریک نگه دار.</b> از کاراواجو به سینمای اکسپرسیونیستی آلمان در دهه‌ی ۱۹۲۰ رسید، از آنجا با مهاجرت فیلم‌سازها به هالیوود رفت و شد <b>فیلم نوآر</b>. جان آلتون در ۱۹۴۹ کتابی نوشت به نام «نقاشی با نور» که عملاً دستورالعملِ همین چیز است. و هنوز هم هر وقت کسی می‌گوید «تصویرش سینمایی است»، معمولاً منظورش همین نسبت بالای کنتراست است.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>تنبریسم</b><span>نسخه‌ی افراطی؛ سیاهِ تقریباً مطلق در بیشتر قاب</span></li>
+          <li><b>نور نوآر</b><span>سایه‌ی کرکره، نور پایین، خیابانِ خیس</span></li>
+          <li><b>کم‌نور (لو-کی)</b><span>اصطلاح امروزی همین ایده در عکاسی و فیلم‌برداری</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>{SUBJECT} in dramatic chiaroscuro, single hard light source from upper left, deep crushed blacks occupying most of the frame, sharp falloff, small pool of illumination, high contrast ratio 8:1</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/chiaro.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="rim" data-fam="light">
+    <a class="gs__shot" href="style/rim.html" aria-label="شناسنامه‌ی کامل بک‌لایت و نور لبه">
+      <picture>
+        <source srcset="prompts/rim.webp" type="image/webp" />
+        <img src="prompts/rim.jpg" alt="بک‌لایت و نور لبه — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">سیلوئت · خط نور روی کانتور · فیل کم · مهِ جداکننده</p>
+      <h3 class="gs__t">بک‌لایت و نور لبه<span>Rim / Backlight</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>از دهه‌ی ۱۹۳۰</dd></div>
+        <div><dt>کجا</dt><dd>هالیوود</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>جرج هارل و فیلم‌بردارهای استودیوییِ عصر طلایی</dd></div>
+      </dl>
+      <p class="gs__what">ساده‌ترین ترفندی که یک تصویر را از تخت‌بودن نجات می‌دهد: چراغ را <b>پشت</b> سوژه بگذار. لبه‌ی سوژه یک خط نور می‌گیرد و از پس‌زمینه کنده می‌شود. در هالیوودِ دهه‌ی ۱۹۳۰ برای مو استفاده می‌شد تا سرِ بازیگر در پس‌زمینه‌ی تیره گم نشود، و بعد کشف کردند اگر جلو را تقریباً بدون نور بگذاری، به سیلوئتی می‌رسی که هنوز خوانا است — و دراماتیک‌ترین کاری است که با یک چراغ می‌شود کرد.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>نور مو</b><span>نسخه‌ی ملایمش؛ فقط برای جداکردن</span></li>
+          <li><b>کنتره</b><span>نور کاملاً از پشت؛ سوژه تقریباً سیاه</span></li>
+          <li><b>نور کنارِ نصفه</b><span>یک لبه روشن، بقیه در تاریکی</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>{SUBJECT} in near silhouette against a bright background, strong rim light tracing the contour, minimal fill on the front, atmospheric haze separating subject from background, high dynamic range, dramatic separation</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/rim.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="doc" data-fam="photo">
+    <a class="gs__shot" href="style/doc.html" aria-label="شناسنامه‌ی کامل عکاسی مستند و خیابانی">
+      <picture>
+        <source srcset="prompts/doc.webp" type="image/webp" />
+        <img src="prompts/doc.jpg" alt="عکاسی مستند و خیابانی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">لنز ۳۵ · فقط نور موجود · تارِ حرکت · کادرِ ناقص · دانه‌ی پیدا</p>
+      <h3 class="gs__t">عکاسی مستند و خیابانی<span>Documentary / Street</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>از ۱۹۳۰</dd></div>
+        <div><dt>کجا</dt><dd>آمریکا، فرانسه، و از آن به بعد همه‌جا</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>دوروتیا لنگ و واکر اونز (پروژه‌ی FSA، ۱۹۳۵–۱۹۴۴)، آنری کارتیه-برسون، رابرت فرانک، ویویان مایر</dd></div>
+      </dl>
+      <p class="gs__what">دو چیز این را ممکن کرد: دوربینِ کوچکِ ۳۵ میلی‌متری که می‌شد در جیب برد، و فیلمِ حساس‌تر که دیگر سه‌پایه لازم نداشت. کارتیه-برسون اسمش را گذاشت <b>«لحظه‌ی قاطع»</b> — آن کسری از ثانیه که همه‌چیز در قاب سر جای درستش می‌ایستد. زیبایی‌شناسی‌اش عمداً ناقص است: کادرِ کج، تارِ حرکت، دانه‌ی درشت. چون هر چیزی که مرتب به‌نظر برسد، یعنی کسی آن را چیده — و این عکس‌ها دقیقاً می‌خواهند بگویند کسی چیزی را نچیده.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>عکاسی خیابانی</b><span>کارتیه-برسون؛ لحظه و هندسه در فضای عمومی</span></li>
+          <li><b>مستند اجتماعی</b><span>FSA؛ عکس در خدمت یک گزارش</span></li>
+          <li><b>عکاسی خبری</b><span>همان زبان، در تحریریه</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>candid documentary photograph of {SUBJECT}, 35mm lens, available light only, slight motion blur, imperfect handheld framing, real unposed expression, visible film grain, muted natural colour, photojournalism</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/doc.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="film35" data-fam="photo">
+    <a class="gs__shot" href="style/film35.html" aria-label="شناسنامه‌ی کامل قاب سینمایی ۳۵ میلی‌متری">
+      <picture>
+        <source srcset="prompts/film35.webp" type="image/webp" />
+        <img src="prompts/film35.jpg" alt="قاب سینمایی ۳۵ میلی‌متری — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">۲.۳۹:۱ · فوکوس کم‌عمق · هاله دور هایلایت · دانه‌ی ارگانیک</p>
+      <h3 class="gs__t">قاب سینمایی ۳۵ میلی‌متری<span>Cinematic 35mm</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>فیلم از ۱۸۹۲؛ آناموورفیک از ۱۹۵۳</dd></div>
+        <div><dt>کجا</dt><dd>هالیوود، سپس همه‌ی صنعت‌های فیلم</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>ادیسون و دیکسون (استانداردِ ۳۵ میلی‌متری)، و بعد هر فیلم‌بردار سینما</dd></div>
+      </dl>
+      <p class="gs__what">۳۵ میلی‌متر فقط یک اندازه‌ی نوار است، ولی آن‌قدر طول کشید که هر ویژگی‌اش تبدیل به <b>معنیِ «سینمایی»</b> شد: دانه‌ی ریزِ ارگانیک، هاله‌ی نرم دور نورهای تند، و رنگی که هیچ‌وقت کاملاً خنثی نیست. نسبت پهنِ ۲.۳۹:۱ از ۱۹۵۳ آمد، وقتی سینما داشت با تلویزیون می‌جنگید و تصمیم گرفت کاری کند که جعبه‌ی گوشه‌ی اتاق نتواند بکند: <b>پهن‌تر شد.</b></p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>آناموورفیک</b><span>لنزِ فشرده‌کننده؛ فلرِ افقی و بوکه‌ی بیضی</span></li>
+          <li><b>اسفریکال</b><span>لنز معمولی؛ خنثی‌تر و تمیزتر</span></li>
+          <li><b>گریدِ نارنجی-فیروزه‌ای</b><span>قرارداد رنگیِ رایجِ دو دهه‌ی اخیر</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>cinematic 35mm film still of {SUBJECT}, anamorphic widescreen 2.39:1, shallow focus, teal and orange colour grade, subtle halation around highlights, organic film grain, practical lights visible in frame, Kodak Vision3 stock</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/film35.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+</section>
+
+<section class="era" id="e6">
+  <header class="era__head">
+    <p class="era__when">۱۹۷۰ تا امروز</p>
+    <h2 class="era__t">نور، خودش موضوع می‌شود</h2>
+    <p class="era__blurb">دیگر کسی دنبال ثبتِ واقعیت نیست. حالا نور را انتخاب می‌کنند تا حرف بزند.</p>
+  </header>
+
+  <article class="gs" id="concept" data-fam="modern">
+    <a class="gs__shot" href="style/concept.html" aria-label="شناسنامه‌ی کامل کنسپت‌آرت سینمایی">
+      <picture>
+        <source srcset="prompts/concept.webp" type="image/webp" />
+        <img src="prompts/concept.jpg" alt="کنسپت‌آرت سینمایی — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">نمای معرف · مهِ عمق‌ساز · سیلوئت خوانا · یک لهجه‌ی گرم · آدمِ کوچکِ مقیاس</p>
+      <h3 class="gs__t">کنسپت‌آرت سینمایی<span>Cinematic Concept Art</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>از دهه‌ی ۱۹۷۰</dd></div>
+        <div><dt>کجا</dt><dd>هالیوود، و امروز صنعت بازی</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>رالف مک‌کواری (جنگ ستارگان، ۱۹۷۵)، سید مید (بلید رانر)، رایان چرچ</dd></div>
+      </dl>
+      <p class="gs__what">این هنر برای دیده‌شدن ساخته نمی‌شود؛ برای <b>تصمیم‌گرفتن</b> ساخته می‌شود. جورج لوکاس در ۱۹۷۵ نمی‌توانست جنگ ستارگان را بفروشد تا وقتی نقاشی‌های مک‌کواری را روی میز گذاشت. قاعده‌ی اصلی‌اش خوانایی است: سیلوئت باید در یک نگاه فهمیده شود، هر لایه‌ی عمق باید با غبار از لایه‌ی بعدی جدا شود، و همیشه یک آدمِ کوچک در قاب هست تا بفهمی چیزی که می‌بینی چقدر بزرگ است.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>طراحی محیط</b><span>منظره و معماری؛ کارِ اصلی</span></li>
+          <li><b>کی‌فریم</b><span>بازسازیِ یک نمای مشخص از فیلم</span></li>
+          <li><b>مت‌پینتینگ</b><span>پس‌زمینه‌ی نقاشی‌شده که در نمای نهایی استفاده می‌شود</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>cinematic concept art of {SUBJECT}, wide establishing composition, atmospheric depth haze separating each plane, strong silhouette reading, painterly digital brushwork, moody desaturated palette with one warm accent, tiny human figure for scale, matte painting quality</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/concept.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="golden" data-fam="light">
+    <a class="gs__shot" href="style/golden.html" aria-label="شناسنامه‌ی کامل نور طلایی (گلدن آور)">
+      <picture>
+        <source srcset="prompts/golden.webp" type="image/webp" />
+        <img src="prompts/golden.jpg" alt="نور طلایی (گلدن آور) — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">آفتابِ کم‌ارتفاع · سایه‌ی بلند · کنتره‌ی کهربایی · ذرات معلق · ۳۲۰۰ کلوین</p>
+      <h3 class="gs__t">نور طلایی (گلدن آور)<span>Golden Hour</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>قاعده‌مند از ۱۹۷۸</dd></div>
+        <div><dt>کجا</dt><dd>همه‌جا — ولی نقطه‌ی عطفش تگزاسِ فیلمِ «روزهای بهشت»</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>نستور آلمندروس و ترنس مالیک؛ فیلم «روزهای بهشت» (۱۹۷۸)</dd></div>
+      </dl>
+      <p class="gs__what">آفتاب که پایین می‌آید، نورش از لایه‌ی ضخیم‌تری از هوا رد می‌شود؛ آبیِ آن پخش می‌شود و می‌رود، و چیزی که می‌ماند نارنجی و طلایی است. سایه‌ها بلند می‌شوند و همه‌چیز حجم پیدا می‌کند. آلمندروس «روزهای بهشت» را تقریباً کاملاً در همین بازه فیلم‌برداری کرد — روزی حدود بیست دقیقه کار، و اسکار همان سال. نشان داد این نور، خودش می‌تواند <b>حرفِ فیلم</b> باشد.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>ساعت جادویی</b><span>دقایق پس از غروب؛ آسمان روشن، بی آفتاب مستقیم</span></li>
+          <li><b>کنتره‌ی طلایی</b><span>خورشید پشت سوژه، غبار در نور</span></li>
+          <li><b>نور مایل</b><span>آفتابِ کم‌ارتفاع که بافت را بیرون می‌کشد</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>{SUBJECT} lit by low golden hour sun, long raking shadows, warm amber key light from behind, hazy atmospheric backlight, dust motes catching the light, soft lens flare, warm 3200K colour temperature</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/golden.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="neon" data-fam="light">
+    <a class="gs__shot" href="style/neon.html" aria-label="شناسنامه‌ی کامل نئون شبانه">
+      <picture>
+        <source srcset="prompts/neon.webp" type="image/webp" />
+        <img src="prompts/neon.jpg" alt="نئون شبانه — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">فقط نورِ تابلو · سرخابی و فیروزه‌ای · بازتاب آسفالت خیس · مهِ پخش‌کننده</p>
+      <h3 class="gs__t">نئون شبانه<span>Neon Night</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>از ۱۹۸۲</dd></div>
+        <div><dt>کجا</dt><dd>لس‌آنجلسِ خیالی، توکیو، هنگ‌کنگ</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>جردن کرونوِث (بلید رانر، ۱۹۸۲)، کریستوفر دویل و وانگ کار-وای (دهه‌ی ۱۹۹۰)</dd></div>
+      </dl>
+      <p class="gs__what">لامپ نئون را ژرژ کلود در ۱۹۱۰ در پاریس معرفی کرد، ولی زبانِ تصویریِ آن در ۱۹۸۲ با «بلید رانر» ساخته شد. منطقش این است: تنها منبع نور، <b>خودِ تابلوها</b> هستند. یعنی رنگ‌ها از هم جدا می‌افتند — سرخابی اینجا، فیروزه‌ای آنجا — و بینشان تاریکیِ کامل است. باران و مه هم تزیین نیستند؛ کارشان این است که نور را در هوا <b>قابل دیدن</b> کنند و روی آسفالت دوبرابرش کنند.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>سایبرپانک</b><span>بلید رانر و بعدش؛ شهر، باران، تابلو</span></li>
+          <li><b>نئون‌نوآر</b><span>همان نور، ولی در روایتِ جنایی</span></li>
+          <li><b>نئونِ هنگ‌کنگی</b><span>وانگ کار-وای؛ رنگ‌های اشباع در فضای تنگ</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>{SUBJECT} at night lit only by neon signage, magenta and cyan colour separation, wet asphalt reflections doubling the light, light fog diffusing the glow, deep shadows between the pools of light, fast lens wide open</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/neon.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+
+  <article class="gs" id="product" data-fam="photo">
+    <a class="gs__shot" href="style/product.html" aria-label="شناسنامه‌ی کامل ماکرو محصول">
+      <picture>
+        <source srcset="prompts/product.webp" type="image/webp" />
+        <img src="prompts/product.jpg" alt="ماکرو محصول — خروجی واقعی پرامپت این سبک" width="800" height="500" loading="lazy" decoding="async" />
+      </picture>
+    </a>
+    <div class="gs__body">
+      <p class="gs__kw">ماکرو · پس‌زمینه‌ی گرادیانی · سافت‌باکس بزرگ · هایلایت کنترل‌شده · فوکوس‌استکینگ</p>
+      <h3 class="gs__t">ماکرو محصول<span>Product Macro</span></h3>
+      <dl class="gs__facts">
+        <div><dt>کِی</dt><dd>معاصر — ریشه‌اش در سده‌ی ۱۷</dd></div>
+        <div><dt>کجا</dt><dd>همه‌ی استودیوهای تبلیغاتی</dd></div>
+        <div><dt>کارِ چه کسانی</dt><dd>ادامه‌ی مستقیمِ طبیعت بی‌جانِ هلندی، با ابزار امروزی</dd></div>
+      </dl>
+      <p class="gs__what">این جدیدترین سبک این صفحه است و در عین حال قدیمی‌ترین ایده: <b>یک شیء را چنان بکش که تماشایش لذت داشته باشد.</b> هلندی‌های سده‌ی ۱۷ همین کار را با لیوان نقره و لیمو می‌کردند. تفاوت در ابزار است: سافت‌باکس بزرگ به‌جای پنجره، و فوکوس‌استکینگ — یعنی چند عکس با فوکوس‌های متفاوت که روی هم ترکیب می‌شوند تا کل شیء از جلو تا عقب تیز باشد، کاری که یک عکس تنها نمی‌تواند بکند.</p>
+      <div class="gs__subs">
+        <p class="gs__subs-h">زیرسبک‌ها</p>
+        <ul>
+          <li><b>پس‌زمینه‌ی بی‌درز</b><span>گرادیان یکدست بدون خط افق</span></li>
+          <li><b>نورِ همه‌جانبه</b><span>چادر نور؛ حذف تقریباً کاملِ سایه</span></li>
+          <li><b>ماکروی جواهر</b><span>بزرگ‌نماییِ شدید با فوکوس‌استکینگ</span></li>
+        </ul>
+      </div>
+      <div class="gs__prompt">
+        <p class="gs__prompt-h">پرامپت این سبک</p>
+        <pre>high-end product photograph of {SUBJECT}, macro detail, gradient seamless background, large diffused softbox above, controlled specular highlights, subtle reflection on polished surface, tack sharp focus stacking, commercial advertising quality</pre>
+        <button class="gs__copy" type="button" data-copy>کپی پرامپت</button>
+      </div>
+      <p class="gs__more"><a href="style/product.html">شناسنامه‌ی کامل: پالت، پرامپت ویدیو، پرامپت منفی ←</a></p>
+    </div>
+  </article>
+</section>
+
+  <section class="thr">
+    <div class="thr__head">
+      <h2>هیچ‌کدام از این‌ها از هیچ‌جا نیامده</h2>
+      <p class="thr__lede">تا اینجا بیست‌وهفت جعبه‌ی جدا دیدی. حالا نخ‌هایی که از میانشان رد می‌شوند — هر کدام چند قرن طول دارند، و وقتی یک بار ببینی‌شان، دیگر نمی‌شود ندیدشان.</p>
+    </div>
+
+    <div class="thread">
+      <h3>نخ اول — یک چراغ، چهارصد سال</h3>
+      <ol>
+        <li><b>کاراواجو</b><span>رم · ۱۶۰۰</span></li>
+        <li><b>اکسپرسیونیسم آلمان</b><span>برلین · ۱۹۲۰</span></li>
+        <li><b>فیلم نوآر</b><span>هالیوود · ۱۹۴۰</span></li>
+        <li><b>نئون شبانه</b><span>بلید رانر · ۱۹۸۲</span></li>
+      </ol>
+      <p>یک ایده و بس: بیشترِ قاب را تاریک نگه دار. کاراواجو با آن صحنه‌ی مذهبی ساخت، فیلم‌سازهای آلمانی با آن کابوس ساختند، همان‌ها بعد از مهاجرت به آمریکا با آن فیلم جنایی ساختند، و کرونوِث در ۱۹۸۲ فقط منبعِ نور را عوض کرد و گذاشتش پای تابلوهای نئون. کنتراست، همان کنتراست است.</p>
+    </div>
+
+    <div class="thread">
+      <h3>نخ دوم — چاپ ارزانی که نقاشی اروپا را عوض کرد</h3>
+      <ol>
+        <li><b>اوکیو-ئه</b><span>ادو · ۱۶۷۰–۱۸۶۰</span></li>
+        <li><b>ژاپونیسم</b><span>پاریس · دهه‌ی ۱۸۶۰</span></li>
+        <li><b>امپرسیونیسم</b><span>پاریس · ۱۸۷۴</span></li>
+        <li><b>پست‌امپرسیونیسم و آر نوو</b><span>۱۸۸۶–۱۹۱۰</span></li>
+      </ol>
+      <p>وقتی ژاپن بعد از دو قرن انزوا باز شد، این چاپ‌ها به‌عنوان <em>کاغذِ بسته‌بندی</em> به اروپا رسیدند. نقاشان پاریس چیزی دیدند که در سنت خودشان نبود: رنگِ تخت بدون سایه، کادربندی‌ای که سوژه را وسط نمی‌گذارد، و فضای خالی به‌عنوان بخشی از ترکیب‌بندی. دگا، مونه و ون‌گوگ هر سه مجموعه‌دار این چاپ‌ها بودند.</p>
+    </div>
+
+    <div class="thread">
+      <h3>نخ سوم — پنجره‌ای که هیچ‌وقت بسته نشد</h3>
+      <ol>
+        <li><b>ورمیر</b><span>دلفت · ۱۶۶۰</span></li>
+        <li><b>آتلیه‌ی نور شمالی</b><span>سده‌ی ۱۸–۱۹</span></li>
+        <li><b>سافت‌باکس</b><span>استودیو · امروز</span></li>
+      </ol>
+      <p>ورمیر پنجره‌ی رو به شمال را انتخاب کرد چون نورش تمام روز ثابت می‌ماند. آتلیه‌های نقاشی سه قرن دنبال همان پنجره ساخته شدند. و سافت‌باکسی که امروز کنار هر پرتره‌ای می‌گذارند، دقیقاً همان کار را می‌کند: یک منبعِ بزرگ و نرم از یک طرف. ابزار عوض شده، فیزیک نه.</p>
+    </div>
+
+    <div class="thread">
+      <h3>نخ چهارم — دو راهِ متفاوت برای نشان‌دادنِ عمق</h3>
+      <ol>
+        <li><b>پرسپکتیو خطی</b><span>فلورانس · ۱۴۲۰</span></li>
+        <li><b>پرسپکتیو تخت</b><span>هرات و تبریز · ۱۴۰۰–۱۶۰۰</span></li>
+        <li><b>عمق با غبار</b><span>کنسپت‌آرت · امروز</span></li>
+      </ol>
+      <p>اروپا عمق را با هندسه حل کرد، ایران با چیدمانِ روایی، و شرق آسیا با مه و جای خالی. هیچ‌کدام «درست‌تر» نیست؛ سه جوابِ متفاوت به یک مسئله‌اند. و کنسپت‌آرتِ امروز عملاً هر سه را با هم استفاده می‌کند: هندسه برای ساختمان، غبار برای لایه‌ها، و خالی‌گذاشتن برای اینکه چشم جایی برای نفس‌کشیدن داشته باشد.</p>
+    </div>
+  </section>
+
+  <section class="gx__end">
+    <h2>و بعد؟</h2>
+    <p>هر سبک اینجا یک شناسنامه‌ی کامل هم دارد: پالت با کد رنگ، پرامپت ویدیو، پرامپت منفیِ مخصوص همان سبک، و توضیح اینکه مدل معمولاً <em>در همین سبک</em> چه اشتباهی می‌کند.</p>
+    <p><a href="prompts.html">کتابخانه‌ی پرامپت — هر ۲۷ سبک ←</a></p>
+  </section>
+
 </div>
 </div>
+
+<script>
+/* Progressive only. Without this the page is the whole gallery, in order,
+   which is the version that matters; this just lets a reader narrow it. */
+(function () {
+  'use strict';
+  var chips = [].slice.call(document.querySelectorAll('.fchip'));
+  var cards = [].slice.call(document.querySelectorAll('.gs'));
+  var eras  = [].slice.call(document.querySelectorAll('.era'));
+  var count = document.querySelector('[data-count]');
+  var fa = function (n) {
+    return String(n).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[+d]; });
+  };
+
+  function apply(fam) {
+    var shown = 0;
+    cards.forEach(function (c) {
+      var on = fam === 'all' || c.getAttribute('data-fam') === fam;
+      c.hidden = !on;
+      if (on) shown++;
+    });
+    /* An era heading with nothing under it reads as a loading bug. */
+    eras.forEach(function (e) {
+      e.hidden = !e.querySelector('.gs:not([hidden])');
+    });
+    chips.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-fam') === fam));
+    });
+    if (count) count.textContent = fa(shown) + ' سبک';
+  }
+
+  chips.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.getAttribute('data-fam')); });
+  });
+
+  /* copy, with the button itself as the receipt */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-copy]');
+    if (!b) return;
+    var pre = b.parentNode.querySelector('pre');
+    if (!pre) return;
+    var done = function () {
+      var was = b.textContent;
+      b.textContent = 'کپی شد ✓'; b.classList.add('is-done');
+      setTimeout(function () { b.textContent = was; b.classList.remove('is-done'); }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(pre.textContent).then(done, function () {});
+    } else {
+      var t = document.createElement('textarea');
+      t.value = pre.textContent; document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); done(); } catch (_) {}
+      document.body.removeChild(t);
+    }
+  });
+})();
+</script>
 
 <section class="followup">
   <div class="followup__in edge">
