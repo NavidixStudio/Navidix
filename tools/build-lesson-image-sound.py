@@ -70,6 +70,10 @@ head = f'''<!DOCTYPE html>
 <link rel="stylesheet" href="nvx-training.css" />
 <script src="nvx-ui.js" defer></script>
 <script src="nvx-training.js" defer></script>
+<script src="curriculum.js" defer></script>
+<script src="nvx-config.js" defer></script>
+<script src="nvx-progress.js" defer></script>
+<script src="nvx-auth.js" defer></script>
 <script type="application/ld+json">
 {LD}
 </script>
