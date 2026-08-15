@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>پیشرفت من | Navidix</title>
+<meta name="description" content="پیشرفت شخصی‌ات در مسیر یادگیری هوش مصنوعی Navidix: زمان یادگیری، درس‌های تکمیل‌شده، زنجیره‌ی روزانه و نشان‌هایی که گرفته‌ای." />
+<meta name="theme-color" content="#08090B" />
+<link rel="canonical" href="https://navidixstudio.com/me.html" />
+
+<!-- A page whose entire content is one reader's own numbers has nothing to
+     offer a search result, and every visitor would see an empty one. -->
+<meta name="robots" content="noindex, follow" />
+
+<link rel="icon" href="/navidix-mark.png" />
+<style>
+@font-face{font-family:'Vazirmatn';src:url('/assets/vazirmatn-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+@font-face{font-family:'Inter';src:url('/assets/inter-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+
+:root{
+  --bg:#08090B; --pane:#0E1116; --line:#1E232B; --line2:#262A31;
+  --ink:#EDF2FA; --ink2:#C8D0DA; --mute:#8C939B; --dim:#6B7280;
+  --mark:#4A90E2; --ember:#E5202A;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg); color:var(--ink); font-size:15px; line-height:1.9;
+  font-family:'Vazirmatn','IRANSans',Tahoma,sans-serif; -webkit-font-smoothing:antialiased}
+.lat{font-family:'Inter',ui-sans-serif,system-ui,sans-serif}
+
+.bar{border-bottom:1px solid var(--line); background:rgba(8,9,11,.9);
+  position:sticky; top:0; z-index:20; backdrop-filter:blur(8px)}
+.bar__row{max-width:860px; margin:0 auto; padding:13px 22px; display:flex; align-items:center; gap:14px}
+.bar__row a{color:var(--mute); text-decoration:none; font-size:13px}
+.bar__row a:hover{color:var(--ink)}
+.bar__home{display:flex; align-items:center; gap:9px; color:var(--ink)!important;
+  font-weight:700; letter-spacing:.16em; font-size:12.5px}
+.bar__sp{flex:1}
+
+.wrap{max-width:860px; margin:0 auto; padding:34px 22px 90px}
+.eyebrow{font-size:11.5px; letter-spacing:.2em; color:var(--dim); margin:0 0 10px}
+h1{font-size:clamp(24px,4vw,34px); font-weight:700; margin:0 0 6px; line-height:1.45}
+.sub{color:var(--mute); font-size:13.5px; margin:0 0 28px; line-height:2}
+h2{font-size:16.5px; font-weight:700; margin:40px 0 4px; line-height:1.6}
+h2 + .hint{margin:0 0 16px}
+.hint{color:var(--mute); font-size:12.5px; line-height:1.9}
+
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(146px,1fr)); gap:10px; margin:0 0 22px}
+.stat{background:var(--pane); border:1px solid var(--line2); border-radius:13px; padding:15px 16px}
+.stat b{display:block; font-size:21px; font-weight:700; color:var(--ink); line-height:1.5;
+  text-wrap:balance; font-variant-numeric:tabular-nums}
+.stat span{display:block; font-size:11.5px; color:var(--mute); margin-top:2px}
+
+.bar__track{height:7px; border-radius:99px; background:#161B22; overflow:hidden; margin:0 0 7px}
+.bar__fill{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--ember),var(--mark));
+  transition:width .9s cubic-bezier(.16,1,.3,1)}
+.pct{font-size:12.5px; color:var(--mute); margin:0 0 8px}
+
+/* ---- next step ---- */
+.next{display:block; text-decoration:none; background:var(--pane); border:1px solid var(--line2);
+  border-radius:14px; padding:18px 20px; margin:0 0 8px; transition:border-color .25s,transform .25s}
+.next:hover{border-color:rgba(150,196,255,.45); transform:translateY(-1px)}
+.next small{display:block; font-size:11.5px; color:var(--dim); margin-bottom:3px}
+.next b{display:block; font-size:15.5px; color:var(--ink); font-weight:600; line-height:1.7}
+.next span{display:block; font-size:12.5px; color:var(--mark); font-weight:600; margin-top:7px}
+
+/* ---- badges ----
+   Earned ones carry the brand hairline and full-strength ink; the rest stay
+   dim and state what they cost. A locked badge that hides its requirement is
+   decoration; one that names it is a next step. */
+.badges{display:grid; grid-template-columns:repeat(auto-fill,minmax(158px,1fr)); gap:10px}
+.badge{position:relative; border:1px solid var(--line); border-radius:13px; padding:14px 15px;
+  background:rgba(14,17,22,.55)}
+.badge__i{display:grid; place-items:center; width:30px; height:30px; border-radius:50%;
+  border:1px solid var(--line2); color:var(--dim); font-size:13px; margin:0 0 9px}
+.badge b{display:block; font-size:13.5px; font-weight:600; color:var(--mute); line-height:1.6}
+.badge span{display:block; font-size:11.5px; color:var(--dim); margin-top:2px; line-height:1.75}
+.badge.on{border-color:rgba(74,144,226,.42); background:linear-gradient(158deg,rgba(32,38,48,.6),rgba(10,12,16,.76))}
+.badge.on .badge__i{background:var(--mark); border-color:var(--mark); color:#08090B; font-weight:700}
+.badge.on b{color:var(--ink)}
+.badge.on span{color:var(--mute)}
+
+/* ---- the offer ---- */
+.offer{border:1px solid rgba(229,32,42,.34); border-radius:15px; padding:22px 22px 20px;
+  background:linear-gradient(158deg,rgba(48,20,24,.5),rgba(12,10,12,.8)); margin:0 0 8px}
+.offer h3{margin:0 0 8px; font-size:16px; font-weight:700; color:var(--ink); line-height:1.7}
+.offer p{margin:0 0 15px; font-size:13.5px; color:var(--ink2); line-height:2}
+.offer ul{margin:0 0 17px; padding:0 17px 0 0; color:var(--ink2); font-size:13px; line-height:2.05}
+.offer button{appearance:none; border:0; border-radius:9px; padding:12px 24px; background:var(--ember);
+  color:#fff; font:inherit; font-size:14px; font-weight:700; cursor:pointer}
+.offer small{display:block; margin-top:11px; font-size:11.5px; color:var(--dim); line-height:1.9}
+
+.stg{margin:0 0 9px; background:var(--pane); border:1px solid var(--line2);
+  border-radius:12px; padding:13px 15px; display:flex; align-items:center; gap:13px}
+.stg__no{font-family:'Inter',monospace; font-size:11px; color:var(--dim); flex:none}
+.stg__b{flex:1; min-width:0}
+.stg__b b{display:block; font-size:13.5px; font-weight:600; color:var(--ink2); line-height:1.6}
+.stg__t{height:5px; border-radius:99px; background:#161B22; overflow:hidden; margin-top:7px}
+.stg__t i{display:block; height:100%; background:var(--mark); width:0; transition:width .9s cubic-bezier(.16,1,.3,1)}
+.stg__n{flex:none; font-size:11.5px; color:var(--dim); font-variant-numeric:tabular-nums}
+.stg.done .stg__b b{color:var(--ink)}
+
+.out{margin-top:44px; padding-top:20px; border-top:1px solid var(--line)}
+.out button{appearance:none; background:none; border:1px solid var(--line2); border-radius:8px;
+  color:var(--mute); font:inherit; font-size:12.5px; padding:8px 16px; cursor:pointer}
+.out button:hover{border-color:rgba(229,32,42,.5); color:#FF8A80}
+.out p{margin:10px 0 0; font-size:11.5px; color:var(--dim)}
+@media (max-width:640px){ .wrap{padding:24px 14px 70px} }
+</style>
+
+<script src="curriculum.js" defer></script>
+<script src="nvx-config.js" defer></script>
+<script src="nvx-progress.js" defer></script>
+<script src="nvx-auth.js" defer></script>
+</head>
+<body>
+
+<header class="bar"><div class="bar__row">
+  <a class="bar__home lat" href="/"><img src="/navidix-mark.png" alt="" width="22" height="22" /><span>NAVIDIX</span></a>
+  <span class="bar__sp"></span>
+  <a href="/journey.html">مسیر یادگیری ←</a>
+</div></header>
+
+<main class="wrap">
+  <p class="eyebrow lat">NAVIDIX · PROGRESS</p>
+  <h1 id="hi">پیشرفت من</h1>
+  <p class="sub" id="sub">در حال خواندن…</p>
+  <div id="body"></div>
+</main>
+
+<script>
+/* =====================================================================
+   The reader's own page.
+
+   Everything here is derived from what nvx-progress.js already keeps, and
+   nothing on it requires an account: a signed-out reader sees their real
+   numbers and their real badges, plus an honest account of what an account
+   would add. That honesty is the point. The site's pitch for signing up is
+   not a promise of extra features — it is that this browser is the only
+   copy, and browsers lose things.
+
+   Badges are computed, never stored. A stored badge is a second source of
+   truth that can disagree with the progress that earned it; a derived one
+   cannot. It also means signing in on a new device re-earns every badge
+   the moment the merge lands, with nothing to migrate.
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  var FA = '۰۱۲۳۴۵۶۷۸۹';
+  function fa(n) { return String(n).replace(/\d/g, function (d) { return FA[+d]; }); }
+  function el(t, c, x) {
+    var e = document.createElement(t);
+    if (c) e.className = c;
+    if (x != null) e.textContent = x;
+    return e;
+  }
+
+  var P = window.NVX_PROGRESS, C = window.NVX_CURRICULUM;
+
+  function hours(sec) {
+    sec = sec || 0;
+    if (sec < 60) return fa(sec) + ' ثانیه';
+    if (sec < 3600) return fa(Math.round(sec / 60)) + ' دقیقه';
+    var h = Math.floor(sec / 3600), m = Math.round(sec % 3600 / 60);
+    return fa(h) + ' ساعت' + (m ? ' و ' + fa(m) + ' دقیقه' : '');
+  }
+
+  /* ------------------------------------------------------------------
+     Badges — four families, all measured against numbers the reader can
+     see elsewhere on this page, so none of them can feel arbitrary.
+     ------------------------------------------------------------------ */
+  function badges(st) {
+    var out = [];
+    var stageDone = {};
+
+    if (C) {
+      C.stages.forEach(function (s) {
+        stageDone[s.id] = s.lessons.every(function (l) { return P.isDone(l.slug); });
+      });
+    }
+
+    function add(on, glyph, name, need) {
+      out.push({ on: on, g: glyph, n: name, need: need });
+    }
+
+    add(st.done >= 1, '۱', 'اولین قدم', 'یک درس را تمام کن');
+    add(st.done >= 3, '۳', 'سه درس', 'سه درس را تمام کن');
+    add(st.all && st.done >= Math.ceil(st.all / 2), '½', 'نیمه‌ی راه',
+        'نیمی از مسیر — ' + fa(Math.ceil((st.all || 0) / 2)) + ' درس');
+    add(st.all && st.done >= st.all, '★', 'کل مسیر', 'هر ' + fa(st.all || 0) + ' درس');
+
+    if (C) {
+      C.stages.forEach(function (s) {
+        add(stageDone[s.id], s.no.replace(/^۰/, ''), s.fa,
+            'همه‌ی درس‌های این مرحله');
+      });
+    }
+
+    add(st.best >= 3,  '۳', 'سه روز پیوسته',  'سه روز پشت سر هم بیا');
+    add(st.best >= 7,  '۷', 'یک هفته پیوسته', 'هفت روز پشت سر هم');
+    add(st.best >= 30, '۳۰', 'یک ماه پیوسته', 'سی روز پشت سر هم');
+
+    add(st.total >= 3600,  '⏱', 'یک ساعت',  'یک ساعت یادگیری');
+    add(st.total >= 18000, '⏱', 'پنج ساعت', 'پنج ساعت یادگیری');
+    add(st.total >= 36000, '⏱', 'ده ساعت',  'ده ساعت یادگیری');
+
+    return out;
+  }
+
+  function nextLesson() {
+    if (!C) return null;
+    for (var i = 0; i < C.stages.length; i++) {
+      for (var j = 0; j < C.stages[i].lessons.length; j++) {
+        var l = C.stages[i].lessons[j];
+        if (!P.isDone(l.slug)) return { l: l, stage: C.stages[i] };
+      }
+    }
+    return null;
+  }
+
+  function section(title, hint, node) {
+    var f = document.createDocumentFragment();
+    f.appendChild(el('h2', '', title));
+    if (hint) f.appendChild(el('p', 'hint', hint));
+    f.appendChild(node);
+    return f;
+  }
+
+  /* The invitation. It names what is actually true — this browser is the
+     only copy — and never claims the account unlocks content, because it
+     does not and a reader would find that out. */
+  function offer(st, earned) {
+    var d = el('div', 'offer');
+    d.appendChild(el('h3', '', 'پیشرفتت فقط روی همین مرورگر است'));
+
+    var p = el('p');
+    p.textContent = earned
+      ? 'تا اینجا ' + fa(st.done) + ' درس و ' + fa(earned) + ' نشان به‌دست آورده‌ای، و ' +
+        hours(st.total) + ' وقت گذاشته‌ای. همه‌ی این‌ها در حافظه‌ی همین مرورگر ذخیره شده — ' +
+        'اگر کش را پاک کنی، مرورگر را عوض کنی یا گوشی‌ات را، از بین می‌رود.'
+      : 'هر چه بخوانی و تمام کنی در حافظه‌ی همین مرورگر ذخیره می‌شود — و با پاک‌شدن کش یا ' +
+        'عوض‌شدن دستگاه از بین می‌رود.';
+    d.appendChild(p);
+
+    var ul = el('ul');
+    ['پیشرفت و نشان‌هایت می‌مانند، حتی اگر مرورگر را پاک کنی',
+     'روی گوشی و کامپیوتر یک مسیر واحد داری، نه دو تا',
+     'همین صفحه هر جا وارد شوی همین اعداد را نشان می‌دهد'
+    ].forEach(function (t) { ul.appendChild(el('li', '', t)); });
+    d.appendChild(ul);
+
+    var b = el('button', '', 'ساختن حساب رایگان');
+    b.type = 'button';
+    b.addEventListener('click', function () { window.NVX_AUTH && NVX_AUTH.open('up'); });
+    d.appendChild(b);
+
+    d.appendChild(el('small', '',
+      'رایگان است، فقط ایمیل و یک رمز می‌خواهد، و هیچ درسی پشت آن قفل نیست — ' +
+      'همه‌ی آموزش‌ها بدون حساب هم باز می‌مانند.'));
+    return d;
+  }
+
+  function draw() {
+    var body = document.getElementById('body');
+    body.textContent = '';
+
+    var st = P.stats();
+    var list = badges(st);
+    var earned = list.filter(function (b) { return b.on; }).length;
+    var sess = window.NVX_AUTH && NVX_AUTH.session();
+
+    document.getElementById('hi').textContent =
+      sess && sess.user ? (sess.user.email || '').split('@')[0] : 'پیشرفت من';
+    document.getElementById('sub').textContent = sess
+      ? 'روی حساب تو ذخیره می‌شود و هر جا وارد شوی همین است.'
+      : 'روی همین مرورگر ذخیره می‌شود و ثبت‌نام نمی‌خواهد.';
+
+    /* ---- the numbers ---- */
+    var g = el('div', 'stats');
+    [['این هفته', hours(st.week)],
+     ['مجموع زمان', hours(st.total)],
+     ['درس تکمیل‌شده', fa(st.done) + ' از ' + fa(st.all)],
+     ['زنجیره‌ی فعلی', fa(st.streak) + ' روز'],
+     ['نشان‌ها', fa(earned) + ' از ' + fa(list.length)]
+    ].forEach(function (p) {
+      var c = el('div', 'stat');
+      c.appendChild(el('b', '', p[1]));
+      c.appendChild(el('span', '', p[0]));
+      g.appendChild(c);
+    });
+    body.appendChild(g);
+
+    var tr = el('div', 'bar__track');
+    var fl = el('i', 'bar__fill');
+    tr.appendChild(fl);
+    body.appendChild(tr);
+    body.appendChild(el('p', 'pct', fa(st.pct) + '٪ از مسیر طی شده' +
+      (st.best > 1 ? ' · بلندترین زنجیره: ' + fa(st.best) + ' روز' : '')));
+    requestAnimationFrame(function () { fl.style.width = st.pct + '%'; });
+
+    /* ---- what to do next ---- */
+    var nx = nextLesson();
+    if (nx) {
+      var a = el('a', 'next');
+      a.href = nx.l.slug + '.html';
+      a.appendChild(el('small', '', 'قدم بعدی · ' + nx.stage.fa));
+      a.appendChild(el('b', '', nx.l.t));
+      a.appendChild(el('span', '', 'شروع کن ←'));
+      body.appendChild(section('از کجا ادامه بدهی', null, a));
+    } else if (st.all) {
+      var done = el('div', 'next');
+      done.appendChild(el('b', '', 'کل مسیر را تمام کرده‌ای.'));
+      done.appendChild(el('span', '', 'مسیر تازه‌ای اضافه شود، اینجا می‌بینی.'));
+      body.appendChild(section('از کجا ادامه بدهی', null, done));
+    }
+
+    /* ---- the offer, only to a reader who does not have an account ---- */
+    if (!sess) body.appendChild(section('حسابت را بساز', null, offer(st, earned)));
+
+    /* ---- badges ---- */
+    var bg = el('div', 'badges');
+    list.forEach(function (b) {
+      var c = el('div', 'badge' + (b.on ? ' on' : ''));
+      c.appendChild(el('div', 'badge__i', b.on ? '✓' : b.g));
+      c.appendChild(el('b', '', b.n));
+      c.appendChild(el('span', '', b.on ? 'گرفتی' : b.need));
+      bg.appendChild(c);
+    });
+    body.appendChild(section('نشان‌ها',
+      fa(earned) + ' از ' + fa(list.length) + ' نشان را گرفته‌ای. هرکدام از روی همان اعدادِ بالا حساب می‌شود.',
+      bg));
+
+    /* ---- the path, stage by stage ---- */
+    if (C) {
+      var wrap = el('div');
+      C.stages.forEach(function (s) {
+        var n = s.lessons.filter(function (l) { return P.isDone(l.slug); }).length;
+        var row = el('div', 'stg' + (n === s.lessons.length ? ' done' : ''));
+        row.appendChild(el('span', 'stg__no lat', s.no));
+        var b = el('div', 'stg__b');
+        b.appendChild(el('b', '', s.fa));
+        var t = el('div', 'stg__t');
+        var i = el('i');
+        t.appendChild(i);
+        b.appendChild(t);
+        row.appendChild(b);
+        row.appendChild(el('span', 'stg__n', fa(n) + '/' + fa(s.lessons.length)));
+        wrap.appendChild(row);
+        requestAnimationFrame(function () {
+          i.style.width = Math.round(n / s.lessons.length * 100) + '%';
+        });
+      });
+      body.appendChild(section('مسیر، مرحله به مرحله', null, wrap));
+    }
+
+    /* ---- leaving ---- */
+    if (sess) {
+      var o = el('div', 'out');
+      var b2 = el('button', '', 'خروج از حساب');
+      b2.type = 'button';
+      b2.addEventListener('click', function () {
+        NVX_AUTH.signOut();
+        location.reload();
+      });
+      o.appendChild(b2);
+      o.appendChild(el('p', '', 'پیشرفتت روی حساب می‌ماند و دفعه‌ی بعد که وارد شوی برمی‌گردد.'));
+      body.appendChild(o);
+    }
+  }
+
+  function boot() {
+    P = window.NVX_PROGRESS;
+    C = window.NVX_CURRICULUM;
+    if (!P || !C) {
+      document.getElementById('sub').textContent =
+        'صفحه کامل بارگذاری نشد. یک بار دیگر باز کن.';
+      return;
+    }
+    draw();
+    /* A sync landing a moment later brings this device up to date; redraw
+       rather than leave the page showing what it knew before. */
+    addEventListener('nvx:progress', function () { draw(); });
+  }
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>

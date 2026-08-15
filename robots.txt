@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /me.html
 
 Sitemap: https://navidixstudio.com/sitemap.xml

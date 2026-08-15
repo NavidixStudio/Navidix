@@ -386,15 +386,17 @@
     if (!btn) return;
     var s = session();
     if (s && s.user) {
-      btn.textContent = (s.user.email || '').split('@')[0] + ' — خروج';
+      btn.textContent = (s.user.email || '').split('@')[0];
       btn.className = 'nvxa nvxa--in';
       btn.title = s.user.email || '';
     } else {
       btn.textContent = 'ورود / ثبت‌نام';
       btn.className = 'nvxa';
-      btn.title = 'پیشرفتت را بین دستگاه‌هایت یکی کن';
+      btn.title = 'پیشرفتت را نگه دار';
     }
   }
+
+  function signOut() { keep(null); paint(); }
 
   /* Three header shapes across the site: the sitebar every ordinary page
      carries, the xbar in explore/, and the homepage's topbar — which is
@@ -405,35 +407,37 @@
     if (!row) return;
     btn = document.createElement('button');
     btn.type = 'button';
+    /* Signed in, this opens the reader's own page rather than signing them
+       out. Sign-out used to be one accidental tap away on a phone, and it
+       was also the only thing an account visibly did — the name is a door
+       into somewhere now, and leaving is a deliberate act taken there. */
     btn.addEventListener('click', function () {
-      if (signedIn()) {
-        keep(null);
-        paint();
-      } else {
-        open('in');
-      }
+      if (signedIn()) location.href = 'me.html';
+      else open('up');
     });
     row.appendChild(btn);
     paint();
   }
 
-  /* The journey page says what an account would buy, once, at the bottom
-     — where a reader who has just seen their own progress is standing. */
+  /* The journey page's closing note. The full case for an account lives
+     on me.html now — badges, what is at stake, the button — so this points
+     there instead of restating it, and a reader arrives at the pitch with
+     their own numbers already in front of them. */
   function invite() {
     var note = document.getElementById('jnote');
     if (!note) return;
-    if (signedIn()) {
-      note.textContent = 'پیشرفتت روی این حساب ذخیره می‌شود و روی همه‌ی دستگاه‌هایت یکی است.';
-      return;
-    }
-    note.textContent = 'پیشرفتت روی همین مرورگر ذخیره می‌شود و ثبت‌نام نمی‌خواهد. ';
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'nvxm__alt';
-    b.style.cssText = 'background:none;border:0;color:#7FB8FF;font:inherit;font-weight:600;cursor:pointer;padding:0;margin:0;';
-    b.textContent = 'یک حساب بساز تا روی گوشی‌ات هم همین باشد ←';
-    b.addEventListener('click', function () { open('up'); });
-    note.appendChild(b);
+
+    note.textContent = signedIn()
+      ? 'پیشرفتت روی این حساب ذخیره می‌شود و روی همه‌ی دستگاه‌هایت یکی است. '
+      : 'پیشرفتت روی همین مرورگر ذخیره می‌شود و ثبت‌نام نمی‌خواهد. ';
+
+    var a = document.createElement('a');
+    a.href = 'me.html';
+    a.style.cssText = 'color:#7FB8FF;font-weight:600;text-decoration:none';
+    a.textContent = signedIn()
+      ? 'صفحه‌ی پیشرفت و نشان‌هایت ←'
+      : 'صفحه‌ی پیشرفت و نشان‌های خودت ←';
+    note.appendChild(a);
   }
 
   /* ===================================================================
@@ -444,9 +448,9 @@
      bare hostname before it is sent, because a full referring URL can
      carry a search query, and a search query is a person's words.
 
-     It is fire-and-forget: no await, no retry, and a rejected promise is
-     swallowed. A reader whose network drops this request loses nothing,
-     which is the correct trade for a number only the owner ever reads.
+     Fire-and-forget: no await, no retry, and a rejected promise is
+     swallowed. A reader whose network drops this loses nothing, which is
+     the right trade for a number only the owner ever reads.
      =================================================================== */
   function ping() {
     if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
@@ -489,6 +493,7 @@
   else boot();
 
   window.NVX_AUTH = {
-    open: open, session: session, sync: sync, signedIn: signedIn, rest: rest
+    open: open, session: session, sync: sync, signedIn: signedIn, rest: rest,
+    signOut: signOut
   };
 })();
