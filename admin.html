@@ -484,7 +484,8 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
   function note(err) {
     var p = el('p', 'empty');
     p.textContent = /Could not find the (function|table)|schema cache|does not exist/i.test(err.message)
-      ? 'این بخش هنوز در پایگاه داده ساخته نشده. فایل supabase/users-and-refs.sql را یک بار در SQL Editor اجرا کن.'
+      ? 'این بخش هنوز در پایگاه داده ساخته نشده. در مخزن، فایل supabase/users-and-refs.sql ' +
+        'را باز کن، «محتوایش» را کپی کن و در Supabase → SQL Editor بچسبان و Run بزن — نامِ فایل را ننویس.'
       : 'خواندن این بخش ممکن نشد: ' + err.message;
     return p;
   }
