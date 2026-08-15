@@ -99,41 +99,6 @@ textarea::placeholder{color:var(--dim)}
 .err code{font-family:'Inter',ui-monospace,monospace; font-size:11.5px; color:var(--mute);
   display:block; margin-top:7px; direction:ltr; text-align:left; word-break:break-word}
 
-/* ---- the key panel ---- */
-.key{border:1px solid var(--line2); border-radius:15px; background:rgba(14,17,22,.55);
-  padding:0; margin:0 0 14px; overflow:hidden}
-.key > summary{list-style:none; cursor:pointer; padding:15px 18px; font-size:13.5px;
-  font-weight:600; color:var(--ink2); display:flex; align-items:center; gap:9px}
-.key > summary::-webkit-details-marker{display:none}
-.key > summary::after{content:'▾'; color:var(--dim); margin-inline-start:auto; font-size:12px}
-.key[open] > summary::after{content:'▴'}
-.key > summary:hover{color:var(--ink)}
-.key__in{padding:0 18px 18px}
-.key ol{margin:0 0 15px; padding:0 19px 0 0; font-size:13px; color:var(--ink2); line-height:2.2}
-.key ol b{color:var(--ink)}
-.key .lnk{display:inline-block; background:var(--mark); color:#08090B; text-decoration:none;
-  border-radius:9px; padding:9px 18px; font-size:13px; font-weight:700; margin:0 0 15px}
-.key input{width:100%; background:#0E131B; color:var(--ink); border:1px solid var(--line2);
-  border-radius:10px; padding:11px 13px; font-family:'Inter',ui-monospace,monospace; font-size:12.5px;
-  direction:ltr; text-align:left; outline:none}
-.key input:focus{border-color:rgba(150,196,255,.5)}
-/* بدون دکمه، تنها راهِ ثبت این بود که کاربر جای دیگری از صفحه بزند تا
-   change شلیک شود. روی گوشی این یعنی «چسباندم، هیچ اتفاقی نیفتاد». */
-.keyrow{display:flex; gap:8px; align-items:stretch}
-.keyrow input{flex:1; min-width:0}
-.keygo{appearance:none; border:0; border-radius:10px; padding:0 22px; background:var(--mark);
-  color:#08090B; font:inherit; font-size:13.5px; font-weight:700; cursor:pointer; white-space:nowrap}
-.keymsg{margin:10px 0 0; font-size:12.5px; line-height:1.9; min-height:1px}
-.keymsg.ok{color:#7FD48A}
-.keymsg.no{color:#E5202A}
-/* کدِ Worker: لاتین و چندخطی در یک صفحه‌ی راست‌به‌چپ، پس جدا و چپ‌چین با
-   اسکرول افقیِ خودش — وگرنه یا می‌شکند یا کلِ صفحه را پهن می‌کند. */
-.wcode{direction:ltr; text-align:left; margin:0 0 14px; padding:13px 14px;
-  background:#0B0F16; border:1px solid var(--line2); border-radius:11px;
-  font-family:'Inter',ui-monospace,monospace; font-size:11px; line-height:1.75;
-  color:var(--ink2); overflow-x:auto; white-space:pre; max-height:230px; overflow-y:auto}
-.safe{margin:12px 0 0; font-size:11.5px; color:var(--dim); line-height:1.95}
-.safe b{color:var(--ink2)}
 
 .quota{font-size:12px; color:var(--dim); margin:0; line-height:1.9}
 .quota b{color:var(--ink2); font-variant-numeric:tabular-nums}
@@ -152,7 +117,7 @@ textarea::placeholder{color:var(--dim)}
      نه دکمه‌ی refreshِ سخت دارد و نه به کاربر اجازه می‌دهد کش را پاک
      کند. بدون این، هر اصلاحی ساعت‌ها پشت فایلِ کهنه گیر می‌کند. با
      هر تغییرِ nvx-studio.js این عدد را عوض کن. -->
-<script src="nvx-studio.js?v=202608152325" defer></script>
+<script src="nvx-studio.js?v=202608152328" defer></script>
 </head>
 <body>
 
@@ -166,8 +131,8 @@ textarea::placeholder{color:var(--dim)}
   <p class="eyebrow lat">NAVIDIX · STUDIO</p>
   <h1>استودیو نویدیکس</h1>
   <p class="sub">فارسی بنویس. نویدیکس ترجمه‌اش می‌کند، با زبان سینما کاملش
-  می‌کند و مدل مناسبِ همان کار را انتخاب می‌کند — و هر سه را هم نشانت می‌دهد.
-  لازم نیست بدانی کدام مدل برای چه خوب است.</p>
+  می‌کند و به <b style="color:var(--ink2)">FLUX</b> می‌سپارد — و هر سه را هم
+  نشانت می‌دهد. نه ثبت‌نام، نه کلید، نه تنظیمات.</p>
 
   <div class="box">
     <textarea id="p" rows="3" placeholder="چه تصویری می‌خواهی؟ فارسی بنویس — مثلاً: مرد میانسالی کنار پنجره‌ی بارانی، غمگین"></textarea>
@@ -184,68 +149,6 @@ textarea::placeholder{color:var(--dim)}
 
   <div id="out"></div>
 
-  <details class="key" id="keybox">
-    <summary id="keysum">کیفیت بهتر می‌خواهی؟ FLUX را روشن کن — رایگان</summary>
-    <div class="key__in">
-      <p class="hint" style="margin:0 0 6px"><b style="color:var(--ink)">FLUX.1 schnell</b>
-      بهترین مدلِ تصویری است که رایگان در دسترس است. روی Cloudflare اجرا می‌شود و
-      <b style="color:var(--ink2)">کارت بانکی نمی‌خواهد.</b></p>
-      <p class="hint" style="margin:0 0 16px">مرورگر اجازه ندارد مستقیم Cloudflare را
-      صدا بزند، پس یک واسطه‌ی کوچک روی حساب خودت می‌سازی. ده دقیقه، یک بار برای
-      همیشه — و اینطوری توکنت اصلاً وارد مرورگر نمی‌شود.</p>
-
-      <ol>
-        <li>در Cloudflare: <b>Compute</b> ← <b>Workers &amp; Pages</b> ← <b>Create</b></li>
-        <li><b>Start with Hello World!</b> را بزن، اسمی مثل <b>navidix-flux</b>
-            بگذار و <b>Deploy</b> کن</li>
-        <li>حالا <b>Edit code</b> را بزن، هرچه در ویرایشگر هست پاک کن و
-            کدِ زیر را جایش بچسبان، بعد <b>Deploy</b></li>
-        <li>برگرد به همان Worker ← <b>Settings</b> ← <b>Bindings</b> ←
-            <b>Add binding</b> ← <b>Workers AI</b> ← نامش را دقیقاً
-            <b class="lat">AI</b> بگذار ← ذخیره</li>
-        <li>آدرس Worker را کپی کن — چیزی شبیه
-            <span class="lat" style="direction:ltr;display:inline-block">navidix-flux.…workers.dev</span>
-            — و پایین بچسبان</li>
-      </ol>
-
-      <button class="keygo" id="copycode" type="button"
-              style="margin:0 0 9px">کپی کد</button>
-      <pre class="wcode" id="wcode">export default {
-  async fetch(req, env) {
-    const cors = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "content-type",
-      "Access-Control-Allow-Methods": "POST, OPTIONS"
-    };
-    if (req.method === "OPTIONS") return new Response(null, { headers: cors });
-    if (req.method !== "POST")
-      return new Response("POST only", { status: 405, headers: cors });
-
-    const body = await req.json().catch(() => ({}));
-    if (!body.prompt)
-      return Response.json({ error: "no prompt" }, { status: 400, headers: cors });
-
-    const out = await env.AI.run("@cf/black-forest-labs/flux-1-schnell", {
-      prompt: body.prompt,
-      steps: body.steps || 4
-    });
-    return Response.json(out, { headers: cors });
-  }
-};</pre>
-
-      <div class="keyrow">
-        <input id="work" type="text" autocomplete="off" spellcheck="false"
-               placeholder="https://navidix-flux.…workers.dev" />
-        <button class="keygo" id="keygo" type="button">ثبت</button>
-      </div>
-      <p class="keymsg" id="keymsg"></p>
-
-      <p class="safe"><b>آدرس Worker پیش خودت می‌ماند.</b> جایی ذخیره نمی‌شود جز همین
-      مرورگر. و مهم‌تر: <b>توکن Cloudflare هیچ‌وقت وارد این صفحه نمی‌شود</b> — داخل
-      Worker خودت می‌ماند، جایی که فقط تو دسترسی داری. آن توکنی که ساختی هم دیگر
-      لازم نیست؛ می‌توانی پاکش کنی.</p>
-    </div>
-  </details>
 
   <h2>ساخته‌های این جلسه</h2>
   <p class="hint" id="galhint">هنوز چیزی نساخته‌ای.</p>

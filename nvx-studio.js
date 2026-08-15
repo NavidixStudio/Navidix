@@ -23,16 +23,16 @@
    برای اینکه چیزی گران است، بلکه چون سرویسِ رایگانِ مشترکی است و کوبیدنش
    بی‌ادبی است. کیفیتش هم در همان حد است: قابل قبول، نه بیشتر.
 
-   موتور دوم FLUX.1 [schnell] است روی Workers AI، با حسابِ خودِ کاربر.
-   شناسه و توکن در همین مرورگر می‌مانند و هیچ‌جا فرستاده نمی‌شوند — سایت
-   اصلاً سروری ندارد که بفرستد.
+   FLUX.1 [schnell] است، بدون کلید و بدون ثبت‌نام: تصویر با یک تگ <img>
+   می‌آید، و همین است که کار را ممکن می‌کند — تصویر CORS لازم ندارد، ولی
+   هر API‌ای که کلید بخواهد دارد. راهِ کلیددار امتحان شد و مرورگر جلویش را
+   گرفت؛ این یکی از اول کار می‌کرد.
    ===================================================================== */
 (function () {
   'use strict';
 
   var DAY   = 'nvx-studio-day';
-  var WORK  = 'nvx-studio-worker';
-  var FREE  = 3;                      // سقف روزانه‌ی موتور بی‌کلید
+  var FREE  = 12;                     // سقف روزانه — ادب در حق سرویسِ مشترک
 
   var $ = function (id) { return document.getElementById(id); };
   if (!$('p')) return;
@@ -64,16 +64,6 @@
 
   function myKey() {
     try { return (localStorage.getItem(KEY) || '').trim(); } catch (e) { return ''; }
-  }
-
-  function myWorker() {
-    try { return (localStorage.getItem(WORK) || '').trim(); } catch (e) { return ''; }
-  }
-
-  function cleanWorker(v) {
-    v = String(v || '').trim().replace(/\/+$/, '');
-    if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
-    return v;
   }
 
   function fa(n) {
@@ -225,52 +215,23 @@
       + (flux ? '&model=flux' : '');
   }
 
-  /* --------------------------------------------- موتور خوب: FLUX روی Cloudflare
+  /* دو راهِ کلیددار امتحان شد و هیچ‌کدام از یک صفحه‌ی بی‌سرور در نمی‌آید:
+     کلیدِ رایگانِ گوگل برای تصویر «limit: 0» می‌دهد — نه سهمیه‌ی تمام‌شده،
+     بلکه سهمیه‌ای که اصلاً وجود ندارد — و REST API کلادفلر تماس از مرورگر
+     را نمی‌پذیرد و درخواست پیش از خروج می‌میرد.
 
-     گوگل از این صفحه برداشته شد. دلیلش سلیقه نبود: کلیدِ رایگانِ گوگل برای
-     تصویر «limit: 0» می‌دهد — یعنی نه سهمیه‌ای مانده، بلکه اصلاً سهمیه‌ای
-     وجود ندارد. ماندنش فقط یک دکمه بود که همیشه خطا می‌داد.
-
-     جایش FLUX.1 [schnell] است روی Workers AI؛ سهمیه‌ی رایگانِ روزانه‌ی واقعی
-     دارد و کارت بانکی نمی‌خواهد. دو چیز لازم دارد نه یکی — شناسه‌ی حساب و
-     توکن — که یک قدم بیشتر است، و همان یک قدم فرقِ «عکسِ عمومیِ هوش مصنوعی»
-     با چیزی است که بشود زیرش اسم گذاشت.
-
-     CORS این سرویس را از اینجا نتوانستم امتحان کنم؛ پراکسیِ محیطِ من فقط چند
-     دامنه‌ی گوگل را باز می‌گذارد. پس اگر مرورگر جلویش را بگیرد، صفحه ساکت
-     نمی‌ماند: پیامش را می‌گوید و کار را با موتور پیش‌فرض تمام می‌کند. */
-
-  function flux(worker, prompt) {
-    return fetch(worker, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: prompt, steps: 4 })
-    }).then(function (r) {
-      return r.json().then(function (j) {
-        if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
-        return j;
-      }, function () { throw new Error('HTTP ' + r.status + ' — پاسخ JSON نبود'); });
-    }).then(function (j) {
-      var img = j.image || (j.result && j.result.image);
-      if (!img) throw new Error('پاسخ آمد ولی تصویری در آن نبود.');
-      return 'data:image/jpeg;base64,' + img;
-    });
-  }
+     چیزی که ماند، از اول همین‌جا بود و کار می‌کرد: <img> برای تصویر CORS
+     لازم ندارد، پس یک آدرسِ ساده هرجا باز می‌شود، در حالی که هر API‌ای که
+     کلید بخواهد اول باید از مرورگر اجازه بگیرد. صفحه دیگر از کسی چیزی
+     نمی‌خواهد. */
 
   /* ------------------------------------------------------------- نمایش */
 
   var shots = [];
 
   function quota() {
-    var on = myWorker();
-    if (on) {
-      $('quota').innerHTML = '<b>FLUX schnell</b> از Worker خودت — بی‌سقف';
-      $('keysum').textContent = 'Worker خودت وصل است — برای تغییر بزن';
-    } else {
-      var left = Math.max(0, FREE - used());
-      $('quota').innerHTML = 'امروز <b>' + fa(left) + '</b> تا از ' + fa(FREE) + ' مانده';
-      $('keysum').textContent = 'کیفیت بالاتر می‌خواهی؟ Worker خودت را وصل کن — رایگان';
-    }
+    var left = Math.max(0, FREE - used());
+    $('quota').innerHTML = 'امروز <b>' + fa(left) + '</b> تا از ' + fa(FREE) + ' مانده';
   }
 
   function fail(title, detail) {
@@ -359,15 +320,12 @@
     var text = $('p').value.trim();
     if (!text) { $('p').focus(); return; }
 
-    var worker = myWorker();
-    if (!worker && used() >= FREE) {
+    if (used() >= FREE) {
       fail('سهمیه‌ی امروزت تمام شد.',
            null);
       $('out').firstChild.appendChild(document.createTextNode(
-        'فردا دوباره باز می‌شود. یا اگر می‌خواهی همین حالا ادامه بدهی و ' +
-        'کیفیت بالاتری هم بگیری، Worker خودت را وصل کن — پایین همین صفحه.'));
-      $('keybox').open = true;
-      $('keybox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        'فردا دوباره باز می‌شود. این سرویس رایگان و مشترک است، و سقف '
+        + 'برای این است که برای بقیه هم بماند.'));
       return;
     }
 
@@ -396,30 +354,6 @@
       // بد بوده باشد همان‌جا می‌بیند و پرامپتش را عوض می‌کند، به‌جای اینکه
       // منتظر یک تصویرِ غلط بماند و نداند چرا غلط است.
       line.textContent = plan.prompt;
-
-      if (worker) {
-        return flux(worker, plan.prompt).then(function (src) {
-          done(); show(src, plan, 'FLUX schnell');
-        }, function (e) {
-          // «limit: 0» یعنی سهمیه تمام نشده — از اول صفر بوده. مدل‌های
-          // تصویرِ گوگل روی حساب رایگان باز نیستند. نشان‌دادنِ یک دیوار
-          // انگلیسی و دست خالی، بدترین کارِ ممکن است؛ تصویر را با موتور
-          // رایگان می‌سازیم و در یک جمله می‌گوییم چرا.
-          // «Failed to fetch» یعنی درخواست اصلاً بیرون نرفت، و روی یک Worker
-          // تازه‌ساخته تقریباً همیشه یک دلیل دارد: کدِ Hello World هنوز
-          // آنجاست و OPTIONS را با سرآیندهای CORS جواب نمی‌دهد. گفتنِ
-          // «Failed to fetch» به کاربر هیچ کمکی نمی‌کند؛ گفتنِ راهِ تشخیص
-          // می‌کند.
-          soft(/Failed to fetch|NetworkError/i.test(e.message)
-            ? 'مرورگر نتوانست به Worker وصل شود. آدرسش را در مرورگر باز کن: ' +
-              'اگر «Hello World!» نوشت یعنی کد هنوز چسبانده نشده — برو Edit code، ' +
-              'همه را پاک کن، کد را بچسبان و Deploy بزن. اگر «POST only» نوشت ' +
-              'یعنی کد سرِ جایش است و اشکال جای دیگری است.'
-            : 'Worker جواب نداد: ' + e.message.slice(0, 120) +
-              ' — اتصال (Binding) با نام AI را چک کن.');
-          return freeShot(plan, done);
-        });
-      }
 
       return freeShot(plan, done);
     }).catch(function (e) {
@@ -457,46 +391,6 @@
   $('go').addEventListener('click', make);
   $('p').addEventListener('keydown', function (e) {
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') make();
-  });
-
-  var box = $('work');
-  box.value = myWorker();
-
-  function saveKey() {
-    var v = cleanWorker(box.value);
-    box.value = v;
-    var msg = $('keymsg');
-    try { v ? localStorage.setItem(WORK, v) : localStorage.removeItem(WORK); } catch (e) {}
-    quota();
-    if (!v) {
-      msg.className = 'keymsg';
-      msg.textContent = 'پاک شد. دوباره با موتور پیش‌فرض کار می‌کند.';
-    } else if (!/^https:\/\/[^\s.]+\.[^\s]+$/i.test(v)) {
-      msg.className = 'keymsg no';
-      msg.textContent = 'این آدرسِ کاملی به‌نظر نمی‌رسد. باید چیزی شبیه ' +
-                        'https://navidix-flux.<نام‌تو>.workers.dev باشد.';
-    } else {
-      msg.className = 'keymsg ok';
-      msg.textContent = 'ثبت شد. برو بالا و بساز — اگر Worker درست کار کند، ' +
-                        'زیر تصویر می‌نویسد FLUX schnell.';
-      $('out').innerHTML = '';
-    }
-  }
-
-  $('keygo').addEventListener('click', saveKey);
-  box.addEventListener('change', saveKey);
-  box.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); saveKey(); }
-  });
-
-  // کپی‌کردنِ کدِ Worker روی گوشی با انگشت شدنی نیست؛ دکمه لازم دارد.
-  var cp = $('copycode');
-  if (cp) cp.addEventListener('click', function () {
-    var t = $('wcode').textContent;
-    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject())
-      .then(function () { cp.textContent = '✓ کپی شد'; },
-            function () { cp.textContent = 'کپی نشد — دستی انتخابش کن'; });
-    setTimeout(function () { cp.textContent = 'کپی کد'; }, 2600);
   });
 
   quota();
