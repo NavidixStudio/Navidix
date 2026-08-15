@@ -84,38 +84,53 @@
     { id: 'text',
       fa: 'متن یا لوگو',
       hit: /لوگو|نوشت|متن|تایپوگراف|پوستر|جلد|بنر|logo|text|poster|typograph|banner/i,
-      craft: 'clean legible lettering, centred composition, high contrast, flat graphic design',
+      craft: ['clean legible lettering, centred composition, high contrast, flat graphic design',
+              'bold display type, generous negative space, single accent colour, crisp edges'],
       note: 'نوشته‌ی داخل تصویر کارِ سختی است؛ مدل‌ها معمولاً حروف را خراب می‌کنند. قاب ساده و پرکنتراست بیشترین شانس را می‌دهد.' },
 
     { id: 'anime',
       fa: 'تصویرسازی',
       hit: /انیمه|کارتون|نقاشی|ایلاستر|کمیک|anime|cartoon|illustration|comic|drawing/i,
-      craft: 'clean line art, cel shading, flat colour blocking, expressive silhouette',
+      craft: ['clean line art, cel shading, flat colour blocking, expressive silhouette',
+              'painterly brushwork, limited palette, strong shape language, soft rim light'],
       note: 'سبک تصویرسازی انتخاب شد: خط تمیز و رنگ‌گذاری تخت، نه بافتِ عکاسی.' },
 
     { id: 'face',
       fa: 'پرتره',
       hit: /پرتره|چهره|صورت|مرد|زن|دختر|پسر|بازیگر|portrait|face|man|woman|person/i,
-      craft: 'soft key light from one side, 85mm lens, shallow depth of field, natural skin texture, catchlight in the eyes',
+      craft: ['soft key light from one side, 85mm lens, shallow depth of field, natural skin texture, catchlight in the eyes',
+              'window light, 50mm, medium close-up, gentle falloff, honest unretouched skin',
+              'low key portrait, single hard source, deep shadow side, 105mm compression'],
       note: 'برای چهره، نورِ یک‌طرفه و لنز ۸۵ اضافه شد — همان چیزی که در «نور و ترکیب‌بندی» به آن می‌گوییم نورِ کلیدی.' },
+
+    { id: 'animal',
+      fa: 'جانور',
+      hit: /گربه|سگ|پرنده|اسب|حیوان|جانور|cat|dog|bird|horse|animal|wolf|fox/i,
+      craft: ['telephoto, eye level with the animal, shallow depth of field, fur detail held in the light',
+              'close observation, natural light, alert gaze, background thrown well out of focus'],
+      note: 'سوژه یک جانور است، پس دوربین به سطحِ چشمِ او آمد و پس‌زمینه رفت روی محو — نه نمای باز، که جانور در آن گم می‌شود.' },
 
     { id: 'place',
       fa: 'لوکیشن و فضا',
-      hit: /منظره|شهر|خیابان|جنگل|کوه|اتاق|فضا|لوکیشن|landscape|city|street|forest|room|interior/i,
-      craft: 'wide establishing shot, atmospheric depth, layered foreground and background, volumetric light',
+      hit: /منظره|شهر|خیابان|جنگل|کوه|اتاق|فضا|لوکیشن|دریا|ساحل|بیابان|آسمان|landscape|city|street|forest|room|interior|mountain|sea|beach|desert|sky|valley|village/i,
+      craft: ['wide establishing shot, atmospheric depth, layered foreground and background, volumetric light',
+              'high vantage point, receding planes, haze separating distance, cool ambient light'],
       note: 'نمای باز با لایه‌ی جلو و عقب — همان کاری که در «زبان دوربین» به آن نمای معرف می‌گوییم.' },
 
     { id: 'product',
       fa: 'محصول',
       hit: /محصول|پکیج|بسته‌بندی|تبلیغ|product|packshot|advert/i,
-      craft: 'studio softbox lighting, seamless backdrop, crisp product focus, subtle reflection',
+      craft: ['studio softbox lighting, seamless backdrop, crisp product focus, subtle reflection',
+              'raking side light, matte surface, tight macro detail, controlled specular highlight'],
       note: 'نور استودیویی و پس‌زمینه‌ی یکدست انتخاب شد تا خودِ محصول دیده شود.' }
   ];
 
   var DEFAULT = {
     id: 'cinema',
     fa: 'سینمایی',
-    craft: 'cinematic lighting, filmic colour grade, 35mm, shallow depth of field, deliberate composition',
+    craft: ['cinematic lighting, filmic colour grade, 35mm, shallow depth of field, deliberate composition',
+            'anamorphic framing, practical light sources in shot, muted contrast, 40mm',
+            'natural available light, handheld feel, documentary framing, honest colour'],
     note: 'قاعده‌ی خاصی در پرامپتت پیدا نشد، پس حالت سینمایی گرفت: نور، رنگ و عمقِ میدانِ فیلم.'
   };
 
@@ -140,8 +155,13 @@
     return {
       kind: r.fa,
       note: r.note,
+      // یک رشته‌ی ثابت یعنی هر تصویرِ این دسته شبیه قبلی درمی‌آید. چند
+      // حالت هست و هر بار یکی برداشته می‌شود، پس دوباره‌زدن واقعاً چیز
+      // تازه‌ای می‌دهد نه همان قاب با دانه‌ی دیگر.
       build: function (subject) {
-        return [subject, r.craft].concat(extra).join(', ');
+        var c = r.craft;
+        if (typeof c !== 'string') c = c[Math.floor(Math.random() * c.length)];
+        return [subject, c].concat(extra).join(', ');
       }
     };
   }
@@ -229,11 +249,23 @@
       });
   }
 
-  function imageModel(key) {
-    return pickModel(key,
-      function (n) { return /image/.test(n) && !/embed/.test(n); },
-      function (v) { if (v !== undefined) cachedImage = v; return cachedImage; },
-      'روی این کلید هیچ مدلِ تصویری باز نیست.');
+  // یک مدل کافی نیست. گوگل چند مدل تصویری فهرست می‌کند و بعضی‌شان روی
+  // حسابِ رایگان «limit: 0» دارند — یعنی نه اینکه سهمیه تمام شده، از اول
+  // صفر بوده. پس همه‌شان به‌ترتیب امتحان می‌شوند.
+  function imageModels(key) {
+    if (cachedImage) return Promise.resolve(cachedImage);
+    return fetch(GB + '/models?pageSize=200&key=' + encodeURIComponent(key))
+      .then(function (r) { return r.ok ? r.json() : gerr(r); })
+      .then(function (d) {
+        cachedImage = (d.models || [])
+          .filter(function (m) {
+            return (m.supportedGenerationMethods || []).indexOf('generateContent') >= 0;
+          })
+          .map(function (m) { return m.name.split('/').pop(); })
+          .filter(function (n) { return /image/.test(n) && !/embed/.test(n); });
+        if (!cachedImage.length) throw new Error('روی این کلید هیچ مدلِ تصویری نیست.');
+        return cachedImage;
+      });
   }
 
   function textModel(key) {
@@ -275,11 +307,16 @@
   ];
 
   function gemini(key, prompt) {
-    return imageModel(key).then(function (model) {
-      var i = 0, last = null;
+    return imageModels(key).then(function (models) {
+      var pairs = [], last = null;
+      models.forEach(function (m) {
+        SHAPES.forEach(function (c) { pairs.push([m, c]); });
+      });
+      var i = 0;
       function attempt() {
-        if (i >= SHAPES.length) throw last || new Error('پاسخی نگرفت');
-        var cfg = SHAPES[i++];
+        if (i >= pairs.length) throw last || new Error('پاسخی نگرفت');
+        var model = pairs[i][0], cfg = pairs[i][1];
+        i++;
         var body = { contents: [{ parts: [{ text: prompt }] }] };
         if (cfg) body.generationConfig = cfg;
         return fetch(GB + '/models/' + model + ':generateContent?key=' + encodeURIComponent(key), {
@@ -359,6 +396,28 @@
     $('gal').insertBefore(g, $('gal').firstChild);
   }
 
+  // یادداشتِ آرام — نه خطا، نه سکوت. برای وقتی که کار انجام شد ولی نه
+  // آن‌طور که کاربر انتظار داشت.
+  function soft(text) {
+    var d = document.createElement('p');
+    d.className = 'soft';
+    d.textContent = text;
+    $('out').insertBefore(d, $('out').firstChild);
+  }
+
+  function freeShot(plan, done) {
+    // بارگذاری خودِ تصویر تنها آزمونِ درست است.
+    return new Promise(function (ok, no) {
+      var url = freeUrl(plan.prompt, Math.floor(Math.random() * 1e9));
+      var probe = new Image();
+      probe.onload = function () {
+        done(); bump(); quota(); show(url, plan, 'موتور رایگان'); ok();
+      };
+      probe.onerror = function () { no(new Error('__free__')); };
+      probe.src = url;
+    });
+  }
+
   function waiting() {
     var w = document.createElement('div');
     w.className = 'shot';
@@ -421,19 +480,19 @@
       if (key) {
         return gemini(key, plan.prompt).then(function (src) {
           done(); show(src, plan, 'کلید خودت');
+        }, function (e) {
+          // «limit: 0» یعنی سهمیه تمام نشده — از اول صفر بوده. مدل‌های
+          // تصویرِ گوگل روی حساب رایگان باز نیستند. نشان‌دادنِ یک دیوار
+          // انگلیسی و دست خالی، بدترین کارِ ممکن است؛ تصویر را با موتور
+          // رایگان می‌سازیم و در یک جمله می‌گوییم چرا.
+          soft(/limit: 0/.test(e.message)
+            ? 'مدل تصویرِ گوگل روی حسابِ رایگان سهمیه ندارد (limit: 0) — این یکی با موتور رایگان ساخته شد. کلیدت برای ترجمه استفاده شد.'
+            : 'گوگل تصویر نداد (' + e.message.slice(0, 90) + ') — با موتور رایگان ساخته شد.');
+          return freeShot(plan, done);
         });
       }
 
-      // موتور بی‌کلید: بارگذاری خودِ تصویر تنها آزمونِ درست است.
-      return new Promise(function (ok, no) {
-        var url = freeUrl(plan.prompt, Math.floor(Math.random() * 1e9));
-        var probe = new Image();
-        probe.onload = function () {
-          done(); bump(); quota(); show(url, plan, 'موتور رایگان'); ok();
-        };
-        probe.onerror = function () { no(new Error('__free__')); };
-        probe.src = url;
-      });
+      return freeShot(plan, done);
     }).catch(function (e) {
       done();
       if (e && e.message === '__free__') {
