@@ -218,7 +218,8 @@
     var css = document.createElement('style');
     css.textContent = [
       '.nvxp{margin:44px 0 8px;padding:20px 22px;border-radius:14px;',
-      '  border:1px solid #262A31;background:linear-gradient(158deg,rgba(32,38,48,.6),rgba(10,12,16,.76));}',
+      '  border:1px solid #313947;background:linear-gradient(158deg,#1C2430,#141A23);',
+      '  box-shadow:inset 0 1px 0 rgba(226,238,255,.07);}',
       '.nvxp__q{margin:0 0 14px;font-size:15px;line-height:1.9;color:#EDF2FA;font-weight:600;}',
       '.nvxp__row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}',
       '.nvxp__btn{appearance:none;border:1px solid #3A4250;background:#12161C;color:#EDF2FA;',
@@ -233,8 +234,9 @@
       '.nvxp__bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#E5202A,#7FB8FF);',
       '  transition:width .8s cubic-bezier(.16,1,.3,1);}',
       /* the strip on training.html */
-      '.nvxs{margin:0 0 26px;padding:15px 17px;border-radius:12px;border:1px solid #1E232B;',
-      '  background:rgba(16,19,25,.6);display:flex;align-items:center;gap:16px;flex-wrap:wrap;}',
+      '.nvxs{margin:0 0 26px;padding:15px 17px;border-radius:12px;border:1px solid #2E3542;',
+      '  background:#161C26;display:flex;align-items:center;gap:16px;flex-wrap:wrap;',
+      '  box-shadow:inset 0 1px 0 rgba(226,238,255,.06);}',
       '.nvxs__t{font-size:13px;color:#C8D0DA;line-height:1.8;flex:1;min-width:190px;}',
       '.nvxs__t b{color:#EDF2FA;font-variant-numeric:tabular-nums;}',
       '.nvxs__go{font-size:12.5px;color:#7FB8FF;font-weight:600;text-decoration:none;white-space:nowrap;}',
