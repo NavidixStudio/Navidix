@@ -126,6 +126,12 @@ textarea::placeholder{color:var(--dim)}
 .keymsg{margin:10px 0 0; font-size:12.5px; line-height:1.9; min-height:1px}
 .keymsg.ok{color:#7FD48A}
 .keymsg.no{color:#E5202A}
+/* کدِ Worker: لاتین و چندخطی در یک صفحه‌ی راست‌به‌چپ، پس جدا و چپ‌چین با
+   اسکرول افقیِ خودش — وگرنه یا می‌شکند یا کلِ صفحه را پهن می‌کند. */
+.wcode{direction:ltr; text-align:left; margin:0 0 14px; padding:13px 14px;
+  background:#0B0F16; border:1px solid var(--line2); border-radius:11px;
+  font-family:'Inter',ui-monospace,monospace; font-size:11px; line-height:1.75;
+  color:var(--ink2); overflow-x:auto; white-space:pre; max-height:230px; overflow-y:auto}
 .safe{margin:12px 0 0; font-size:11.5px; color:var(--dim); line-height:1.95}
 .safe b{color:var(--ink2)}
 
@@ -146,7 +152,7 @@ textarea::placeholder{color:var(--dim)}
      نه دکمه‌ی refreshِ سخت دارد و نه به کاربر اجازه می‌دهد کش را پاک
      کند. بدون این، هر اصلاحی ساعت‌ها پشت فایلِ کهنه گیر می‌کند. با
      هر تغییرِ nvx-studio.js این عدد را عوض کن. -->
-<script src="nvx-studio.js?v=202608152300" defer></script>
+<script src="nvx-studio.js?v=202608152306" defer></script>
 </head>
 <body>
 
@@ -182,53 +188,62 @@ textarea::placeholder{color:var(--dim)}
     <summary id="keysum">کیفیت بهتر می‌خواهی؟ FLUX را روشن کن — رایگان</summary>
     <div class="key__in">
       <p class="hint" style="margin:0 0 6px"><b style="color:var(--ink)">FLUX.1 schnell</b>
-      بهترین مدلِ تصویری است که رایگان در دسترس است — فاصله‌اش با موتور پیش‌فرض
-      زیاد است. روی Cloudflare اجرا می‌شود.</p>
-      <p class="hint" style="margin:0 0 16px">پنج دقیقه وقت می‌برد، یک بار برای همیشه.
+      بهترین مدلِ تصویری است که رایگان در دسترس است. روی Cloudflare اجرا می‌شود و
       <b style="color:var(--ink2)">کارت بانکی نمی‌خواهد.</b></p>
+      <p class="hint" style="margin:0 0 16px">مرورگر اجازه ندارد مستقیم Cloudflare را
+      صدا بزند، پس یک واسطه‌ی کوچک روی حساب خودت می‌سازی. ده دقیقه، یک بار برای
+      همیشه — و اینطوری توکنت اصلاً وارد مرورگر نمی‌شود.</p>
 
-      <p class="hint" style="margin:0 0 8px"><b style="color:var(--ink2)">کادر اول —
-      شناسه‌ی حساب</b></p>
       <ol>
-        <li>دکمه‌ی زیر را بزن و حساب رایگان بساز (فقط ایمیل و رمز)</li>
-        <li>منوی سمت چپ ← زیر <b>Build</b> روی <b>AI</b> ← بعد <b>Workers AI</b></li>
-        <li>بالای آن صفحه دکمه‌ی <b>{ } REST API</b> را بزن</li>
-        <li>صفحه‌ای باز می‌شود با عنوان <b>Get Account ID</b> و یک کادر زیرش —
-            دکمه‌ی <b>کپی</b> کنارِ آن کادر را بزن، و در کادر اولِ پایین بچسبان</li>
+        <li>در Cloudflare: <b>Compute</b> ← <b>Workers &amp; Pages</b> ← <b>Create</b></li>
+        <li><b>Start with Hello World!</b> را بزن، اسمی مثل <b>navidix-flux</b>
+            بگذار و <b>Deploy</b> کن</li>
+        <li>حالا <b>Edit code</b> را بزن، هرچه در ویرایشگر هست پاک کن و
+            کدِ زیر را جایش بچسبان، بعد <b>Deploy</b></li>
+        <li>برگرد به همان Worker ← <b>Settings</b> ← <b>Bindings</b> ←
+            <b>Add binding</b> ← <b>Workers AI</b> ← نامش را دقیقاً
+            <b class="lat">AI</b> بگذار ← ذخیره</li>
+        <li>آدرس Worker را کپی کن — چیزی شبیه
+            <span class="lat" style="direction:ltr;display:inline-block">navidix-flux.…workers.dev</span>
+            — و پایین بچسبان</li>
       </ol>
 
-      <p class="hint" style="margin:0 0 8px"><b style="color:var(--ink2)">کادر دوم —
-      توکن</b></p>
-      <ol>
-        <li>در <b>همان صفحه</b>، بالاترش، دکمه‌ی
-            <b>Create a Workers AI API Token</b> هست — بزنش</li>
-        <li>ساخته که شد، توکن را کپی کن و در کادر دوم بچسبان —
-            <b>همان لحظه، چون دیگر نشانش نمی‌دهد</b></li>
-      </ol>
+      <button class="keygo" id="copycode" type="button"
+              style="margin:0 0 9px">کپی کد</button>
+      <pre class="wcode" id="wcode">export default {
+  async fetch(req, env) {
+    const cors = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "content-type",
+      "Access-Control-Allow-Methods": "POST, OPTIONS"
+    };
+    if (req.method === "OPTIONS") return new Response(null, { headers: cors });
+    if (req.method !== "POST")
+      return new Response("POST only", { status: 405, headers: cors });
 
-      <a class="lnk" href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">
-        ساختن حساب / ورود ←</a>
+    const body = await req.json().catch(() => ({}));
+    if (!body.prompt)
+      return Response.json({ error: "no prompt" }, { status: 400, headers: cors });
+
+    const out = await env.AI.run("@cf/black-forest-labs/flux-1-schnell", {
+      prompt: body.prompt,
+      steps: body.steps || 4
+    });
+    return Response.json(out, { headers: cors });
+  }
+};</pre>
 
       <div class="keyrow">
-        <input id="acct" type="text" autocomplete="off" spellcheck="false"
-               placeholder="شناسه یا آدرسِ صفحه‌ی Cloudflare — کادر اول" />
-      </div>
-      <div class="keyrow" style="margin-top:8px">
-        <input id="key" type="password" autocomplete="off" spellcheck="false"
-               placeholder="API Token — کادر دوم" />
+        <input id="work" type="text" autocomplete="off" spellcheck="false"
+               placeholder="https://navidix-flux.…workers.dev" />
         <button class="keygo" id="keygo" type="button">ثبت</button>
       </div>
       <p class="keymsg" id="keymsg"></p>
 
-      <p class="safe"><b>هر دو پیش خودت می‌مانند.</b> جایی ذخیره نمی‌شوند جز همین
-      مرورگر، و به نویدیکس فرستاده نمی‌شوند — ما اصلاً سروری نداریم که بفرستد.
-      مرورگرت مستقیم با Cloudflare حرف می‌زند. هر وقت خواستی کادرها را خالی کن
-      و ثبت بزن تا پاک شوند.</p>
-
-      <p class="safe" style="margin-top:9px"><b style="color:#E5A24A">توکن را برای
-      هیچ‌کس نفرست و از آن عکس نگیر</b> — آن یکی رمز است و هر که داشته باشد
-      می‌تواند از سهمیه‌ی تو خرج کند. شناسه‌ی حساب اما رمز نیست و لو رفتنش
-      اشکالی ندارد؛ به‌تنهایی هیچ کاری نمی‌شود با آن کرد.</p>
+      <p class="safe"><b>آدرس Worker پیش خودت می‌ماند.</b> جایی ذخیره نمی‌شود جز همین
+      مرورگر. و مهم‌تر: <b>توکن Cloudflare هیچ‌وقت وارد این صفحه نمی‌شود</b> — داخل
+      Worker خودت می‌ماند، جایی که فقط تو دسترسی داری. آن توکنی که ساختی هم دیگر
+      لازم نیست؛ می‌توانی پاکش کنی.</p>
     </div>
   </details>
 

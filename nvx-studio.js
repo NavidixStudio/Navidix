@@ -30,9 +30,8 @@
 (function () {
   'use strict';
 
-  var KEY   = 'nvx-studio-key';
   var DAY   = 'nvx-studio-day';
-  var ACCT  = 'nvx-studio-acct';
+  var WORK  = 'nvx-studio-worker';
   var FREE  = 3;                      // سقف روزانه‌ی موتور بی‌کلید
 
   var $ = function (id) { return document.getElementById(id); };
@@ -67,17 +66,14 @@
     try { return (localStorage.getItem(KEY) || '').trim(); } catch (e) { return ''; }
   }
 
-  function myAcct() {
-    try { return (localStorage.getItem(ACCT) || '').trim(); } catch (e) { return ''; }
+  function myWorker() {
+    try { return (localStorage.getItem(WORK) || '').trim(); } catch (e) { return ''; }
   }
 
-  // Cloudflare منویش را عوض کرده و «Account ID» آن‌جایی نیست که راهنماها
-  // می‌گویند. ولی شناسه در آدرسِ هر صفحه‌ی داشبورد هست، و کپی‌کردنِ آدرس
-  // از نوار مرورگر کاری است که هرکسی بلد است. پس هر دو را قبول می‌کنیم:
-  // خودِ شناسه، یا آدرسی که شناسه تویش است.
-  function cleanAcct(v) {
-    var m = String(v || '').match(/[0-9a-f]{32}/i);
-    return m ? m[0] : String(v || '').trim();
+  function cleanWorker(v) {
+    v = String(v || '').trim().replace(/\/+$/, '');
+    if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
+    return v;
   }
 
   function fa(n) {
@@ -222,10 +218,11 @@
      نمی‌فرستد جز خود پرامپت، و اگر سرویس بالا نباشد onerror می‌گیرد و
      صریح می‌گوید — به‌جای اینکه صفحه بی‌صدا خالی بماند. */
 
-  function freeUrl(prompt, seed) {
+  function freeUrl(prompt, seed, flux) {
     return 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt)
       + '?width=' + ratio.w + '&height=' + ratio.h
-      + '&seed=' + seed + '&nologo=true&referrer=navidixstudio.com';
+      + '&seed=' + seed + '&nologo=true&referrer=navidixstudio.com'
+      + (flux ? '&model=flux' : '');
   }
 
   /* --------------------------------------------- موتور خوب: FLUX روی Cloudflare
@@ -243,29 +240,18 @@
      دامنه‌ی گوگل را باز می‌گذارد. پس اگر مرورگر جلویش را بگیرد، صفحه ساکت
      نمی‌ماند: پیامش را می‌گوید و کار را با موتور پیش‌فرض تمام می‌کند. */
 
-  var CF    = 'https://api.cloudflare.com/client/v4/accounts/';
-  var MODEL = '@cf/black-forest-labs/flux-1-schnell';
-
-  function flux(acct, token, prompt) {
-    // steps بالاتر از ۸ را این مدل نمی‌پذیرد؛ ۴ همان جایی است که schnell
-    // برایش ساخته شده — سریع و بدون افتِ محسوس.
-    return fetch(CF + encodeURIComponent(acct) + '/ai/run/' + MODEL, {
+  function flux(worker, prompt) {
+    return fetch(worker, {
       method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: prompt, steps: 4 })
     }).then(function (r) {
       return r.json().then(function (j) {
-        if (!r.ok || j.success === false) {
-          var e = (j.errors && j.errors[0] && j.errors[0].message) || ('HTTP ' + r.status);
-          throw new Error(e);
-        }
+        if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
         return j;
-      }, function () { throw new Error('HTTP ' + r.status); });
+      }, function () { throw new Error('HTTP ' + r.status + ' — پاسخ JSON نبود'); });
     }).then(function (j) {
-      var img = j.result && (j.result.image || j.result.b64_json);
+      var img = j.image || (j.result && j.result.image);
       if (!img) throw new Error('پاسخ آمد ولی تصویری در آن نبود.');
       return 'data:image/jpeg;base64,' + img;
     });
@@ -276,14 +262,14 @@
   var shots = [];
 
   function quota() {
-    var on = myKey() && myAcct();
+    var on = myWorker();
     if (on) {
-      $('quota').innerHTML = '<b>FLUX schnell</b> روشن است — بی‌سقف';
-      $('keysum').textContent = 'FLUX روشن است — برای تغییر یا پاک‌کردن بزن';
+      $('quota').innerHTML = '<b>FLUX schnell</b> از Worker خودت — بی‌سقف';
+      $('keysum').textContent = 'Worker خودت وصل است — برای تغییر بزن';
     } else {
       var left = Math.max(0, FREE - used());
       $('quota').innerHTML = 'امروز <b>' + fa(left) + '</b> تا از ' + fa(FREE) + ' مانده';
-      $('keysum').textContent = 'کیفیت بهتر می‌خواهی؟ FLUX را روشن کن — رایگان';
+      $('keysum').textContent = 'کیفیت بالاتر می‌خواهی؟ Worker خودت را وصل کن — رایگان';
     }
   }
 
@@ -337,16 +323,26 @@
   }
 
   function freeShot(plan, done) {
-    // بارگذاری خودِ تصویر تنها آزمونِ درست است.
-    return new Promise(function (ok, no) {
-      var url = freeUrl(plan.prompt, Math.floor(Math.random() * 1e9));
-      var probe = new Image();
-      probe.onload = function () {
-        done(); bump(); quota(); show(url, plan, 'موتور رایگان'); ok();
-      };
-      probe.onerror = function () { no(new Error('__free__')); };
-      probe.src = url;
-    });
+    // بارگذاری خودِ تصویر تنها آزمونِ درست است — و همین اجازه می‌دهد بدون
+    // خطر، مدلِ بهتر را اول امتحان کنیم: اگر این سرویس پارامتر flux را
+    // نشناسد، تصویر بار نمی‌شود و بی‌سروصدا برمی‌گردیم سر حالتِ ساده.
+    var seed = Math.floor(Math.random() * 1e9);
+
+    function attempt(flux) {
+      return new Promise(function (ok, no) {
+        var url = freeUrl(plan.prompt, seed, flux);
+        var probe = new Image();
+        probe.onload = function () {
+          done(); bump(); quota();
+          show(url, plan, flux ? 'FLUX (رایگان)' : 'موتور پیش‌فرض');
+          ok();
+        };
+        probe.onerror = function () { no(new Error('__free__')); };
+        probe.src = url;
+      });
+    }
+
+    return attempt(true).catch(function () { return attempt(false); });
   }
 
   function waiting() {
@@ -363,13 +359,13 @@
     var text = $('p').value.trim();
     if (!text) { $('p').focus(); return; }
 
-    var key = myKey(), acct = myAcct();
-    if (!key && used() >= FREE) {
+    var worker = myWorker();
+    if (!worker && used() >= FREE) {
       fail('سهمیه‌ی امروزت تمام شد.',
            null);
       $('out').firstChild.appendChild(document.createTextNode(
-        'فردا دوباره باز می‌شود. یا اگر می‌خواهی همین حالا ادامه بدهی، ' +
-        'کلید رایگان خودت را بگذار — پایین همین صفحه، دو دقیقه.'));
+        'فردا دوباره باز می‌شود. یا اگر می‌خواهی همین حالا ادامه بدهی و ' +
+        'کیفیت بالاتری هم بگیری، Worker خودت را وصل کن — پایین همین صفحه.'));
       $('keybox').open = true;
       $('keybox').scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -401,17 +397,17 @@
       // منتظر یک تصویرِ غلط بماند و نداند چرا غلط است.
       line.textContent = plan.prompt;
 
-      if (key && acct) {
-        return flux(acct, key, plan.prompt).then(function (src) {
+      if (worker) {
+        return flux(worker, plan.prompt).then(function (src) {
           done(); show(src, plan, 'FLUX schnell');
         }, function (e) {
           // «limit: 0» یعنی سهمیه تمام نشده — از اول صفر بوده. مدل‌های
           // تصویرِ گوگل روی حساب رایگان باز نیستند. نشان‌دادنِ یک دیوار
           // انگلیسی و دست خالی، بدترین کارِ ممکن است؛ تصویر را با موتور
           // رایگان می‌سازیم و در یک جمله می‌گوییم چرا.
-          soft('FLUX جواب نداد: ' + e.message.slice(0, 120) +
-               ' — این یکی با موتور پیش‌فرض ساخته شد. اگر پیام از دسترسی می‌گوید، ' +
-               'شناسه‌ی حساب یا توکن را دوباره چک کن.');
+          soft('Worker جواب نداد: ' + e.message.slice(0, 120) +
+               ' — این یکی با موتور پیش‌فرض ساخته شد. آدرس Worker را چک کن، و ' +
+               'اینکه اتصال (Binding) با نام AI رویش تعریف شده باشد.');
           return freeShot(plan, done);
         });
       }
@@ -454,47 +450,44 @@
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') make();
   });
 
-  var box  = $('key');
-  var abox = $('acct');
-  box.value  = myKey();
-  abox.value = myAcct();
+  var box = $('work');
+  box.value = myWorker();
 
   function saveKey() {
-    var v = box.value.trim(), a = cleanAcct(abox.value);
-    abox.value = a;                       // آنچه ذخیره شد، همان چیزی که می‌بیند
+    var v = cleanWorker(box.value);
+    box.value = v;
     var msg = $('keymsg');
-    try {
-      v ? localStorage.setItem(KEY, v)   : localStorage.removeItem(KEY);
-      a ? localStorage.setItem(ACCT, a)  : localStorage.removeItem(ACCT);
-    } catch (e) {}
+    try { v ? localStorage.setItem(WORK, v) : localStorage.removeItem(WORK); } catch (e) {}
     quota();
-
-    // نصفه‌کاره ثبت‌کردن رایج‌ترین حالت است — یکی را می‌چسبانند و آن یکی را
-    // یادشان می‌رود. سکوت اینجا یعنی کاربر فکر می‌کند کار تمام است.
-    if (v && a) {
-      msg.className = 'keymsg ok';
-      msg.textContent = /^[0-9a-f]{32}$/i.test(a)
-        ? 'ثبت شد. FLUX روشن است — برو بالا و بساز.'
-        : 'ثبت شد، ولی شناسه‌ی حساب شکلِ معمولش را ندارد (۳۲ حرف و رقم). ' +
-          'اگر کار نکرد، آدرسِ صفحه‌ی Cloudflare را کپی کن و همین‌جا بچسبان.';
-      $('out').innerHTML = '';
-    } else if (!v && !a) {
+    if (!v) {
       msg.className = 'keymsg';
-      msg.textContent = 'هر دو پاک شدند. دوباره با موتور پیش‌فرض کار می‌کند.';
-    } else {
+      msg.textContent = 'پاک شد. دوباره با موتور پیش‌فرض کار می‌کند.';
+    } else if (!/^https:\/\/[^\s.]+\.[^\s]+$/i.test(v)) {
       msg.className = 'keymsg no';
-      msg.textContent = v
-        ? 'توکن هست ولی Account ID خالی است — کادر اول را هم پر کن.'
-        : 'Account ID هست ولی توکن خالی است — کادر دوم را هم پر کن.';
+      msg.textContent = 'این آدرسِ کاملی به‌نظر نمی‌رسد. باید چیزی شبیه ' +
+                        'https://navidix-flux.<نام‌تو>.workers.dev باشد.';
+    } else {
+      msg.className = 'keymsg ok';
+      msg.textContent = 'ثبت شد. برو بالا و بساز — اگر Worker درست کار کند، ' +
+                        'زیر تصویر می‌نویسد FLUX schnell.';
+      $('out').innerHTML = '';
     }
   }
 
   $('keygo').addEventListener('click', saveKey);
-  [box, abox].forEach(function (el) {
-    el.addEventListener('change', saveKey);
-    el.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { e.preventDefault(); saveKey(); }
-    });
+  box.addEventListener('change', saveKey);
+  box.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); saveKey(); }
+  });
+
+  // کپی‌کردنِ کدِ Worker روی گوشی با انگشت شدنی نیست؛ دکمه لازم دارد.
+  var cp = $('copycode');
+  if (cp) cp.addEventListener('click', function () {
+    var t = $('wcode').textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject())
+      .then(function () { cp.textContent = '✓ کپی شد'; },
+            function () { cp.textContent = 'کپی نشد — دستی انتخابش کن'; });
+    setTimeout(function () { cp.textContent = 'کپی کد'; }, 2600);
   });
 
   quota();
