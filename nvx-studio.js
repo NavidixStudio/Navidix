@@ -135,11 +135,43 @@
     for (var j = 0; j < MOOD.length; j++) {
       if (MOOD[j].hit.test(text)) extra.push(MOOD[j].add);
     }
+    // قاعده‌ها روی متنِ فارسی اجرا می‌شوند و باید هم بشوند؛ ساختنِ پرامپتِ
+    // نهایی اما تا بعد از ترجمه صبر می‌کند.
     return {
       kind: r.fa,
       note: r.note,
-      prompt: [text, r.craft].concat(extra).join(', ')
+      build: function (subject) {
+        return [subject, r.craft].concat(extra).join(', ');
+      }
     };
+  }
+
+  /* ------------------------------------------------------------- ترجمه
+
+     مدل‌های تصویر فارسی نمی‌فهمند. «یک سگ» برایشان یک رشته‌ی بی‌معنی است و
+     جوابش یک لکه‌ی تصادفی است — که دقیقاً همان چیزی بود که اول کار از این
+     صفحه درآمد. پس سوژه پیش از رفتن، انگلیسی می‌شود.
+
+     نقطه‌ی ضعفش را هم بگویم: این سرویسِ ترجمه‌ی عمومیِ گوگل است و قرارداد
+     رسمی ندارد، پس ممکن است روزی جواب ندهد. آن روز صفحه ساکت نمی‌ماند و
+     نمی‌گذارد فارسی خام برود بیرون — می‌گوید نشد و می‌گوید چه کار کنی. */
+
+  var TR = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=';
+
+  function needsTranslating(s) { return /[؀-ۿ]/.test(s); }
+
+  function translate(text) {
+    return fetch(TR + encodeURIComponent(text))
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (j) {
+        var out = (j[0] || []).map(function (seg) { return (seg && seg[0]) || ''; })
+                              .join('').trim();
+        if (!out) throw new Error('پاسخ خالی بود');
+        return out;
+      });
   }
 
   /* -------------------------------------------------------------- نسبت‌ها */
@@ -171,7 +203,8 @@
      بدهد برداشته می‌شود. */
 
   var GB = 'https://generativelanguage.googleapis.com/v1beta';
-  var cachedModel = null;
+  var cachedImage = null;
+  var cachedText  = null;
 
   function gerr(r) {
     return r.json().then(function (j) {
@@ -180,8 +213,8 @@
     }, function () { throw new Error('HTTP ' + r.status); });
   }
 
-  function imageModel(key) {
-    if (cachedModel) return Promise.resolve(cachedModel);
+  function pickModel(key, want, cache, err) {
+    if (cache()) return Promise.resolve(cache());
     return fetch(GB + '/models?pageSize=200&key=' + encodeURIComponent(key))
       .then(function (r) { return r.ok ? r.json() : gerr(r); })
       .then(function (d) {
@@ -190,11 +223,47 @@
             return (m.supportedGenerationMethods || []).indexOf('generateContent') >= 0;
           })
           .map(function (m) { return m.name.split('/').pop(); })
-          .filter(function (n) { return /image/.test(n) && !/embed/.test(n); });
-        if (!names.length) throw new Error('روی این کلید هیچ مدلِ تصویری باز نیست.');
-        cachedModel = names[0];
-        return cachedModel;
+          .filter(want);
+        if (!names.length) throw new Error(err);
+        return cache(names[0]);
       });
+  }
+
+  function imageModel(key) {
+    return pickModel(key,
+      function (n) { return /image/.test(n) && !/embed/.test(n); },
+      function (v) { if (v !== undefined) cachedImage = v; return cachedImage; },
+      'روی این کلید هیچ مدلِ تصویری باز نیست.');
+  }
+
+  function textModel(key) {
+    return pickModel(key,
+      function (n) { return !/image|tts|embed|video/.test(n); },
+      function (v) { if (v !== undefined) cachedText = v; return cachedText; },
+      'روی این کلید هیچ مدلِ متنی باز نیست.');
+  }
+
+  // ترجمه با کلیدِ خودِ کاربر: رسمی است، و همان مسیری است که برای تصویر هم
+  // بررسی شد. سرویسِ رایگانِ ترجمه فقط وقتی می‌ماند که کلیدی در کار نباشد.
+  function geminiTranslate(key, text) {
+    return textModel(key).then(function (m) {
+      return fetch(GB + '/models/' + m + ':generateContent?key=' + encodeURIComponent(key), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text:
+            'Translate this image prompt into natural English. Reply with the ' +
+            'translation only — no quotes, no explanation.\n\n' + text }] }],
+          generationConfig: { temperature: 0 }
+        })
+      }).then(function (r) { return r.ok ? r.json() : gerr(r); })
+        .then(function (j) {
+          var parts = (((j.candidates || [])[0] || {}).content || {}).parts || [];
+          var out = parts.map(function (x) { return x.text || ''; }).join('').trim();
+          if (!out) throw new Error('ترجمه خالی برگشت');
+          return out;
+        });
+    });
   }
 
   // حالتِ خروجی بین نسل‌ها فرق می‌کند و از بیرون معلوم نیست کدام را قبول
@@ -324,35 +393,62 @@
     strong.textContent = 'انتخاب نویدیکس: ' + plan.kind + '. ';
     why.appendChild(strong);
     why.appendChild(document.createTextNode(plan.note));
+    var line = document.createElement('span');
+    line.className = 'why__p';
+    why.appendChild(line);
 
     $('go').disabled = true;
     var w = waiting();
 
     function done() { $('go').disabled = false; w.remove(); }
 
-    if (key) {
-      gemini(key, plan.prompt).then(function (src) {
-        done(); show(src, plan, 'کلید خودت');
-      }, function (e) {
-        done();
-        fail('گوگل این را برگرداند:', e.message);
-      });
-      return;
+    var subject;
+    if (!needsTranslating(text)) {
+      subject = Promise.resolve(text);
+    } else if (key) {
+      subject = geminiTranslate(key, text).catch(function () { return translate(text); });
+    } else {
+      subject = translate(text);
     }
 
-    // موتور بی‌کلید: بارگذاری خودِ تصویر تنها آزمونِ درست است.
-    var url = freeUrl(plan.prompt, Math.floor(Math.random() * 1e9));
-    var probe = new Image();
-    probe.onload = function () {
-      done(); bump(); quota(); show(url, plan, 'موتور رایگان');
-    };
-    probe.onerror = function () {
+    subject.then(function (en) {
+      plan.prompt = plan.build(en);
+      // آنچه واقعاً فرستاده می‌شود، پیش از چشمِ کاربر — نه بعدش. اگر ترجمه
+      // بد بوده باشد همان‌جا می‌بیند و پرامپتش را عوض می‌کند، به‌جای اینکه
+      // منتظر یک تصویرِ غلط بماند و نداند چرا غلط است.
+      line.textContent = plan.prompt;
+
+      if (key) {
+        return gemini(key, plan.prompt).then(function (src) {
+          done(); show(src, plan, 'کلید خودت');
+        });
+      }
+
+      // موتور بی‌کلید: بارگذاری خودِ تصویر تنها آزمونِ درست است.
+      return new Promise(function (ok, no) {
+        var url = freeUrl(plan.prompt, Math.floor(Math.random() * 1e9));
+        var probe = new Image();
+        probe.onload = function () {
+          done(); bump(); quota(); show(url, plan, 'موتور رایگان'); ok();
+        };
+        probe.onerror = function () { no(new Error('__free__')); };
+        probe.src = url;
+      });
+    }).catch(function (e) {
       done();
-      fail('موتور رایگان الان جواب نداد.',
-           'این سرویسِ عمومی و رایگان است و گاهی شلوغ می‌شود. چند لحظه بعد ' +
-           'دوباره بزن، یا کلید خودت را بگذار تا مستقیم از گوگل بگیرد.');
-    };
-    probe.src = url;
+      if (e && e.message === '__free__') {
+        fail('موتور رایگان الان جواب نداد.',
+             'این سرویسِ عمومی و رایگان است و گاهی شلوغ می‌شود. چند لحظه بعد ' +
+             'دوباره بزن، یا کلید خودت را بگذار تا مستقیم از گوگل بگیرد.');
+      } else if (!plan.prompt) {
+        fail('نتوانستم پرامپتت را به انگلیسی برگردانم.',
+             'مدل‌های تصویر فارسی نمی‌فهمند، و فرستادنِ فارسیِ خام فقط یک ' +
+             'تصویرِ بی‌ربط تحویل می‌دهد — پس نفرستادم. یا چند لحظه بعد دوباره ' +
+             'بزن، یا همین پرامپت را به انگلیسی بنویس.');
+      } else {
+        fail('گوگل این را برگرداند:', e.message);
+      }
+    });
   }
 
   /* --------------------------------------------------------------- راه‌اندازی */
@@ -377,11 +473,29 @@
 
   var box = $('key');
   box.value = myKey();
-  box.addEventListener('change', function () {
+
+  function saveKey() {
     var v = box.value.trim();
+    var msg = $('keymsg');
     try { v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); } catch (e) {}
-    cachedModel = null;
+    cachedImage = null;
+    cachedText = null;
     quota();
+    if (v) {
+      msg.className = 'keymsg ok';
+      msg.textContent = 'ثبت شد. سقف روزانه برداشته شد — حالا بالا برو و بساز.';
+      // پیامِ «سهمیه‌ات تمام شد» دیگر راست نیست؛ ماندنش فقط گیج می‌کند.
+      $('out').innerHTML = '';
+    } else {
+      msg.className = 'keymsg';
+      msg.textContent = 'کلید پاک شد. دوباره سقف روزانه داری.';
+    }
+  }
+
+  $('keygo').addEventListener('click', saveKey);
+  box.addEventListener('change', saveKey);
+  box.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); saveKey(); }
   });
 
   quota();

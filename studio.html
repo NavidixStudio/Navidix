@@ -71,6 +71,11 @@ textarea::placeholder{color:var(--dim)}
   border-inline-start:2px solid var(--line2); padding-inline-start:11px}
 .why b{color:var(--ink2); font-weight:600}
 .why.on{border-inline-start-color:var(--mark)}
+/* پرامپتِ نهایی — همانی که واقعاً فرستاده می‌شود. لاتین است، پس در یک بندِ
+   RTL باید جدا و چپ‌چین بایستد وگرنه ویرگول و پرانتزش می‌پرد آن سرِ خط. */
+.why__p{display:block; margin-top:9px; direction:ltr; text-align:left;
+  font-family:'Inter',ui-monospace,monospace; font-size:11.5px; line-height:1.85;
+  color:var(--dim); word-break:break-word}
 
 /* ---- results ---- */
 .shot{border:1px solid var(--line2); border-radius:15px; overflow:hidden; background:#0B0D11;
@@ -110,6 +115,15 @@ textarea::placeholder{color:var(--dim)}
   border-radius:10px; padding:11px 13px; font-family:'Inter',ui-monospace,monospace; font-size:12.5px;
   direction:ltr; text-align:left; outline:none}
 .key input:focus{border-color:rgba(150,196,255,.5)}
+/* بدون دکمه، تنها راهِ ثبت این بود که کاربر جای دیگری از صفحه بزند تا
+   change شلیک شود. روی گوشی این یعنی «چسباندم، هیچ اتفاقی نیفتاد». */
+.keyrow{display:flex; gap:8px; align-items:stretch}
+.keyrow input{flex:1; min-width:0}
+.keygo{appearance:none; border:0; border-radius:10px; padding:0 22px; background:var(--mark);
+  color:#08090B; font:inherit; font-size:13.5px; font-weight:700; cursor:pointer; white-space:nowrap}
+.keymsg{margin:10px 0 0; font-size:12.5px; line-height:1.9; min-height:1px}
+.keymsg.ok{color:#7FD48A}
+.keymsg.no{color:#E5202A}
 .safe{margin:12px 0 0; font-size:11.5px; color:var(--dim); line-height:1.95}
 .safe b{color:var(--ink2)}
 
@@ -139,12 +153,12 @@ textarea::placeholder{color:var(--dim)}
 <main class="wrap">
   <p class="eyebrow lat">NAVIDIX · STUDIO</p>
   <h1>استودیو نویدیکس</h1>
-  <p class="sub">پرامپتت را با زبان سینما کامل می‌کند و مدل مناسبِ همان کار را
-  انتخاب می‌کند. لازم نیست بدانی کدام مدل برای چه خوب است — همین انتخاب،
-  کارِ نویدیکس است.</p>
+  <p class="sub">فارسی بنویس. نویدیکس ترجمه‌اش می‌کند، با زبان سینما کاملش
+  می‌کند و مدل مناسبِ همان کار را انتخاب می‌کند — و هر سه را هم نشانت می‌دهد.
+  لازم نیست بدانی کدام مدل برای چه خوب است.</p>
 
   <div class="box">
-    <textarea id="p" rows="3" placeholder="چه تصویری می‌خواهی؟ ساده و فارسی بنویس — مثلاً: مرد میانسالی کنار پنجره‌ی بارانی، غمگین"></textarea>
+    <textarea id="p" rows="3" placeholder="چه تصویری می‌خواهی؟ فارسی بنویس — مثلاً: مرد میانسالی کنار پنجره‌ی بارانی، غمگین"></textarea>
 
     <div class="row" id="ratios"></div>
     <div class="row">
@@ -175,8 +189,12 @@ textarea::placeholder{color:var(--dim)}
       <a class="lnk" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">
         باز کردن صفحه‌ی کلید گوگل ←</a>
 
-      <input id="key" type="password" autocomplete="off" spellcheck="false"
-             placeholder="AIza… را اینجا بچسبان" />
+      <div class="keyrow">
+        <input id="key" type="password" autocomplete="off" spellcheck="false"
+               placeholder="AIza… را اینجا بچسبان" />
+        <button class="keygo" id="keygo" type="button">ثبت</button>
+      </div>
+      <p class="keymsg" id="keymsg"></p>
 
       <p class="safe"><b>کلیدت پیش خودت می‌ماند.</b> جایی ذخیره نمی‌شود جز همین مرورگر،
       و به سرور نویدیکس فرستاده نمی‌شود — ما اصلاً سروری نداریم که بفرستد. مرورگرت
