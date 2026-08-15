@@ -471,3 +471,61 @@
   .nvx-rv{ opacity:1 !important; transform:none !important; }
   .nvx-lb, .nvx-zoom{ display:none !important; }
 }
+
+/* nvx-resources */
+/* =====================================================================
+   منابع یوتیوب
+
+   کارت همان `.vcard` صفحات مستند و مجموعه است تا چیز تازه‌ای به زبان
+   بصری سایت اضافه نشود. تفاوتش دو چیز است: چیپ سطح، و یک جمله که
+   می‌گوید چرا این ویدیو اینجاست.
+   ===================================================================== */
+/* The block is inserted just before the pager, which sits outside the
+   column that holds lesson prose — so it inherits none of that column's
+   width or padding and ran edge to edge. It carries its own, matched to
+   the prose measured on a real lesson page (662px of text inside a
+   706px box), and keeps margins on a phone.
+
+   The doubled class is not a typo. The shell sets `.lesson section
+   {padding:48px 0}`, whose shorthand zeroes the inline padding, and at
+   0,1,1 it outranks a plain `.ytb`. `.ytb.ytb` scores 0,2,0 and wins —
+   the same trick `.jrn .stg` needed on the journey page, for the same
+   reason. */
+.ytb.ytb{ margin:44px auto 8px; max-width:706px; padding:0 22px; }
+@media (max-width:640px){ .ytb.ytb{ padding:0 15px; } }
+.ytb__lead{ font-size:14px; line-height:2.05; color:#C8D0DA; margin:0 0 10px; }
+.ytb__sub{ font-size:12.5px; line-height:2; color:#8C939B; margin:0 0 18px; }
+.ytb__sub b{ color:#C8D0DA; font-weight:600; }
+.ytb__grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); gap:14px; }
+
+.ytc{ display:flex; flex-direction:column; border-radius:13px; overflow:hidden;
+  border:1px solid #262A31; background:rgba(14,17,22,.6); text-decoration:none;
+  transition:border-color .25s, transform .25s; }
+.ytc:hover{ border-color:rgba(150,196,255,.42); transform:translateY(-2px); }
+.ytc__cover{ position:relative; display:block; aspect-ratio:16/9; background:#0B0D11;
+  border:0; padding:0; width:100%; cursor:pointer; }
+.ytc__cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+.ytc__play{ position:absolute; inset:0; display:grid; place-items:center; }
+.ytc__play i{ width:46px; height:46px; border-radius:50%; background:rgba(8,9,11,.72);
+  border:1px solid rgba(233,244,255,.3); display:grid; place-items:center;
+  transition:background .25s, border-color .25s; }
+.ytc__play i::after{ content:''; border-style:solid; border-width:8px 0 8px 13px;
+  border-color:transparent transparent transparent #EDF2FA; margin-inline-start:3px; }
+.ytc__cover:hover .ytc__play i{ background:#E5202A; border-color:#E5202A; }
+.ytc__time{ position:absolute; bottom:8px; inset-inline-start:8px; background:rgba(4,6,10,.84);
+  border-radius:5px; padding:1px 6px; font-size:11px; color:#EDF2FA;
+  font-family:ui-monospace,Menlo,Vazirmatn,monospace; }
+.ytc__lv{ position:absolute; top:8px; inset-inline-end:8px; background:rgba(4,6,10,.84);
+  border:1px solid rgba(150,175,215,.28); border-radius:5px; padding:1px 7px;
+  font-size:10.5px; color:#C8D0DA; }
+.ytc__b{ padding:14px 15px 15px; display:flex; flex-direction:column; gap:7px; flex:1; }
+.ytc__b h4{ margin:0; font-size:14px; line-height:1.75; font-weight:600; color:#EDF2FA; }
+.ytc__ch{ font-size:11.5px; color:#6B7280; }
+.ytc__why{ font-size:12.5px; line-height:1.95; color:#8C939B; flex:1; margin:0; }
+.ytc__go{ font-size:12px; color:#7FB8FF; font-weight:600; }
+
+/* the facade, once it has been pressed */
+.ytc__cover iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+.ytb__back{ margin:18px 0 0; font-size:12.5px; line-height:2; color:#6B7280;
+  border-top:1px solid #1B2028; padding-top:14px; }

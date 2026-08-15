@@ -68,10 +68,11 @@ def R(lesson, url, level, why, dur=None):
 # نشده و نباید بشود: شناسه‌ی حدسی یا به ویدیوی مرده می‌رود یا به ویدیویی
 # که هیچ ربطی به درس ندارد، و هر دو بدتر از نبودنِ این بخش‌اند.
 
+# RESOURCES:start — این محدوده را tools/curate.py بازنویسی می‌کند.
+# دستی هم می‌شود ویرایشش کرد؛ فقط این دو خط نشانه را جابه‌جا نکن.
 RESOURCES = [
-    # R('ai-start', 'https://youtu.be/XXXXXXXXXXX', 'beginner',
-    #   'در بیست دقیقه نشان می‌دهد یک مدل زبانی واقعاً چه می‌کند و چه نمی‌کند.'),
 ]
+# RESOURCES:end
 
 
 # ------------------------------------------------------------------ youtube
@@ -112,7 +113,19 @@ SECTION_CSS = '''
    بصری سایت اضافه نشود. تفاوتش دو چیز است: چیپ سطح، و یک جمله که
    می‌گوید چرا این ویدیو اینجاست.
    ===================================================================== */
-.ytb{ margin:44px 0 8px; }
+/* The block is inserted just before the pager, which sits outside the
+   column that holds lesson prose — so it inherits none of that column's
+   width or padding and ran edge to edge. It carries its own, matched to
+   the prose measured on a real lesson page (662px of text inside a
+   706px box), and keeps margins on a phone.
+
+   The doubled class is not a typo. The shell sets `.lesson section
+   {padding:48px 0}`, whose shorthand zeroes the inline padding, and at
+   0,1,1 it outranks a plain `.ytb`. `.ytb.ytb` scores 0,2,0 and wins —
+   the same trick `.jrn .stg` needed on the journey page, for the same
+   reason. */
+.ytb.ytb{ margin:44px auto 8px; max-width:706px; padding:0 22px; }
+@media (max-width:640px){ .ytb.ytb{ padding:0 15px; } }
 .ytb__lead{ font-size:14px; line-height:2.05; color:#C8D0DA; margin:0 0 10px; }
 .ytb__sub{ font-size:12.5px; line-height:2; color:#8C939B; margin:0 0 18px; }
 .ytb__sub b{ color:#C8D0DA; font-weight:600; }
@@ -267,8 +280,13 @@ def build():
         if HEAD in html:
             a = html.index(HEAD)
             b = html.index(TAIL) + len(TAIL)
-            # بلوک قبلی و خطوط خالی بعدش را با تازه عوض کن
-            new = html[:a] + block.rstrip('\n') + html[b:]
+            # برداشتن یک بخش باید فایل را دقیقاً به حالت پیش از افزودنش
+            # برگرداند — وگرنه هر بار حذف و افزودن، یک جفت خط خالی جا
+            # می‌گذارد و diffها پر از تغییرِ بی‌معنی می‌شوند.
+            if block:
+                new = html[:a] + block.rstrip('\n') + html[b:]
+            else:
+                new = html[:a].rstrip('\n') + '\n\n' + html[b:].lstrip('\n')
         elif block:
             # قبل از pager می‌نشیند: جایی که خواننده وقتی درس تمام شده ایستاده
             i = html.rindex('<nav class="pager">')
