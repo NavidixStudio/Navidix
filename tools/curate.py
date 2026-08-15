@@ -44,40 +44,16 @@ sys.path.insert(0, HERE)
 import curriculum          # noqa: E402  — مسیر یادگیری
 import resources           # noqa: E402  — فهرست فعلی و ابزار یوتیوب
 
-BASE = 'https://generativelanguage.googleapis.com/v1beta'
+BASE = 'https://generativelanguage.googleapis.com'
+VERSIONS = ('v1beta', 'v1')
 
-# اسم مدل حدس زده نمی‌شود. دو بار پشت سر هم همین حدس ۴۰۴ گرفت — یک بار
-# gemini-1.5-flash در خبرساز قدیمی، یک بار gemini-2.5-flash اینجا — چون
-# اینکه کدام مدل روی یک کلید مشخص فعال است چیزی نیست که بشود از حافظه
-# دانست. حالا از خود API پرسیده می‌شود.
+# اسم مدل حدس زده نمی‌شود — سه بار پشت سر هم همین حدس ۴۰۴ گرفت. حالا از
+# خودِ API پرسیده می‌شود و این فقط ترتیبِ ترجیح است بین آنچه واقعاً هست.
 PREFER = ('gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.0-flash',
           'gemini-2.5-pro', 'gemini-pro-latest')
 
-
-def models(key):
-    d = json.loads(urllib.request.urlopen(BASE + '/models?key=' + key,
-                                          timeout=30).read())
-    return [m['name'].split('/')[-1] for m in d.get('models', [])
-            if 'generateContent' in m.get('supportedGenerationMethods', [])]
-
-
-def pick(key):
-    have = models(key)
-    if not have:
-        raise RuntimeError('این کلید هیچ مدلی برای generateContent ندارد.')
-    for want in PREFER:
-        if want in have:
-            return want, have
-    for n in have:                      # هر flashی بهتر از هیچ
-        if 'flash' in n:
-            return n, have
-    return have[0], have
-
 PER_LESSON = 3          # چند پیشنهاد از مدل بخواهیم
 KEEP = 3                # حداکثر چندتا نگه داریم
-
-
-# ------------------------------------------------------------------- gemini
 
 # نام ابزار جست‌وجو بین نسل‌های مدل فرق می‌کند، و کدام‌یک را قبول می‌کند
 # چیزی نیست که از بیرون معلوم باشد. هر سه حالت امتحان می‌شود؛ آخری بدون
@@ -90,29 +66,99 @@ TOOLSETS = [
 ]
 
 
-def ask(key, model, prompt, note=None):
-    last = None
-    for label, tools in TOOLSETS:
-        body = {
-            'contents': [{'parts': [{'text': prompt}]}],
-            'generationConfig': {'temperature': 0.3},
-        }
-        if tools:
-            body['tools'] = tools
-        req = urllib.request.Request(
-            BASE + '/models/' + model + ':generateContent?key=' + key,
-            data=json.dumps(body).encode(),
-            headers={'Content-Type': 'application/json'})
+# ------------------------------------------------------------------- gemini
+
+class ApiError(Exception):
+    """خطای گوگل با حرفِ خودِ گوگل، نه فقط با کدش."""
+
+    def __init__(self, code, msg):
+        Exception.__init__(self, 'HTTP %s — %s' % (code, msg))
+        self.code = code
+        self.msg = msg
+
+
+def http(url, payload=None):
+    req = urllib.request.Request(url)
+    if payload is not None:
+        req.data = json.dumps(payload).encode()
+        req.add_header('Content-Type', 'application/json')
+    try:
+        return json.loads(urllib.request.urlopen(req, timeout=120).read())
+    except urllib.error.HTTPError as e:
+        # همین چند خط بود که جا افتاده بود. یک ۴۰۴ خالی هیچ نمی‌گوید؛ متنِ
+        # پاسخ دقیقاً می‌گوید مدل نیست، نسخه فرق دارد، یا ابزار پشتیبانی
+        # نمی‌شود — و بدون آن آدم فقط اسم مدل حدس می‌زند.
         try:
-            r = json.loads(urllib.request.urlopen(req, timeout=120).read())
-        except urllib.error.HTTPError as e:
-            last = '%s → HTTP %s' % (label, e.code)
+            msg = json.loads(e.read()).get('error', {}).get('message', '')
+        except Exception:
+            msg = ''
+        raise ApiError(e.code, (msg or 'بدون توضیح').strip()[:300])
+
+
+def catalog(key, version):
+    d = http('%s/%s/models?pageSize=200&key=%s' % (BASE, version, key))
+    return [m['name'].split('/')[-1] for m in d.get('models', [])
+            if 'generateContent' in m.get('supportedGenerationMethods', [])]
+
+
+def ordered(have):
+    out = [n for n in PREFER if n in have]
+    out += [n for n in have if 'flash' in n and n not in out]
+    out += [n for n in have if n not in out]
+    return out
+
+
+def probe(key):
+    """با یک پیام دو حرفی بفهم کدام ترکیب جواب می‌دهد، بعد سراغ درس‌ها برو.
+
+    قبلاً هر درس هر سه حالت را امتحان می‌کرد، پس یک اشکالِ واحد ۳۹ بار
+    تکرار می‌شد و لاگ پر از یک خطای یکسان بود. حالا یک بار امتحان می‌شود
+    و اگر هیچ‌کدام نگرفت، همه‌ی چیزی که سرور گفته چاپ می‌شود.
+    """
+    tried = []
+    for version in VERSIONS:
+        try:
+            have = catalog(key, version)
+        except ApiError as e:
+            tried.append('%s / فهرست مدل‌ها → %s' % (version, e))
             continue
-        if note and label != TOOLSETS[0][0]:
-            note(label)
-        parts = r['candidates'][0]['content']['parts']
-        return ''.join(p.get('text', '') for p in parts)
-    raise RuntimeError(last or 'پاسخی نگرفت')
+        if not have:
+            tried.append('%s → هیچ مدلی generateContent ندارد' % version)
+            continue
+        print('%s: %s' % (version, '، '.join(have[:10])))
+        for model in ordered(have)[:4]:
+            for label, tools in TOOLSETS:
+                body = {'contents': [{'parts': [{'text': 'ping'}]}]}
+                if tools:
+                    body['tools'] = tools
+                try:
+                    http('%s/%s/models/%s:generateContent?key=%s'
+                         % (BASE, version, model, key), body)
+                except ApiError as e:
+                    tried.append('%s / %s / %s → %s'
+                                 % (version, model, label, e))
+                    continue
+                return dict(version=version, model=model,
+                            tools=tools, label=label)
+    raise RuntimeError('هیچ ترکیبی جواب نداد. سرور این‌ها را گفت:\n  '
+                       + '\n  '.join(tried))
+
+
+def ask(key, combo, prompt):
+    body = {
+        'contents': [{'parts': [{'text': prompt}]}],
+        'generationConfig': {'temperature': 0.3},
+    }
+    if combo['tools']:
+        body['tools'] = combo['tools']
+    r = http('%s/%s/models/%s:generateContent?key=%s'
+             % (BASE, combo['version'], combo['model'], key), body)
+    cand = (r.get('candidates') or [{}])[0]
+    parts = cand.get('content', {}).get('parts', [])
+    if not parts:
+        raise RuntimeError('پاسخ خالی بود (%s)'
+                           % cand.get('finishReason', 'بی‌دلیل'))
+    return ''.join(p.get('text', '') for p in parts)
 
 
 def parse(text):
@@ -213,17 +259,22 @@ def existing():
 # ---------------------------------------------------------------------- main
 
 def main():
+    # وگرنه روی Actions همه‌ی خط‌ها ته کار با یک زمان چاپ می‌شوند و معلوم
+    # نیست کدام درس چقدر طول کشیده.
+    sys.stdout.reconfigure(line_buffering=True)
+
     key = os.environ.get('GEMINI_API_KEY')
     if not key:
         print('GEMINI_API_KEY نیست.')
         return 1
 
     try:
-        model, avail = pick(key)
+        combo = probe(key)
     except Exception as e:
-        print('فهرست مدل‌ها خوانده نشد: %s' % e)
+        print(e)
         return 1
-    print('مدل: %s   (در دسترس: %s)\n' % (model, ', '.join(avail[:8])))
+    print('\nمدل: %s   نسخه: %s   %s\n'
+          % (combo['model'], combo['version'], combo['label']))
 
     have = existing()
     seen = {resources.vid(r['url']) for r in have}
@@ -249,8 +300,7 @@ def main():
     for l, st in targets:
         print('— %s' % l['t'])
         try:
-            text = ask(key, model, prompt_for(l, st),
-                       note=lambda lb: print('   (%s)' % lb))
+            text = ask(key, combo, prompt_for(l, st))
         except Exception as e:
             print('   جمینای جواب نداد: %s' % e)
             continue
