@@ -436,6 +436,41 @@
     note.appendChild(b);
   }
 
+  /* ===================================================================
+     5 — one line in the traffic log
+
+     Counts the visit and nothing else. No cookie, no browser id, no IP —
+     the table has no column for any of them. The referrer is reduced to a
+     bare hostname before it is sent, because a full referring URL can
+     carry a search query, and a search query is a person's words.
+
+     It is fire-and-forget: no await, no retry, and a rejected promise is
+     swallowed. A reader whose network drops this request loses nothing,
+     which is the correct trade for a number only the owner ever reads.
+     =================================================================== */
+  function ping() {
+    if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+    if (/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname)) return;
+
+    var ref = null;
+    try {
+      if (document.referrer) {
+        var r = new URL(document.referrer);
+        ref = (r.hostname === location.hostname) ? 'internal' : r.hostname;
+      }
+    } catch (e) {}
+
+    try {
+      fetch(URL_ + '/rest/v1/page_views', {
+        method: 'POST',
+        headers: { 'apikey': CFG.key, 'Content-Type': 'application/json',
+                   'Prefer': 'return=minimal' },
+        body: JSON.stringify({ path: location.pathname, ref: ref }),
+        keepalive: true
+      }).catch(function () {});
+    } catch (e) {}
+  }
+
   function boot() {
     /* The progress layer is optional here. Most of the site — the gallery,
        the style pages, the homepage — has no lesson to track, but a reader
@@ -446,11 +481,14 @@
     styles();
     mount();
     invite();
+    ping();
     if (P && signedIn()) sync();
   }
 
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);
   else boot();
 
-  window.NVX_AUTH = { open: open, session: session, sync: sync, signedIn: signedIn };
+  window.NVX_AUTH = {
+    open: open, session: session, sync: sync, signedIn: signedIn, rest: rest
+  };
 })();

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>پنل مدیریت | Navidix</title>
+<meta name="theme-color" content="#08090B" />
+
+<!-- Deliberately out of every index. This page is not secret — on a static
+     site nothing can be, and anyone may open it — but there is no reason for
+     it to appear in a search result. What actually keeps a reader out is the
+     row level security in supabase/schema.sql: a non-admin who loads this
+     gets zero rows from every view and sees the "no access" panel. -->
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="icon" href="/navidix-mark.png" />
+<style>
+@font-face{font-family:'Vazirmatn';src:url('/assets/vazirmatn-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+@font-face{font-family:'Inter';src:url('/assets/inter-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+
+/* =====================================================================
+   The palette below is the site's, plus one colour that is not.
+
+   Every data mark is #4A90E2. The site's own #7FB8FF sits at OKLCH
+   L 0.772, which is outside the 0.48–0.67 band a mark needs against a
+   dark surface — it is a link colour, not a mark colour. #4A90E2 is the
+   same family, inside the band, and clears the checks against the
+   #0E1116 panel: chroma 0.13, contrast above 3:1, and ΔE 25.9 from the
+   brand ember under deuteranopia.
+
+   One hue, because every chart here answers "how much" — magnitude, not
+   identity. No chart on this page carries two series, so none carries a
+   legend either: the heading says what is plotted.
+   ===================================================================== */
+:root{
+  --bg:#08090B; --pane:#0E1116; --line:#1E232B; --line2:#262A31;
+  --ink:#EDF2FA; --ink2:#C8D0DA; --mute:#8C939B; --dim:#6B7280;
+  --mark:#4A90E2; --ember:#E5202A;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Vazirmatn','IRANSans',Tahoma,sans-serif;
+  font-size:15px; line-height:1.9; -webkit-font-smoothing:antialiased;
+}
+.lat{font-family:'Inter',ui-sans-serif,system-ui,sans-serif}
+.num{font-variant-numeric:tabular-nums}
+
+.bar{border-bottom:1px solid var(--line); background:rgba(8,9,11,.9);
+  position:sticky; top:0; z-index:20; backdrop-filter:blur(8px)}
+.bar__row{max-width:1080px; margin:0 auto; padding:13px 22px;
+  display:flex; align-items:center; gap:14px}
+.bar__row a{color:var(--mute); text-decoration:none; font-size:13px}
+.bar__row a:hover{color:var(--ink)}
+.bar__home{display:flex; align-items:center; gap:9px; color:var(--ink)!important;
+  font-weight:700; letter-spacing:.16em; font-size:12.5px}
+.bar__sp{flex:1}
+
+.wrap{max-width:1080px; margin:0 auto; padding:34px 22px 90px}
+h1{font-size:clamp(23px,3.4vw,31px); font-weight:700; margin:0 0 4px; line-height:1.5}
+.eyebrow{font-size:11.5px; letter-spacing:.2em; color:var(--dim); margin:0 0 10px}
+.sub{color:var(--mute); font-size:13.5px; margin:0 0 30px}
+
+h2{font-size:16.5px; font-weight:700; margin:38px 0 3px; line-height:1.6}
+h2 + .hint{margin:0 0 16px}
+.hint{color:var(--mute); font-size:12.5px; line-height:1.85}
+
+/* ---- KPI row. Five headline numbers are stat tiles, not a chart:
+       a one-bar bar chart is the classic way to miss the point. ---- */
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:11px; margin:0 0 8px}
+.kpi{background:var(--pane); border:1px solid var(--line2); border-radius:13px; padding:16px 17px}
+.kpi b{display:block; font-size:26px; font-weight:700; line-height:1.45; color:var(--ink)}
+.kpi span{display:block; font-size:11.5px; color:var(--mute); margin-top:1px}
+
+.panel{background:var(--pane); border:1px solid var(--line2); border-radius:14px; padding:19px 20px}
+
+/* ---- table ---- */
+table{width:100%; border-collapse:collapse; font-size:13px}
+th{text-align:right; font-weight:600; color:var(--dim); font-size:11.5px;
+  padding:0 10px 9px; border-bottom:1px solid var(--line)}
+td{padding:11px 10px; border-bottom:1px solid var(--line); color:var(--ink2); vertical-align:middle}
+tr:last-child td{border-bottom:0}
+th.n,td.n{text-align:left; width:1%; white-space:nowrap}
+/* The page is RTL, so a block-level bar is anchored at the right and its
+   data-end is the LEFT one — that is the end that gets the 4px round, and
+   the anchored end stays square against the baseline. Written the wrong way
+   round first, which rounds the origin and squares the tip. */
+.tbar{height:7px; border-radius:4px 0 0 4px; background:var(--mark); min-width:3px; display:block}
+.tbar__w{background:#161B22; border-radius:4px; overflow:hidden; min-width:64px}
+
+/* ---- gate ---- */
+.gate{max-width:430px; margin:70px auto; text-align:center;
+  background:var(--pane); border:1px solid var(--line2); border-radius:16px; padding:34px 30px}
+.gate h2{margin:0 0 8px; font-size:18px}
+.gate p{color:var(--mute); font-size:13.5px; margin:0 0 18px; line-height:2}
+.gate button{appearance:none; border:0; border-radius:9px; padding:11px 22px;
+  background:var(--ember); color:#fff; font:inherit; font-size:14px; font-weight:700; cursor:pointer}
+
+.tip{position:fixed; z-index:60; pointer-events:none; opacity:0;
+  background:#11151B; border:1px solid var(--line2); border-radius:9px;
+  padding:7px 11px; font-size:12px; color:var(--ink); white-space:nowrap;
+  box-shadow:0 12px 30px -14px rgba(0,0,0,.9); transition:opacity .12s}
+.tip.on{opacity:1}
+
+.empty{color:var(--dim); font-size:12.5px; padding:16px 2px}
+@media (max-width:640px){ .wrap{padding:24px 15px 70px} }
+</style>
+
+<script src="curriculum.js" defer></script>
+<script src="nvx-config.js" defer></script>
+<script src="nvx-auth.js" defer></script>
+</head>
+<body>
+
+<header class="bar"><div class="bar__row">
+  <a class="bar__home lat" href="/"><img src="/navidix-mark.png" alt="" width="22" height="22" /><span>NAVIDIX</span></a>
+  <span class="bar__sp"></span>
+  <a href="/training.html">آموزش‌ها ←</a>
+</div></header>
+
+<main class="wrap" id="app">
+  <p class="eyebrow lat">NAVIDIX · ADMIN</p>
+  <h1>پنل مدیریت</h1>
+  <p class="sub" id="sub">در حال بررسی دسترسی…</p>
+  <div id="body"></div>
+</main>
+
+<div class="tip" id="tip"></div>
+
+<script>
+/* =====================================================================
+   The panel reads five views and draws them. It has no privileges of its
+   own: every request goes out as the signed-in reader, and the database
+   answers with what that reader is allowed to see. For anyone who is not
+   an admin that is zero rows from all five — which is why "no rows" and
+   "not an admin" are treated as the same case below.
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  var FA = '۰۱۲۳۴۵۶۷۸۹';
+  var fa = function (n) { return String(n).replace(/\d/g, function (d) { return FA[+d]; }); };
+  var el = function (t, c, x) {
+    var e = document.createElement(t);
+    if (c) e.className = c;
+    if (x != null) e.textContent = x;
+    return e;
+  };
+
+  function hours(sec) {
+    sec = sec || 0;
+    if (sec < 60) return fa(sec) + ' ثانیه';
+    if (sec < 3600) return fa(Math.round(sec / 60)) + ' دقیقه';
+    var h = Math.floor(sec / 3600), m = Math.round(sec % 3600 / 60);
+    return fa(h) + ' ساعت' + (m ? ' و ' + fa(m) + ' دقیقه' : '');
+  }
+
+  /* Persian day/month for the axis, from a YYYY-MM-DD string. */
+  function short(day) {
+    var p = String(day).split('-');
+    return fa(+p[2]) + '/' + fa(+p[1]);
+  }
+
+  var tip = document.getElementById('tip');
+  function hover(node, text) {
+    node.addEventListener('pointerenter', function (e) {
+      tip.textContent = text;
+      tip.classList.add('on');
+      move(e);
+    });
+    node.addEventListener('pointermove', move);
+    node.addEventListener('pointerleave', function () { tip.classList.remove('on'); });
+    function move(e) {
+      tip.style.left = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 10) + 'px';
+      tip.style.top = (e.clientY - tip.offsetHeight - 12) + 'px';
+    }
+  }
+
+  /* ------------------------------------------------------------------
+     A column chart. One series, so no legend — the heading above it says
+     what is plotted. Bars are capped at 24px and never fill their slot;
+     the leftover is the 2px surface gap that separates neighbours, which
+     is why no bar carries a stroke.
+     ------------------------------------------------------------------ */
+  function columns(rows, fmt) {
+    var W = 100, H = 116, PAD = 18;            // viewBox units, scaled by CSS
+    var wrap = el('div');
+    if (!rows.length) { wrap.appendChild(el('p', 'empty', 'هنوز داده‌ای نیست.')); return wrap; }
+
+    var max = Math.max.apply(null, rows.map(function (r) { return r.v; })) || 1;
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.style.cssText = 'width:100%;height:150px;display:block;overflow:visible';
+
+    /* one hairline baseline, recessive — gridlines before a second axis,
+       but a 30-bar strip does not need a grid at all */
+    var base = document.createElementNS(svg.namespaceURI, 'line');
+    base.setAttribute('x1', 0); base.setAttribute('x2', W);
+    base.setAttribute('y1', H - PAD); base.setAttribute('y2', H - PAD);
+    base.setAttribute('stroke', '#262A31'); base.setAttribute('stroke-width', '.6');
+    svg.appendChild(base);
+
+    var slot = W / rows.length;
+    var bw = Math.min(slot - 1.2, 6);           // the cap, and the 2px-ish gap
+
+    rows.forEach(function (r, i) {
+      var h = r.v > 0 ? Math.max((r.v / max) * (H - PAD - 8), 1.6) : 0;
+      var x = W - (i + 1) * slot + (slot - bw) / 2;   // RTL: newest on the left
+      if (h > 0) {
+        var b = document.createElementNS(svg.namespaceURI, 'rect');
+        b.setAttribute('x', x); b.setAttribute('y', H - PAD - h);
+        b.setAttribute('width', bw); b.setAttribute('height', h);
+        b.setAttribute('rx', Math.min(1.6, bw / 2));   // rounded data-end
+        b.setAttribute('fill', '#4A90E2');
+        svg.appendChild(b);
+      }
+      /* a generous hit target, so hovering a 1px bar still works */
+      var hit = document.createElementNS(svg.namespaceURI, 'rect');
+      hit.setAttribute('x', W - (i + 1) * slot); hit.setAttribute('y', 0);
+      hit.setAttribute('width', slot); hit.setAttribute('height', H - PAD);
+      hit.setAttribute('fill', 'transparent');
+      hit.style.cursor = 'default';
+      hover(hit, short(r.k) + ' — ' + fmt(r.v));
+      svg.appendChild(hit);
+    });
+
+    wrap.appendChild(svg);
+
+    /* Label only the ends. A number under every column is chaos. */
+    var ax = el('div');
+    ax.style.cssText = 'display:flex;justify-content:space-between;font-size:10.5px;color:#6B7280;margin-top:2px';
+    ax.appendChild(el('span', 'num', short(rows[0].k)));
+    ax.appendChild(el('span', 'num', short(rows[rows.length - 1].k)));
+    wrap.appendChild(ax);
+    return wrap;
+  }
+
+  /* ------------------------------------------------------------------
+     Lessons: magnitude against long Persian names, so horizontal, and
+     every bar the same hue. Colouring each bar by its own value would
+     spend the identity channel re-encoding what bar length already says.
+     ------------------------------------------------------------------ */
+  function lessonTable(rows) {
+    var titles = {};
+    if (window.NVX_CURRICULUM) {
+      window.NVX_CURRICULUM.stages.forEach(function (st) {
+        st.lessons.forEach(function (l) { titles[l.slug] = l.s; });
+      });
+    }
+    var max = Math.max.apply(null, rows.map(function (r) { return r.readers; })) || 1;
+
+    var t = el('table');
+    var hd = el('tr');
+    ['درس', 'خواننده', '', 'تکمیل', 'نرخ تکمیل', 'زمان'].forEach(function (h, i) {
+      var th = el('th', i >= 3 ? 'n' : '', h);
+      if (i === 2) th.style.width = '30%';
+      hd.appendChild(th);
+    });
+    var thead = el('thead'); thead.appendChild(hd); t.appendChild(thead);
+
+    var tb = el('tbody');
+    rows.forEach(function (r) {
+      var tr = el('tr');
+      tr.appendChild(el('td', '', titles[r.lesson_slug] || r.lesson_slug));
+      tr.appendChild(el('td', 'n num', fa(r.readers)));
+
+      var td = el('td');
+      var w = el('span', 'tbar__w'); w.style.display = 'block';
+      var b = el('span', 'tbar');
+      b.style.width = Math.round(r.readers / max * 100) + '%';
+      w.appendChild(b); td.appendChild(w);
+      hover(td, (titles[r.lesson_slug] || r.lesson_slug) + ' — ' + fa(r.readers) + ' خواننده');
+      tr.appendChild(td);
+
+      tr.appendChild(el('td', 'n num', fa(r.completions)));
+      tr.appendChild(el('td', 'n num',
+        r.readers ? fa(Math.round(r.completions / r.readers * 100)) + '٪' : '—'));
+      tr.appendChild(el('td', 'n', hours(r.seconds)));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    return t;
+  }
+
+  function trafficTable(rows) {
+    var by = {};
+    rows.forEach(function (r) { by[r.path] = (by[r.path] || 0) + r.views; });
+    var list = Object.keys(by).map(function (p) { return { path: p, v: by[p] }; })
+      .sort(function (a, b) { return b.v - a.v; }).slice(0, 15);
+    if (!list.length) return el('p', 'empty', 'هنوز بازدیدی ثبت نشده. چند ساعت بعد از انتشار پر می‌شود.');
+
+    var max = list[0].v || 1;
+    var t = el('table'), thead = el('thead'), hd = el('tr');
+    ['صفحه', '', 'بازدید'].forEach(function (h, i) {
+      var th = el('th', i === 2 ? 'n' : '', h);
+      if (i === 1) th.style.width = '38%';
+      hd.appendChild(th);
+    });
+    thead.appendChild(hd); t.appendChild(thead);
+    var tb = el('tbody');
+    list.forEach(function (r) {
+      var tr = el('tr');
+      tr.appendChild(el('td', 'lat', r.path));
+      var td = el('td');
+      var w = el('span', 'tbar__w'); w.style.display = 'block';
+      var b = el('span', 'tbar'); b.style.width = Math.round(r.v / max * 100) + '%';
+      w.appendChild(b); td.appendChild(w);
+      hover(td, r.path + ' — ' + fa(r.v) + ' بازدید');
+      tr.appendChild(td);
+      tr.appendChild(el('td', 'n num', fa(r.v)));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    return t;
+  }
+
+  /* Fills the last N days so a quiet day is a gap in the line, not a
+     missing column that silently compresses the axis. */
+  function series(rows, key, days) {
+    var out = [], by = {}, i;
+    rows.forEach(function (r) { by[r.day] = (by[r.day] || 0) + Number(r[key] || 0); });
+    var d = new Date();
+    for (i = 0; i < days; i++) {
+      var k = new Date(d.getTime() - i * 864e5).toISOString().slice(0, 10);
+      out.push({ k: k, v: by[k] || 0 });
+    }
+    return out;                                   // newest first
+  }
+
+  function section(title, hint, node) {
+    var f = document.createDocumentFragment();
+    f.appendChild(el('h2', '', title));
+    if (hint) f.appendChild(el('p', 'hint', hint));
+    var p = el('div', 'panel');
+    p.appendChild(node);
+    f.appendChild(p);
+    return f;
+  }
+
+  function gate(msg, cta) {
+    var b = document.getElementById('body');
+    b.textContent = '';
+    var g = el('div', 'gate');
+    g.appendChild(el('h2', '', 'دسترسی نداری'));
+    g.appendChild(el('p', '', msg));
+    if (cta) {
+      var btn = el('button', '', 'ورود');
+      btn.type = 'button';
+      btn.addEventListener('click', function () { window.NVX_AUTH && NVX_AUTH.open('in'); });
+      g.appendChild(btn);
+    }
+    b.appendChild(g);
+    document.getElementById('sub').textContent = '';
+  }
+
+  function draw(over, daily, lessons, signups, traffic) {
+    var b = document.getElementById('body');
+    b.textContent = '';
+    document.getElementById('sub').textContent =
+      'همه‌ی اعداد زنده‌اند و مستقیم از پایگاه داده خوانده می‌شوند.';
+
+    var k = el('div', 'kpis');
+    [['کل کاربران', fa(over.users_total || 0)],
+     ['فعال ۷ روز اخیر', fa(over.users_active_7d || 0)],
+     ['ثبت‌نام ۷ روز اخیر', fa(over.users_new_7d || 0)],
+     ['مجموع زمان یادگیری', hours(over.seconds_total)],
+     ['درس‌های تکمیل‌شده', fa(over.completions_total || 0)]
+    ].forEach(function (p) {
+      var c = el('div', 'kpi');
+      c.appendChild(el('b', 'num', p[1]));
+      c.appendChild(el('span', '', p[0]));
+      k.appendChild(c);
+    });
+    b.appendChild(k);
+
+    /* Three charts rather than one with three lines: users, minutes and
+       signups are different quantities on different scales, and putting
+       two scales on one plot invents a correlation that is not there. */
+    b.appendChild(section('کاربران فعال روزانه', 'در ۳۰ روز گذشته. هر ستون یک روز است، تازه‌ترین سمت راست.',
+      columns(series(daily, 'active_users', 30), function (v) { return fa(v) + ' کاربر'; })));
+
+    b.appendChild(section('زمان یادگیری روزانه', 'مجموع دقیقه‌هایی که همه‌ی کاربران در آن روز صرف کردند.',
+      columns(series(daily, 'seconds', 30).map(function (r) {
+        return { k: r.k, v: Math.round(r.v / 60) };
+      }), function (v) { return fa(v) + ' دقیقه'; })));
+
+    b.appendChild(section('ثبت‌نام روزانه', 'حساب‌های تازه‌ساخته‌شده در هر روز.',
+      columns(series(signups, 'signups', 30), function (v) { return fa(v) + ' ثبت‌نام'; })));
+
+    b.appendChild(section('محبوب‌ترین آموزش‌ها',
+      'بر اساس تعداد کاربرانی که درس را باز کرده‌اند. «نرخ تکمیل» نسبت کسانی است که تمامش کردند.',
+      lessons.length ? lessonTable(lessons) : el('p', 'empty', 'هنوز کسی درسی را باز نکرده.')));
+
+    b.appendChild(section('پربازدیدترین صفحه‌ها', 'شامل مهمان‌های بدون حساب. بدون کوکی و بدون شناسه‌ی فردی.',
+      trafficTable(traffic)));
+  }
+
+  function boot() {
+    if (!window.NVX_AUTH) {
+      gate('لایه‌ی حساب بالا نیامد. صفحه را دوباره بارگذاری کن.', false);
+      return;
+    }
+    if (!NVX_AUTH.signedIn()) {
+      gate('برای دیدن این صفحه باید با حساب مدیر وارد شوی.', true);
+      return;
+    }
+
+    Promise.all([
+      NVX_AUTH.rest('admin_overview?select=*'),
+      NVX_AUTH.rest('admin_daily?select=*'),
+      NVX_AUTH.rest('admin_lessons?select=*'),
+      NVX_AUTH.rest('admin_signups?select=*'),
+      NVX_AUTH.rest('admin_traffic?select=*')
+    ]).then(function (r) {
+      var over = (r[0] || [])[0];
+      /* No row here means the policies did not recognise this account as
+         an admin. It is not an error and it is not shown as one. */
+      if (!over) {
+        gate('این حساب دسترسی مدیر ندارد.', false);
+        return;
+      }
+      draw(over, r[1] || [], r[2] || [], r[3] || [], r[4] || []);
+    }).catch(function (e) {
+      gate('خواندن داده‌ها ممکن نشد: ' + e.message, false);
+    });
+  }
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>
