@@ -254,9 +254,16 @@
   /* ===================================================================
      5 — the panel on a lesson page
 
-     Placed before the pager, which is where a reader already is when they
-     have finished: the next thing they see is "next lesson", and the panel
-     is the step between arriving there and taking it.
+     Placed at the end of .lesson__main, so it follows the last thing the
+     reader actually reads. It used to go before the pager, but on a lesson
+     page the pager comes after the sources footer and outside
+     .lesson__main — which buried the panel below the footer, far from
+     where the lesson ends. A reader who has just finished the text should
+     not have to scroll past a list of citations to say so.
+
+     Appending also puts it after the YouTube block, which the builder adds
+     at the end of the same container: watch first, then mark it done —
+     which is exactly what that block's closing line tells them to do.
      =================================================================== */
   function panel() {
     var pager = document.querySelector('nav.pager');
@@ -321,8 +328,8 @@
 
     paint();
     repaint = paint;
-    if (pager) pager.parentNode.insertBefore(box, pager);
-    else main.appendChild(box);
+    if (main) main.appendChild(box);
+    else pager.parentNode.insertBefore(box, pager);
   }
 
   /* ===================================================================

@@ -119,23 +119,27 @@ SECTION_CSS = '''
    بصری سایت اضافه نشود. تفاوتش دو چیز است: چیپ سطح، و یک جمله که
    می‌گوید چرا این ویدیو اینجاست.
    ===================================================================== */
-/* The block is inserted just before the pager, which sits outside the
-   column that holds lesson prose — so it inherits none of that column's
-   width or padding and ran edge to edge. It carries its own, matched to
-   the prose measured on a real lesson page (662px of text inside a
-   706px box), and keeps margins on a phone.
+/* This block used to carry its own max-width and padding, and a doubled
+   class to beat `.lesson section{padding:48px 0}` on specificity. All of
+   that was compensating for being in the wrong place: it was anchored to
+   the pager, which sits after the sources footer and outside
+   `.lesson__main` altogether, so it inherited none of the lesson column
+   and had to rebuild it by hand — badly, since a hand-copied 706px is a
+   number that goes stale the moment the real column changes.
 
-   The doubled class is not a typo. The shell sets `.lesson section
-   {padding:48px 0}`, whose shorthand zeroes the inline padding, and at
-   0,1,1 it outranks a plain `.ytb`. `.ytb.ytb` scores 0,2,0 and wins —
-   the same trick `.jrn .stg` needed on the journey page, for the same
-   reason. */
-.ytb.ytb{ margin:44px auto 8px; max-width:706px; padding:0 22px; }
-@media (max-width:640px){ .ytb.ytb{ padding:0 15px; } }
+   It now sits at the end of `.lesson__main` with a `.wrap` inside, like
+   every other section on the page. Width, padding and the phone breakpoint
+   come from `.lesson .wrap`, and the vertical rhythm from `.lesson
+   section` — the rules the prose already uses. Nothing to keep in sync. */
 .ytb__lead{ font-size:14px; line-height:2.05; color:#C8D0DA; margin:0 0 10px; }
 .ytb__sub{ font-size:12.5px; line-height:2; color:#8C939B; margin:0 0 18px; }
 .ytb__sub b{ color:#C8D0DA; font-weight:600; }
-.ytb__grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); gap:14px; }
+/* The track max was 1fr, which is fine for three videos and absurd for one:
+   a lone card stretched the full column and turned a 16:9 thumbnail into a
+   1024x576 hero. Capping the track keeps one card card-sized, while three
+   still fill the row — they shrink to fit rather than growing to fill. */
+.ytb__grid{ display:grid; gap:14px; justify-content:start;
+  grid-template-columns:repeat(auto-fit,minmax(258px,420px)); }
 
 .ytc{ display:flex; flex-direction:column; border-radius:13px; overflow:hidden;
   border:1px solid #262A31; background:rgba(14,17,22,.6); text-decoration:none;
@@ -204,6 +208,7 @@ def section(rows, meta):
     cards = '\n'.join(card(r, meta) for r in rows)
     return f'''{HEAD}
 <section class="ytb">
+  <div class="wrap">
   <h2>منابع رایگان یوتیوب</h2>
   <p class="ytb__lead">اگر می‌خواهی این بخش را بهتر بفهمی، این منابع رایگان را در
   یوتیوب ببین. هر کدام را خودمان دیده‌ایم و زیرش نوشته‌ایم چرا انتخاب شده.</p>
@@ -218,6 +223,7 @@ def section(rows, meta):
   <p class="ytb__back">این ویدیوها روی یوتیوب‌اند و مال سازنده‌های خودشان — ما فقط
   انتخاب و مرتبشان کرده‌ایم. وقتی تماشایشان تمام شد، برگرد همین‌جا و درس را
   «تکمیل شد» بزن.</p>
+  </div>
 </section>
 
 <script>
@@ -266,12 +272,18 @@ def build():
         by.setdefault(r['lesson'], []).append(r)
 
     # استایل یک بار به شیت مشترک می‌رود
+    # بازنویسی می‌شود، نه اینکه فقط یک بار اضافه شود. قبلاً شرط «اگر نبود
+    # اضافه کن» بود، یعنی هر اصلاحی در SECTION_CSS هیچ‌وقت به سایت
+    # نمی‌رسید و شیت روی نسخه‌ی اولش می‌ماند — دقیقاً همان اتفاقی که با
+    # عوض‌شدن جای بخش افتاد. بلوک همیشه ته فایل است، پس از نشانه تا آخر
+    # دوباره نوشته می‌شود.
     css_path = os.path.join(REPO, 'nvx-training.css')
     css = io.open(css_path, encoding='utf-8').read()
-    if CSS_MARK not in css:
-        io.open(css_path, 'w', encoding='utf-8').write(
-            css.rstrip() + '\n\n' + CSS_MARK + SECTION_CSS)
-        print('nvx-training.css — استایل منابع اضافه شد')
+    i = css.find(CSS_MARK)
+    fresh = (css[:i] if i >= 0 else css).rstrip() + '\n\n' + CSS_MARK + SECTION_CSS
+    if fresh != css:
+        io.open(css_path, 'w', encoding='utf-8').write(fresh)
+        print('nvx-training.css — استایل منابع به‌روز شد')
 
     touched = 0
     for slug in sorted(set(list(by) + lessons_with_section())):
@@ -283,22 +295,26 @@ def build():
 
         block = section(by[slug], meta) + '\n\n' if slug in by else ''
 
+        # اول برداشته می‌شود، بعد از نو سرِ جای درست گذاشته می‌شود — نه
+        # اینکه سرِ جای قبلی‌اش به‌روز شود. لنگرگاه یک بار عوض شد و آن
+        # صفحه‌ها همان‌جای غلط ماندند؛ این‌طور دفعه‌ی بعد خودشان جابه‌جا
+        # می‌شوند.
+        #
+        # برداشتن باید فایل را دقیقاً به حالت پیش از افزودن برگرداند — وگرنه
+        # هر بار حذف و افزودن یک جفت خط خالی جا می‌گذارد و diffها پر از
+        # تغییرِ بی‌معنی می‌شوند.
         if HEAD in html:
             a = html.index(HEAD)
             b = html.index(TAIL) + len(TAIL)
-            # برداشتن یک بخش باید فایل را دقیقاً به حالت پیش از افزودنش
-            # برگرداند — وگرنه هر بار حذف و افزودن، یک جفت خط خالی جا
-            # می‌گذارد و diffها پر از تغییرِ بی‌معنی می‌شوند.
-            if block:
-                new = html[:a] + block.rstrip('\n') + html[b:]
-            else:
-                new = html[:a].rstrip('\n') + '\n\n' + html[b:].lstrip('\n')
-        elif block:
-            # قبل از pager می‌نشیند: جایی که خواننده وقتی درس تمام شده ایستاده
-            i = html.rindex('<nav class="pager">')
-            new = html[:i] + block + html[i:]
+            base = html[:a] + html[b:].lstrip('\n')
         else:
-            continue
+            base = html
+
+        if block:
+            i = anchor(base)
+            new = base[:i] + block + base[i:]
+        else:
+            new = base
 
         if new != html:
             io.open(path, 'w', encoding='utf-8').write(new)
@@ -307,6 +323,32 @@ def build():
 
     print('%d صفحه به‌روز شد، %d منبع در %d درس'
           % (touched, len(RESOURCES), len(by)))
+
+
+def anchor(html):
+    """ته .lesson__main — یعنی درست بعد از آخرین بخشِ متنِ درس.
+
+    قبلاً لنگر `<nav class="pager">` بود، و آن روی صفحه‌ی درس بعدِ
+    `<footer>` منابع می‌آید و اصلاً بیرون از .lesson__main است. نتیجه این
+    شد که بخش ویدیوها زیرِ فوترِ درس می‌نشست — یعنی ته ته صفحه، دور از
+    جایی که متن تمام می‌شود.
+
+    ساختار صفحه این است:
+
+        <div class="lesson"><div class="lesson__main">
+          <section class="hero">…    <section>…</section>   ← متن درس
+        </div>                       ← اینجا می‌نشیند
+        <footer>منابع…</footer>
+        </div>
+        <nav class="pager">
+
+    پس دنبال `<footer>` می‌گردیم و می‌رویم روی `</div>`ِ قبلش — دقیق‌تر،
+    سرِ همان خط. اگر وسطِ خط بایستیم، تورفتگیِ `</div>` پشتِ بخش می‌ماند و
+    برداشتنش دیگر فایل را به حالت اولش برنمی‌گرداند.
+    """
+    f = html.rindex('<footer>')
+    d = html.rindex('</div>', 0, f)
+    return html.rindex('\n', 0, d) + 1
 
 
 def lessons_with_section():

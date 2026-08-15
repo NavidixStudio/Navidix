@@ -480,23 +480,27 @@
    بصری سایت اضافه نشود. تفاوتش دو چیز است: چیپ سطح، و یک جمله که
    می‌گوید چرا این ویدیو اینجاست.
    ===================================================================== */
-/* The block is inserted just before the pager, which sits outside the
-   column that holds lesson prose — so it inherits none of that column's
-   width or padding and ran edge to edge. It carries its own, matched to
-   the prose measured on a real lesson page (662px of text inside a
-   706px box), and keeps margins on a phone.
+/* This block used to carry its own max-width and padding, and a doubled
+   class to beat `.lesson section{padding:48px 0}` on specificity. All of
+   that was compensating for being in the wrong place: it was anchored to
+   the pager, which sits after the sources footer and outside
+   `.lesson__main` altogether, so it inherited none of the lesson column
+   and had to rebuild it by hand — badly, since a hand-copied 706px is a
+   number that goes stale the moment the real column changes.
 
-   The doubled class is not a typo. The shell sets `.lesson section
-   {padding:48px 0}`, whose shorthand zeroes the inline padding, and at
-   0,1,1 it outranks a plain `.ytb`. `.ytb.ytb` scores 0,2,0 and wins —
-   the same trick `.jrn .stg` needed on the journey page, for the same
-   reason. */
-.ytb.ytb{ margin:44px auto 8px; max-width:706px; padding:0 22px; }
-@media (max-width:640px){ .ytb.ytb{ padding:0 15px; } }
+   It now sits at the end of `.lesson__main` with a `.wrap` inside, like
+   every other section on the page. Width, padding and the phone breakpoint
+   come from `.lesson .wrap`, and the vertical rhythm from `.lesson
+   section` — the rules the prose already uses. Nothing to keep in sync. */
 .ytb__lead{ font-size:14px; line-height:2.05; color:#C8D0DA; margin:0 0 10px; }
 .ytb__sub{ font-size:12.5px; line-height:2; color:#8C939B; margin:0 0 18px; }
 .ytb__sub b{ color:#C8D0DA; font-weight:600; }
-.ytb__grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); gap:14px; }
+/* The track max was 1fr, which is fine for three videos and absurd for one:
+   a lone card stretched the full column and turned a 16:9 thumbnail into a
+   1024x576 hero. Capping the track keeps one card card-sized, while three
+   still fill the row — they shrink to fit rather than growing to fill. */
+.ytb__grid{ display:grid; gap:14px; justify-content:start;
+  grid-template-columns:repeat(auto-fit,minmax(258px,420px)); }
 
 .ytc{ display:flex; flex-direction:column; border-radius:13px; overflow:hidden;
   border:1px solid #262A31; background:rgba(14,17,22,.6); text-decoration:none;

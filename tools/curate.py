@@ -50,8 +50,8 @@ VERSIONS = ('v1beta', 'v1')
 
 # اسم مدل حدس زده نمی‌شود — سه بار پشت سر هم همین حدس ۴۰۴ گرفت. حالا از
 # خودِ API پرسیده می‌شود و این فقط ترتیبِ ترجیح است بین آنچه واقعاً هست.
-PREFER = ('gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.0-flash',
-          'gemini-2.5-pro', 'gemini-pro-latest')
+PREFER = ('gemini-3.7-flash', 'gemini-2.5-flash', 'gemini-flash-latest',
+          'gemini-2.0-flash', 'gemini-2.5-pro', 'gemini-pro-latest')
 
 PER_LESSON = 3          # چند پیشنهاد از مدل بخواهیم
 KEEP = 3                # حداکثر چندتا نگه داریم
