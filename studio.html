@@ -146,7 +146,7 @@ textarea::placeholder{color:var(--dim)}
      نه دکمه‌ی refreshِ سخت دارد و نه به کاربر اجازه می‌دهد کش را پاک
      کند. بدون این، هر اصلاحی ساعت‌ها پشت فایلِ کهنه گیر می‌کند. با
      هر تغییرِ nvx-studio.js این عدد را عوض کن. -->
-<script src="nvx-studio.js?v=202608152258" defer></script>
+<script src="nvx-studio.js?v=202608152300" defer></script>
 </head>
 <body>
 
@@ -190,33 +190,24 @@ textarea::placeholder{color:var(--dim)}
       <p class="hint" style="margin:0 0 8px"><b style="color:var(--ink2)">کادر اول —
       شناسه‌ی حساب</b></p>
       <ol>
-        <li>دکمه‌ی ۱ را بزن و حساب رایگان بساز (فقط ایمیل و رمز)</li>
-        <li>وارد شدی؟ منوی سمت چپ ← زیر <b>Build</b> روی <b>AI</b> بزن ←
-            بعد <b>Workers AI</b></li>
-        <li>بالای آن صفحه دکمه‌ی <b>{ } REST API</b> هست — بزنش</li>
-        <li>یک نمونه‌کد نشان می‌دهد که تویش
-            <code style="direction:ltr;display:inline-block">…/accounts/xxxx…/ai/run/…</code>
-            دیده می‌شود. <b>همه‌اش را کپی کن</b> و در کادر اول بچسبان —
-            لازم نیست شناسه را جدا کنی، خودش از متن بیرونش می‌کشد</li>
-        <li>راه دوم اگر آن دکمه نبود: <b>آیکن اشتراک‌گذاری بالای مرورگر ←
-            Copy link</b>، و همان لینک را بچسبان</li>
+        <li>دکمه‌ی زیر را بزن و حساب رایگان بساز (فقط ایمیل و رمز)</li>
+        <li>منوی سمت چپ ← زیر <b>Build</b> روی <b>AI</b> ← بعد <b>Workers AI</b></li>
+        <li>بالای آن صفحه دکمه‌ی <b>{ } REST API</b> را بزن</li>
+        <li>صفحه‌ای باز می‌شود با عنوان <b>Get Account ID</b> و یک کادر زیرش —
+            دکمه‌ی <b>کپی</b> کنارِ آن کادر را بزن، و در کادر اولِ پایین بچسبان</li>
       </ol>
 
       <p class="hint" style="margin:0 0 8px"><b style="color:var(--ink2)">کادر دوم —
       توکن</b></p>
       <ol>
-        <li>دکمه‌ی ۲ را بزن</li>
-        <li><b>Create Token</b> ← در فهرست قالب‌ها دنبال <b>Workers AI</b> بگرد
-            و <b>Use template</b> را بزن</li>
-        <li>پایین صفحه <b>Continue to summary</b> ← بعد <b>Create Token</b></li>
-        <li>توکن را کپی کن و در کادر دوم بچسبان —
-            <b>همان لحظه کپی کن، چون دیگر نشانش نمی‌دهد</b></li>
+        <li>در <b>همان صفحه</b>، بالاترش، دکمه‌ی
+            <b>Create a Workers AI API Token</b> هست — بزنش</li>
+        <li>ساخته که شد، توکن را کپی کن و در کادر دوم بچسبان —
+            <b>همان لحظه، چون دیگر نشانش نمی‌دهد</b></li>
       </ol>
 
       <a class="lnk" href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">
-        ۱ — ساختن حساب / ورود ←</a>
-      <a class="lnk" href="https://dash.cloudflare.com/profile/api-tokens" target="_blank" rel="noopener">
-        ۲ — صفحه‌ی ساخت توکن ←</a>
+        ساختن حساب / ورود ←</a>
 
       <div class="keyrow">
         <input id="acct" type="text" autocomplete="off" spellcheck="false"
@@ -233,6 +224,11 @@ textarea::placeholder{color:var(--dim)}
       مرورگر، و به نویدیکس فرستاده نمی‌شوند — ما اصلاً سروری نداریم که بفرستد.
       مرورگرت مستقیم با Cloudflare حرف می‌زند. هر وقت خواستی کادرها را خالی کن
       و ثبت بزن تا پاک شوند.</p>
+
+      <p class="safe" style="margin-top:9px"><b style="color:#E5A24A">توکن را برای
+      هیچ‌کس نفرست و از آن عکس نگیر</b> — آن یکی رمز است و هر که داشته باشد
+      می‌تواند از سهمیه‌ی تو خرج کند. شناسه‌ی حساب اما رمز نیست و لو رفتنش
+      اشکالی ندارد؛ به‌تنهایی هیچ کاری نمی‌شود با آن کرد.</p>
     </div>
   </details>
 
