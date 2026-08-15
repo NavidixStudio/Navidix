@@ -33,6 +33,7 @@
 
   var KEY   = 'nvx-studio-key';
   var DAY   = 'nvx-studio-day';
+  var NOIMG = 'nvx-studio-noimg';
   var FREE  = 3;                      // سقف روزانه‌ی موتور بی‌کلید
 
   var $ = function (id) { return document.getElementById(id); };
@@ -61,6 +62,17 @@
   function bump() {
     try { localStorage.setItem(DAY, JSON.stringify({ d: today(), n: used() + 1 })); }
     catch (e) {}
+  }
+
+  // وقتی گوگل گفت limit: 0، دیگر پرسیدن ندارد. بدون این، هر بار یک رفت و
+  // برگشتِ بی‌فایده می‌رود و کاربر یک خطای تکراری می‌بیند برای چیزی که از
+  // قبل جوابش معلوم است.
+  function noImg() {
+    try { return localStorage.getItem(NOIMG) === '1'; } catch (e) { return false; }
+  }
+
+  function markNoImg() {
+    try { localStorage.setItem(NOIMG, '1'); } catch (e) {}
   }
 
   function myKey() {
@@ -347,7 +359,9 @@
   function quota() {
     var k = myKey();
     if (k) {
-      $('quota').innerHTML = 'کلید خودت فعال است — <b>بی‌سقف</b>';
+      $('quota').innerHTML = noImg()
+        ? 'کلیدت برای <b>ترجمه</b> — تصویر با موتور رایگان، بی‌سقف'
+        : 'کلید خودت فعال است — <b>بی‌سقف</b>';
       $('keysum').textContent = 'کلیدت فعال است — برای تغییر یا پاک‌کردن بزن';
     } else {
       var left = Math.max(0, FREE - used());
@@ -477,7 +491,7 @@
       // منتظر یک تصویرِ غلط بماند و نداند چرا غلط است.
       line.textContent = plan.prompt;
 
-      if (key) {
+      if (key && !noImg()) {
         return gemini(key, plan.prompt).then(function (src) {
           done(); show(src, plan, 'کلید خودت');
         }, function (e) {
@@ -485,9 +499,15 @@
           // تصویرِ گوگل روی حساب رایگان باز نیستند. نشان‌دادنِ یک دیوار
           // انگلیسی و دست خالی، بدترین کارِ ممکن است؛ تصویر را با موتور
           // رایگان می‌سازیم و در یک جمله می‌گوییم چرا.
-          soft(/limit: 0/.test(e.message)
-            ? 'مدل تصویرِ گوگل روی حسابِ رایگان سهمیه ندارد (limit: 0) — این یکی با موتور رایگان ساخته شد. کلیدت برای ترجمه استفاده شد.'
-            : 'گوگل تصویر نداد (' + e.message.slice(0, 90) + ') — با موتور رایگان ساخته شد.');
+          if (/limit: 0/.test(e.message)) {
+            markNoImg();
+            quota();          // نوار بالا باید همان لحظه راستش را بگوید
+            soft('مدل تصویرِ گوگل روی حسابِ رایگان سهمیه ندارد (limit: 0) — ' +
+                 'ساختِ تصویر در پلن رایگان گوگل نیست. از این به بعد یک‌راست ' +
+                 'با موتور رایگان ساخته می‌شود و کلیدت برای ترجمه به کار می‌رود.');
+          } else {
+            soft('گوگل تصویر نداد (' + e.message.slice(0, 90) + ') — با موتور رایگان ساخته شد.');
+          }
           return freeShot(plan, done);
         });
       }
@@ -539,6 +559,7 @@
     try { v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); } catch (e) {}
     cachedImage = null;
     cachedText = null;
+    try { localStorage.removeItem(NOIMG); } catch (e) {}   // کلید تازه، فرضِ تازه
     quota();
     if (v) {
       msg.className = 'keymsg ok';

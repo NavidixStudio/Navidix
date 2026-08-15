@@ -142,7 +142,11 @@ textarea::placeholder{color:var(--dim)}
 </style>
 <script src="nvx-config.js" defer></script>
 <script src="nvx-auth.js" defer></script>
-<script src="nvx-studio.js" defer></script>
+<!-- نسخه در آدرس است چون مرورگرِ داخلِ اپ‌ها (تلگرام، اینستاگرام)
+     نه دکمه‌ی refreshِ سخت دارد و نه به کاربر اجازه می‌دهد کش را پاک
+     کند. بدون این، هر اصلاحی ساعت‌ها پشت فایلِ کهنه گیر می‌کند. با
+     هر تغییرِ nvx-studio.js این عدد را عوض کن. -->
+<script src="nvx-studio.js?v=202608152236" defer></script>
 </head>
 <body>
 
