@@ -71,6 +71,9 @@ def R(lesson, url, level, why, dur=None):
 # RESOURCES:start — این محدوده را tools/curate.py بازنویسی می‌کند.
 # دستی هم می‌شود ویرایشش کرد؛ فقط این دو خط نشانه را جابه‌جا نکن.
 RESOURCES = [
+    R('brand-content', 'https://youtu.be/Ch4Sl0POBhU', 'beginner',
+      'همان منبعی است که بخش برندسازی شخصی و بازاریابیِ این درس از آن '
+      'درآمده — اگر می‌خواهی استدلال پشتِ این حرف‌ها را کامل بشنوی، اینجاست.'),
 ]
 # RESOURCES:end
 

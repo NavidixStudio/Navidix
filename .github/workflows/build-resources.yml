@@ -1,0 +1,42 @@
+name: Build YouTube resources
+
+# جدا از اکشن جمینای، و عمداً.
+#
+# آن یکی «پیشنهاد بده» است و چون قضاوتِ ماشین را وارد سایت می‌کند، خروجی‌اش
+# Pull Request است تا آدم ببیند. این یکی «بساز» است: ویدیو را خودت انتخاب
+# کرده‌ای و همان انتخاب، تأییدِ لازم است — پس مستقیم روی main می‌رود.
+#
+# کارش فقط این است که عنوان و نام کانال را از یوتیوب بگیرد. آن دو هیچ‌وقت
+# دستی نوشته نمی‌شوند: عنوانِ دستی کهنه می‌شود و اشتباهش هم معلوم نیست.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: گرفتن عنوان‌ها و ساختن بخش منابع
+        run: python3 tools/resources.py --fetch
+
+      - name: ثبت تغییرات
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "چیزی عوض نشد."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit \
+            -m "Fill in YouTube titles and rebuild the resource sections" \
+            -m "Titles and channel names come from YouTube's oEmbed endpoint rather than being typed by hand, so a renamed video or channel is corrected the next time this runs instead of quietly going stale."
+          git push origin HEAD:main
