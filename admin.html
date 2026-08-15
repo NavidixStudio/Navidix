@@ -477,6 +477,33 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     return out;                                   // newest first
   }
 
+  /* A dataset that failed is a note in its own panel, never the end of the
+     page. Only the overview is load-bearing — it is what decides whether
+     this reader is an admin at all. Everything else is a section that can
+     be missing while the rest still reads. */
+  function note(err) {
+    var p = el('p', 'empty');
+    p.textContent = /Could not find the (function|table)|schema cache|does not exist/i.test(err.message)
+      ? 'این بخش هنوز در پایگاه داده ساخته نشده. فایل supabase/users-and-refs.sql را یک بار در SQL Editor اجرا کن.'
+      : 'خواندن این بخش ممکن نشد: ' + err.message;
+    return p;
+  }
+
+  /* Resolves to a shape that says which happened, so one failure never
+     rejects the whole batch — which is exactly what Promise.all did, and
+     why a missing optional function took the working half of the page with
+     it. */
+  function soft(p) {
+    return p.then(function (v) { return { ok: true, v: v || [] }; },
+                  function (e) { return { ok: false, e: e }; });
+  }
+
+  function part(r, render, empty) {
+    if (!r.ok) return note(r.e);
+    if (!r.v.length) return el('p', 'empty', empty);
+    return render(r.v);
+  }
+
   function section(title, hint, node, tools) {
     var f = document.createDocumentFragment();
     f.appendChild(el('h2', '', title));
@@ -576,33 +603,39 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
        signups are different quantities on different scales, and putting
        two scales on one plot invents a correlation that is not there. */
     b.appendChild(section('کاربران فعال روزانه', 'در ۳۰ روز گذشته. هر ستون یک روز است، تازه‌ترین سمت راست.',
-      columns(series(daily, 'active_users', 30), function (v) { return fa(v) + ' کاربر'; })));
+      part(daily, function (v) {
+        return columns(series(v, 'active_users', 30), function (n) { return fa(n) + ' کاربر'; });
+      }, 'هنوز داده‌ای نیست.')));
 
     b.appendChild(section('زمان یادگیری روزانه', 'مجموع دقیقه‌هایی که همه‌ی کاربران در آن روز صرف کردند.',
-      columns(series(daily, 'seconds', 30).map(function (r) {
-        return { k: r.k, v: Math.round(r.v / 60) };
-      }), function (v) { return fa(v) + ' دقیقه'; })));
+      part(daily, function (v) {
+        return columns(series(v, 'seconds', 30).map(function (r) {
+          return { k: r.k, v: Math.round(r.v / 60) };
+        }), function (n) { return fa(n) + ' دقیقه'; });
+      }, 'هنوز داده‌ای نیست.')));
 
     b.appendChild(section('ثبت‌نام روزانه', 'حساب‌های تازه‌ساخته‌شده در هر روز.',
-      columns(series(signups, 'signups', 30), function (v) { return fa(v) + ' ثبت‌نام'; })));
+      part(signups, function (v) {
+        return columns(series(v, 'signups', 30), function (n) { return fa(n) + ' ثبت‌نام'; });
+      }, 'هنوز داده‌ای نیست.')));
 
     b.appendChild(section('محبوب‌ترین آموزش‌ها',
       'بر اساس تعداد کاربرانی که درس را باز کرده‌اند. «نرخ تکمیل» نسبت کسانی است که تمامش کردند.',
-      lessons.length ? lessonTable(lessons) : el('p', 'empty', 'هنوز کسی درسی را باز نکرده.')));
+      part(lessons, lessonTable, 'هنوز کسی درسی را باز نکرده.')));
 
     b.appendChild(section('پربازدیدترین صفحه‌ها', 'شامل مهمان‌های بدون حساب. بدون کوکی و بدون شناسه‌ی فردی.',
-      trafficTable(traffic)));
+      part(traffic, trafficTable, 'هنوز بازدیدی ثبت نشده. چند ساعت بعد از انتشار پر می‌شود.')));
 
     b.appendChild(section('از کجا آمده‌اند',
       'دامنه‌ای که بازدیدکننده از آن وارد شده. «مستقیم» یعنی آدرس را خودش زده، ' +
       'یا از جایی آمده که ارجاع نمی‌فرستد — مثل تلگرام، ایمیل یا بوکمارک.',
-      refsTable(refs)));
+      part(refs, refsTable, 'هنوز داده‌ای نیست.')));
 
     var all = window.NVX_CURRICULUM ? window.NVX_CURRICULUM.total : 0;
     b.appendChild(section('کاربران ثبت‌نام‌شده',
       'تازه‌ترین‌ها بالا. «تکمیل» یعنی چند درس از ' + fa(all) + ' درس مسیر را تمام کرده.',
-      users.length ? usersTable(users, all) : el('p', 'empty', 'هنوز کسی ثبت‌نام نکرده.'),
-      users.length ? copyTool(users) : null));
+      part(users, function (v) { return usersTable(v, all); }, 'هنوز کسی ثبت‌نام نکرده.'),
+      users.ok && users.v.length ? copyTool(users.v) : null));
   }
 
   function boot() {
@@ -618,22 +651,23 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     }
 
     within(Promise.all([
-      NVX_AUTH.rest('admin_overview?select=*'),
-      NVX_AUTH.rest('admin_daily?select=*'),
-      NVX_AUTH.rest('admin_lessons?select=*'),
-      NVX_AUTH.rest('admin_signups?select=*'),
-      NVX_AUTH.rest('admin_traffic?select=*'),
-      NVX_AUTH.rest('rpc/admin_users', { method: 'POST', body: {} }),
-      NVX_AUTH.rest('admin_refs?select=*')
+      soft(NVX_AUTH.rest('admin_overview?select=*')),
+      soft(NVX_AUTH.rest('admin_daily?select=*')),
+      soft(NVX_AUTH.rest('admin_lessons?select=*')),
+      soft(NVX_AUTH.rest('admin_signups?select=*')),
+      soft(NVX_AUTH.rest('admin_traffic?select=*')),
+      soft(NVX_AUTH.rest('rpc/admin_users', { method: 'POST', body: {} })),
+      soft(NVX_AUTH.rest('admin_refs?select=*'))
     ]), 15000, 'خواندن آمار').then(function (r) {
-      var over = (r[0] || [])[0];
+      if (!r[0].ok) throw r[0].e;
+      var over = (r[0].v || [])[0];
       /* No row here means the policies did not recognise this account as
          an admin. It is not an error and it is not shown as one. */
       if (!over) {
         gate('این حساب دسترسی مدیر ندارد.', false);
         return;
       }
-      draw(over, r[1] || [], r[2] || [], r[3] || [], r[4] || [], r[5] || [], r[6] || []);
+      draw(over, r[1], r[2], r[3], r[4], r[5], r[6]);
     }).catch(function (e) {
       gate('خواندن داده‌ها ممکن نشد. ' + e.message +
            '. اگر VPN روشن است یا این صفحه را در مرورگر داخلی یک اپ باز کرده‌ای، ' +
