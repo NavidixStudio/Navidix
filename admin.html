@@ -127,6 +127,8 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
 .tag{font-size:10.5px; border:1px solid var(--line2); border-radius:5px; padding:1px 6px;
   color:var(--mute); white-space:nowrap}
 .tag--a{color:var(--mark); border-color:rgba(74,144,226,.5)}
+.path{display:block; font-size:11px; color:var(--dim); direction:ltr; text-align:right;
+  unicode-bidi:isolate; margin-top:1px}
 .gate button + button{margin-top:9px}
 .diag{margin:16px 0 0; font-size:11.5px; color:var(--dim); line-height:1.9;
   border-top:1px solid var(--line); padding-top:13px}
@@ -432,6 +434,93 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     return t;
   }
 
+  var PAGES = {
+    '/': 'صفحه‌ی اصلی',
+    '/index.html': 'صفحه‌ی اصلی',
+    '/training.html': 'فهرست آموزش‌ها',
+    '/journey.html': 'مسیر یادگیری',
+    '/me.html': 'پیشرفت من',
+    '/admin.html': 'پنل مدیریت',
+    '/prompts.html': 'کتابخانه‌ی پرامپت',
+    '/gallery.html': 'گالری سبک‌ها',
+    '/documentaries.html': 'مستندها',
+    '/collections.html': 'مجموعه‌ها',
+    '/channels.html': 'کانال‌های رسمی',
+    '/about.html': 'درباره',
+    '/system.html': 'خدمات استودیو',
+    '/explore/': 'تجربه‌های تعاملی',
+    '/explore/atoms-and-molecules/': 'تجربه — اتم و مولکول',
+    '/explore/evolution-of-life/': 'تجربه — فرگشت حیات',
+    '/explore/hidden-network/': 'تجربه — شبکه‌ی پنهان',
+    '/explore/human-to-machine/': 'تجربه — از انسان تا ماشین',
+    '/explore/space-time/': 'تجربه — فضا-زمان'
+  };
+
+  var STYLES = {
+    'artdeco': 'آر دکو',
+    'artnouveau': 'آر نوو',
+    'baroque': 'باروک',
+    'chiaro': 'کیاروسکورو',
+    'concept': 'کنسپت‌آرت سینمایی',
+    'doc': 'عکاسی مستند و خیابانی',
+    'film35': 'قاب سینمایی ۳۵ میلی‌متری',
+    'golden': 'نور طلایی (گلدن آور)',
+    'gouache': 'گواش و پوستر رترو',
+    'graphite': 'طراحی با مداد',
+    'impressionist': 'امپرسیونیسم',
+    'inkwash': 'مرکب چینی',
+    'miniature': 'مینیاتور ایرانی',
+    'neon': 'نئون شبانه',
+    'oil': 'رنگ روغن کلاسیک',
+    'postimp': 'پست‌امپرسیونیسم',
+    'product': 'ماکرو محصول',
+    'qajar': 'نقاشی قاجار',
+    'renaissance': 'رنسانس',
+    'rim': 'بک‌لایت و نور لبه',
+    'romantic': 'رمانتیسم',
+    'studio': 'پرتره‌ی استودیویی',
+    'surreal': 'سوررئالیسم',
+    'ukiyoe': 'اوکیو-ئه ژاپنی',
+    'watercolor': 'آبرنگ',
+    'window': 'نور نرم پنجره',
+    'woodcut': 'چاپ چوبی و لینوکات'
+  };
+
+  /* A bare path in an RTL page is a small trap of its own: "/admin.html"
+     renders with its slash on the far side and reads as "admin.html/".
+     The Persian name leads, and the path follows in an isolated LTR span
+     for anyone who wants to know which file it was.
+
+     Lesson names come from the curriculum rather than this map, so a
+     renamed lesson is right here the moment it is right there. */
+  function pageName(path) {
+    if (PAGES[path]) return PAGES[path];
+
+    var m = /^\/style\/([\w-]+)\.html$/.exec(path);
+    if (m && STYLES[m[1]]) return 'سبک — ' + STYLES[m[1]];
+
+    var slug = (/([^\/]+)\.html?$/.exec(path) || [])[1];
+    if (slug && window.NVX_CURRICULUM) {
+      var found = null;
+      NVX_CURRICULUM.stages.forEach(function (st) {
+        st.lessons.forEach(function (l) { if (l.slug === slug) found = l.s; });
+      });
+      if (found) return 'درس — ' + found;
+    }
+    return path;
+  }
+
+  function pageCell(path) {
+    var td = el('td');
+    var name = pageName(path);
+    td.appendChild(el('span', '', name));
+    if (name !== path) {
+      var s = el('span', 'path lat', path);
+      td.appendChild(s);
+    }
+    return td;
+  }
+
   function trafficTable(rows) {
     var by = {};
     rows.forEach(function (r) { by[r.path] = (by[r.path] || 0) + r.views; });
@@ -450,7 +539,7 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     var tb = el('tbody');
     list.forEach(function (r) {
       var tr = el('tr');
-      tr.appendChild(el('td', 'lat', r.path));
+      tr.appendChild(pageCell(r.path));
       var td = el('td', 'bar');
       var w = el('span', 'tbar__w'); w.style.display = 'block';
       var b = el('span', 'tbar'); b.style.width = Math.round(r.v / max * 100) + '%';
