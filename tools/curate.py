@@ -44,9 +44,34 @@ sys.path.insert(0, HERE)
 import curriculum          # noqa: E402  — مسیر یادگیری
 import resources           # noqa: E402  — فهرست فعلی و ابزار یوتیوب
 
-MODEL = 'gemini-2.5-flash'
-API = ('https://generativelanguage.googleapis.com/v1beta/models/'
-       + MODEL + ':generateContent')
+BASE = 'https://generativelanguage.googleapis.com/v1beta'
+
+# اسم مدل حدس زده نمی‌شود. دو بار پشت سر هم همین حدس ۴۰۴ گرفت — یک بار
+# gemini-1.5-flash در خبرساز قدیمی، یک بار gemini-2.5-flash اینجا — چون
+# اینکه کدام مدل روی یک کلید مشخص فعال است چیزی نیست که بشود از حافظه
+# دانست. حالا از خود API پرسیده می‌شود.
+PREFER = ('gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.0-flash',
+          'gemini-2.5-pro', 'gemini-pro-latest')
+
+
+def models(key):
+    d = json.loads(urllib.request.urlopen(BASE + '/models?key=' + key,
+                                          timeout=30).read())
+    return [m['name'].split('/')[-1] for m in d.get('models', [])
+            if 'generateContent' in m.get('supportedGenerationMethods', [])]
+
+
+def pick(key):
+    have = models(key)
+    if not have:
+        raise RuntimeError('این کلید هیچ مدلی برای generateContent ندارد.')
+    for want in PREFER:
+        if want in have:
+            return want, have
+    for n in have:                      # هر flashی بهتر از هیچ
+        if 'flash' in n:
+            return n, have
+    return have[0], have
 
 PER_LESSON = 3          # چند پیشنهاد از مدل بخواهیم
 KEEP = 3                # حداکثر چندتا نگه داریم
@@ -54,20 +79,40 @@ KEEP = 3                # حداکثر چندتا نگه داریم
 
 # ------------------------------------------------------------------- gemini
 
-def ask(key, prompt):
-    body = {
-        'contents': [{'parts': [{'text': prompt}]}],
-        # جست‌وجوی زنده. بدون این، مدل از حافظه جواب می‌دهد و شناسه می‌سازد.
-        'tools': [{'google_search': {}}],
-        'generationConfig': {'temperature': 0.3},
-    }
-    req = urllib.request.Request(
-        API + '?key=' + key,
-        data=json.dumps(body).encode(),
-        headers={'Content-Type': 'application/json'})
-    r = json.loads(urllib.request.urlopen(req, timeout=120).read())
-    parts = r['candidates'][0]['content']['parts']
-    return ''.join(p.get('text', '') for p in parts)
+# نام ابزار جست‌وجو بین نسل‌های مدل فرق می‌کند، و کدام‌یک را قبول می‌کند
+# چیزی نیست که از بیرون معلوم باشد. هر سه حالت امتحان می‌شود؛ آخری بدون
+# جست‌وجوست، که ضعیف‌تر است ولی تأیید oEmbed همچنان جلوی شناسه‌ی ساختگی
+# را می‌گیرد — پس بدترین حالتش «پیشنهاد کمتر» است، نه «پیشنهاد بی‌اعتبار».
+TOOLSETS = [
+    ('با جست‌وجوی زنده',        [{'google_search': {}}]),
+    ('با جست‌وجوی نسل قبل',     [{'google_search_retrieval': {}}]),
+    ('بدون جست‌وجو',            None),
+]
+
+
+def ask(key, model, prompt, note=None):
+    last = None
+    for label, tools in TOOLSETS:
+        body = {
+            'contents': [{'parts': [{'text': prompt}]}],
+            'generationConfig': {'temperature': 0.3},
+        }
+        if tools:
+            body['tools'] = tools
+        req = urllib.request.Request(
+            BASE + '/models/' + model + ':generateContent?key=' + key,
+            data=json.dumps(body).encode(),
+            headers={'Content-Type': 'application/json'})
+        try:
+            r = json.loads(urllib.request.urlopen(req, timeout=120).read())
+        except urllib.error.HTTPError as e:
+            last = '%s → HTTP %s' % (label, e.code)
+            continue
+        if note and label != TOOLSETS[0][0]:
+            note(label)
+        parts = r['candidates'][0]['content']['parts']
+        return ''.join(p.get('text', '') for p in parts)
+    raise RuntimeError(last or 'پاسخی نگرفت')
 
 
 def parse(text):
@@ -173,6 +218,13 @@ def main():
         print('GEMINI_API_KEY نیست.')
         return 1
 
+    try:
+        model, avail = pick(key)
+    except Exception as e:
+        print('فهرست مدل‌ها خوانده نشد: %s' % e)
+        return 1
+    print('مدل: %s   (در دسترس: %s)\n' % (model, ', '.join(avail[:8])))
+
     have = existing()
     seen = {resources.vid(r['url']) for r in have}
     covered = {r['lesson'] for r in have}
@@ -197,7 +249,8 @@ def main():
     for l, st in targets:
         print('— %s' % l['t'])
         try:
-            text = ask(key, prompt_for(l, st))
+            text = ask(key, model, prompt_for(l, st),
+                       note=lambda lb: print('   (%s)' % lb))
         except Exception as e:
             print('   جمینای جواب نداد: %s' % e)
             continue

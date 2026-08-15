@@ -45,8 +45,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "چیزی تأیید نشد — Pull Requestی لازم نیست."
+          # عمداً فقط resources.py نگاه می‌شود، نه کل درخت. --fetch حتی وقتی
+          # هیچ منبعی تأیید نشده باشد یک resources.json خالی می‌نویسد، و آن
+          # یک فایل کافی بود تا بار قبل شاخه و کامیتِ بی‌محتوا ساخته شود.
+          # منبعِ تأییدشده فقط و فقط داخل resources.py می‌نشیند.
+          if git diff --quiet -- tools/resources.py; then
+            echo "هیچ منبعی تأیید نشد — نه شاخه‌ای، نه Pull Requestی."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
@@ -59,6 +63,18 @@ jobs:
             -m "Every URL here came back verified: Gemini proposed it with Google Search on, and the link was then checked against YouTube's oEmbed before being kept. Anything oEmbed refused — deleted, private, or invented — was dropped rather than written down." \
             -m "The titles and channel names are YouTube's own, not the model's. The only thing the model contributed that survives is the one-line reason each video is here, which is a judgement rather than a fact that can be faked. Read those before merging."
           git push -u origin "$BRANCH"
-          gh pr create \
-            --title "منابع یوتیوب پیشنهادی — $(date +%Y-%m-%d)" \
-            --body-file .github/resources-pr.md
+
+          # اگر «Allow GitHub Actions to create and approve pull requests» در
+          # تنظیمات مخزن روشن نباشد، این خط ۴۰۳ می‌گیرد. آن‌وقت شکست دادنِ
+          # کل job فقط دروغ است: شاخه رفته بالا و کار انجام شده. پس لینکِ
+          # ساختِ دستی چاپ می‌شود و job سبز می‌ماند.
+          if ! gh pr create \
+                 --title "منابع یوتیوب پیشنهادی — $(date +%Y-%m-%d)" \
+                 --body-file .github/resources-pr.md; then
+            echo "::warning::Pull Request خودکار ساخته نشد."
+            echo "شاخه روی گیت‌هاب هست. برای ساختنش با دست:"
+            echo "https://github.com/${GITHUB_REPOSITORY}/pull/new/${BRANCH}"
+            echo "یا Settings → Actions → General → Workflow permissions را باز"
+            echo "کن و «Allow GitHub Actions to create and approve pull"
+            echo "requests» را تیک بزن، بعد دوباره اجرا کن."
+          fi
