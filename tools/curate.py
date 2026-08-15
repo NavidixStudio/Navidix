@@ -127,7 +127,14 @@ def catalog(key, version):
             if 'generateContent' in m.get('supportedGenerationMethods', [])]
 
 
+# generateContent را پشتیبانی می‌کنند ولی خروجی‌شان متن نیست، پس اینجا به
+# درد نمی‌خورند. gemini-2.5-flash-preview-tts در همان فهرست بود و یک جای
+# آزمایش را گرفت تا بگوید فقط AUDIO می‌دهد.
+NOT_TEXT = ('tts', 'image', 'embedding', 'video-understanding', 'vision')
+
+
 def ordered(have):
+    have = [n for n in have if not any(x in n for x in NOT_TEXT)]
     out = [n for n in PREFER if n in have]
     out += [n for n in have if 'flash' in n and n not in out]
     out += [n for n in have if n not in out]
