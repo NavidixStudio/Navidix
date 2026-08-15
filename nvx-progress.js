@@ -328,8 +328,20 @@
 
     paint();
     repaint = paint;
-    if (main) main.appendChild(box);
-    else pager.parentNode.insertBefore(box, pager);
+    /* Anchored to the things themselves, not to a container, because the
+       containers are not the same on every lesson. On brand-content the
+       footer and pager sit outside .lesson__main; on team-monetization
+       both sit inside it — so "append to .lesson__main" put the panel
+       after the pager on one page and before the footer on the other.
+       Naming the neighbour instead is true on both. */
+    var ytb  = document.querySelector('section.ytb');
+    var foot = document.querySelector('.lesson footer') ||
+               document.querySelector('footer');
+
+    if (ytb && ytb.parentNode) ytb.parentNode.insertBefore(box, ytb.nextSibling);
+    else if (foot && foot.parentNode) foot.parentNode.insertBefore(box, foot);
+    else if (pager) pager.parentNode.insertBefore(box, pager);
+    else main.appendChild(box);
   }
 
   /* ===================================================================
