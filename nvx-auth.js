@@ -401,7 +401,7 @@
      deliberately absent over the hero and arrives once the reader has
      scrolled past it. First one found wins. */
   function mount() {
-    var row = document.querySelector('.sitebar .row, .xbar__row, .topbar__links');
+    var row = document.querySelector('.sitebar .row, .xbar__row, .topbar__links, .bar__row');
     if (!row) return;
     btn = document.createElement('button');
     btn.type = 'button';
