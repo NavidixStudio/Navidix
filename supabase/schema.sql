@@ -295,3 +295,7 @@ alter view public.admin_daily    set (security_invoker = on);
 alter view public.admin_lessons  set (security_invoker = on);
 alter view public.admin_signups  set (security_invoker = on);
 alter view public.admin_traffic  set (security_invoker = on);
+
+
+-- فهرست کاربران و منابع ورودی در supabase/users-and-refs.sql هستند.
+-- آن فایل را هم یک بار اجرا کن؛ پنل مدیریت بدون آن دو بخش آخرش خالی است.

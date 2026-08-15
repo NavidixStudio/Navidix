@@ -77,7 +77,13 @@ h2 + .hint{margin:0 0 16px}
 
 .panel{background:var(--pane); border:1px solid var(--line2); border-radius:14px; padding:19px 20px}
 
-/* ---- table ---- */
+/* ---- table ----
+   A phone is 360px wide and these tables are not. The panel scrolls
+   inside itself rather than pushing the page sideways, and below 560px
+   the decorative bar column is dropped entirely — it restates the number
+   beside it, so on a narrow screen it is the first thing that should go
+   rather than the thing that pushes the numbers off the edge. */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch}
 table{width:100%; border-collapse:collapse; font-size:13px}
 th{text-align:right; font-weight:600; color:var(--dim); font-size:11.5px;
   padding:0 10px 9px; border-bottom:1px solid var(--line)}
@@ -106,10 +112,36 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
 .tip.on{opacity:1}
 
 .empty{color:var(--dim); font-size:12.5px; padding:16px 2px}
+.tools{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 16px}
+.tools button{appearance:none; border:1px solid var(--line2); background:transparent;
+  color:var(--ink2); font:inherit; font-size:12.5px; padding:7px 14px; border-radius:8px; cursor:pointer}
+.tools button:hover{border-color:rgba(150,196,255,.5); color:var(--ink)}
+.tools button.done{border-color:var(--mark); color:var(--mark)}
+/* An address broken across five lines mid-word is unreadable, and
+   break-all is what does it once the column gets narrow enough. The
+   address stays on one line and the table scrolls inside its wrapper
+   instead — the same answer as every other wide table here. */
+.mail{font-family:'Inter',ui-sans-serif,system-ui,sans-serif; font-size:12.5px; direction:ltr;
+  text-align:left; white-space:nowrap}
+.t--users td,.t--users th{white-space:nowrap}
+.tag{font-size:10.5px; border:1px solid var(--line2); border-radius:5px; padding:1px 6px;
+  color:var(--mute); white-space:nowrap}
+.tag--a{color:var(--mark); border-color:rgba(74,144,226,.5)}
 .gate button + button{margin-top:9px}
 .diag{margin:16px 0 0; font-size:11.5px; color:var(--dim); line-height:1.9;
   border-top:1px solid var(--line); padding-top:13px}
-@media (max-width:640px){ .wrap{padding:24px 15px 70px} }
+@media (max-width:640px){
+  .wrap{padding:24px 14px 70px}
+  h2{margin-top:30px}
+  .panel{padding:15px 13px}
+  .kpi{padding:13px 14px}
+  .kpi b{font-size:22px}
+}
+@media (max-width:560px){
+  table{font-size:12px}
+  th,td{padding:9px 7px}
+  th.bar,td.bar{display:none}      /* the number already says it */
+}
 </style>
 
 <script src="curriculum.js" defer></script>
@@ -259,7 +291,7 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     var t = el('table');
     var hd = el('tr');
     ['درس', 'خواننده', '', 'تکمیل', 'نرخ تکمیل', 'زمان'].forEach(function (h, i) {
-      var th = el('th', i >= 3 ? 'n' : '', h);
+      var th = el('th', i === 2 ? 'bar' : (i >= 3 ? 'n' : ''), h);
       if (i === 2) th.style.width = '30%';
       hd.appendChild(th);
     });
@@ -271,7 +303,7 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
       tr.appendChild(el('td', '', titles[r.lesson_slug] || r.lesson_slug));
       tr.appendChild(el('td', 'n num', fa(r.readers)));
 
-      var td = el('td');
+      var td = el('td', 'bar');
       var w = el('span', 'tbar__w'); w.style.display = 'block';
       var b = el('span', 'tbar');
       b.style.width = Math.round(r.readers / max * 100) + '%';
@@ -289,6 +321,117 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     return t;
   }
 
+  /* Persian calendar for free — the browser has it, and a signup date in
+     Gregorian means nothing to a reader who thinks in Mordad. */
+  var DATE = null;
+  try { DATE = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'medium' }); } catch (e) {}
+  function when(x) {
+    if (!x) return '—';
+    var d = new Date(x);
+    if (isNaN(d)) return '—';
+    if (DATE) { try { return DATE.format(d); } catch (e) {} }
+    return d.toISOString().slice(0, 10);
+  }
+
+  function usersTable(rows, total) {
+    var t = el('table', 't--users'), thead = el('thead'), hd = el('tr');
+    ['ایمیل', 'ثبت‌نام', 'تکمیل', 'زمان', 'آخرین فعالیت'].forEach(function (h, i) {
+      hd.appendChild(el('th', i >= 2 ? 'n' : '', h));
+    });
+    thead.appendChild(hd); t.appendChild(thead);
+
+    var tb = el('tbody');
+    rows.forEach(function (r) {
+      var tr = el('tr');
+
+      var td = el('td');
+      var m = el('span', 'mail', r.email);
+      td.appendChild(m);
+      if (r.role === 'admin') {
+        td.appendChild(document.createTextNode(' '));
+        td.appendChild(el('span', 'tag tag--a', 'مدیر'));
+      }
+      tr.appendChild(td);
+
+      tr.appendChild(el('td', '', when(r.joined)));
+      tr.appendChild(el('td', 'n num', fa(r.completed || 0) + ' از ' + fa(total || 0)));
+      tr.appendChild(el('td', 'n', hours(r.seconds)));
+      tr.appendChild(el('td', 'n', r.last_active ? when(r.last_active) : 'هنوز نه'));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    return t;
+  }
+
+  /* One button that puts every address on the clipboard, comma separated —
+     which is the form an email client wants pasted into its To: field.
+     The reason this exists is that selecting text out of a table on a
+     phone is genuinely painful. */
+  function copyTool(rows) {
+    var d = el('div', 'tools');
+    var b = el('button', '', 'کپی همه‌ی ایمیل‌ها');
+    b.type = 'button';
+    b.addEventListener('click', function () {
+      var text = rows.map(function (r) { return r.email; }).join(', ');
+      var done = function () {
+        b.textContent = '✓ کپی شد — ' + fa(rows.length) + ' ایمیل';
+        b.className = 'done';
+        setTimeout(function () { b.textContent = 'کپی همه‌ی ایمیل‌ها'; b.className = ''; }, 2600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+      function fallback() {
+        /* An in-app browser often refuses the clipboard API. Showing the
+           addresses in a selectable box is worse than copying for them,
+           and far better than a button that silently does nothing. */
+        var ta = el('textarea');
+        ta.value = text;
+        ta.style.cssText = 'width:100%;margin-top:9px;background:#0E1116;color:#EDF2FA;' +
+          'border:1px solid #262A31;border-radius:9px;padding:10px;font-size:12px;' +
+          'direction:ltr;text-align:left;min-height:74px';
+        ta.readOnly = true;
+        if (!d.querySelector('textarea')) d.appendChild(ta);
+        ta.select();
+        b.textContent = 'دستی انتخاب و کپی کن';
+      }
+    });
+    d.appendChild(b);
+    return d;
+  }
+
+  function refsTable(rows) {
+    var list = rows.slice().sort(function (a, b) { return b.views - a.views; }).slice(0, 12);
+    if (!list.length) return el('p', 'empty', 'هنوز داده‌ای نیست.');
+    var max = list[0].views || 1;
+
+    var t = el('table'), thead = el('thead'), hd = el('tr');
+    ['منبع', '', 'بازدید'].forEach(function (h, i) {
+      var th = el('th', i === 1 ? 'bar' : (i === 2 ? 'n' : ''), h);
+      if (i === 1) th.style.width = '38%';
+      hd.appendChild(th);
+    });
+    thead.appendChild(hd); t.appendChild(thead);
+
+    var tb = el('tbody');
+    list.forEach(function (r) {
+      var tr = el('tr');
+      var name = !r.ref ? 'مستقیم یا بدون ارجاع'
+               : r.ref === 'internal' ? 'داخل خود سایت'
+               : r.ref;
+      tr.appendChild(el('td', r.ref && r.ref !== 'internal' ? 'lat' : '', name));
+      var td = el('td', 'bar');
+      var w = el('span', 'tbar__w'); w.style.display = 'block';
+      var bb = el('span', 'tbar'); bb.style.width = Math.round(r.views / max * 100) + '%';
+      w.appendChild(bb); td.appendChild(w);
+      tr.appendChild(td);
+      tr.appendChild(el('td', 'n num', fa(r.views)));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    return t;
+  }
+
   function trafficTable(rows) {
     var by = {};
     rows.forEach(function (r) { by[r.path] = (by[r.path] || 0) + r.views; });
@@ -299,7 +442,7 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     var max = list[0].v || 1;
     var t = el('table'), thead = el('thead'), hd = el('tr');
     ['صفحه', '', 'بازدید'].forEach(function (h, i) {
-      var th = el('th', i === 2 ? 'n' : '', h);
+      var th = el('th', i === 1 ? 'bar' : (i === 2 ? 'n' : ''), h);
       if (i === 1) th.style.width = '38%';
       hd.appendChild(th);
     });
@@ -308,7 +451,7 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     list.forEach(function (r) {
       var tr = el('tr');
       tr.appendChild(el('td', 'lat', r.path));
-      var td = el('td');
+      var td = el('td', 'bar');
       var w = el('span', 'tbar__w'); w.style.display = 'block';
       var b = el('span', 'tbar'); b.style.width = Math.round(r.v / max * 100) + '%';
       w.appendChild(b); td.appendChild(w);
@@ -334,12 +477,19 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     return out;                                   // newest first
   }
 
-  function section(title, hint, node) {
+  function section(title, hint, node, tools) {
     var f = document.createDocumentFragment();
     f.appendChild(el('h2', '', title));
     if (hint) f.appendChild(el('p', 'hint', hint));
+    if (tools) f.appendChild(tools);
     var p = el('div', 'panel');
-    p.appendChild(node);
+    if (node.tagName === 'TABLE') {
+      var sc = el('div', 'scroll');
+      sc.appendChild(node);
+      p.appendChild(sc);
+    } else {
+      p.appendChild(node);
+    }
     f.appendChild(p);
     return f;
   }
@@ -392,11 +542,21 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     document.getElementById('sub').textContent = '';
   }
 
-  function draw(over, daily, lessons, signups, traffic) {
+  function draw(over, daily, lessons, signups, traffic, users, refs) {
     var b = document.getElementById('body');
     b.textContent = '';
     document.getElementById('sub').textContent =
       'همه‌ی اعداد زنده‌اند و مستقیم از پایگاه داده خوانده می‌شوند.';
+
+    var refresh = el('div', 'tools');
+    var rb = el('button', '', '↻ تازه‌سازی');
+    rb.type = 'button';
+    rb.addEventListener('click', function () {
+      rb.textContent = 'یک لحظه…';
+      boot();
+    });
+    refresh.appendChild(rb);
+    b.appendChild(refresh);
 
     var k = el('div', 'kpis');
     [['کل کاربران', fa(over.users_total || 0)],
@@ -432,6 +592,17 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
 
     b.appendChild(section('پربازدیدترین صفحه‌ها', 'شامل مهمان‌های بدون حساب. بدون کوکی و بدون شناسه‌ی فردی.',
       trafficTable(traffic)));
+
+    b.appendChild(section('از کجا آمده‌اند',
+      'دامنه‌ای که بازدیدکننده از آن وارد شده. «مستقیم» یعنی آدرس را خودش زده، ' +
+      'یا از جایی آمده که ارجاع نمی‌فرستد — مثل تلگرام، ایمیل یا بوکمارک.',
+      refsTable(refs)));
+
+    var all = window.NVX_CURRICULUM ? window.NVX_CURRICULUM.total : 0;
+    b.appendChild(section('کاربران ثبت‌نام‌شده',
+      'تازه‌ترین‌ها بالا. «تکمیل» یعنی چند درس از ' + fa(all) + ' درس مسیر را تمام کرده.',
+      users.length ? usersTable(users, all) : el('p', 'empty', 'هنوز کسی ثبت‌نام نکرده.'),
+      users.length ? copyTool(users) : null));
   }
 
   function boot() {
@@ -451,7 +622,9 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
       NVX_AUTH.rest('admin_daily?select=*'),
       NVX_AUTH.rest('admin_lessons?select=*'),
       NVX_AUTH.rest('admin_signups?select=*'),
-      NVX_AUTH.rest('admin_traffic?select=*')
+      NVX_AUTH.rest('admin_traffic?select=*'),
+      NVX_AUTH.rest('rpc/admin_users', { method: 'POST', body: {} }),
+      NVX_AUTH.rest('admin_refs?select=*')
     ]), 15000, 'خواندن آمار').then(function (r) {
       var over = (r[0] || [])[0];
       /* No row here means the policies did not recognise this account as
@@ -460,7 +633,7 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
         gate('این حساب دسترسی مدیر ندارد.', false);
         return;
       }
-      draw(over, r[1] || [], r[2] || [], r[3] || [], r[4] || []);
+      draw(over, r[1] || [], r[2] || [], r[3] || [], r[4] || [], r[5] || [], r[6] || []);
     }).catch(function (e) {
       gate('خواندن داده‌ها ممکن نشد. ' + e.message +
            '. اگر VPN روشن است یا این صفحه را در مرورگر داخلی یک اپ باز کرده‌ای، ' +
