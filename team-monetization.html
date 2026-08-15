@@ -678,6 +678,64 @@ body::before{
   </div>
 </footer>
 
+<!-- nvx-resources:start -->
+<section class="ytb">
+  <h2>منابع رایگان یوتیوب</h2>
+  <p class="ytb__lead">اگر می‌خواهی این بخش را بهتر بفهمی، این منابع رایگان را در
+  یوتیوب ببین. هر کدام را خودمان دیده‌ایم و زیرش نوشته‌ایم چرا انتخاب شده.</p>
+  <p class="ytb__sub"><b>انگلیسی بلد نیستی؟ اشکالی ندارد.</b> کافی است زیرنویس فارسی
+  را در خود یوتیوب روشن کنی: چرخ‌دنده‌ی ⚙ گوشه‌ی ویدیو ← Subtitles ←
+  Auto-translate ← Persian.</p>
+
+  <div class="ytb__grid">
+      <div class="ytc">
+        <button class="ytc__cover" type="button" data-yt="Ch4Sl0POBhU"
+                aria-label="پخش: How to Build a Personal Brand (Full Course)">
+          <img loading="lazy" width="480" height="270" alt=""
+               src="https://img.youtube.com/vi/Ch4Sl0POBhU/hqdefault.jpg"
+               onerror="this.style.display='none'" />
+          <span class="ytc__play" aria-hidden="true"><i></i></span>
+          <span class="ytc__lv">متوسط</span>
+        </button>
+        <div class="ytc__b">
+          <h4>How to Build a Personal Brand (Full Course)</h4>
+          <span class="ytc__ch">Caleb Ralston</span>
+          <p class="ytc__why">همان دوره‌ی برندسازی، این بار به‌خاطر بخش بازاریابی‌اش: اینکه برند شخصی چطور به مشتری و درآمد وصل می‌شود، نه اینکه فقط دیده شوی.</p>
+          <a class="ytc__go" href="https://www.youtube.com/watch?v=Ch4Sl0POBhU"
+             target="_blank" rel="noopener">تماشا در یوتیوب ←</a>
+        </div>
+      </div>
+  </div>
+
+  <p class="ytb__back">این ویدیوها روی یوتیوب‌اند و مال سازنده‌های خودشان — ما فقط
+  انتخاب و مرتبشان کرده‌ایم. وقتی تماشایشان تمام شد، برگرد همین‌جا و درس را
+  «تکمیل شد» بزن.</p>
+</section>
+
+<script>
+/* پوسته‌ی ویدیو: تا وقتی کسی کلیک نکند، هیچ چیزی از یوتیوب بارگذاری نمی‌شود
+   جز یک تصویر. iframe یوتیوب نزدیک یک مگابایت اسکریپت و کوکی شخص ثالث
+   می‌آورد، و صفحات درس این سایت از قبل سنگین‌اند. با کلیک، نسخه‌ی
+   youtube-nocookie جایش می‌نشیند. */
+(function () {
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.ytc__cover[data-yt]');
+    if (!b) return;
+    var v = b.getAttribute('data-yt');
+    b.removeAttribute('data-yt');
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + v +
+            '?autoplay=1&rel=0&cc_load_policy=1';
+    f.title = b.getAttribute('aria-label') || 'ویدیو';
+    f.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture';
+    f.allowFullscreen = true;
+    b.textContent = '';
+    b.appendChild(f);
+  });
+})();
+</script>
+<!-- nvx-resources:end -->
+
 <nav class="pager"><a href="brand-content.html"><small>قسمت پیش</small><b>برند، پیش از محتوا</b></a><a href="hell-grind.html"><small>مسیر ۳</small><b>پرونده‌ی باز Hell Grind</b></a><a href="training.html"><small>فهرست</small><b>همه‌ی قسمت‌های آموزش هوش مصنوعی کاربردی</b></a></nav>
 
 </div>
