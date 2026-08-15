@@ -146,7 +146,7 @@ textarea::placeholder{color:var(--dim)}
      نه دکمه‌ی refreshِ سخت دارد و نه به کاربر اجازه می‌دهد کش را پاک
      کند. بدون این، هر اصلاحی ساعت‌ها پشت فایلِ کهنه گیر می‌کند. با
      هر تغییرِ nvx-studio.js این عدد را عوض کن. -->
-<script src="nvx-studio.js?v=202608152244" defer></script>
+<script src="nvx-studio.js?v=202608152255" defer></script>
 </head>
 <body>
 
@@ -187,17 +187,27 @@ textarea::placeholder{color:var(--dim)}
       <p class="hint" style="margin:0 0 16px">پنج دقیقه وقت می‌برد، یک بار برای همیشه.
       <b style="color:var(--ink2)">کارت بانکی نمی‌خواهد.</b></p>
 
+      <p class="hint" style="margin:0 0 8px"><b style="color:var(--ink2)">کادر اول —
+      شناسه‌ی حساب</b></p>
       <ol>
-        <li>در <b>Cloudflare</b> حساب رایگان بساز (فقط ایمیل و رمز)</li>
-        <li>وارد شدی؟ از منوی راست <b>Workers &amp; Pages</b> را بزن</li>
-        <li>در ستون سمت راستِ همان صفحه، <b>Account ID</b> نوشته شده —
-            کپی‌اش کن و در کادر <b>اول</b> پایین بچسبان</li>
-        <li>حالا دکمه‌ی دومِ زیر را بزن تا صفحه‌ی توکن باز شود</li>
+        <li>دکمه‌ی ۱ را بزن و حساب رایگان بساز (فقط ایمیل و رمز)</li>
+        <li>وارد شدی؟ منوی سمت چپ ← زیر <b>Build</b> روی <b>AI</b> بزن ←
+            بعد <b>Workers AI</b></li>
+        <li><b>ساده‌ترین راه:</b> وقتی آن صفحه باز شد، <b>آدرسِ صفحه را از
+            نوار بالای مرورگر کپی کن</b> و همان را در کادر اول بچسبان —
+            شناسه داخلش هست و خودم بیرونش می‌کشم</li>
+        <li>یا اگر <b>Account ID</b> را جایی در صفحه دیدی، خودش را کپی کن</li>
+      </ol>
+
+      <p class="hint" style="margin:0 0 8px"><b style="color:var(--ink2)">کادر دوم —
+      توکن</b></p>
+      <ol>
+        <li>دکمه‌ی ۲ را بزن</li>
         <li><b>Create Token</b> ← در فهرست قالب‌ها دنبال <b>Workers AI</b> بگرد
             و <b>Use template</b> را بزن</li>
         <li>پایین صفحه <b>Continue to summary</b> ← بعد <b>Create Token</b></li>
-        <li>توکنی که نشان می‌دهد را کپی کن و در کادر <b>دوم</b> بچسبان —
-            <b>همان‌جا کپی کن، چون دیگر نشانش نمی‌دهد</b></li>
+        <li>توکن را کپی کن و در کادر دوم بچسبان —
+            <b>همان لحظه کپی کن، چون دیگر نشانش نمی‌دهد</b></li>
       </ol>
 
       <a class="lnk" href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">
@@ -207,7 +217,7 @@ textarea::placeholder{color:var(--dim)}
 
       <div class="keyrow">
         <input id="acct" type="text" autocomplete="off" spellcheck="false"
-               placeholder="Account ID — کادر اول" />
+               placeholder="شناسه یا آدرسِ صفحه‌ی Cloudflare — کادر اول" />
       </div>
       <div class="keyrow" style="margin-top:8px">
         <input id="key" type="password" autocomplete="off" spellcheck="false"
