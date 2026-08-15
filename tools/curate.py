@@ -35,6 +35,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 
@@ -71,13 +72,14 @@ TOOLSETS = [
 class ApiError(Exception):
     """خطای گوگل با حرفِ خودِ گوگل، نه فقط با کدش."""
 
-    def __init__(self, code, msg):
+    def __init__(self, code, msg, wait=0):
         Exception.__init__(self, 'HTTP %s — %s' % (code, msg))
         self.code = code
         self.msg = msg
+        self.wait = wait
 
 
-def http(url, payload=None):
+def once(url, payload=None):
     req = urllib.request.Request(url)
     if payload is not None:
         req.data = json.dumps(payload).encode()
@@ -88,11 +90,35 @@ def http(url, payload=None):
         # همین چند خط بود که جا افتاده بود. یک ۴۰۴ خالی هیچ نمی‌گوید؛ متنِ
         # پاسخ دقیقاً می‌گوید مدل نیست، نسخه فرق دارد، یا ابزار پشتیبانی
         # نمی‌شود — و بدون آن آدم فقط اسم مدل حدس می‌زند.
+        err = {}
         try:
-            msg = json.loads(e.read()).get('error', {}).get('message', '')
+            err = json.loads(e.read()).get('error', {})
         except Exception:
-            msg = ''
-        raise ApiError(e.code, (msg or 'بدون توضیح').strip()[:300])
+            pass
+        wait = 0
+        for d in err.get('details', []):
+            m = re.match(r'(\d+)s$', str(d.get('retryDelay', '')))
+            if m:
+                wait = min(int(m.group(1)), 30)
+        raise ApiError(e.code,
+                       (err.get('message') or 'بدون توضیح').strip()[:300],
+                       wait)
+
+
+# ۴۲۹ یعنی «الان نه»، نه «هرگز». ۵۰۳ هم خودش می‌گوید موقتی است. اگر این دو
+# را مثل بقیه‌ی خطاها شکستِ نهایی حساب کنیم، سراغ مدل بعدی می‌رویم و در
+# عمل مدلی را کنار می‌گذاریم که هیچ ایرادی نداشت.
+AGAIN = (429, 503)
+
+
+def http(url, payload=None, tries=3):
+    for n in range(tries):
+        try:
+            return once(url, payload)
+        except ApiError as e:
+            if e.code not in AGAIN or n == tries - 1:
+                raise
+            time.sleep(e.wait or 5 * (n + 1))
 
 
 def catalog(key, version):
@@ -108,40 +134,62 @@ def ordered(have):
     return out
 
 
+def verdict(tried):
+    """یک جمله‌ی فارسی به‌جای بیست خط خطای تکراری."""
+    codes = {}
+    for _, _, e in tried:
+        codes[e.code] = codes.get(e.code, 0) + 1
+
+    lines = ['هیچ مدلی جواب نداد.', '']
+    for m, e in sorted({m: e for m, _, e in tried}.items()):
+        lines.append('  %-26s %s' % (m, e))
+    lines.append('')
+
+    if codes.get(429):
+        lines.append('سهمیه‌ی کلید تمام شده (خطای ۴۲۹). این ایرادِ کد نیست.')
+        lines.append('یا چند ساعت بعد دوباره اجرا کن، یا در Google AI Studio')
+        lines.append('برای همین پروژه صورت‌حساب را فعال کن.')
+    elif codes.get(404):
+        lines.append('گوگل این مدل‌ها را روی کلیدهای تازه بسته است. یعنی در')
+        lines.append('فهرست هستند ولی صدا زدنشان ۴۰۴ می‌دهد — پس PREFER در')
+        lines.append('tools/curate.py باید با نسل تازه‌تر به‌روز شود.')
+    return '\n'.join(lines)
+
+
 def probe(key):
     """با یک پیام دو حرفی بفهم کدام ترکیب جواب می‌دهد، بعد سراغ درس‌ها برو.
 
     قبلاً هر درس هر سه حالت را امتحان می‌کرد، پس یک اشکالِ واحد ۳۹ بار
-    تکرار می‌شد و لاگ پر از یک خطای یکسان بود. حالا یک بار امتحان می‌شود
-    و اگر هیچ‌کدام نگرفت، همه‌ی چیزی که سرور گفته چاپ می‌شود.
+    تکرار می‌شد و لاگ پر از یک خطای یکسان بود.
     """
     tried = []
     for version in VERSIONS:
         try:
             have = catalog(key, version)
         except ApiError as e:
-            tried.append('%s / فهرست مدل‌ها → %s' % (version, e))
+            tried.append((version + '/فهرست', None, e))
             continue
         if not have:
-            tried.append('%s → هیچ مدلی generateContent ندارد' % version)
             continue
         print('%s: %s' % (version, '، '.join(have[:10])))
-        for model in ordered(have)[:4]:
+        for model in ordered(have)[:5]:
             for label, tools in TOOLSETS:
                 body = {'contents': [{'parts': [{'text': 'ping'}]}]}
                 if tools:
                     body['tools'] = tools
                 try:
                     http('%s/%s/models/%s:generateContent?key=%s'
-                         % (BASE, version, model, key), body)
+                         % (BASE, version, model, key), body, tries=2)
                 except ApiError as e:
-                    tried.append('%s / %s / %s → %s'
-                                 % (version, model, label, e))
+                    tried.append(('%s/%s' % (version, model), label, e))
+                    # ابزارِ دیگر روی مدلی که اصلاً وجود ندارد همان جواب را
+                    # می‌دهد؛ سه بار پرسیدنش فقط لاگ را سه برابر می‌کند.
+                    if e.code in (404, 429):
+                        break
                     continue
                 return dict(version=version, model=model,
                             tools=tools, label=label)
-    raise RuntimeError('هیچ ترکیبی جواب نداد. سرور این‌ها را گفت:\n  '
-                       + '\n  '.join(tried))
+    raise RuntimeError(verdict(tried))
 
 
 def ask(key, combo, prompt):
