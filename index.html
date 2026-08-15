@@ -441,12 +441,15 @@ html[lang="fa"] .hindex__lead span{ font-size:21px; }
   /* Two and two. Four entries across a phone would be four slivers with a
      broken word in each; two rows of two give every label its own line
      and keep the grid square. */
-  /* A lead is worth a full row here — at 50% its label wraps and stops
-     looking like the largest thing in the list, which is the only job it
-     has. The three archives still fit one row between them. */
-  .hindex__lead{ flex:0 0 100% !important; padding:14px 10px 13px; }
-  .hindex__lead span{ font-size:17px; }
-  html[lang="fa"] .hindex__lead span{ font-size:18.5px; }
+  /* A full row each was the earlier answer, on the theory that a 50% lead
+     wraps its label. It does not at this padding — measured, both fit on
+     one line down to 320px. What a full row each did produce was three
+     stacked bands of wildly different weight: two shouting rows, then a
+     strip of three small ones. Two over three is the same hierarchy in a
+     shape that reads as one block. */
+  .hindex__lead{ flex:0 0 50% !important; padding:14px 10px 13px; }
+  .hindex__lead span{ font-size:16px; }
+  html[lang="fa"] .hindex__lead span{ font-size:17px; }
   .hindex a:not(.hindex__lead){ flex:1 1 33.333%; padding:11px 6px 10px; }
   .hindex a span{ font-size:13px; }
   html[lang="fa"] .hindex a span{ font-size:13.5px; }
