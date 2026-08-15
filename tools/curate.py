@@ -141,6 +141,18 @@ def ordered(have):
     return out
 
 
+class NoModel(RuntimeError):
+    """هیچ مدلی جواب نداد — و اینکه «چرا» فرق می‌کند.
+
+    اگر دلیلش سهمیه باشد، ابزار سالم است و فقط باید بعداً دوباره زد. آن را
+    مثل خرابی قرمز کردن، آدم را دنبال اشکالی می‌فرستد که وجود ندارد.
+    """
+
+    def __init__(self, text, quota):
+        RuntimeError.__init__(self, text)
+        self.quota = quota
+
+
 def verdict(tried):
     """یک جمله‌ی فارسی به‌جای بیست خط خطای تکراری."""
     codes = {}
@@ -196,7 +208,8 @@ def probe(key):
                     continue
                 return dict(version=version, model=model,
                             tools=tools, label=label)
-    raise RuntimeError(verdict(tried))
+    raise NoModel(verdict(tried),
+                  quota=any(e.code == 429 for _, _, e in tried))
 
 
 def ask(key, combo, prompt):
@@ -325,6 +338,15 @@ def main():
 
     try:
         combo = probe(key)
+    except NoModel as e:
+        print(e)
+        if e.quota:
+            # سبز با هشدار، نه قرمز: کد کاری نکرده که خراب باشد. متن بالا
+            # صریح می‌گوید هیچ منبعی اضافه نشد، پس با موفقیت اشتباه نمی‌شود.
+            print('::warning::سهمیه‌ی جمینای تمام است. هیچ منبعی اضافه نشد — '
+                  'بعداً دوباره اجرا کن.')
+            return 0
+        return 1
     except Exception as e:
         print(e)
         return 1
