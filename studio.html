@@ -146,7 +146,7 @@ textarea::placeholder{color:var(--dim)}
      نه دکمه‌ی refreshِ سخت دارد و نه به کاربر اجازه می‌دهد کش را پاک
      کند. بدون این، هر اصلاحی ساعت‌ها پشت فایلِ کهنه گیر می‌کند. با
      هر تغییرِ nvx-studio.js این عدد را عوض کن. -->
-<script src="nvx-studio.js?v=202608152236" defer></script>
+<script src="nvx-studio.js?v=202608152244" defer></script>
 </head>
 <body>
 
@@ -179,32 +179,47 @@ textarea::placeholder{color:var(--dim)}
   <div id="out"></div>
 
   <details class="key" id="keybox">
-    <summary id="keysum">کلید رایگان خودت را بگذار — نامحدود می‌شود</summary>
+    <summary id="keysum">کیفیت بهتر می‌خواهی؟ FLUX را روشن کن — رایگان</summary>
     <div class="key__in">
-      <p class="hint" style="margin:0 0 14px">دو دقیقه وقت می‌برد و یک بار برای همیشه است.
-      بعدش دیگر سقف روزانه نداری، چون روی سهمیه‌ی خودت کار می‌کند.</p>
+      <p class="hint" style="margin:0 0 6px"><b style="color:var(--ink)">FLUX.1 schnell</b>
+      بهترین مدلِ تصویری است که رایگان در دسترس است — فاصله‌اش با موتور پیش‌فرض
+      زیاد است. روی Cloudflare اجرا می‌شود.</p>
+      <p class="hint" style="margin:0 0 16px">پنج دقیقه وقت می‌برد، یک بار برای همیشه.
+      <b style="color:var(--ink2)">کارت بانکی نمی‌خواهد.</b></p>
 
       <ol>
-        <li>دکمه‌ی زیر را بزن — صفحه‌ی گوگل باز می‌شود</li>
-        <li>با <b>همان جیمیلی که همیشه استفاده می‌کنی</b> وارد شو</li>
-        <li>روی <b>Create API key</b> بزن</li>
-        <li>اگر پرسید کدام پروژه، <b>Create API key in new project</b> را بزن</li>
-        <li>کلیدِ ساخته‌شده را <b>کپی</b> کن و پایین همین‌جا بچسبان</li>
+        <li>در <b>Cloudflare</b> حساب رایگان بساز (فقط ایمیل و رمز)</li>
+        <li>وارد شدی؟ از منوی راست <b>Workers &amp; Pages</b> را بزن</li>
+        <li>در ستون سمت راستِ همان صفحه، <b>Account ID</b> نوشته شده —
+            کپی‌اش کن و در کادر <b>اول</b> پایین بچسبان</li>
+        <li>حالا دکمه‌ی دومِ زیر را بزن تا صفحه‌ی توکن باز شود</li>
+        <li><b>Create Token</b> ← در فهرست قالب‌ها دنبال <b>Workers AI</b> بگرد
+            و <b>Use template</b> را بزن</li>
+        <li>پایین صفحه <b>Continue to summary</b> ← بعد <b>Create Token</b></li>
+        <li>توکنی که نشان می‌دهد را کپی کن و در کادر <b>دوم</b> بچسبان —
+            <b>همان‌جا کپی کن، چون دیگر نشانش نمی‌دهد</b></li>
       </ol>
 
-      <a class="lnk" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">
-        باز کردن صفحه‌ی کلید گوگل ←</a>
+      <a class="lnk" href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">
+        ۱ — ساختن حساب / ورود ←</a>
+      <a class="lnk" href="https://dash.cloudflare.com/profile/api-tokens" target="_blank" rel="noopener">
+        ۲ — صفحه‌ی ساخت توکن ←</a>
 
       <div class="keyrow">
+        <input id="acct" type="text" autocomplete="off" spellcheck="false"
+               placeholder="Account ID — کادر اول" />
+      </div>
+      <div class="keyrow" style="margin-top:8px">
         <input id="key" type="password" autocomplete="off" spellcheck="false"
-               placeholder="AIza… را اینجا بچسبان" />
+               placeholder="API Token — کادر دوم" />
         <button class="keygo" id="keygo" type="button">ثبت</button>
       </div>
       <p class="keymsg" id="keymsg"></p>
 
-      <p class="safe"><b>کلیدت پیش خودت می‌ماند.</b> جایی ذخیره نمی‌شود جز همین مرورگر،
-      و به سرور نویدیکس فرستاده نمی‌شود — ما اصلاً سروری نداریم که بفرستد. مرورگرت
-      مستقیم با گوگل حرف می‌زند. هر وقت خواستی، پاکش کن.</p>
+      <p class="safe"><b>هر دو پیش خودت می‌مانند.</b> جایی ذخیره نمی‌شوند جز همین
+      مرورگر، و به نویدیکس فرستاده نمی‌شوند — ما اصلاً سروری نداریم که بفرستد.
+      مرورگرت مستقیم با Cloudflare حرف می‌زند. هر وقت خواستی کادرها را خالی کن
+      و ثبت بزن تا پاک شوند.</p>
     </div>
   </details>
 

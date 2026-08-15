@@ -33,7 +33,7 @@
 
   var KEY   = 'nvx-studio-key';
   var DAY   = 'nvx-studio-day';
-  var NOIMG = 'nvx-studio-noimg';
+  var ACCT  = 'nvx-studio-acct';
   var FREE  = 3;                      // سقف روزانه‌ی موتور بی‌کلید
 
   var $ = function (id) { return document.getElementById(id); };
@@ -64,19 +64,12 @@
     catch (e) {}
   }
 
-  // وقتی گوگل گفت limit: 0، دیگر پرسیدن ندارد. بدون این، هر بار یک رفت و
-  // برگشتِ بی‌فایده می‌رود و کاربر یک خطای تکراری می‌بیند برای چیزی که از
-  // قبل جوابش معلوم است.
-  function noImg() {
-    try { return localStorage.getItem(NOIMG) === '1'; } catch (e) { return false; }
-  }
-
-  function markNoImg() {
-    try { localStorage.setItem(NOIMG, '1'); } catch (e) {}
-  }
-
   function myKey() {
     try { return (localStorage.getItem(KEY) || '').trim(); } catch (e) { return ''; }
+  }
+
+  function myAcct() {
+    try { return (localStorage.getItem(ACCT) || '').trim(); } catch (e) { return ''; }
   }
 
   function fa(n) {
@@ -227,128 +220,46 @@
       + '&seed=' + seed + '&nologo=true&referrer=navidixstudio.com';
   }
 
-  /* ------------------------------------------------------ موتور با کلید
+  /* --------------------------------------------- موتور خوب: FLUX روی Cloudflare
 
-     نام مدل حدس زده نمی‌شود. امروز دو بار همین حدس ۴۰۴ گرفت، چون اینکه
-     کدام مدل روی یک کلید مشخص باز است چیزی نیست که بشود از حافظه دانست.
-     از خودِ API پرسیده می‌شود و اولین مدلی که هم تصویر بدهد و هم جواب
-     بدهد برداشته می‌شود. */
+     گوگل از این صفحه برداشته شد. دلیلش سلیقه نبود: کلیدِ رایگانِ گوگل برای
+     تصویر «limit: 0» می‌دهد — یعنی نه سهمیه‌ای مانده، بلکه اصلاً سهمیه‌ای
+     وجود ندارد. ماندنش فقط یک دکمه بود که همیشه خطا می‌داد.
 
-  var GB = 'https://generativelanguage.googleapis.com/v1beta';
-  var cachedImage = null;
-  var cachedText  = null;
+     جایش FLUX.1 [schnell] است روی Workers AI؛ سهمیه‌ی رایگانِ روزانه‌ی واقعی
+     دارد و کارت بانکی نمی‌خواهد. دو چیز لازم دارد نه یکی — شناسه‌ی حساب و
+     توکن — که یک قدم بیشتر است، و همان یک قدم فرقِ «عکسِ عمومیِ هوش مصنوعی»
+     با چیزی است که بشود زیرش اسم گذاشت.
 
-  function gerr(r) {
-    return r.json().then(function (j) {
-      var m = (j.error && j.error.message) || '';
-      throw new Error(m || ('HTTP ' + r.status));
-    }, function () { throw new Error('HTTP ' + r.status); });
-  }
+     CORS این سرویس را از اینجا نتوانستم امتحان کنم؛ پراکسیِ محیطِ من فقط چند
+     دامنه‌ی گوگل را باز می‌گذارد. پس اگر مرورگر جلویش را بگیرد، صفحه ساکت
+     نمی‌ماند: پیامش را می‌گوید و کار را با موتور پیش‌فرض تمام می‌کند. */
 
-  function pickModel(key, want, cache, err) {
-    if (cache()) return Promise.resolve(cache());
-    return fetch(GB + '/models?pageSize=200&key=' + encodeURIComponent(key))
-      .then(function (r) { return r.ok ? r.json() : gerr(r); })
-      .then(function (d) {
-        var names = (d.models || [])
-          .filter(function (m) {
-            return (m.supportedGenerationMethods || []).indexOf('generateContent') >= 0;
-          })
-          .map(function (m) { return m.name.split('/').pop(); })
-          .filter(want);
-        if (!names.length) throw new Error(err);
-        return cache(names[0]);
-      });
-  }
+  var CF    = 'https://api.cloudflare.com/client/v4/accounts/';
+  var MODEL = '@cf/black-forest-labs/flux-1-schnell';
 
-  // یک مدل کافی نیست. گوگل چند مدل تصویری فهرست می‌کند و بعضی‌شان روی
-  // حسابِ رایگان «limit: 0» دارند — یعنی نه اینکه سهمیه تمام شده، از اول
-  // صفر بوده. پس همه‌شان به‌ترتیب امتحان می‌شوند.
-  function imageModels(key) {
-    if (cachedImage) return Promise.resolve(cachedImage);
-    return fetch(GB + '/models?pageSize=200&key=' + encodeURIComponent(key))
-      .then(function (r) { return r.ok ? r.json() : gerr(r); })
-      .then(function (d) {
-        cachedImage = (d.models || [])
-          .filter(function (m) {
-            return (m.supportedGenerationMethods || []).indexOf('generateContent') >= 0;
-          })
-          .map(function (m) { return m.name.split('/').pop(); })
-          .filter(function (n) { return /image/.test(n) && !/embed/.test(n); });
-        if (!cachedImage.length) throw new Error('روی این کلید هیچ مدلِ تصویری نیست.');
-        return cachedImage;
-      });
-  }
-
-  function textModel(key) {
-    return pickModel(key,
-      function (n) { return !/image|tts|embed|video/.test(n); },
-      function (v) { if (v !== undefined) cachedText = v; return cachedText; },
-      'روی این کلید هیچ مدلِ متنی باز نیست.');
-  }
-
-  // ترجمه با کلیدِ خودِ کاربر: رسمی است، و همان مسیری است که برای تصویر هم
-  // بررسی شد. سرویسِ رایگانِ ترجمه فقط وقتی می‌ماند که کلیدی در کار نباشد.
-  function geminiTranslate(key, text) {
-    return textModel(key).then(function (m) {
-      return fetch(GB + '/models/' + m + ':generateContent?key=' + encodeURIComponent(key), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text:
-            'Translate this image prompt into natural English. Reply with the ' +
-            'translation only — no quotes, no explanation.\n\n' + text }] }],
-          generationConfig: { temperature: 0 }
-        })
-      }).then(function (r) { return r.ok ? r.json() : gerr(r); })
-        .then(function (j) {
-          var parts = (((j.candidates || [])[0] || {}).content || {}).parts || [];
-          var out = parts.map(function (x) { return x.text || ''; }).join('').trim();
-          if (!out) throw new Error('ترجمه خالی برگشت');
-          return out;
-        });
-    });
-  }
-
-  // حالتِ خروجی بین نسل‌ها فرق می‌کند و از بیرون معلوم نیست کدام را قبول
-  // می‌کند؛ هر دو امتحان می‌شود و متنِ خطای گوگل عیناً بالا می‌آید.
-  var SHAPES = [
-    { responseModalities: ['IMAGE'] },
-    { responseModalities: ['IMAGE', 'TEXT'] },
-    null
-  ];
-
-  function gemini(key, prompt) {
-    return imageModels(key).then(function (models) {
-      var pairs = [], last = null;
-      models.forEach(function (m) {
-        SHAPES.forEach(function (c) { pairs.push([m, c]); });
-      });
-      var i = 0;
-      function attempt() {
-        if (i >= pairs.length) throw last || new Error('پاسخی نگرفت');
-        var model = pairs[i][0], cfg = pairs[i][1];
-        i++;
-        var body = { contents: [{ parts: [{ text: prompt }] }] };
-        if (cfg) body.generationConfig = cfg;
-        return fetch(GB + '/models/' + model + ':generateContent?key=' + encodeURIComponent(key), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        }).then(function (r) { return r.ok ? r.json() : gerr(r); })
-          .then(function (j) {
-            var parts = (((j.candidates || [])[0] || {}).content || {}).parts || [];
-            for (var k = 0; k < parts.length; k++) {
-              if (parts[k].inlineData && parts[k].inlineData.data) {
-                return 'data:' + (parts[k].inlineData.mimeType || 'image/png')
-                  + ';base64,' + parts[k].inlineData.data;
-              }
-            }
-            throw new Error('مدل جواب داد ولی تصویری نفرستاد.');
-          })
-          .catch(function (e) { last = e; return attempt(); });
-      }
-      return attempt();
+  function flux(acct, token, prompt) {
+    // steps بالاتر از ۸ را این مدل نمی‌پذیرد؛ ۴ همان جایی است که schnell
+    // برایش ساخته شده — سریع و بدون افتِ محسوس.
+    return fetch(CF + encodeURIComponent(acct) + '/ai/run/' + MODEL, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ prompt: prompt, steps: 4 })
+    }).then(function (r) {
+      return r.json().then(function (j) {
+        if (!r.ok || j.success === false) {
+          var e = (j.errors && j.errors[0] && j.errors[0].message) || ('HTTP ' + r.status);
+          throw new Error(e);
+        }
+        return j;
+      }, function () { throw new Error('HTTP ' + r.status); });
+    }).then(function (j) {
+      var img = j.result && (j.result.image || j.result.b64_json);
+      if (!img) throw new Error('پاسخ آمد ولی تصویری در آن نبود.');
+      return 'data:image/jpeg;base64,' + img;
     });
   }
 
@@ -357,16 +268,14 @@
   var shots = [];
 
   function quota() {
-    var k = myKey();
-    if (k) {
-      $('quota').innerHTML = noImg()
-        ? 'کلیدت برای <b>ترجمه</b> — تصویر با موتور رایگان، بی‌سقف'
-        : 'کلید خودت فعال است — <b>بی‌سقف</b>';
-      $('keysum').textContent = 'کلیدت فعال است — برای تغییر یا پاک‌کردن بزن';
+    var on = myKey() && myAcct();
+    if (on) {
+      $('quota').innerHTML = '<b>FLUX schnell</b> روشن است — بی‌سقف';
+      $('keysum').textContent = 'FLUX روشن است — برای تغییر یا پاک‌کردن بزن';
     } else {
       var left = Math.max(0, FREE - used());
       $('quota').innerHTML = 'امروز <b>' + fa(left) + '</b> تا از ' + fa(FREE) + ' مانده';
-      $('keysum').textContent = 'کلید رایگان خودت را بگذار — نامحدود می‌شود';
+      $('keysum').textContent = 'کیفیت بهتر می‌خواهی؟ FLUX را روشن کن — رایگان';
     }
   }
 
@@ -446,7 +355,7 @@
     var text = $('p').value.trim();
     if (!text) { $('p').focus(); return; }
 
-    var key = myKey();
+    var key = myKey(), acct = myAcct();
     if (!key && used() >= FREE) {
       fail('سهمیه‌ی امروزت تمام شد.',
            null);
@@ -475,14 +384,7 @@
 
     function done() { $('go').disabled = false; w.remove(); }
 
-    var subject;
-    if (!needsTranslating(text)) {
-      subject = Promise.resolve(text);
-    } else if (key) {
-      subject = geminiTranslate(key, text).catch(function () { return translate(text); });
-    } else {
-      subject = translate(text);
-    }
+    var subject = needsTranslating(text) ? translate(text) : Promise.resolve(text);
 
     subject.then(function (en) {
       plan.prompt = plan.build(en);
@@ -491,23 +393,17 @@
       // منتظر یک تصویرِ غلط بماند و نداند چرا غلط است.
       line.textContent = plan.prompt;
 
-      if (key && !noImg()) {
-        return gemini(key, plan.prompt).then(function (src) {
-          done(); show(src, plan, 'کلید خودت');
+      if (key && acct) {
+        return flux(acct, key, plan.prompt).then(function (src) {
+          done(); show(src, plan, 'FLUX schnell');
         }, function (e) {
           // «limit: 0» یعنی سهمیه تمام نشده — از اول صفر بوده. مدل‌های
           // تصویرِ گوگل روی حساب رایگان باز نیستند. نشان‌دادنِ یک دیوار
           // انگلیسی و دست خالی، بدترین کارِ ممکن است؛ تصویر را با موتور
           // رایگان می‌سازیم و در یک جمله می‌گوییم چرا.
-          if (/limit: 0/.test(e.message)) {
-            markNoImg();
-            quota();          // نوار بالا باید همان لحظه راستش را بگوید
-            soft('مدل تصویرِ گوگل روی حسابِ رایگان سهمیه ندارد (limit: 0) — ' +
-                 'ساختِ تصویر در پلن رایگان گوگل نیست. از این به بعد یک‌راست ' +
-                 'با موتور رایگان ساخته می‌شود و کلیدت برای ترجمه به کار می‌رود.');
-          } else {
-            soft('گوگل تصویر نداد (' + e.message.slice(0, 90) + ') — با موتور رایگان ساخته شد.');
-          }
+          soft('FLUX جواب نداد: ' + e.message.slice(0, 120) +
+               ' — این یکی با موتور پیش‌فرض ساخته شد. اگر پیام از دسترسی می‌گوید، ' +
+               'شناسه‌ی حساب یا توکن را دوباره چک کن.');
           return freeShot(plan, done);
         });
       }
@@ -550,32 +446,43 @@
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') make();
   });
 
-  var box = $('key');
-  box.value = myKey();
+  var box  = $('key');
+  var abox = $('acct');
+  box.value  = myKey();
+  abox.value = myAcct();
 
   function saveKey() {
-    var v = box.value.trim();
+    var v = box.value.trim(), a = abox.value.trim();
     var msg = $('keymsg');
-    try { v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); } catch (e) {}
-    cachedImage = null;
-    cachedText = null;
-    try { localStorage.removeItem(NOIMG); } catch (e) {}   // کلید تازه، فرضِ تازه
+    try {
+      v ? localStorage.setItem(KEY, v)   : localStorage.removeItem(KEY);
+      a ? localStorage.setItem(ACCT, a)  : localStorage.removeItem(ACCT);
+    } catch (e) {}
     quota();
-    if (v) {
+
+    // نصفه‌کاره ثبت‌کردن رایج‌ترین حالت است — یکی را می‌چسبانند و آن یکی را
+    // یادشان می‌رود. سکوت اینجا یعنی کاربر فکر می‌کند کار تمام است.
+    if (v && a) {
       msg.className = 'keymsg ok';
-      msg.textContent = 'ثبت شد. سقف روزانه برداشته شد — حالا بالا برو و بساز.';
-      // پیامِ «سهمیه‌ات تمام شد» دیگر راست نیست؛ ماندنش فقط گیج می‌کند.
+      msg.textContent = 'ثبت شد. FLUX روشن است — برو بالا و بساز.';
       $('out').innerHTML = '';
-    } else {
+    } else if (!v && !a) {
       msg.className = 'keymsg';
-      msg.textContent = 'کلید پاک شد. دوباره سقف روزانه داری.';
+      msg.textContent = 'هر دو پاک شدند. دوباره با موتور پیش‌فرض کار می‌کند.';
+    } else {
+      msg.className = 'keymsg no';
+      msg.textContent = v
+        ? 'توکن هست ولی Account ID خالی است — کادر اول را هم پر کن.'
+        : 'Account ID هست ولی توکن خالی است — کادر دوم را هم پر کن.';
     }
   }
 
   $('keygo').addEventListener('click', saveKey);
-  box.addEventListener('change', saveKey);
-  box.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); saveKey(); }
+  [box, abox].forEach(function (el) {
+    el.addEventListener('change', saveKey);
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); saveKey(); }
+    });
   });
 
   quota();
