@@ -1,0 +1,388 @@
+/* nvx-studio.js — استودیو تصویر نویدیکس
+   =====================================================================
+
+   این فایل مدل نمی‌سازد و مدل هم ندارد. کاری که می‌کند دو چیز است، و
+   هر دو همان چیزی است که آدمِ بلد موقع کار با این ابزارها انجام می‌دهد:
+
+     ۱. پرامپت را کامل می‌کند. «مرد کنار پنجره‌ی بارانی» یک سوژه است، نه
+        یک قاب. نور، لنز، فاصله‌ی نما و حسِ رنگ باید گفته شود وگرنه مدل
+        خودش یک چیزی برمی‌دارد. این‌ها همان‌هایی است که در درس‌های «نور و
+        ترکیب‌بندی» و «زبان دوربین» گفته شده.
+
+     ۲. مدل را انتخاب می‌کند. مدلی که چهره‌ی واقع‌گرا خوب می‌دهد، همان مدلی
+        نیست که متن روی پوستر را درست می‌نویسد.
+
+   اسمش را «مدلِ آموزش‌دیده‌ی نویدیکس» نمی‌گذاریم، چون نیست و دروغ است.
+   انتخاب و تنظیم است — و همان چیزی است که ارزش دارد.
+
+
+   دو موتور، و چرا
+   ---------------
+   موتور رایگان کلید نمی‌خواهد و از سهمیه‌ی هیچ‌کس خرج نمی‌کند، پس هر
+   بازدیدکننده‌ای می‌تواند بی‌هیچ کاری امتحانش کند. سقف روزانه دارد، نه
+   برای اینکه چیزی گران است، بلکه چون سرویسِ رایگانِ مشترکی است و کوبیدنش
+   بی‌ادبی است.
+
+   موتور دوم با کلیدِ خودِ کاربر کار می‌کند. کلید در همین مرورگر می‌ماند و
+   هیچ‌جا فرستاده نمی‌شود — سایت اصلاً سروری ندارد که بفرستد. مرورگر
+   مستقیم با گوگل حرف می‌زند؛ بررسی شد که گوگل تماس از مرورگر را قبول
+   می‌کند (Access-Control-Allow-Origin برای همین دامنه برمی‌گردد).
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  var KEY   = 'nvx-studio-key';
+  var DAY   = 'nvx-studio-day';
+  var FREE  = 3;                      // سقف روزانه‌ی موتور بی‌کلید
+
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$('p')) return;
+
+  /* ---------------------------------------------------------------- ابزار */
+
+  function today() {
+    // مرزِ روز به وقت تهران، مثل بقیه‌ی سایت — وگرنه ساعت ۳ بامداد
+    // سهمیه‌ی «فردا» باز می‌شود و برای خواننده بی‌معنی است.
+    try {
+      return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' })
+        .format(new Date());
+    } catch (e) {
+      return new Date().toISOString().slice(0, 10);
+    }
+  }
+
+  function used() {
+    try {
+      var d = JSON.parse(localStorage.getItem(DAY) || '{}');
+      return d.d === today() ? (d.n || 0) : 0;
+    } catch (e) { return 0; }
+  }
+
+  function bump() {
+    try { localStorage.setItem(DAY, JSON.stringify({ d: today(), n: used() + 1 })); }
+    catch (e) {}
+  }
+
+  function myKey() {
+    try { return (localStorage.getItem(KEY) || '').trim(); } catch (e) { return ''; }
+  }
+
+  function fa(n) {
+    return String(n).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; });
+  }
+
+  /* ------------------------------------------------------------ انتخابگر
+     قانون است، نه مدل. هر قاعده یک نشانه در پرامپت می‌گیرد و یک تصمیم
+     می‌دهد. فارسی و انگلیسی هر دو، چون آدم‌ها هر دو را می‌نویسند. */
+
+  // ترتیب مهم است و تصادفی نیست: اولین قاعده‌ای که بگیرد برنده است، پس
+  // نشانه‌های سبک باید جلوتر از نشانه‌های سوژه باشند. «انیمه دختری با چتر»
+  // هم انیمه است هم دختر؛ اگر «دختر» زودتر بگیرد، پرتره‌ی واقع‌گرا تحویل
+  // می‌دهد که غلط است. سوژه در هر پرامپتی هست، سبک فقط وقتی گفته می‌شود
+  // که طرف واقعاً همان را می‌خواهد.
+  var RULES = [
+    { id: 'text',
+      fa: 'متن یا لوگو',
+      hit: /لوگو|نوشت|متن|تایپوگراف|پوستر|جلد|بنر|logo|text|poster|typograph|banner/i,
+      craft: 'clean legible lettering, centred composition, high contrast, flat graphic design',
+      note: 'نوشته‌ی داخل تصویر کارِ سختی است؛ مدل‌ها معمولاً حروف را خراب می‌کنند. قاب ساده و پرکنتراست بیشترین شانس را می‌دهد.' },
+
+    { id: 'anime',
+      fa: 'تصویرسازی',
+      hit: /انیمه|کارتون|نقاشی|ایلاستر|کمیک|anime|cartoon|illustration|comic|drawing/i,
+      craft: 'clean line art, cel shading, flat colour blocking, expressive silhouette',
+      note: 'سبک تصویرسازی انتخاب شد: خط تمیز و رنگ‌گذاری تخت، نه بافتِ عکاسی.' },
+
+    { id: 'face',
+      fa: 'پرتره',
+      hit: /پرتره|چهره|صورت|مرد|زن|دختر|پسر|بازیگر|portrait|face|man|woman|person/i,
+      craft: 'soft key light from one side, 85mm lens, shallow depth of field, natural skin texture, catchlight in the eyes',
+      note: 'برای چهره، نورِ یک‌طرفه و لنز ۸۵ اضافه شد — همان چیزی که در «نور و ترکیب‌بندی» به آن می‌گوییم نورِ کلیدی.' },
+
+    { id: 'place',
+      fa: 'لوکیشن و فضا',
+      hit: /منظره|شهر|خیابان|جنگل|کوه|اتاق|فضا|لوکیشن|landscape|city|street|forest|room|interior/i,
+      craft: 'wide establishing shot, atmospheric depth, layered foreground and background, volumetric light',
+      note: 'نمای باز با لایه‌ی جلو و عقب — همان کاری که در «زبان دوربین» به آن نمای معرف می‌گوییم.' },
+
+    { id: 'product',
+      fa: 'محصول',
+      hit: /محصول|پکیج|بسته‌بندی|تبلیغ|product|packshot|advert/i,
+      craft: 'studio softbox lighting, seamless backdrop, crisp product focus, subtle reflection',
+      note: 'نور استودیویی و پس‌زمینه‌ی یکدست انتخاب شد تا خودِ محصول دیده شود.' }
+  ];
+
+  var DEFAULT = {
+    id: 'cinema',
+    fa: 'سینمایی',
+    craft: 'cinematic lighting, filmic colour grade, 35mm, shallow depth of field, deliberate composition',
+    note: 'قاعده‌ی خاصی در پرامپتت پیدا نشد، پس حالت سینمایی گرفت: نور، رنگ و عمقِ میدانِ فیلم.'
+  };
+
+  var MOOD = [
+    { hit: /غمگین|دلگیر|تنها|سرد|melanchol|sad|lonely/i, add: 'muted desaturated palette, cool shadows' },
+    { hit: /شاد|گرم|آفتاب|روشن|happy|warm|sunny|bright/i, add: 'warm golden light, gentle highlights' },
+    { hit: /ترسناک|تاریک|وحشت|horror|dark|scary/i,       add: 'low key lighting, heavy shadow, high contrast' },
+    { hit: /شب|بارانی|مه|night|rain|fog|neon/i,          add: 'wet reflective surfaces, atmospheric haze' }
+  ];
+
+  function route(text) {
+    var r = DEFAULT;
+    for (var i = 0; i < RULES.length; i++) {
+      if (RULES[i].hit.test(text)) { r = RULES[i]; break; }
+    }
+    var extra = [];
+    for (var j = 0; j < MOOD.length; j++) {
+      if (MOOD[j].hit.test(text)) extra.push(MOOD[j].add);
+    }
+    return {
+      kind: r.fa,
+      note: r.note,
+      prompt: [text, r.craft].concat(extra).join(', ')
+    };
+  }
+
+  /* -------------------------------------------------------------- نسبت‌ها */
+
+  var RATIOS = [
+    { fa: '۱:۱',  w: 1024, h: 1024 },
+    { fa: '۱۶:۹', w: 1280, h: 720 },
+    { fa: '۹:۱۶', w: 720,  h: 1280 },
+    { fa: '۴:۵',  w: 896,  h: 1120 }
+  ];
+  var ratio = RATIOS[1];
+
+  /* --------------------------------------------------------- موتور رایگان
+     یک تگ <img> است و نه بیشتر. کلید نمی‌خواهد، هیچ چیزی از کاربر بیرون
+     نمی‌فرستد جز خود پرامپت، و اگر سرویس بالا نباشد onerror می‌گیرد و
+     صریح می‌گوید — به‌جای اینکه صفحه بی‌صدا خالی بماند. */
+
+  function freeUrl(prompt, seed) {
+    return 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt)
+      + '?width=' + ratio.w + '&height=' + ratio.h
+      + '&seed=' + seed + '&nologo=true&referrer=navidixstudio.com';
+  }
+
+  /* ------------------------------------------------------ موتور با کلید
+
+     نام مدل حدس زده نمی‌شود. امروز دو بار همین حدس ۴۰۴ گرفت، چون اینکه
+     کدام مدل روی یک کلید مشخص باز است چیزی نیست که بشود از حافظه دانست.
+     از خودِ API پرسیده می‌شود و اولین مدلی که هم تصویر بدهد و هم جواب
+     بدهد برداشته می‌شود. */
+
+  var GB = 'https://generativelanguage.googleapis.com/v1beta';
+  var cachedModel = null;
+
+  function gerr(r) {
+    return r.json().then(function (j) {
+      var m = (j.error && j.error.message) || '';
+      throw new Error(m || ('HTTP ' + r.status));
+    }, function () { throw new Error('HTTP ' + r.status); });
+  }
+
+  function imageModel(key) {
+    if (cachedModel) return Promise.resolve(cachedModel);
+    return fetch(GB + '/models?pageSize=200&key=' + encodeURIComponent(key))
+      .then(function (r) { return r.ok ? r.json() : gerr(r); })
+      .then(function (d) {
+        var names = (d.models || [])
+          .filter(function (m) {
+            return (m.supportedGenerationMethods || []).indexOf('generateContent') >= 0;
+          })
+          .map(function (m) { return m.name.split('/').pop(); })
+          .filter(function (n) { return /image/.test(n) && !/embed/.test(n); });
+        if (!names.length) throw new Error('روی این کلید هیچ مدلِ تصویری باز نیست.');
+        cachedModel = names[0];
+        return cachedModel;
+      });
+  }
+
+  // حالتِ خروجی بین نسل‌ها فرق می‌کند و از بیرون معلوم نیست کدام را قبول
+  // می‌کند؛ هر دو امتحان می‌شود و متنِ خطای گوگل عیناً بالا می‌آید.
+  var SHAPES = [
+    { responseModalities: ['IMAGE'] },
+    { responseModalities: ['IMAGE', 'TEXT'] },
+    null
+  ];
+
+  function gemini(key, prompt) {
+    return imageModel(key).then(function (model) {
+      var i = 0, last = null;
+      function attempt() {
+        if (i >= SHAPES.length) throw last || new Error('پاسخی نگرفت');
+        var cfg = SHAPES[i++];
+        var body = { contents: [{ parts: [{ text: prompt }] }] };
+        if (cfg) body.generationConfig = cfg;
+        return fetch(GB + '/models/' + model + ':generateContent?key=' + encodeURIComponent(key), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        }).then(function (r) { return r.ok ? r.json() : gerr(r); })
+          .then(function (j) {
+            var parts = (((j.candidates || [])[0] || {}).content || {}).parts || [];
+            for (var k = 0; k < parts.length; k++) {
+              if (parts[k].inlineData && parts[k].inlineData.data) {
+                return 'data:' + (parts[k].inlineData.mimeType || 'image/png')
+                  + ';base64,' + parts[k].inlineData.data;
+              }
+            }
+            throw new Error('مدل جواب داد ولی تصویری نفرستاد.');
+          })
+          .catch(function (e) { last = e; return attempt(); });
+      }
+      return attempt();
+    });
+  }
+
+  /* ------------------------------------------------------------- نمایش */
+
+  var shots = [];
+
+  function quota() {
+    var k = myKey();
+    if (k) {
+      $('quota').innerHTML = 'کلید خودت فعال است — <b>بی‌سقف</b>';
+      $('keysum').textContent = 'کلیدت فعال است — برای تغییر یا پاک‌کردن بزن';
+    } else {
+      var left = Math.max(0, FREE - used());
+      $('quota').innerHTML = 'امروز <b>' + fa(left) + '</b> تا از ' + fa(FREE) + ' مانده';
+      $('keysum').textContent = 'کلید رایگان خودت را بگذار — نامحدود می‌شود';
+    }
+  }
+
+  function fail(title, detail) {
+    var d = document.createElement('div');
+    d.className = 'err';
+    var b = document.createElement('b'); b.textContent = title; d.appendChild(b);
+    if (detail) {
+      var c = document.createElement('code'); c.textContent = detail; d.appendChild(c);
+    }
+    $('out').insertBefore(d, $('out').firstChild);
+  }
+
+  function show(src, plan, engine) {
+    var card = document.createElement('div');
+    card.className = 'shot';
+
+    var img = document.createElement('img');
+    img.src = src; img.alt = plan.prompt; img.loading = 'lazy';
+    card.appendChild(img);
+
+    var b = document.createElement('div'); b.className = 'shot__b';
+    var p = document.createElement('p'); p.className = 'shot__p'; p.textContent = plan.prompt;
+    var m = document.createElement('p'); m.className = 'shot__m';
+    m.textContent = plan.kind + ' · ' + engine + ' — ';
+    var a = document.createElement('a');
+    a.href = src; a.download = 'navidix-' + Date.now() + '.png';
+    a.textContent = 'ذخیره'; a.target = '_blank'; a.rel = 'noopener';
+    m.appendChild(a);
+    b.appendChild(p); b.appendChild(m);
+    card.appendChild(b);
+
+    $('out').insertBefore(card, $('out').firstChild);
+
+    shots.unshift(src);
+    $('galhint').style.display = 'none';
+    var g = document.createElement('a');
+    g.href = src; g.target = '_blank'; g.rel = 'noopener';
+    var gi = document.createElement('img'); gi.src = src; gi.alt = ''; gi.loading = 'lazy';
+    g.appendChild(gi);
+    $('gal').insertBefore(g, $('gal').firstChild);
+  }
+
+  function waiting() {
+    var w = document.createElement('div');
+    w.className = 'shot';
+    w.innerHTML = '<div class="wait"><span class="spin"></span><span>در حال ساختن…</span></div>';
+    $('out').insertBefore(w, $('out').firstChild);
+    return w;
+  }
+
+  /* --------------------------------------------------------------- کار */
+
+  function make() {
+    var text = $('p').value.trim();
+    if (!text) { $('p').focus(); return; }
+
+    var key = myKey();
+    if (!key && used() >= FREE) {
+      fail('سهمیه‌ی امروزت تمام شد.',
+           null);
+      $('out').firstChild.appendChild(document.createTextNode(
+        'فردا دوباره باز می‌شود. یا اگر می‌خواهی همین حالا ادامه بدهی، ' +
+        'کلید رایگان خودت را بگذار — پایین همین صفحه، دو دقیقه.'));
+      $('keybox').open = true;
+      $('keybox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    var plan = route(text);
+    var why = $('why');
+    why.className = 'why on';
+    why.innerHTML = '';
+    var strong = document.createElement('b');
+    strong.textContent = 'انتخاب نویدیکس: ' + plan.kind + '. ';
+    why.appendChild(strong);
+    why.appendChild(document.createTextNode(plan.note));
+
+    $('go').disabled = true;
+    var w = waiting();
+
+    function done() { $('go').disabled = false; w.remove(); }
+
+    if (key) {
+      gemini(key, plan.prompt).then(function (src) {
+        done(); show(src, plan, 'کلید خودت');
+      }, function (e) {
+        done();
+        fail('گوگل این را برگرداند:', e.message);
+      });
+      return;
+    }
+
+    // موتور بی‌کلید: بارگذاری خودِ تصویر تنها آزمونِ درست است.
+    var url = freeUrl(plan.prompt, Math.floor(Math.random() * 1e9));
+    var probe = new Image();
+    probe.onload = function () {
+      done(); bump(); quota(); show(url, plan, 'موتور رایگان');
+    };
+    probe.onerror = function () {
+      done();
+      fail('موتور رایگان الان جواب نداد.',
+           'این سرویسِ عمومی و رایگان است و گاهی شلوغ می‌شود. چند لحظه بعد ' +
+           'دوباره بزن، یا کلید خودت را بگذار تا مستقیم از گوگل بگیرد.');
+    };
+    probe.src = url;
+  }
+
+  /* --------------------------------------------------------------- راه‌اندازی */
+
+  RATIOS.forEach(function (r, i) {
+    var b = document.createElement('button');
+    b.className = 'chip'; b.type = 'button'; b.textContent = r.fa;
+    b.setAttribute('aria-pressed', i === 1 ? 'true' : 'false');
+    b.addEventListener('click', function () {
+      ratio = r;
+      $('ratios').querySelectorAll('.chip').forEach(function (o) {
+        o.setAttribute('aria-pressed', String(o === b));
+      });
+    });
+    $('ratios').appendChild(b);
+  });
+
+  $('go').addEventListener('click', make);
+  $('p').addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') make();
+  });
+
+  var box = $('key');
+  box.value = myKey();
+  box.addEventListener('change', function () {
+    var v = box.value.trim();
+    try { v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); } catch (e) {}
+    cachedModel = null;
+    quota();
+  });
+
+  quota();
+})();

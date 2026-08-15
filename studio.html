@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>استودیو نویدیکس | ساخت تصویر با هوش مصنوعی</title>
+<meta name="description" content="استودیو تصویر Navidix: پرامپتت را با زبان سینما کامل می‌کند و مدل مناسب را خودش انتخاب می‌کند. رایگان، بدون ثبت‌نام، بدون آپلود." />
+<meta name="theme-color" content="#08090B" />
+<link rel="canonical" href="https://navidixstudio.com/studio.html" />
+<link rel="icon" href="/navidix-mark.png" />
+<style>
+@font-face{font-family:'Vazirmatn';src:url('/assets/vazirmatn-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+@font-face{font-family:'Inter';src:url('/assets/inter-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+
+:root{
+  --bg:#08090B; --pane:#161C26; --line:#252C36; --line2:#2E3542;
+  --ink:#EDF2FA; --ink2:#C8D0DA; --mute:#8C939B; --dim:#6B7280;
+  --mark:#4A90E2; --ember:#E5202A;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg); color:var(--ink); font-size:15px; line-height:1.9;
+  font-family:'Vazirmatn','IRANSans',Tahoma,sans-serif; -webkit-font-smoothing:antialiased}
+.lat{font-family:'Inter',ui-sans-serif,system-ui,sans-serif}
+
+.bar{border-bottom:1px solid var(--line); background:rgba(8,9,11,.9);
+  position:sticky; top:0; z-index:20; backdrop-filter:blur(8px)}
+.bar__row{max-width:860px; margin:0 auto; padding:13px 22px; display:flex; align-items:center; gap:14px}
+.bar__row a{color:var(--mute); text-decoration:none; font-size:13px}
+.bar__row a:hover{color:var(--ink)}
+.bar__home{display:flex; align-items:center; gap:9px; color:var(--ink)!important;
+  font-weight:700; letter-spacing:.16em; font-size:12.5px}
+.bar__sp{flex:1}
+
+.wrap{max-width:860px; margin:0 auto; padding:34px 22px 90px}
+.eyebrow{font-size:11.5px; letter-spacing:.2em; color:var(--dim); margin:0 0 10px}
+h1{font-size:clamp(24px,4vw,34px); font-weight:700; margin:0 0 6px; line-height:1.45}
+.sub{color:var(--mute); font-size:13.5px; margin:0 0 28px; line-height:2}
+h2{font-size:16.5px; font-weight:700; margin:40px 0 4px; line-height:1.6}
+h2 + .hint{margin:0 0 16px}
+.hint{color:var(--mute); font-size:12.5px; line-height:1.9}
+
+/* ---- the composer ---- */
+.box{background:var(--pane); border:1px solid var(--line2); border-radius:15px;
+  padding:18px 18px 16px; margin:0 0 14px}
+textarea{width:100%; min-height:96px; resize:vertical; background:#0E131B; color:var(--ink);
+  border:1px solid var(--line2); border-radius:11px; padding:13px 14px; font:inherit;
+  font-size:14.5px; line-height:2; outline:none}
+textarea:focus{border-color:rgba(150,196,255,.5)}
+textarea::placeholder{color:var(--dim)}
+
+.row{display:flex; flex-wrap:wrap; gap:8px; margin:13px 0 0; align-items:center}
+.chip{appearance:none; border:1px solid var(--line2); background:rgba(14,17,22,.6); color:var(--ink2);
+  border-radius:99px; padding:7px 14px; font:inherit; font-size:12.5px; cursor:pointer;
+  transition:border-color .2s,color .2s,background .2s}
+.chip:hover{border-color:rgba(150,196,255,.42); color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--mark); border-color:var(--mark); color:#08090B; font-weight:700}
+.row__sp{flex:1}
+
+.go{appearance:none; border:0; border-radius:11px; padding:13px 30px; background:var(--ember);
+  color:#fff; font:inherit; font-size:15px; font-weight:700; cursor:pointer; transition:opacity .2s}
+.go:disabled{opacity:.45; cursor:not-allowed}
+
+/* ---- what the router decided ----
+   Shown, not hidden. The whole claim of this page is that the choosing is
+   the part Navidix does; a reader who cannot see the choice has to take
+   that on faith. */
+.why{margin:12px 0 0; font-size:12.5px; color:var(--mute); line-height:1.95;
+  border-inline-start:2px solid var(--line2); padding-inline-start:11px}
+.why b{color:var(--ink2); font-weight:600}
+.why.on{border-inline-start-color:var(--mark)}
+
+/* ---- results ---- */
+.shot{border:1px solid var(--line2); border-radius:15px; overflow:hidden; background:#0B0D11;
+  margin:0 0 14px}
+.shot img{display:block; width:100%; height:auto}
+.shot__b{padding:13px 16px 14px; border-top:1px solid var(--line)}
+.shot__p{margin:0; font-size:13px; color:var(--ink2); line-height:1.95}
+.shot__m{margin:7px 0 0; font-size:11.5px; color:var(--dim); line-height:1.85}
+.shot__m a{color:var(--mark); text-decoration:none; font-weight:600}
+.wait{display:grid; place-items:center; min-height:190px; color:var(--mute); font-size:13px; gap:12px}
+.spin{width:26px; height:26px; border:2px solid var(--line2); border-top-color:var(--mark);
+  border-radius:50%; animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){ .spin{animation-duration:2.6s} }
+
+.err{border:1px solid rgba(229,32,42,.4); background:rgba(48,20,24,.4); border-radius:13px;
+  padding:15px 17px; margin:0 0 14px; font-size:13px; color:var(--ink2); line-height:2}
+.err b{display:block; color:var(--ink); margin-bottom:5px; font-size:13.5px}
+.err code{font-family:'Inter',ui-monospace,monospace; font-size:11.5px; color:var(--mute);
+  display:block; margin-top:7px; direction:ltr; text-align:left; word-break:break-word}
+
+/* ---- the key panel ---- */
+.key{border:1px solid var(--line2); border-radius:15px; background:rgba(14,17,22,.55);
+  padding:0; margin:0 0 14px; overflow:hidden}
+.key > summary{list-style:none; cursor:pointer; padding:15px 18px; font-size:13.5px;
+  font-weight:600; color:var(--ink2); display:flex; align-items:center; gap:9px}
+.key > summary::-webkit-details-marker{display:none}
+.key > summary::after{content:'▾'; color:var(--dim); margin-inline-start:auto; font-size:12px}
+.key[open] > summary::after{content:'▴'}
+.key > summary:hover{color:var(--ink)}
+.key__in{padding:0 18px 18px}
+.key ol{margin:0 0 15px; padding:0 19px 0 0; font-size:13px; color:var(--ink2); line-height:2.2}
+.key ol b{color:var(--ink)}
+.key .lnk{display:inline-block; background:var(--mark); color:#08090B; text-decoration:none;
+  border-radius:9px; padding:9px 18px; font-size:13px; font-weight:700; margin:0 0 15px}
+.key input{width:100%; background:#0E131B; color:var(--ink); border:1px solid var(--line2);
+  border-radius:10px; padding:11px 13px; font-family:'Inter',ui-monospace,monospace; font-size:12.5px;
+  direction:ltr; text-align:left; outline:none}
+.key input:focus{border-color:rgba(150,196,255,.5)}
+.safe{margin:12px 0 0; font-size:11.5px; color:var(--dim); line-height:1.95}
+.safe b{color:var(--ink2)}
+
+.quota{font-size:12px; color:var(--dim); margin:0; line-height:1.9}
+.quota b{color:var(--ink2); font-variant-numeric:tabular-nums}
+
+.gal{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px}
+.gal a{display:block; border:1px solid var(--line); border-radius:11px; overflow:hidden; background:#0B0D11}
+.gal img{display:block; width:100%; aspect-ratio:1; object-fit:cover}
+
+.foot{margin:52px 0 0; padding-top:20px; border-top:1px solid var(--line);
+  font-size:12px; color:var(--dim); line-height:2}
+.foot a{color:var(--mute)}
+</style>
+<script src="nvx-config.js" defer></script>
+<script src="nvx-auth.js" defer></script>
+<script src="nvx-studio.js" defer></script>
+</head>
+<body>
+
+<header class="bar"><div class="bar__row">
+  <a class="bar__home lat" href="/"><img src="/navidix-mark.png" alt="" width="22" height="22" /><span>NAVIDIX</span></a>
+  <span class="bar__sp"></span>
+  <a href="/journey.html">مسیر یادگیری ←</a>
+</div></header>
+
+<main class="wrap">
+  <p class="eyebrow lat">NAVIDIX · STUDIO</p>
+  <h1>استودیو نویدیکس</h1>
+  <p class="sub">پرامپتت را با زبان سینما کامل می‌کند و مدل مناسبِ همان کار را
+  انتخاب می‌کند. لازم نیست بدانی کدام مدل برای چه خوب است — همین انتخاب،
+  کارِ نویدیکس است.</p>
+
+  <div class="box">
+    <textarea id="p" rows="3" placeholder="چه تصویری می‌خواهی؟ ساده و فارسی بنویس — مثلاً: مرد میانسالی کنار پنجره‌ی بارانی، غمگین"></textarea>
+
+    <div class="row" id="ratios"></div>
+    <div class="row">
+      <button class="go" id="go" type="button">بساز</button>
+      <span class="row__sp"></span>
+      <p class="quota" id="quota"></p>
+    </div>
+
+    <p class="why" id="why"></p>
+  </div>
+
+  <div id="out"></div>
+
+  <details class="key" id="keybox">
+    <summary id="keysum">کلید رایگان خودت را بگذار — نامحدود می‌شود</summary>
+    <div class="key__in">
+      <p class="hint" style="margin:0 0 14px">دو دقیقه وقت می‌برد و یک بار برای همیشه است.
+      بعدش دیگر سقف روزانه نداری، چون روی سهمیه‌ی خودت کار می‌کند.</p>
+
+      <ol>
+        <li>دکمه‌ی زیر را بزن — صفحه‌ی گوگل باز می‌شود</li>
+        <li>با <b>همان جیمیلی که همیشه استفاده می‌کنی</b> وارد شو</li>
+        <li>روی <b>Create API key</b> بزن</li>
+        <li>اگر پرسید کدام پروژه، <b>Create API key in new project</b> را بزن</li>
+        <li>کلیدِ ساخته‌شده را <b>کپی</b> کن و پایین همین‌جا بچسبان</li>
+      </ol>
+
+      <a class="lnk" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">
+        باز کردن صفحه‌ی کلید گوگل ←</a>
+
+      <input id="key" type="password" autocomplete="off" spellcheck="false"
+             placeholder="AIza… را اینجا بچسبان" />
+
+      <p class="safe"><b>کلیدت پیش خودت می‌ماند.</b> جایی ذخیره نمی‌شود جز همین مرورگر،
+      و به سرور نویدیکس فرستاده نمی‌شود — ما اصلاً سروری نداریم که بفرستد. مرورگرت
+      مستقیم با گوگل حرف می‌زند. هر وقت خواستی، پاکش کن.</p>
+    </div>
+  </details>
+
+  <h2>ساخته‌های این جلسه</h2>
+  <p class="hint" id="galhint">هنوز چیزی نساخته‌ای.</p>
+  <div class="gal" id="gal"></div>
+
+  <p class="foot">تصویرها را مدل‌های آزادِ دیگران می‌سازند؛ آنچه نویدیکس اضافه می‌کند
+  انتخاب مدل و کاملْ‌کردنِ پرامپت است. اگر می‌خواهی خودت این کار را یاد بگیری،
+  <a href="/ai-prompting.html">آناتومی یک پرامپت خوب</a> همین را از پایه می‌گوید.</p>
+</main>
+
+</body>
+</html>
