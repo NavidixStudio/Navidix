@@ -135,31 +135,38 @@ LIB_CSS = '''
 code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; color:#F0A868;
   background:#12151a; border:1px solid #262A31; border-radius:3px; padding:1px 6px; }
 
-/* control bar sticks so filters stay reachable however long the list gets */
-.bar{ position:sticky; top:0; z-index:20; margin:clamp(18px,3vh,26px) -22px clamp(22px,3vh,30px);
-  padding:13px 22px; background:rgba(8,9,11,.94);
+/* control bar sticks so filters stay reachable however long the list gets.
+   top is the sitebar's own rendered height (52px, steady across breakpoints
+   since its padding doesn't change) — at top:0 this bar stuck at the same
+   offset as the sitebar, so its top ~40px sat hidden behind the header
+   instead of being cut from the layout, i.e. it looked compact while
+   actually reserving the full height anyway. Docking it right below the
+   header fixes that and the padding below is trimmed on top of it, so the
+   space it keeps is space it earns. */
+.bar{ position:sticky; top:52px; z-index:20; margin:clamp(18px,3vh,26px) -22px clamp(22px,3vh,30px);
+  padding:9px 22px; background:rgba(8,9,11,.94);
   -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border-bottom:1px solid #1b1e24; }
 .bar__box{ position:relative; display:block; }
-.bar__box > svg{ position:absolute; inset-inline-start:15px; top:50%; transform:translateY(-50%);
-  width:16px; height:16px; color:#6B7280; pointer-events:none; }
-.q{ width:100%; box-sizing:border-box; padding:14px 44px; background:#0C0F13; border:1px solid #262A31;
-  border-radius:4px; color:#E9EDF2; font-family:inherit; font-size:15px; line-height:1.6;
+.bar__box > svg{ position:absolute; inset-inline-start:14px; top:50%; transform:translateY(-50%);
+  width:15px; height:15px; color:#6B7280; pointer-events:none; }
+.q{ width:100%; box-sizing:border-box; padding:9px 42px; background:#0C0F13; border:1px solid #262A31;
+  border-radius:4px; color:#E9EDF2; font-family:inherit; font-size:14px; line-height:1.6;
   transition:border-color .25s ease, background .25s ease; }
 .q::placeholder{ color:#6B7280; }
 .q:focus{ outline:none; border-color:rgba(229,32,42,.55); background:#12151a; }
-.qx{ position:absolute; inset-inline-end:12px; top:50%; transform:translateY(-50%); width:26px; height:26px;
-  border:0; border-radius:50%; cursor:pointer; background:#1b1e24; color:#B9C0C8; font-size:15px;
+.qx{ position:absolute; inset-inline-end:11px; top:50%; transform:translateY(-50%); width:22px; height:22px;
+  border:0; border-radius:50%; cursor:pointer; background:#1b1e24; color:#B9C0C8; font-size:14px;
   line-height:1; display:none; place-items:center; padding:0; }
 .qx:hover{ background:#E5202A; color:#fff; }
 .bar.has-q .qx{ display:grid; }
-.chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-.chip{ font-family:inherit; font-size:13px; line-height:1; cursor:pointer; padding:9px 15px;
+.chips{ display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
+.chip{ font-family:inherit; font-size:12.5px; line-height:1; cursor:pointer; padding:6px 13px;
   border-radius:100px; color:#B9C0C8; background:transparent; border:1px solid #262A31;
   transition:border-color .2s ease, color .2s ease, background .2s ease; }
 .chip:hover{ border-color:#3a4049; color:#E9EDF2; }
 .chip[aria-pressed="true"]{ background:rgba(229,32,42,.14); border-color:rgba(229,32,42,.6); color:#fff; }
 .chip:focus-visible{ outline:1px solid #5BD6C0; outline-offset:2px; }
-.bar__foot{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:11px; }
+.bar__foot{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:7px; }
 .tally{ margin:0; font-size:13px; color:#6B7280; }
 /* ---- grid density (S/M/L) ----
    --pc-min drives .cards2's auto-fill minmax; a class on <body> picks the
