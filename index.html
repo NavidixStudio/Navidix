@@ -136,9 +136,9 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
    frame; underneath, the two read as one lit room. */
 .grade--ambient{
   background:
-    radial-gradient(62% 46% at 12% 4%,   rgba(43,108,255,.13),  transparent 74%),
-    radial-gradient(54% 40% at 92% 16%,  rgba(120,170,255,.075), transparent 72%),
-    radial-gradient(80% 42% at 50% 100%, rgba(227,27,35,.075),  transparent 70%);
+    radial-gradient(62% 46% at 12% 4%,   rgba(43,108,255,.20),  transparent 74%),
+    radial-gradient(54% 40% at 92% 16%,  rgba(120,170,255,.12), transparent 72%),
+    radial-gradient(80% 42% at 50% 100%, rgba(227,27,35,.11),  transparent 70%);
 }
 .grade--vignette{
   background:
@@ -1881,7 +1881,7 @@ const NAVIDIX = (() => {
     color: { void:0x000000, deep:0x08132b, glow:0x2b6cff, ion:0x8fdbff, ember:0xe31b23 },
 
     camZ: 620,                     // layout math uses this, not the live camera
-    quality: { stars:26000, dust:900, dpr:1.75, nebulae:3, streaks:2, octaves:5, drifters:44 }
+    quality: { stars:32000, dust:900, dpr:1.75, nebulae:3, streaks:2, octaves:5, drifters:44 }
   };
 
   const state = {
@@ -1929,7 +1929,7 @@ const Stage = (() => {
        against a small-screen budget that already drops the dust, halves
        the stars, bakes the nebulae to a texture and runs one streak layer
        — the cuts that were made so this number would not have to be. */
-    if (small || cores <= 4) config.quality = { stars:15000, dust:0, dpr:1.75, nebulae:1, streaks:1, octaves:3, bake:true, drifters:22 };
+    if (small || cores <= 4) config.quality = { stars:18000, dust:0, dpr:1.75, nebulae:1, streaks:1, octaves:3, bake:true, drifters:22 };
     if (state.reduced) { config.quality.dust = 0; config.quality.streaks = 0; config.quality.drifters = 0; }
 
     scene  = new THREE.Scene();
