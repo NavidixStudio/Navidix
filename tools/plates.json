@@ -3,115 +3,207 @@
  "aspect_ratio": "3:2",
  "quality": "basic",
  "suffix": ". No text, lettering, signature or watermark.",
- "generated": "2026-08-11",
+ "generated": "2026-08-16",
  "plates": [
   {
-   "id": "studio",
-   "job": "12888a86-040a-469c-af75-45a25a42d15f"
+   "id": "sports",
+   "job": "7b0167d4-0336-4632-96a6-84be0dac2fcc"
   },
   {
-   "id": "doc",
-   "job": "11244887-0ef2-4909-8633-59d64e19b7eb"
+   "id": "astro",
+   "job": "592e62fa-61d4-4037-83de-eb5156d9f2bc"
   },
   {
-   "id": "film35",
-   "job": "ecb8054b-4845-4fb6-a9fa-fa9884acfe85"
+   "id": "aerial",
+   "job": "18d6c50a-d9a6-43c7-93c5-4135dabcbf84"
   },
   {
-   "id": "product",
-   "job": "eb6c319b-546b-483f-800b-1c43bacc34d5"
+   "id": "fashion",
+   "job": "55b34931-099f-4846-bda5-e0af8ff4e876"
   },
   {
-   "id": "oil",
-   "job": "fe78ac4b-6f9b-4963-be91-e99a4869a0ab"
+   "id": "food",
+   "job": "502a5ca8-80b2-48da-9873-102a34015174"
   },
   {
-   "id": "baroque",
-   "job": "5ba568b7-84d9-433d-bd1d-8773a6308ff1"
+   "id": "wildlife",
+   "job": "3283fb7a-3cd3-4d95-87a3-58db2b0ef3c6"
   },
   {
-   "id": "renaissance",
-   "job": "0d1158c5-20c3-4adb-a643-3d0da4afdc48"
+   "id": "infrared",
+   "job": "970143e4-bc00-43eb-a4e9-6602ca4d4f6a"
   },
   {
-   "id": "romantic",
-   "job": "ba9ac164-7682-4aa8-a1b7-48163851bea6"
+   "id": "polaroid",
+   "job": "efce21e6-c80f-40a5-8406-0b7c9f8dc265"
   },
   {
-   "id": "impressionist",
-   "job": "4a6c58f4-e18d-468b-ac8b-9362be46643b"
+   "id": "longexp",
+   "job": "1443291b-89d7-4c7c-bc3a-ca5b4ab5f869"
   },
   {
-   "id": "postimp",
-   "job": "f9b53c8c-c46e-429a-8c3e-febcf69212f8"
+   "id": "spanish",
+   "job": "2e7f287b-53a2-4552-b1b8-d21548fc2f0a"
   },
   {
-   "id": "artnouveau",
-   "job": "61286f7b-4073-42f0-9615-2191bff036ce"
+   "id": "hudson",
+   "job": "7f0a022c-e47f-4878-81fc-b378433b75c5"
   },
   {
-   "id": "artdeco",
-   "job": "3d99e91e-9fc1-4449-a84c-4d20607972c5"
+   "id": "pointillism",
+   "job": "823f7f37-6ce2-48a4-be60-dc5a9d59326f"
   },
   {
-   "id": "surreal",
-   "job": "7672a6bc-973c-4397-baac-e0fc5dedcfcc"
+   "id": "nabis",
+   "job": "78dc76e9-7540-4f18-9dbc-bfce9fec8fb7"
   },
   {
-   "id": "concept",
-   "job": "d0ade951-ebe4-4050-9d70-3980370fac53"
+   "id": "mannerism",
+   "job": "dc15293f-d6d1-407a-b2a0-9660aabcff79"
   },
   {
-   "id": "miniature",
-   "job": "94549d10-d597-4d0d-9e7a-1c44dfe64b58"
+   "id": "biedermeier",
+   "job": "0fa8f2c9-5658-4cb0-9c39-d94305c57242"
   },
   {
-   "id": "qajar",
-   "job": "2c445591-e3d9-4159-a5bb-f6f214aea435"
+   "id": "ashcan",
+   "job": "814fea6d-3272-46be-b3b2-99709b9fd52f"
   },
   {
-   "id": "ukiyoe",
-   "job": "9dbb14ab-93e2-4950-8337-be2f6581b132"
+   "id": "aesthetic",
+   "job": "406fbcd4-6944-43e4-8da1-4b077df8f5e5"
   },
   {
-   "id": "inkwash",
-   "job": "ea0e463c-5938-468e-9e1a-510597faa8a8"
+   "id": "naturalism",
+   "job": "59d4b3af-74a0-4d23-9f64-bd4d9641599b"
   },
   {
-   "id": "watercolor",
-   "job": "6a31fa87-29b7-47d5-81c0-38292e3781e8"
+   "id": "gothic",
+   "job": "2c9eb0b7-a314-4d9b-9233-f80254774517"
   },
   {
-   "id": "gouache",
-   "job": "845f72f7-6e59-4b36-8522-c232e16ac563"
+   "id": "cuzco",
+   "job": "faf3d6ac-aa58-4099-9b00-2c6e5c7aeb53"
   },
   {
-   "id": "graphite",
-   "job": "6b2c070f-9e0b-46ed-a0a2-ef6a70fdd0f7"
+   "id": "futurism",
+   "job": "f036d68f-c812-49db-b572-174742436c81"
   },
   {
-   "id": "woodcut",
-   "job": "9f9b0b81-fed3-4504-9a17-7b4d8f4e6d95"
+   "id": "bauhaus",
+   "job": "c3debf9c-967f-4c63-969b-caedb394c30e"
   },
   {
-   "id": "golden",
-   "job": "5b760d27-7743-4960-9d79-633277c1f4b7"
+   "id": "suprematism",
+   "job": "bbc5951b-6e13-40ab-b674-dc2a074ef08c"
   },
   {
-   "id": "chiaro",
-   "job": "619344c1-022b-42c0-8d35-56ad696da807"
+   "id": "dada",
+   "job": "21a021fd-c6d6-47d6-a83a-135c1111ee1f"
   },
   {
-   "id": "neon",
-   "job": "fa8e3311-9bf4-499c-8734-2449061d3849"
+   "id": "absexp",
+   "job": "5c5722ee-5cbe-410d-b768-ff869c6a0793"
   },
   {
-   "id": "window",
-   "job": "fa7d6eab-e81e-45e1-a7fa-e544c821dbe8"
+   "id": "pop",
+   "job": "1892a61b-f745-40d5-b095-cf6e3fc5e7d0"
   },
   {
-   "id": "rim",
-   "job": "71f0f9bb-de88-4b18-840f-00fc0c062b3c"
+   "id": "destijl",
+   "job": "0fcce7d8-f10b-479b-9c0a-a8849ab09fb9"
+  },
+  {
+   "id": "metaphysical",
+   "job": "0b22c8de-94a8-4239-b773-c37827d81387"
+  },
+  {
+   "id": "dotpaint",
+   "job": "f2bdd090-0a0b-45a8-931d-d51aca3e3ebe"
+  },
+  {
+   "id": "egyptian",
+   "job": "476d9455-e82a-444b-92d4-ca0e7540f930"
+  },
+  {
+   "id": "mesoamerican",
+   "job": "3a7b4d46-a239-4e57-8af8-9e7ee9412d53"
+  },
+  {
+   "id": "madhubani",
+   "job": "7e6b41c6-0a4b-424a-8f46-52d63b4b68c3"
+  },
+  {
+   "id": "minhwa",
+   "job": "484f6f79-4d08-46d8-b935-1bf150100cb4"
+  },
+  {
+   "id": "adinkra",
+   "job": "64b10fd3-1e86-4524-a888-e7d05abb64e7"
+  },
+  {
+   "id": "ebru",
+   "job": "9cc37449-7123-4ebc-a1a4-a3514d09d4fd"
+  },
+  {
+   "id": "ledgerart",
+   "job": "66cffc36-874e-4412-a443-d58f147154be"
+  },
+  {
+   "id": "batik",
+   "job": "dca35219-94b3-46cf-9627-19e236a5738c"
+  },
+  {
+   "id": "armenian",
+   "job": "ab629f69-1b81-4776-a1b8-5b311a171dbb"
+  },
+  {
+   "id": "daguerreotype",
+   "job": "81147735-fcef-4337-8767-fbe84f42d056"
+  },
+  {
+   "id": "risograph",
+   "job": "d2969681-2b2d-47b1-bd9c-1b4907e594d3"
+  },
+  {
+   "id": "scratchboard",
+   "job": "cf6c67e6-1cd2-4867-933e-9a3ef1be124c"
+  },
+  {
+   "id": "airbrush",
+   "job": "32c2812d-2f9a-4679-b8be-957e1e6e059c"
+  },
+  {
+   "id": "kirigami",
+   "job": "b55240c9-631d-47d4-bda4-917f442765a6"
+  },
+  {
+   "id": "blueprint",
+   "job": "d97d4baf-0196-428e-b4d1-394745e7c97c"
+  },
+  {
+   "id": "serigraph",
+   "job": "0ba53508-03a6-48c9-a53a-e78f8b173f7a"
+  },
+  {
+   "id": "doubleexp",
+   "job": "ca0a1ea5-f56d-4ad3-8e4c-f32788605e03"
+  },
+  {
+   "id": "aurora",
+   "job": "0e39293b-81af-4d96-8c32-45fd16c43d26"
+  },
+  {
+   "id": "godrays",
+   "job": "19d3e54d-9ea7-48ad-a168-897e4eaaeca2"
+  },
+  {
+   "id": "bluehour",
+   "job": "3083b32b-5950-471e-8fb7-6372b2d21c35"
+  },
+  {
+   "id": "storm",
+   "job": "234941b8-e657-4fb0-996c-c9e029c4dbe5"
   }
  ]
 }
