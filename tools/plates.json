@@ -6,204 +6,312 @@
  "generated": "2026-08-16",
  "plates": [
   {
-   "id": "sports",
-   "job": "7b0167d4-0336-4632-96a6-84be0dac2fcc"
+   "id": "headshot",
+   "job": "809c1170-482a-4373-b685-ff8381271244"
   },
   {
-   "id": "astro",
-   "job": "592e62fa-61d4-4037-83de-eb5156d9f2bc"
+   "id": "bwportrait",
+   "job": "004ecf35-bf4a-45d0-9f97-b23df293a339"
   },
   {
-   "id": "aerial",
-   "job": "18d6c50a-d9a6-43c7-93c5-4135dabcbf84"
+   "id": "environmental",
+   "job": "bf1e3c3a-8dd1-4554-97cd-a6e41f8feaf2"
   },
   {
-   "id": "fashion",
-   "job": "55b34931-099f-4846-bda5-e0af8ff4e876"
+   "id": "couple",
+   "job": "0030d18a-0f66-4889-abc7-79995667b98a"
   },
   {
-   "id": "food",
-   "job": "502a5ca8-80b2-48da-9873-102a34015174"
+   "id": "travel",
+   "job": "8300a42c-f387-45f7-be02-58ad1d2ba33d"
   },
   {
-   "id": "wildlife",
-   "job": "3283fb7a-3cd3-4d95-87a3-58db2b0ef3c6"
+   "id": "streetstyle",
+   "job": "f3a604d8-dc49-42b5-8c20-7dfb6e0d0476"
   },
   {
-   "id": "infrared",
-   "job": "970143e4-bc00-43eb-a4e9-6602ca4d4f6a"
+   "id": "automotive",
+   "job": "8ec376a9-9b30-4450-9a3b-4bddc1a39812"
   },
   {
-   "id": "polaroid",
-   "job": "efce21e6-c80f-40a5-8406-0b7c9f8dc265"
+   "id": "concert",
+   "job": "5cb0e7c6-9133-4b43-94ed-499bea6d96c3"
   },
   {
-   "id": "longexp",
-   "job": "1443291b-89d7-4c7c-bc3a-ca5b4ab5f869"
+   "id": "extremesport",
+   "job": "f6fac6e5-f0f7-4a6d-813b-760225c6d431"
   },
   {
-   "id": "spanish",
-   "job": "2e7f287b-53a2-4552-b1b8-d21548fc2f0a"
+   "id": "fitness",
+   "job": "19f146b1-df6f-4466-b98c-2e489eabc301"
   },
   {
-   "id": "hudson",
-   "job": "7f0a022c-e47f-4878-81fc-b378433b75c5"
+   "id": "petportrait",
+   "job": "d8544d70-076a-4552-bafa-584067d27331"
   },
   {
-   "id": "pointillism",
-   "job": "823f7f37-6ce2-48a4-be60-dc5a9d59326f"
+   "id": "architecture",
+   "job": "eb420e4a-decc-409c-ad57-3f90d121c300"
   },
   {
-   "id": "nabis",
-   "job": "78dc76e9-7540-4f18-9dbc-bfce9fec8fb7"
+   "id": "underwater",
+   "job": "1b6f0061-fa95-47f8-b4d3-08acbaf15d6c"
   },
   {
-   "id": "mannerism",
-   "job": "dc15293f-d6d1-407a-b2a0-9660aabcff79"
+   "id": "silhouette",
+   "job": "54025dc8-6a14-4bc5-95b3-45e13e4c0506"
   },
   {
-   "id": "biedermeier",
-   "job": "0fa8f2c9-5658-4cb0-9c39-d94305c57242"
+   "id": "panorama",
+   "job": "5e354a49-e25f-478e-9e89-1b65cde1a20e"
   },
   {
-   "id": "ashcan",
-   "job": "814fea6d-3272-46be-b3b2-99709b9fd52f"
+   "id": "splash",
+   "job": "0ee1012f-631e-48a0-bde8-12faae46d90c"
   },
   {
-   "id": "aesthetic",
-   "job": "406fbcd4-6944-43e4-8da1-4b077df8f5e5"
+   "id": "sienese",
+   "job": "366c99a0-b854-4b86-bf11-d23a71058155"
   },
   {
-   "id": "naturalism",
-   "job": "59d4b3af-74a0-4d23-9f64-bd4d9641599b"
+   "id": "german",
+   "job": "59d0d308-765a-49df-b177-294fad7e2bd4"
   },
   {
-   "id": "gothic",
-   "job": "2c9eb0b7-a314-4d9b-9233-f80254774517"
+   "id": "caravaggisti",
+   "job": "c5d90255-9c42-45c6-b15b-0f161b42ce15"
   },
   {
-   "id": "cuzco",
-   "job": "faf3d6ac-aa58-4099-9b00-2c6e5c7aeb53"
+   "id": "rubens",
+   "job": "d495b44c-c249-4cf2-86bb-80cc8fa26388"
   },
   {
-   "id": "futurism",
-   "job": "f036d68f-c812-49db-b572-174742436c81"
+   "id": "courbet",
+   "job": "39df1fb2-2c5e-4e24-a5ee-ff71b23a7e72"
   },
   {
-   "id": "bauhaus",
-   "job": "c3debf9c-967f-4c63-969b-caedb394c30e"
+   "id": "elgreco",
+   "job": "74cfe07f-e7c8-4569-8be7-79432b53e4ab"
   },
   {
-   "id": "suprematism",
-   "job": "bbc5951b-6e13-40ab-b674-dc2a074ef08c"
+   "id": "empire",
+   "job": "983bcc42-bcc9-4a00-abc2-abe3f2818cc5"
   },
   {
-   "id": "dada",
-   "job": "21a021fd-c6d6-47d6-a83a-135c1111ee1f"
+   "id": "victorian",
+   "job": "104f55a9-7d8c-4ae7-a086-27ebd913ebd9"
   },
   {
-   "id": "absexp",
-   "job": "5c5722ee-5cbe-410d-b768-ff869c6a0793"
+   "id": "giotto",
+   "job": "a758f82b-d060-4d76-b23f-50f7a574ad43"
   },
   {
-   "id": "pop",
-   "job": "1892a61b-f745-40d5-b095-cf6e3fc5e7d0"
+   "id": "pompeian",
+   "job": "f4847d04-1a84-4bba-b6dd-a8306c3ea328"
   },
   {
-   "id": "destijl",
-   "job": "0fcce7d8-f10b-479b-9c0a-a8849ab09fb9"
+   "id": "neorococo",
+   "job": "f264d30c-6ba0-486e-b706-02c9548d6366"
   },
   {
-   "id": "metaphysical",
-   "job": "0b22c8de-94a8-4239-b773-c37827d81387"
+   "id": "colonial",
+   "job": "f54cd78f-6bc8-4b66-b82c-e188da18a74c"
   },
   {
-   "id": "dotpaint",
-   "job": "f2bdd090-0a0b-45a8-931d-d51aca3e3ebe"
+   "id": "hague",
+   "job": "9ae836b5-b2a8-47ee-839d-9dde1fa4c3c1"
   },
   {
-   "id": "egyptian",
-   "job": "476d9455-e82a-444b-92d4-ca0e7540f930"
+   "id": "dusseldorf",
+   "job": "fc8d8db2-e33a-4b0d-8be5-21758b51fdae"
   },
   {
-   "id": "mesoamerican",
-   "job": "3a7b4d46-a239-4e57-8af8-9e7ee9412d53"
+   "id": "socialrealism",
+   "job": "6c1ddf91-ade1-4c5e-aae9-806dda3e4211"
   },
   {
-   "id": "madhubani",
-   "job": "7e6b41c6-0a4b-424a-8f46-52d63b4b68c3"
+   "id": "socialistrealism",
+   "job": "6373c101-bc38-4694-99e9-34596e541603"
   },
   {
-   "id": "minhwa",
-   "job": "484f6f79-4d08-46d8-b935-1bf150100cb4"
+   "id": "casta",
+   "job": "ec5c459d-948c-4938-be16-df9cbb4bbaf7"
   },
   {
-   "id": "adinkra",
-   "job": "64b10fd3-1e86-4524-a888-e7d05abb64e7"
+   "id": "brueghel",
+   "job": "3baf7e96-171f-4f77-b85c-0d2a075b0f1b"
   },
   {
-   "id": "ebru",
-   "job": "9cc37449-7123-4ebc-a1a4-a3514d09d4fd"
+   "id": "miniatureportrait",
+   "job": "bd8b2c27-1c70-4491-bc35-6aa1e28a5008"
   },
   {
-   "id": "ledgerart",
-   "job": "66cffc36-874e-4412-a443-d58f147154be"
+   "id": "stilllife",
+   "job": "fa9176a6-82c4-4e8b-8ee0-3caf47f7f1be"
   },
   {
-   "id": "batik",
-   "job": "dca35219-94b3-46cf-9627-19e236a5738c"
+   "id": "vorticism",
+   "job": "5b9ad169-2f2c-4c81-a969-2eb574a7a88d"
   },
   {
-   "id": "armenian",
-   "job": "ab629f69-1b81-4776-a1b8-5b311a171dbb"
+   "id": "neuesachlichkeit",
+   "job": "22f8b11e-919d-4387-9fff-edc12d61159c"
   },
   {
-   "id": "daguerreotype",
-   "job": "81147735-fcef-4337-8767-fbe84f42d056"
+   "id": "orphism",
+   "job": "45db3333-abb0-4b3d-be24-aa882a92f080"
   },
   {
-   "id": "risograph",
-   "job": "d2969681-2b2d-47b1-bd9c-1b4907e594d3"
+   "id": "precisionism",
+   "job": "bde5f77b-0762-45d0-a0fd-9f32f429b00e"
   },
   {
-   "id": "scratchboard",
-   "job": "cf6c67e6-1cd2-4867-933e-9a3ef1be124c"
+   "id": "regionalism",
+   "job": "e740d9d3-81d6-4b49-ba2e-514de21e75ce"
   },
   {
-   "id": "airbrush",
-   "job": "32c2812d-2f9a-4679-b8be-957e1e6e059c"
+   "id": "harlem",
+   "job": "83614244-59d9-40b1-91a5-fbbf1605514f"
   },
   {
-   "id": "kirigami",
-   "job": "b55240c9-631d-47d4-bda4-917f442765a6"
+   "id": "minimalism",
+   "job": "a4c1a65b-7aea-47f0-a02d-e6b993a5451c"
   },
   {
-   "id": "blueprint",
-   "job": "d97d4baf-0196-428e-b4d1-394745e7c97c"
+   "id": "opart",
+   "job": "0400a787-318d-41d0-a719-38601f3bfd6c"
   },
   {
-   "id": "serigraph",
-   "job": "0ba53508-03a6-48c9-a53a-e78f8b173f7a"
+   "id": "colorfield",
+   "job": "8c2acad7-1e94-4847-bbc8-d6a8e2d75b01"
   },
   {
-   "id": "doubleexp",
-   "job": "ca0a1ea5-f56d-4ad3-8e4c-f32788605e03"
+   "id": "naive",
+   "job": "91fc7cba-32cb-488c-a378-027f6a92b61a"
   },
   {
-   "id": "aurora",
-   "job": "0e39293b-81af-4d96-8c32-45fd16c43d26"
+   "id": "muralism",
+   "job": "263849b2-d2bf-406a-8220-72cfe919e962"
   },
   {
-   "id": "godrays",
-   "job": "19d3e54d-9ea7-48ad-a168-897e4eaaeca2"
+   "id": "streetart",
+   "job": "e14c30fa-0e44-4ede-a99d-62408a53a294"
   },
   {
-   "id": "bluehour",
-   "job": "3083b32b-5950-471e-8fb7-6372b2d21c35"
+   "id": "lowbrow",
+   "job": "7a3b0cf1-af9f-4dae-aac0-ab73ffbc23ae"
   },
   {
-   "id": "storm",
-   "job": "234941b8-e657-4fb0-996c-c9e029c4dbe5"
+   "id": "cyberpunk",
+   "job": "808c8ace-b12f-4b31-92a9-ca38ddb58368"
+  },
+  {
+   "id": "vaporwave",
+   "job": "b7750104-b980-4d51-914f-9702767a4c1e"
+  },
+  {
+   "id": "huichol",
+   "job": "11358812-47fd-4f10-a3be-4add926152f6"
+  },
+  {
+   "id": "balinese",
+   "job": "bb3d906c-6653-46db-ac4f-43e3d9f090c3"
+  },
+  {
+   "id": "aztec",
+   "job": "84402592-275f-4b9e-912d-df48b3444c3e"
+  },
+  {
+   "id": "haida",
+   "job": "eaf7da3c-4e93-44c6-98c6-7714d8b8bdc3"
+  },
+  {
+   "id": "maori",
+   "job": "5f43dc8a-8177-46a1-a362-6e464e4fc17b"
+  },
+  {
+   "id": "inuit",
+   "job": "b5ef302e-680e-400d-928d-6797507cd573"
+  },
+  {
+   "id": "peranakan",
+   "job": "0578221b-445b-4cd1-b680-e2c34e069c47"
+  },
+  {
+   "id": "coptic",
+   "job": "0c5d5290-8b60-4acd-a67c-632e5eb69ba2"
+  },
+  {
+   "id": "platinum",
+   "job": "3bd4974c-9da1-4a60-a63a-f358f7ba5851"
+  },
+  {
+   "id": "gumbichromate",
+   "job": "471585ef-b3cd-45cc-bbee-2a0f6a8747ac"
+  },
+  {
+   "id": "albumen",
+   "job": "49a34d98-0261-4d96-b89d-5939f6659a36"
+  },
+  {
+   "id": "spraypaint",
+   "job": "a3b33c97-1cfd-468f-ac11-45bd1783a93c"
+  },
+  {
+   "id": "embroidery",
+   "job": "4a1fb21b-24a2-4542-92d5-4e507e6a36a0"
+  },
+  {
+   "id": "marker",
+   "job": "7f220240-d78f-4e40-b171-9d18274ae066"
+  },
+  {
+   "id": "inkpen",
+   "job": "89fc7956-bfb6-4f98-bc41-295f0ed1ad4f"
+  },
+  {
+   "id": "mattepainting",
+   "job": "856d3558-3d73-42e3-a22c-b6d8c626f89d"
+  },
+  {
+   "id": "bouncelight",
+   "job": "4a85f9c7-d4fc-42ad-8a58-29f944646522"
+  },
+  {
+   "id": "splitlight",
+   "job": "71226ec6-6286-4ad2-acdf-0f15727f3d9a"
+  },
+  {
+   "id": "butterflylight",
+   "job": "90415333-ee32-4788-b364-ef77a1db9b85"
+  },
+  {
+   "id": "practicallight",
+   "job": "f9798f2e-2c99-41f7-b6eb-ee55cfee1256"
+  },
+  {
+   "id": "overcast",
+   "job": "981793e0-601a-45a5-8eab-b1379491eaf0"
+  },
+  {
+   "id": "underlight",
+   "job": "a39ccb56-991a-4866-8bb8-66e9594aeb4b"
+  },
+  {
+   "id": "silhouettelight",
+   "job": "990f8562-fa4c-4d03-b930-9d4835a9d581"
+  },
+  {
+   "id": "volumetricfog",
+   "job": "c647b49b-b0a3-449a-85d7-677a84b767a9"
+  },
+  {
+   "id": "harshsun",
+   "job": "b69d20b9-6f1c-4cb7-ad4e-87e63258a889"
+  },
+  {
+   "id": "bioluminescent",
+   "job": "5791e046-4ca3-45b4-b73f-1eacd491e76e"
   }
  ]
 }

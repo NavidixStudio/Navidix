@@ -159,14 +159,36 @@ code.ph{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:.92em; co
 .chip:hover{ border-color:#3a4049; color:#E9EDF2; }
 .chip[aria-pressed="true"]{ background:rgba(229,32,42,.14); border-color:rgba(229,32,42,.6); color:#fff; }
 .chip:focus-visible{ outline:1px solid #5BD6C0; outline-offset:2px; }
-.tally{ margin:11px 0 0; font-size:13px; color:#6B7280; }
+.bar__foot{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:11px; }
+.tally{ margin:0; font-size:13px; color:#6B7280; }
+/* ---- grid density (S/M/L) ----
+   --pc-min drives .cards2's auto-fill minmax; a class on <body> picks the
+   value so it applies to every group at once and survives a reload via
+   localStorage. Mobile gets its own scale in the media query below —
+   at desktop pixel sizes "S" on a 390px phone would still be one column,
+   which defeats the point of a compact mode there. */
+:root{ --pc-min:268px; }
+body.density-s{ --pc-min:190px; }
+body.density-l{ --pc-min:380px; }
+.density{ display:flex; gap:2px; padding:2px; border:1px solid #262A31; border-radius:8px; flex:none; }
+.density__btn{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px; font-weight:700;
+  letter-spacing:.02em; cursor:pointer; width:28px; height:26px; border-radius:6px; border:0;
+  background:transparent; color:#6B7280; transition:background .2s ease, color .2s ease; }
+.density__btn:hover{ color:#E9EDF2; }
+.density__btn[aria-pressed="true"]{ background:rgba(229,32,42,.16); color:#fff; }
+.density__btn:focus-visible{ outline:1px solid #5BD6C0; outline-offset:2px; }
+@media (max-width:640px){
+  body.density-s{ --pc-min:148px; }
+  body:not(.density-s):not(.density-l){ --pc-min:220px; }
+  body.density-l{ --pc-min:300px; }
+}
 
 .grp2{ margin-bottom:clamp(32px,5vh,52px); }
 .grp2__head{ display:flex; align-items:baseline; gap:12px; margin:0 0 6px; }
 .grp2__head h2{ font-size:clamp(18px,2.6vw,25px); font-weight:700; margin:0; line-height:1.5; color:#EDF2F8; }
 .grp2__n{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:12px; letter-spacing:.14em; color:#E5202A; }
 .grp2__sub{ color:#8C939B; font-size:13.5px; line-height:1.95; margin:0 0 16px; max-width:62ch; }
-.cards2{ display:grid; grid-template-columns:repeat(auto-fill,minmax(268px,1fr)); gap:16px; }
+.cards2{ display:grid; grid-template-columns:repeat(auto-fill,minmax(var(--pc-min,268px),1fr)); gap:16px; }
 
 .pc{ display:flex; flex-direction:column; border:1px solid #262A31; border-radius:5px; background:#0d1015;
   overflow:hidden; text-decoration:none; color:inherit;
@@ -559,6 +581,18 @@ INDEX_JS = r'''
   document.addEventListener('keydown', function(e){
     if(e.key==='/' && document.activeElement!==input){ e.preventDefault(); input.focus(); } });
   apply();
+
+  /* ---- grid density (S/M/L) ---- */
+  var densityBtns=[].slice.call(document.querySelectorAll('#density .density__btn'));
+  function setDensity(size, persist){
+    document.body.classList.remove('density-s','density-l');
+    if(size==='s'||size==='l') document.body.classList.add('density-'+size);
+    densityBtns.forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.size===size)); });
+    if(persist){ try{ localStorage.setItem('nvxPcDensity', size); }catch(_){} }
+  }
+  densityBtns.forEach(function(b){ b.addEventListener('click', function(){ setDensity(b.dataset.size, true); }); });
+  setDensity(document.body.classList.contains('density-s') ? 's'
+           : document.body.classList.contains('density-l') ? 'l' : 'm', false);
 })();
 '''
 
@@ -568,6 +602,17 @@ idesc = (f'{fa(len(STYLES))} سبک با شناسنامه‌ی کامل: پال�
 
 index_body = f'''
 <body>
+<script>
+/* Applied before the grid paints, not in the deferred bundle below — a class
+   added after first paint would flash the default density for one frame on
+   every reload for anyone who picked S or L. */
+(function(){{
+  try{{
+    var d=localStorage.getItem('nvxPcDensity');
+    if(d==='s'||d==='l') document.body.classList.add('density-'+d);
+  }}catch(_){{}}
+}})();
+</script>
 {SITEBAR.format(up='').replace('<a href="prompts.html">کتابخانه‌ی پرامپت ←</a>', '<a href="training.html">همه‌ی آموزش‌ها ←</a>')}
 <main class="lib" id="lib">
   <div class="eyebrow"><span class="lat">Navidix</span> · کتابخانه‌ی پرامپت</div>
@@ -588,7 +633,14 @@ index_body = f'''
       <button class="chip" type="button" data-cat="all" aria-pressed="true">همه</button>
 {chips}
     </div>
-    <p class="tally" id="tally" role="status" aria-live="polite"></p>
+    <div class="bar__foot">
+      <p class="tally" id="tally" role="status" aria-live="polite"></p>
+      <div class="density" id="density" role="group" aria-label="اندازه‌ی نمایش کارت‌ها">
+        <button class="density__btn" type="button" data-size="s" aria-pressed="false" aria-label="نمایش فشرده — کارت‌های کوچک‌تر">S</button>
+        <button class="density__btn" type="button" data-size="m" aria-pressed="true" aria-label="نمایش متوسط — پیش‌فرض">M</button>
+        <button class="density__btn" type="button" data-size="l" aria-pressed="false" aria-label="نمایش بزرگ — کارت‌های درشت‌تر">L</button>
+      </div>
+    </div>
   </div>
 {groups}
   <div class="empty2" id="empty2">
