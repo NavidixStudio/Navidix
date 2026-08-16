@@ -1011,7 +1011,7 @@ html[lang="en"] .topbar__row{ padding:11px calc(var(--gutter) + 92px) 11px var(-
 .band + .band{ padding-top:clamp(46px,8vh,92px); }
 .band__head{
   display:grid; gap:8px;
-  grid-template-areas:'eyebrow cta' 'title cta' 'sub cta';
+  grid-template-areas:'eyebrow cta' 'title cta' 'sub cta' 'path cta';
   /* the text column is capped so the line length stays readable and the
      action lands in the opposite corner rather than adrift in the middle */
   grid-template-columns:minmax(0,1fr) auto; align-items:start;
@@ -1061,6 +1061,52 @@ html[lang="fa"] .band__cta{ font-family:var(--f-fa); font-size:12.5px; letter-sp
 /* the arrow points the way the page reads, whichever way that is */
 html[lang="en"] .band__cta i{ transform:scaleX(-1); }
 html[lang="en"] .band__cta:hover i{ transform:scaleX(-1) translateX(-5px); }
+
+/* ---- the learn band's route strip ----
+   A concrete number reads as more of a promise than a mood animation
+   does, so this is the six real stages of the curriculum drawn as a line,
+   with a pulse that keeps moving because the course itself doesn't wait.
+   Plain HTML spans rather than an SVG viewBox: a non-uniformly stretched
+   viewBox (100 wide, 14 tall, to fill a flexible-width row) turns round
+   <circle> nodes into flat ellipses, and logical inset properties handle
+   RTL/LTR on their own — no manual mirroring needed either way. */
+.band__path{ grid-area:path; display:flex; align-items:center; gap:16px; margin-top:4px; }
+.band__path .path__line{ position:relative; flex:1 1 auto; min-width:0; height:14px; }
+.band__path .path__line::before{
+  content:''; position:absolute; inset-inline:3px; top:50%; height:1.5px;
+  transform:translateY(-50%); background:var(--glass-edge);
+}
+.band__path .path__pulse{
+  position:absolute; top:50%; inset-inline-start:0; width:22px; height:2px;
+  margin-inline-start:-11px; border-radius:99px; transform:translateY(-50%);
+  background:linear-gradient(to right, transparent, var(--ember-soft), transparent);
+  animation:bandPathPulse 5.5s linear infinite;
+}
+@keyframes bandPathPulse{
+  0%{ inset-inline-start:0%; opacity:0; }
+  6%{ opacity:1; }
+  90%{ opacity:1; }
+  100%{ inset-inline-start:100%; opacity:0; }
+}
+.band__path .path__node{
+  position:absolute; top:50%; width:6px; height:6px; margin-inline-start:-3px;
+  border-radius:50%; transform:translateY(-50%);
+  background:var(--void); border:1.5px solid rgba(237,242,250,.5);
+}
+.band__path .path__node--end{ width:9px; height:9px; margin-inline-start:-4.5px; border-color:var(--paper-dim); }
+.band__path .path__stat{
+  flex:none; margin:0; display:flex; align-items:baseline; gap:6px;
+  font-family:var(--f-ui); font-size:11px; color:var(--paper-dim); white-space:nowrap;
+}
+html[lang="fa"] .band__path .path__stat{ font-family:var(--f-fa); font-size:12.5px; }
+.band__path .path__n{ color:var(--paper); font-weight:600; font-variant-numeric:tabular-nums; }
+.band__path .path__stat .dot{ width:2px; height:2px; border-radius:50%; background:currentColor; opacity:.5; }
+@media (prefers-reduced-motion:reduce){
+  .band__path .path__pulse{ animation:none; opacity:0; }
+}
+@media (max-width:640px){
+  .band__path .path__stat{ display:none; }
+}
 
 /* ---- the rail ----
    A grid on a wide screen, a single swipeable row on a narrow one. Scroll
@@ -1199,7 +1245,7 @@ picture{ display:contents; }
   .band__rail--5{ grid-template-columns:repeat(2,1fr); }
 }
 @media (max-width:760px){
-  .band__head{ grid-template-areas:'eyebrow' 'title' 'sub' 'cta'; grid-template-columns:1fr; }
+  .band__head{ grid-template-areas:'eyebrow' 'title' 'sub' 'path' 'cta'; grid-template-columns:1fr; }
   .band__cta{ justify-self:start; margin-top:6px; }
   .band__rail--3{ grid-template-columns:1fr; }
 }
@@ -1404,6 +1450,22 @@ picture{ display:contents; }
         <p class="band__eyebrow" data-copy2="learnEyebrow">آموزش هوش مصنوعی کاربردی</p>
         <h2 class="band__title" id="band-learn-t" data-copy2="learnTitle">از اولین پرامپت تا اولین فیلم</h2>
         <p class="band__sub" data-copy2="learnSub">همه رایگان و بدون پیش‌نیاز — پروتکل‌هایی که در تولیدهای واقعی جواب داده‌اند، نه تئوری.</p>
+        <div class="band__path">
+          <div class="path__line" aria-hidden="true">
+            <span class="path__pulse"></span>
+            <span class="path__node" style="inset-inline-start:0%"></span>
+            <span class="path__node" style="inset-inline-start:20%"></span>
+            <span class="path__node" style="inset-inline-start:40%"></span>
+            <span class="path__node" style="inset-inline-start:60%"></span>
+            <span class="path__node" style="inset-inline-start:80%"></span>
+            <span class="path__node path__node--end" style="inset-inline-start:100%"></span>
+          </div>
+          <p class="path__stat">
+            <b class="path__n" data-target="14">۱۴</b> <span data-copy2="learnCountLessons">درس</span>
+            <span class="dot" aria-hidden="true"></span>
+            <b class="path__n" data-target="9">۹</b> <span data-copy2="learnCountHours">ساعت</span>
+          </p>
+        </div>
         <a class="band__cta" href="training.html"><span data-copy2="learnCta">همه‌ی آموزش‌ها</span><i aria-hidden="true">←</i></a>
       </header>
       <div class="band__rail band__rail--4">
@@ -1658,7 +1720,7 @@ const NAVIDIX = (() => {
             xCta:'All experiences',
             learnEyebrow:'Applied AI training', learnTitle:'From a first prompt to a finished film',
             learnSub:'All free, no prerequisites — protocols proven on real production work, not theory.',
-            learnCta:'All training',
+            learnCta:'All training', learnCountLessons:'lessons', learnCountHours:'hours',
             galEyebrow:'The gallery of styles', galTitle:'Where each style came from',
             galSub:'A timeline of visual languages — what year, which country, whose work. Each with two samples from one prompt, so you can see which part was the style and which was the subject.',
             galCta:'Enter the gallery',
@@ -1680,7 +1742,7 @@ const NAVIDIX = (() => {
             xCta:'همه‌ی تجربه‌ها',
             learnEyebrow:'آموزش هوش مصنوعی کاربردی', learnTitle:'از اولین پرامپت تا اولین فیلم',
             learnSub:'همه رایگان و بدون پیش‌نیاز — پروتکل‌هایی که در تولیدهای واقعی جواب داده‌اند، نه تئوری.',
-            learnCta:'همه‌ی آموزش‌ها',
+            learnCta:'همه‌ی آموزش‌ها', learnCountLessons:'درس', learnCountHours:'ساعت',
             galEyebrow:'گالری سبک‌ها', galTitle:'هر سبک، از کجا آمده',
             galSub:'خط زمانِ زبان‌های تصویری — چه سالی، در کدام کشور، کارِ چه کسانی. هر کدام با دو نمونه از یک پرامپت، تا ببینی چه چیزی سبک بود و چه چیزی سوژه.',
             galCta:'ورود به گالری',
@@ -3219,6 +3281,13 @@ const Lang = (() => {
     const copy = config.copy[l];
     document.getElementById('tagline').textContent = copy.tagline;
     document.querySelectorAll('[data-copy2]').forEach(el => { el.textContent = copy[el.dataset.copy2]; });
+    /* the route strip's two counters sit outside data-copy2 on purpose —
+       it would wipe the <b> the count-up animation writes into — so their
+       numeral system is kept in sync with the language switch here instead */
+    document.querySelectorAll('.band__path .path__n').forEach(el => {
+      const n = parseInt(el.dataset.target, 10);
+      el.textContent = l === 'fa' ? String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]) : String(n);
+    });
     /* labels that are read rather than shown — a landmark's accessible name
        has to change with the language too, and textContent cannot carry it */
     document.querySelectorAll('[data-copy2-label]').forEach(el =>
@@ -3699,6 +3768,42 @@ setTimeout(function () {
   new IntersectionObserver(function (entries) {
     show(!entries[0].isIntersecting);
   }, { rootMargin: '-45% 0px 0px 0px' }).observe(landing);
+})();
+
+/* ---------------------------------------------------------------------
+   THE LEARN BAND'S ROUTE STRIP
+   The numbers are already true — fourteen lessons, nine hours — so the
+   only job here is to make them land instead of just sit there. Counts
+   up once, the first time it scrolls into view, then leaves the static
+   digits alone. No JS, no IntersectionObserver, or reduced-motion: the
+   server-rendered ۱۴ / ۹ already in the markup is the correct fallback.
+   ========================================================================= */
+(function () {
+  var nums = document.querySelectorAll('.band__path .path__n');
+  if (!nums.length || !('IntersectionObserver' in window)) return;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function digits(n) {
+    return document.documentElement.lang === 'fa'
+      ? String(n).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; })
+      : String(n);
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      io.unobserve(en.target);
+      var el = en.target, target = parseInt(el.dataset.target, 10), start = null, dur = 900;
+      el.textContent = digits(0);
+      requestAnimationFrame(function tick(now) {
+        if (start === null) start = now;
+        var t = Math.min(1, (now - start) / dur);
+        el.textContent = digits(Math.round((1 - Math.pow(1 - t, 3)) * target));
+        if (t < 1) requestAnimationFrame(tick);
+      });
+    });
+  }, { threshold: .6 });
+  nums.forEach(function (n) { io.observe(n); });
 })();
 </script>
 </body>
