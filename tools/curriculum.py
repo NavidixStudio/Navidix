@@ -180,9 +180,9 @@ EXTRA_CSS = '''
 .jrn .stg{ position:relative; padding:0 0 6px; }
 .stg{ position:relative; }
 .stg__head{ display:flex; align-items:baseline; gap:12px; margin:0 0 4px; }
-.stg__no{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:12px; color:#6B7280; }
+.stg__no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:12px; color:#6B7280; }
 .stg__head h2{ margin:0; font-size:clamp(17px,2.3vw,21px); font-weight:700; line-height:1.6; color:#EDF2FA; }
-.stg__en{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11px; color:#6B7280;
+.stg__en{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11px; color:#6B7280;
   letter-spacing:.04em; }
 .stg__blurb{ margin:0 0 14px; font-size:13.5px; line-height:2; color:#8C939B; }
 
@@ -209,7 +209,7 @@ EXTRA_CSS = '''
 .lrow.is-done .lrow__tick::after{ content:'✓'; font-weight:700; }
 .lrow__t{ flex:1; font-size:14px; line-height:1.7; color:#C8D0DA; }
 .lrow.is-done .lrow__t{ color:#7E8894; }
-.lrow__m{ flex:none; font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11px; color:#6B7280; }
+.lrow__m{ flex:none; font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11px; color:#6B7280; }
 
 .jrn__note{ font-size:12.5px; line-height:2; color:#6B7280; border-top:1px solid #1B2028;
   padding-top:18px; margin-top:8px; }

@@ -16,7 +16,7 @@ unreliable there. What that cost, measured:
     panels, no text.
 
 Both are now served from the site's own origin, so a reader who can reach the
-site can read it. One variable Vazirmatn covers every weight the site asks
+site can read it. One variable Estedad covers every weight the site asks
 for, which is smaller than the six static files it replaces.
 
 Idempotent.
@@ -30,7 +30,7 @@ FACES = '''<style>
    site's readers, and a render-blocking stylesheet on a host that hangs
    means nothing paints at all. One variable file per family covers every
    weight used here. swap, so text is readable before the file lands. */
-@font-face{font-family:'Vazirmatn';src:url('/assets/vazirmatn-var.woff2')format('woff2');
+@font-face{font-family:'Estedad';src:url('/assets/estedad-var.woff2')format('woff2');
   font-weight:100 900;font-display:swap;font-style:normal}
 @font-face{font-family:'Sora';src:url('/assets/sora-var.woff2')format('woff2');
   font-weight:100 800;font-display:swap;font-style:normal}

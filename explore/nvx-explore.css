@@ -28,8 +28,8 @@
   --xp-ghost:     rgba(237,242,250,.20);
   --xp-f-display: "Sora","SF Pro Display","Helvetica Neue",system-ui,sans-serif;
   --xp-f-ui:      "Inter","SF Pro Text","Helvetica Neue",system-ui,sans-serif;
-  --xp-f-fa:      "Vazirmatn","IRANSansX","IRANSans","Segoe UI",Tahoma,sans-serif;
-  --xp-f-mono:    ui-monospace,SFMono-Regular,Menlo,"Vazirmatn",monospace;
+  --xp-f-fa:      "Estedad","IRANSansX","IRANSans","Segoe UI",Tahoma,sans-serif;
+  --xp-f-mono:    ui-monospace,SFMono-Regular,Menlo,"Estedad",monospace;
   --xp-ease:      cubic-bezier(.16,1,.3,1);
   --xp-gutter:    clamp(20px,4.4vw,64px);
   --xp-measure:   1240px;

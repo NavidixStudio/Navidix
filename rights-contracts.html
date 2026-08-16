@@ -34,7 +34,7 @@
    site's readers, and a render-blocking stylesheet on a host that hangs
    means nothing paints at all. One variable file per family covers every
    weight used here. swap, so text is readable before the file lands. */
-@font-face{font-family:'Vazirmatn';src:url('/assets/vazirmatn-var.woff2')format('woff2');
+@font-face{font-family:'Estedad';src:url('/assets/estedad-var.woff2')format('woff2');
   font-weight:100 900;font-display:swap;font-style:normal}
 @font-face{font-family:'Sora';src:url('/assets/sora-var.woff2')format('woff2');
   font-weight:100 800;font-display:swap;font-style:normal}
@@ -74,30 +74,30 @@ body::before{
 .sitebar{ position:sticky; top:0; z-index:30; background:rgba(8,9,11,.9); border-bottom:1px solid #262A31;
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
 .sitebar .row{ max-width:980px; margin:0 auto; padding:11px 22px; display:flex; align-items:center;
-  justify-content:space-between; gap:14px; font-family:"Vazirmatn","IRANSans",Tahoma,sans-serif; }
+  justify-content:space-between; gap:14px; font-family:"Estedad","IRANSans",Tahoma,sans-serif; }
 .sitebar a{ color:#8C939B; text-decoration:none; font-size:13px; transition:color .3s ease; }
 .sitebar a:hover{ color:#E5202A; }
 .sitebar .home{ display:flex; align-items:center; gap:9px; color:#E4E7EA; font-size:14px; letter-spacing:.04em; }
 .sitebar .home svg{ width:22px; height:22px; }
 .pager{ max-width:980px; margin:0 auto; padding:0 22px 70px; display:flex; gap:14px; flex-wrap:wrap;
-  font-family:"Vazirmatn","IRANSans",Tahoma,sans-serif; }
+  font-family:"Estedad","IRANSans",Tahoma,sans-serif; }
 .pager a{ flex:1 1 260px; min-width:0; text-decoration:none; border:1px solid #262A31; border-radius:4px;
   padding:18px 20px; background:#101216; color:#E4E7EA; transition:border-color .3s ease, background .3s ease; }
 .pager a:hover{ border-color:rgba(229,32,42,.6); background:#12151a; }
 .pager small{ display:block; color:#8C939B; font-size:11.5px; letter-spacing:.16em; margin-bottom:7px; }
 .pager b{ font-weight:500; font-size:15px; line-height:1.7; }
 .idx{ max-width:980px; margin:0 auto; padding:clamp(56px,10vh,110px) 22px 90px;
-  font-family:"Vazirmatn","IRANSans",Tahoma,sans-serif; color:#E4E7EA; }
+  font-family:"Estedad","IRANSans",Tahoma,sans-serif; color:#E4E7EA; }
 .idx h1{ font-size:clamp(28px,5vw,46px); line-height:1.4; margin:0 0 16px; font-weight:800; letter-spacing:-.01em; }
 .idx .sub{ color:#8C939B; font-size:clamp(14px,2vw,17px); line-height:2; max-width:64ch; margin:0 0 clamp(34px,6vh,60px); }
-.idx .eyebrow{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px; letter-spacing:.24em; color:#B9C0C8;
+.idx .eyebrow{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; letter-spacing:.24em; color:#B9C0C8;
   text-transform:uppercase; margin-bottom:20px; }
 .cards{ display:grid; gap:16px; }
 .cards a{ display:block; text-decoration:none; color:inherit; border:1px solid #262A31; border-radius:4px;
   background:#101216; padding:clamp(22px,3vw,32px);
   transition:border-color .35s ease, background .35s ease, transform .35s ease; }
 .cards a:hover{ border-color:rgba(229,32,42,.55); background:#12151a; transform:translateY(-2px); }
-.cards .no{ font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px; letter-spacing:.2em; color:#E5202A; }
+.cards .no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; letter-spacing:.2em; color:#E5202A; }
 .cards h2{ font-size:clamp(17px,2.4vw,23px); line-height:1.6; margin:10px 0 10px; font-weight:700; }
 .cards p{ color:#8C939B; font-size:14px; line-height:2; margin:0; }
 .cards .soon{ opacity:.45; }
@@ -115,10 +115,10 @@ body::before{
     --amber:#E5202A;      /* Navidix neon red — accent, craft */
     --teal:#B9C0C8;       /* brushed steel — data, measurement */
     --rust:#B01620;       /* deep crimson — warning */
-    --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, Vazirmatn, monospace; /* Persian glyphs are absent from every mono face, so name the Persian one
+    --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, Estedad, monospace; /* Persian glyphs are absent from every mono face, so name the Persian one
        before the generic keyword — otherwise the browser picks a fallback
        that does not shape Persian properly. */
-    --fa: "Vazirmatn", "IRANSans", Tahoma, "Segoe UI", sans-serif;
+    --fa: "Estedad", "IRANSans", Tahoma, "Segoe UI", sans-serif;
     --maxw: 980px;
   }
 .lesson{

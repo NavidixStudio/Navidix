@@ -38,7 +38,7 @@
    right edge and a latin label walks off the left of the stage. These
    labels are always latin; say so once, here. */
 .nvx-dg__stage text{
-  font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:9px;
+  font-family:ui-monospace,Menlo,Estedad,monospace; font-size:9px;
   fill:#7B838D; letter-spacing:.06em;
   direction:ltr; text-anchor:start;
 }
@@ -123,7 +123,7 @@
    family carries the script — and it needs the rtl the stage's latin
    rule switches off. */
 .nvx-dg__stage text.fa{
-  font-family:"Vazirmatn","IRANSans",Tahoma,sans-serif; font-size:12px;
+  font-family:"Estedad","IRANSans",Tahoma,sans-serif; font-size:12px;
   fill:#D7DEE7; direction:rtl; text-anchor:middle; letter-spacing:normal;
 }
 .nvx-dg__stage text.mid{ text-anchor:middle; fill:#8C939B; }
@@ -140,7 +140,7 @@
 .nvx-dg__read code{
   display:block; margin-top:11px; padding:10px 12px;
   direction:ltr; text-align:left; white-space:pre-wrap;
-  font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px; line-height:1.85;
+  font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; line-height:1.85;
   color:#B9C0C8; background:#080B0E; border:1px solid #1B1F26; border-radius:4px;
 }
 
@@ -169,7 +169,7 @@
 }
 .nvx-dg__ctrls button:focus-visible{ outline:1px solid #B9C0C8; outline-offset:2px; }
 .nvx-dg__ctrls button .en{
-  display:block; margin-top:5px; font-family:ui-monospace,Menlo,Vazirmatn,monospace;
+  display:block; margin-top:5px; font-family:ui-monospace,Menlo,Estedad,monospace;
   font-size:10px; color:#6B7280; direction:ltr;
 }
 .nvx-dg__ctrls button[aria-pressed="true"] .en{ color:rgba(255,255,255,.62); }
@@ -181,7 +181,7 @@
 }
 .nvx-dg__read b{ color:#E4E7EA; font-weight:600; }
 .nvx-dg__read .en{
-  font-family:ui-monospace,Menlo,Vazirmatn,monospace; font-size:11.5px;
+  font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px;
   color:#E5202A; direction:ltr; display:inline-block; margin-inline-start:8px;
 }
 .nvx-dg__hint{

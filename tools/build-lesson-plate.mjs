@@ -31,7 +31,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(ROOT, 'tools', 'plates');
-const font = fs.readFileSync(path.join(ROOT, 'assets/vazirmatn-var.woff2')).toString('base64');
+const font = fs.readFileSync(path.join(ROOT, 'assets/estedad-var.woff2')).toString('base64');
 
 /* id → what to write. `focus` is the point of the source that must stay
    in shot, as a fraction: .5/.5 is the centre. */
@@ -93,7 +93,7 @@ async function card(b64, spec) {
   const bg = (await crop(b64, w, h, spec.focus)).png;
   const p = await browser.newPage({ viewport: { width: w, height: h } });
   await p.setContent(`<!doctype html><meta charset="utf-8"><style>
-@font-face{font-family:'Vazirmatn';src:url(data:font/woff2;base64,${font})format('woff2');font-weight:100 900}
+@font-face{font-family:'Estedad';src:url(data:font/woff2;base64,${font})format('woff2');font-weight:100 900}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:${w}px;height:${h}px;overflow:hidden;background:#07090C}
 .card{position:relative;width:${w}px;height:${h}px;overflow:hidden}
@@ -104,7 +104,7 @@ html,body{width:${w}px;height:${h}px;overflow:hidden;background:#07090C}
   linear-gradient(to left, rgba(5,7,11,.94) 0%, rgba(5,7,11,.86) 38%, rgba(5,7,11,.34) 66%, rgba(5,7,11,.12) 100%),
   linear-gradient(to top, rgba(5,7,11,.5), transparent 46%)}
 .tag{position:absolute;right:${w * .05}px;top:${h * .18}px;width:${w * .56}px;
-  text-align:right;direction:rtl;font-family:Vazirmatn,sans-serif;color:#EDF2FA}
+  text-align:right;direction:rtl;font-family:Estedad,sans-serif;color:#EDF2FA}
 .tag span{color:#E5202A}
 </style>
 <div class="card">

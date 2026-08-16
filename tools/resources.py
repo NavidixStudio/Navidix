@@ -157,7 +157,7 @@ SECTION_CSS = '''
 .ytc__cover:hover .ytc__play i{ background:#E5202A; border-color:#E5202A; }
 .ytc__time{ position:absolute; bottom:8px; inset-inline-start:8px; background:rgba(4,6,10,.84);
   border-radius:5px; padding:1px 6px; font-size:11px; color:#EDF2FA;
-  font-family:ui-monospace,Menlo,Vazirmatn,monospace; }
+  font-family:ui-monospace,Menlo,Estedad,monospace; }
 .ytc__lv{ position:absolute; top:8px; inset-inline-end:8px; background:rgba(4,6,10,.84);
   border:1px solid rgba(150,175,215,.28); border-radius:5px; padding:1px 7px;
   font-size:10.5px; color:#C8D0DA; }
