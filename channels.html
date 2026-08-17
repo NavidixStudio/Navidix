@@ -4,7 +4,7 @@
 <script>if(location.hostname==='navidixstudio.github.io'){location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}</script>
 <meta charset="utf-8" />
 <script>(function(){try{var t=localStorage.getItem('nvx-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('#themeToggle');if(!b)return;var L=document.documentElement.getAttribute('data-theme')==='light';if(L){document.documentElement.removeAttribute('data-theme');}else{document.documentElement.setAttribute('data-theme','light');}try{localStorage.setItem('nvx-theme',L?'dark':'light');}catch(e){}});})();</script>
-<style>:root{--nvx-red:var(--nvx-red);--nvx-red2:var(--nvx-red2);--nvx-red-deep:var(--nvx-red-deep);--nvx-red-soft:var(--nvx-red-soft)}html[data-theme="light"]{--nvx-red:#1ADFD5;--nvx-red2:#1CE4DC;--nvx-red-deep:#4FE9DF;--nvx-red-soft:#0095A5;filter:invert(1)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture,html[data-theme="light"] canvas,html[data-theme="light"] iframe{filter:invert(1)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:var(--nvx-red)}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}</style>
+<style>html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture,html[data-theme="light"] canvas{filter:invert(1) hue-rotate(180deg)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:#E5202A}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>کانال‌های رسمی نویدیکس | یوتیوب، تلگرام و اینستاگرام</title>
 <meta name="description" content="همه‌ی کانال‌های رسمی استودیو نویدیکس یک‌جا: یوتیوب برای مستند و فیلم کوتاه علمی، تلگرام برای ابزار و پرامپت روزانه، اینستاگرام برای تصویر." />
@@ -78,7 +78,7 @@ body::before{
 .sitebar .row{ max-width:980px; margin:0 auto; padding:11px 22px; display:flex; align-items:center;
   justify-content:space-between; gap:14px; font-family:"Estedad","IRANSans",Tahoma,sans-serif; }
 .sitebar a{ color:#8C939B; text-decoration:none; font-size:13px; transition:color .3s ease; }
-.sitebar a:hover{ color:var(--nvx-red); }
+.sitebar a:hover{ color:#E5202A; }
 .sitebar .home{ display:flex; align-items:center; gap:9px; color:#E4E7EA; font-size:14px; letter-spacing:.04em; }
 .sitebar .home svg{ width:22px; height:22px; }
 .pager{ max-width:980px; margin:0 auto; padding:0 22px 70px; display:flex; gap:14px; flex-wrap:wrap;
@@ -115,7 +115,7 @@ body::before{
     inset 0 1px 0 rgba(220,234,255,.1),
     0 26px 56px -32px rgba(120,16,22,.55);
 }
-.cards .no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; letter-spacing:.2em; color:var(--nvx-red); }
+.cards .no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; letter-spacing:.2em; color:#E5202A; }
 .cards h2{ font-size:clamp(17px,2.4vw,23px); line-height:1.6; margin:10px 0 10px; font-weight:700; }
 .cards p{ color:#8C939B; font-size:14px; line-height:2; margin:0; }
 .cards .soon{ opacity:.45; }
@@ -130,9 +130,9 @@ body::before{
     --line:#262A31;
     --bone:#E4E7EA;       /* steel white */
     --bone-dim:#8C939B;
-    --amber:var(--nvx-red);      /* Navidix neon red — accent, craft */
+    --amber:#E5202A;      /* Navidix neon red — accent, craft */
     --teal:#B9C0C8;       /* brushed steel — data, measurement */
-    --rust:var(--nvx-red-deep);       /* deep crimson — warning */
+    --rust:#B01620;       /* deep crimson — warning */
     --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, Estedad, monospace; /* Persian glyphs are absent from every mono face, so name the Persian one
        before the generic keyword — otherwise the browser picks a fallback
        that does not shape Persian properly. */
@@ -540,7 +540,6 @@ body::before{
 <script src="nvx-ui.js" defer></script>
 <script src="nvx-config.js" defer></script>
 <script src="nvx-auth.js" defer></script>
-<script src="/nvx-nav.js" defer></script>
 </head>
 <body>
 

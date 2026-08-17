@@ -4,7 +4,7 @@
 <script>if(location.hostname==='navidixstudio.github.io'){location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}</script>
 <meta charset="utf-8" />
 <script>(function(){try{var t=localStorage.getItem('nvx-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('#themeToggle');if(!b)return;var L=document.documentElement.getAttribute('data-theme')==='light';if(L){document.documentElement.removeAttribute('data-theme');}else{document.documentElement.setAttribute('data-theme','light');}try{localStorage.setItem('nvx-theme',L?'dark':'light');}catch(e){}});})();</script>
-<style>:root{--nvx-red:var(--nvx-red);--nvx-red2:var(--nvx-red2);--nvx-red-deep:var(--nvx-red-deep);--nvx-red-soft:var(--nvx-red-soft)}html[data-theme="light"]{--nvx-red:#1ADFD5;--nvx-red2:#1CE4DC;--nvx-red-deep:#4FE9DF;--nvx-red-soft:#0095A5;filter:invert(1)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture,html[data-theme="light"] canvas,html[data-theme="light"] iframe{filter:invert(1)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:var(--nvx-red)}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}</style>
+<style>html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture,html[data-theme="light"] canvas{filter:invert(1) hue-rotate(180deg)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:#E5202A}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>آموزش رایگان هوش مصنوعی کاربردی به فارسی | Navidix</title>
 <meta name="description" content="آموزش کامل و رایگان هوش مصنوعی به زبان فارسی: از اولین پرامپت تا زبان دوربین، نورپردازی و تولید ویدیو. پروتکل‌ها و یادداشت‌های میدانی از تولیدهای واقعی — بدون پیش‌نیاز." />
@@ -84,7 +84,7 @@ body::before{
 .sitebar .row{ max-width:980px; margin:0 auto; padding:11px 22px; display:flex; align-items:center;
   justify-content:space-between; gap:14px; font-family:"Estedad","IRANSans",Tahoma,sans-serif; }
 .sitebar a{ color:#8C939B; text-decoration:none; font-size:13px; transition:color .3s ease; }
-.sitebar a:hover{ color:var(--nvx-red); }
+.sitebar a:hover{ color:#E5202A; }
 .sitebar .home{ display:flex; align-items:center; gap:9px; color:#E4E7EA; font-size:14px; letter-spacing:.04em; }
 .sitebar .home svg{ width:22px; height:22px; }
 .pager{ max-width:980px; margin:0 auto; padding:0 22px 70px; display:flex; gap:14px; flex-wrap:wrap;
@@ -105,7 +105,7 @@ body::before{
   background:#101216; padding:clamp(22px,3vw,32px);
   transition:border-color .35s ease, background .35s ease, transform .35s ease; }
 .cards a:hover{ border-color:rgba(229,32,42,.55); background:#12151a; transform:translateY(-2px); }
-.cards .no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; letter-spacing:.2em; color:var(--nvx-red); }
+.cards .no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; letter-spacing:.2em; color:#E5202A; }
 .cards h2{ font-size:clamp(17px,2.4vw,23px); line-height:1.6; margin:10px 0 10px; font-weight:700; }
 .cards p{ color:#8C939B; font-size:14px; line-height:2; margin:0; }
 .cards .soon{ opacity:.45; }
@@ -120,9 +120,9 @@ body::before{
     --line:#262A31;
     --bone:#E4E7EA;       /* steel white */
     --bone-dim:#8C939B;
-    --amber:var(--nvx-red);      /* Navidix neon red — accent, craft */
+    --amber:#E5202A;      /* Navidix neon red — accent, craft */
     --teal:#B9C0C8;       /* brushed steel — data, measurement */
-    --rust:var(--nvx-red-deep);       /* deep crimson — warning */
+    --rust:#B01620;       /* deep crimson — warning */
     --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, Estedad, monospace; /* Persian glyphs are absent from every mono face, so name the Persian one
        before the generic keyword — otherwise the browser picks a fallback
        that does not shape Persian properly. */
@@ -331,7 +331,7 @@ body::before{
 
 .grp{ margin-bottom:clamp(40px,6vh,72px); }
 .grp__head{ display:flex; align-items:baseline; gap:14px; margin-bottom:10px; }
-.grp__no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:12px; letter-spacing:.2em; color:var(--nvx-red); }
+.grp__no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:12px; letter-spacing:.2em; color:#E5202A; }
 .grp__head h2{ font-size:clamp(19px,2.6vw,27px); font-weight:700; margin:0; line-height:1.5; }
 .grp__sub{ color:#8C939B; font-size:14px; line-height:2; margin:0 0 22px; max-width:62ch; }
 .grp .cards h3{ font-size:clamp(16px,2.2vw,21px); line-height:1.6; margin:10px 0 10px; font-weight:700; }
@@ -347,12 +347,12 @@ body::before{
 .feat:hover{ border-color:rgba(229,32,42,.7); background:#12151a; transform:translateY(-2px); }
 .feat:focus-visible{ outline:1px solid var(--teal,#5BD6C0); outline-offset:3px; }
 .feat__tag{ flex:none; align-self:flex-start; font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11px;
-  letter-spacing:.16em; color:var(--nvx-red); border:1px solid rgba(229,32,42,.4); border-radius:100px;
+  letter-spacing:.16em; color:#E5202A; border:1px solid rgba(229,32,42,.4); border-radius:100px;
   padding:5px 11px; }
 .feat__b{ flex:1; display:block; }
 .feat__b b{ display:block; font-size:clamp(16px,2.3vw,20px); font-weight:700; line-height:1.6; margin-bottom:5px; }
 .feat__b span{ display:block; color:#8C939B; font-size:13.5px; line-height:1.95; }
-.feat__go{ flex:none; color:var(--nvx-red); font-size:19px; }
+.feat__go{ flex:none; color:#E5202A; font-size:19px; }
 @media (max-width:560px){ .feat{ flex-wrap:wrap; } .feat__go{ display:none; } }
 
 /* ---------- find ---------- */
@@ -376,7 +376,7 @@ body::before{
   background:#1b1e24; color:#B9C0C8; font-size:15px; line-height:1;
   display:none; place-items:center; padding:0;
 }
-.find__clear:hover{ background:var(--nvx-red); color:#fff; }
+.find__clear:hover{ background:#E5202A; color:#fff; }
 .find.has-query .find__clear{ display:grid; }
 .find__chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:14px; }
 .chip{
@@ -507,7 +507,6 @@ mark{ background:rgba(229,32,42,.26); color:#fff; border-radius:2px; padding:0 1
 <script src="nvx-config.js" defer></script>
 <script src="nvx-progress.js" defer></script>
 <script src="nvx-auth.js" defer></script>
-<script src="/nvx-nav.js" defer></script>
 </head>
 <body>
 <header class="sitebar"><div class="row"><button type="button" id="themeToggle" aria-label="پوسته‌ی روشن/تاریک" title="پوسته‌ی روشن/تاریک"><svg class="i-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>

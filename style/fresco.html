@@ -4,8 +4,7 @@
 <script>if(location.hostname==='navidixstudio.github.io'){location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}</script>
 <meta charset="utf-8" />
 <script>(function(){try{var t=localStorage.getItem('nvx-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('#themeToggle');if(!b)return;var L=document.documentElement.getAttribute('data-theme')==='light';if(L){document.documentElement.removeAttribute('data-theme');}else{document.documentElement.setAttribute('data-theme','light');}try{localStorage.setItem('nvx-theme',L?'dark':'light');}catch(e){}});})();</script>
-<style>:root{--nvx-red:var(--nvx-red);--nvx-red2:var(--nvx-red2);--nvx-red-deep:var(--nvx-red-deep);--nvx-red-soft:var(--nvx-red-soft)}html[data-theme="light"]{--nvx-red:#1ADFD5;--nvx-red2:#1CE4DC;--nvx-red-deep:#4FE9DF;--nvx-red-soft:#0095A5;filter:invert(1)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture,html[data-theme="light"] canvas,html[data-theme="light"] iframe{filter:invert(1)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:var(--nvx-red)}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}</style>
-<script src="/nvx-nav.js" defer></script>
+<style>html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture,html[data-theme="light"] canvas{filter:invert(1) hue-rotate(180deg)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:#E5202A}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>فرسک دیواری — پرامپت و شناسنامه‌ی سبک | Navidix</title>
 <meta name="description" content="پرامپت آماده‌ی فرسک دیواری (Fresco) برای تصویر و ویدیو، همراه با شناسنامه‌ی سبک: خاکیِ روشن و پودری، محدود به رنگدانه‌های مقاوم؛ نورِ ملایمِ همه‌جانبه، سایه‌های کم‌رمق. و توضیح اینکه چطور هر سوژه‌ای را در همین سبک بسازی." />
@@ -86,7 +85,7 @@ body::before{
 .sitebar .row{ max-width:980px; margin:0 auto; padding:11px 22px; display:flex; align-items:center;
   justify-content:space-between; gap:14px; font-family:"Estedad","IRANSans",Tahoma,sans-serif; }
 .sitebar a{ color:#8C939B; text-decoration:none; font-size:13px; transition:color .3s ease; }
-.sitebar a:hover{ color:var(--nvx-red); }
+.sitebar a:hover{ color:#E5202A; }
 .sitebar .home{ display:flex; align-items:center; gap:9px; color:#E4E7EA; font-size:14px; letter-spacing:.04em; }
 .sitebar .home svg{ width:22px; height:22px; }
 .pager{ max-width:980px; margin:0 auto; padding:0 22px 70px; display:flex; gap:14px; flex-wrap:wrap;
@@ -123,7 +122,7 @@ body::before{
     inset 0 1px 0 rgba(220,234,255,.1),
     0 26px 56px -32px rgba(120,16,22,.55);
 }
-.cards .no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; letter-spacing:.2em; color:var(--nvx-red); }
+.cards .no{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; letter-spacing:.2em; color:#E5202A; }
 .cards h2{ font-size:clamp(17px,2.4vw,23px); line-height:1.6; margin:10px 0 10px; font-weight:700; }
 .cards p{ color:#8C939B; font-size:14px; line-height:2; margin:0; }
 .cards .soon{ opacity:.45; }
@@ -138,9 +137,9 @@ body::before{
     --line:#262A31;
     --bone:#E4E7EA;       /* steel white */
     --bone-dim:#8C939B;
-    --amber:var(--nvx-red);      /* Navidix neon red — accent, craft */
+    --amber:#E5202A;      /* Navidix neon red — accent, craft */
     --teal:#B9C0C8;       /* brushed steel — data, measurement */
-    --rust:var(--nvx-red-deep);       /* deep crimson — warning */
+    --rust:#B01620;       /* deep crimson — warning */
     --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, Estedad, monospace; /* Persian glyphs are absent from every mono face, so name the Persian one
        before the generic keyword — otherwise the browser picks a fallback
        that does not shape Persian properly. */
@@ -495,7 +494,7 @@ body::before{
 .lib .sub{ color:#8C939B; font-size:clamp(14px,2vw,17px); line-height:2; max-width:66ch; margin:0 0 16px; }
 .lib .eyebrow{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:11.5px; letter-spacing:.24em; color:#B9C0C8;
   text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:10px; }
-.lib .eyebrow::before{ content:""; width:26px; height:1px; background:var(--nvx-red); display:block; }
+.lib .eyebrow::before{ content:""; width:26px; height:1px; background:#E5202A; display:block; }
 code.ph{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:.92em; color:#F0A868;
   background:#12151a; border:1px solid #262A31; border-radius:3px; padding:1px 6px; }
 
@@ -521,7 +520,7 @@ code.ph{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:.92em; colo
 .qx{ position:absolute; inset-inline-end:11px; top:50%; transform:translateY(-50%); width:22px; height:22px;
   border:0; border-radius:50%; cursor:pointer; background:#1b1e24; color:#B9C0C8; font-size:14px;
   line-height:1; display:none; place-items:center; padding:0; }
-.qx:hover{ background:var(--nvx-red); color:#fff; }
+.qx:hover{ background:#E5202A; color:#fff; }
 .bar.has-q .qx{ display:grid; }
 .chips{ display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
 .chip{ font-family:inherit; font-size:12.5px; line-height:1; cursor:pointer; padding:6px 13px;
@@ -557,7 +556,7 @@ body.density-l{ --pc-min:380px; }
 .grp2{ margin-bottom:clamp(32px,5vh,52px); }
 .grp2__head{ display:flex; align-items:baseline; gap:12px; margin:0 0 6px; }
 .grp2__head h2{ font-size:clamp(18px,2.6vw,25px); font-weight:700; margin:0; line-height:1.5; color:#EDF2F8; }
-.grp2__n{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:12px; letter-spacing:.14em; color:var(--nvx-red); }
+.grp2__n{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:12px; letter-spacing:.14em; color:#E5202A; }
 .grp2__sub{ color:#8C939B; font-size:13.5px; line-height:1.95; margin:0 0 16px; max-width:62ch; }
 .cards2{ display:grid; grid-template-columns:repeat(auto-fill,minmax(var(--pc-min,268px),1fr)); gap:16px; }
 
@@ -587,7 +586,7 @@ picture{ display:contents; }
    strength, a rule draws itself underneath from the trailing edge, and the
    arrow travels — leftward, because the page is Persian and left is forward
    here. Two transforms and an opacity; nothing measured, nothing reflowed. */
-.pc__go{ margin-top:auto; padding-top:9px; font-size:12px; color:var(--nvx-red); display:flex;
+.pc__go{ margin-top:auto; padding-top:9px; font-size:12px; color:#E5202A; display:flex;
   align-items:center; gap:7px; opacity:.78;
   transition:opacity .45s cubic-bezier(.16,1,.3,1); }
 .pc__go > span{ position:relative; }
@@ -614,7 +613,7 @@ picture{ display:contents; }
 .lib.is-empty .empty2{ display:block; }
 .grp2[hidden]{ display:none; }
 
-.join{ border:1px solid #262A31; border-inline-start:3px solid var(--nvx-red); border-radius:4px;
+.join{ border:1px solid #262A31; border-inline-start:3px solid #E5202A; border-radius:4px;
   background:#0d1015; padding:clamp(18px,3vw,26px); margin:clamp(28px,5vh,44px) 0 0; }
 .join h2{ margin:0 0 10px; font-size:clamp(17px,2.4vw,22px); font-weight:700; line-height:1.6; }
 .join p{ margin:0 0 14px; color:#98A0A9; font-size:14px; line-height:2; max-width:62ch; }
@@ -630,7 +629,7 @@ picture{ display:contents; }
 
 .sd{ max-width:920px; margin:0 auto; padding:clamp(40px,7vh,80px) 22px 80px; color:#D7DEE7; }
 .sd__crumb{ font-size:12.5px; color:#7C848D; margin-bottom:16px; }
-.sd__crumb a{ color:#8C939B; text-decoration:none; } .sd__crumb a:hover{ color:var(--nvx-red); }
+.sd__crumb a{ color:#8C939B; text-decoration:none; } .sd__crumb a:hover{ color:#E5202A; }
 .sd h1{ font-size:clamp(26px,4.6vw,42px); line-height:1.38; margin:0 0 8px; font-weight:800; letter-spacing:-.01em; color:#F2F6FB; }
 .sd__en{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:13px; letter-spacing:.06em; color:#7C848D; }
 .sd__meta{ display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 clamp(22px,4vh,32px); }
@@ -659,16 +658,16 @@ picture{ display:contents; }
 
 .sd h2{ font-size:clamp(18px,2.6vw,24px); font-weight:700; margin:clamp(28px,5vh,44px) 0 14px; line-height:1.55; color:#EDF2F8; }
 .sd h2 .n{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:12px; letter-spacing:.14em;
-  color:var(--nvx-red); margin-inline-end:10px; }
+  color:#E5202A; margin-inline-end:10px; }
 .sd p{ color:#98A0A9; font-size:14.5px; line-height:2.05; margin:0 0 14px; max-width:64ch; }
-.sd p b{ color:#E9EDF2; } .sd p em{ font-style:normal; color:var(--nvx-red); font-weight:700; }
+.sd p b{ color:#E9EDF2; } .sd p em{ font-style:normal; color:#E5202A; font-weight:700; }
 
 .dna{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1px;
   background:#1b1e24; border:1px solid #1b1e24; border-radius:5px; overflow:hidden; }
 .dna div{ background:#0d1015; padding:14px 16px; }
 /* seven traits never fill a row exactly, so the last one takes the slack */
 .dna div:last-child{ grid-column:1 / -1; }
-.dna dt{ font-size:11px; letter-spacing:.13em; color:var(--nvx-red); font-weight:700; margin-bottom:6px; }
+.dna dt{ font-size:11px; letter-spacing:.13em; color:#E5202A; font-weight:700; margin-bottom:6px; }
 .dna dd{ margin:0; font-size:13.5px; line-height:1.9; color:#C4CBD3; }
 
 .pal{ display:flex; gap:0; border-radius:5px; overflow:hidden; border:1px solid #262A31; margin-bottom:14px; }
@@ -683,7 +682,7 @@ picture{ display:contents; }
 .copy{ position:absolute; inset-inline-end:8px; bottom:8px; font-family:inherit; font-size:12px;
   padding:6px 13px; border-radius:3px; cursor:pointer; color:#C9D1D9;
   background:#161A20; border:1px solid #2b313a; transition:background .2s ease, color .2s ease; }
-.copy:hover{ background:var(--nvx-red); border-color:var(--nvx-red); color:#fff; }
+.copy:hover{ background:#E5202A; border-color:#E5202A; color:#fff; }
 .copy.done{ background:#1B7A4B; border-color:#1B7A4B; color:#fff; }
 .copy:focus-visible{ outline:1px solid #5BD6C0; outline-offset:2px; }
 .pnote{ font-size:12.5px; color:#6B7280; line-height:1.9; margin:0 0 clamp(20px,3vh,28px); }

@@ -21,8 +21,8 @@
   --xp-deep:      #0B1A3A;
   --xp-blue:      #2B6CFF;
   --xp-ion:       #8FDBFF;
-  --xp-red:       var(--nvx-red2);
-  --xp-red-soft:  var(--nvx-red-soft);
+  --xp-red:       #E31B23;
+  --xp-red-soft:  #FF6A5A;
   --xp-paper:     #EDF2FA;
   --xp-dim:       rgba(237,242,250,.56);
   --xp-ghost:     rgba(237,242,250,.20);
