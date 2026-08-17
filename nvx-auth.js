@@ -246,7 +246,7 @@
       '  margin:0 0 13px;direction:ltr;text-align:left;}',
       '.nvxm input:focus{outline:none;border-color:rgba(150,196,255,.6);}',
       '.nvxm__go{width:100%;appearance:none;border:0;border-radius:9px;padding:12px;',
-      '  background:#E5202A;color:#fff;font:inherit;font-size:14px;font-weight:700;cursor:pointer;}',
+      '  background:var(--nvx-red);color:#fff;font:inherit;font-size:14px;font-weight:700;cursor:pointer;}',
       '.nvxm__go:disabled{opacity:.55;cursor:default;}',
       '.nvxm__alt{margin:14px 0 0;font-size:12.5px;color:#8C939B;text-align:center;line-height:2;}',
       '.nvxm__alt button{background:none;border:0;color:#7FB8FF;font:inherit;font-size:12.5px;',
