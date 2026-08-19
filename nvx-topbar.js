@@ -36,7 +36,7 @@
     '.topbar__home{display:inline-flex;align-items:center;gap:9px;flex:none;',
     'color:'+PAPER+';text-decoration:none;font-family:"Inter","SF Pro Text","Helvetica Neue",system-ui,sans-serif;',
     'font-size:12.5px;letter-spacing:.2em}',
-    '.topbar__home img{display:block}',
+    '.topbar__home img{display:block;width:30px;height:30px;object-fit:contain}',
     '#topbar .topbar__links{display:flex;flex-direction:column;padding:0;margin:0 0 2px}',
     '#topbar .topbar__links .nvxa{appearance:none;border:0;background:none;color:'+PAPER_DIM+';',
     'font-family:"Estedad","IRANSansX","IRANSans","Segoe UI",Tahoma,sans-serif;font-size:14px;line-height:1.2;',
@@ -86,9 +86,10 @@
   ].join('');
   document.head.appendChild(css);
 
-  /* ---- 2. the markup ---- */
-  var BASE = location.pathname.replace(/\/[^\/]*$/, '/');
-  function href(p){ return BASE + p; }
+  /* ---- 2. the markup ----
+     Root-relative paths, so the same bar resolves on the homepage, content
+     pages and the explore/ subfolder alike. */
+  function href(p){ return '/' + p; }
 
   var bar = document.createElement('header');
   bar.className = 'topbar';
