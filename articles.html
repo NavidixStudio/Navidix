@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-nvx-maintenance>
+<head>
+<script>if(location.hostname==='navidixstudio.github.io'){location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}</script>
+<meta charset="utf-8" />
+<script>(function(){try{var t=localStorage.getItem('nvx-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('#themeToggle');if(!b)return;var L=document.documentElement.getAttribute('data-theme')==='light';if(L){document.documentElement.removeAttribute('data-theme');}else{document.documentElement.setAttribute('data-theme','light');}try{localStorage.setItem('nvx-theme',L?'dark':'light');}catch(e){}});})();</script>
+<style>html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture,html[data-theme="light"] canvas{filter:invert(1) hue-rotate(180deg)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:#E5202A}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>مقاله‌ها | Navidix</title>
+<meta name="description" content="نوشته‌های استودیو نویدیکس درباره‌ی هوش مصنوعی، ابزارها و تولید محتوا." />
+<meta name="theme-color" content="#08090B" />
+
+<!-- This page is rendered in the browser from the database, so a crawler
+     that does not run JavaScript sees the shell and not the articles. That
+     is a real cost and it is taken knowingly: it is the difference between
+     publishing from the panel today and waiting for the static rebuild
+     step. When that step lands, this page becomes its output and the
+     tag below goes with it. -->
+<meta name="robots" content="index, follow" />
+
+<link rel="icon" href="favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="مقاله‌ها — نویدیکس" />
+<meta property="og:description" content="نوشته‌های استودیو نویدیکس درباره‌ی هوش مصنوعی، ابزارها و تولید محتوا." />
+<meta property="og:image" content="https://navidixstudio.com/og-home.png" />
+<meta property="og:url" content="https://navidixstudio.com/articles.html" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<style>
+@font-face{font-family:'Estedad';src:url('/assets/estedad-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+@font-face{font-family:'Inter';src:url('/assets/inter-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+
+:root{--bg:#08090B;--pane:#11151B;--line:#262A31;--ink:#EDF2FA;--ink2:#C8D0DA;
+  --mute:#8C939B;--dim:#6B7280;--ember:#E5202A;--link:#7FB8FF}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);
+  font-family:'Estedad','IRANSans',Tahoma,sans-serif;font-size:15px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+.lat{font-family:'Inter',ui-sans-serif,system-ui,sans-serif}
+
+.sitebar{border-bottom:1px solid var(--line);background:rgba(8,9,11,.9);
+  position:sticky;top:0;z-index:20;backdrop-filter:blur(8px)}
+.sitebar .row{max-width:1080px;margin:0 auto;padding:13px 22px;
+  display:flex;align-items:center;gap:14px}
+.sitebar a{color:var(--mute);text-decoration:none;font-size:13px}
+.sitebar a:hover{color:var(--ink)}
+.home{display:flex;align-items:center;gap:9px;color:var(--ink)!important;
+  font-weight:700;letter-spacing:.16em;font-size:12.5px}
+.sp{flex:1}
+
+.wrap{max-width:1080px;margin:0 auto;padding:38px 22px 90px}
+.eyebrow{font-size:11.5px;letter-spacing:.2em;color:var(--dim);margin:0 0 10px}
+h1{font-size:clamp(24px,3.6vw,34px);font-weight:700;margin:0 0 8px;line-height:1.5}
+.sub{color:var(--mute);font-size:14px;margin:0 0 6px;line-height:2}
+
+.empty{color:var(--dim);font-size:13.5px;line-height:2.1;
+  border:1px dashed var(--line);border-radius:14px;padding:26px 22px;margin:26px 0}
+.empty b{color:var(--ink2);display:block;font-weight:700;margin-bottom:4px}
+
+@media (max-width:640px){.wrap{padding:26px 15px 70px}}
+</style>
+
+<script src="nvx-ui.js" defer></script>
+<script src="nvx-config.js" defer></script>
+<script src="nvx-auth.js" defer></script>
+<script src="nvx-content.js" defer></script>
+</head>
+<body>
+
+<header class="sitebar"><div class="row"><button type="button" id="themeToggle" aria-label="پوسته‌ی روشن/تاریک" title="پوسته‌ی روشن/تاریک"><svg class="i-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+  <a class="home" href="index.html"><img class="navmark" src="navidix-mark.png" alt="" width="24" height="24" /><span>NAVIDIX</span></a>
+  <span class="sp"></span>
+  <a href="index.html">صفحه‌ی اصلی ←</a>
+</div></header>
+
+<main class="wrap">
+  <p class="eyebrow lat">NAVIDIX · ARTICLES</p>
+  <h1>مقاله‌ها</h1>
+  <p class="sub">نوشته‌های استودیو درباره‌ی هوش مصنوعی، ابزارها و تولید محتوا.</p>
+
+  <!-- The whole page. data-nvx-keep is what keeps this node in the
+       document when nothing is published yet, so the note below it can
+       explain the emptiness instead of the page ending after the
+       subtitle. -->
+  <div data-nvx="articles" data-nvx-keep></div>
+
+  <div class="empty" id="note" hidden>
+    <b>هنوز مقاله‌ای منتشر نشده.</b>
+    اولین مقاله را از پنل مدیریت بساز و منتشر کن — همان لحظه اینجا ظاهر می‌شود.
+  </div>
+</main>
+
+<script>
+/* The note is shown only for a genuinely empty list, not for a list that
+   failed to load. Those are different things: one is a site with no
+   articles yet, the other is a reader whose network dropped, and telling
+   the second reader that nothing has been written is a lie. */
+(function () {
+  var host = document.querySelector('[data-nvx="articles"]');
+  var note = document.getElementById('note');
+  if (!host || !note) return;
+
+  var check = function () {
+    if (host.getAttribute('data-nvx-state') === 'empty') note.hidden = false;
+  };
+
+  new MutationObserver(check).observe(host, {
+    attributes: true, attributeFilter: ['data-nvx-state']
+  });
+  check();
+})();
+</script>
+</body>
+</html>

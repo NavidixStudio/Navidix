@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<script>if(location.hostname==='navidixstudio.github.io'){location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}</script>
+<meta charset="utf-8" />
+<script>(function(){try{var t=localStorage.getItem('nvx-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('#themeToggle');if(!b)return;var L=document.documentElement.getAttribute('data-theme')==='light';if(L){document.documentElement.removeAttribute('data-theme');}else{document.documentElement.setAttribute('data-theme','light');}try{localStorage.setItem('nvx-theme',L?'dark':'light');}catch(e){}});})();</script>
+<style>html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture,html[data-theme="light"] canvas{filter:invert(1) hue-rotate(180deg)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:#E5202A}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>مقاله | Navidix</title>
+<meta name="theme-color" content="#08090B" />
+
+<!-- One file serves every article, addressed by ?slug=. The title and the
+     description below are placeholders that the script replaces once the
+     row arrives — which works for a reader and for anything that runs
+     JavaScript, and not for a crawler that does not. Same trade as
+     articles.html, and the same fix later. -->
+<meta name="description" content="نوشته‌ای از استودیو نویدیکس." />
+<meta name="robots" content="index, follow" />
+
+<link rel="icon" href="favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="مقاله — نویدیکس" />
+<meta property="og:image" content="https://navidixstudio.com/og-home.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<style>
+@font-face{font-family:'Estedad';src:url('/assets/estedad-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+@font-face{font-family:'Inter';src:url('/assets/inter-var.woff2')format('woff2');
+  font-weight:100 900;font-display:swap;font-style:normal}
+
+:root{--bg:#08090B;--pane:#11151B;--line:#262A31;--ink:#EDF2FA;--ink2:#C8D0DA;
+  --mute:#8C939B;--dim:#6B7280;--ember:#E5202A;--link:#7FB8FF}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);
+  font-family:'Estedad','IRANSans',Tahoma,sans-serif;font-size:15px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+.lat{font-family:'Inter',ui-sans-serif,system-ui,sans-serif}
+
+.sitebar{border-bottom:1px solid var(--line);background:rgba(8,9,11,.9);
+  position:sticky;top:0;z-index:20;backdrop-filter:blur(8px)}
+.sitebar .row{max-width:760px;margin:0 auto;padding:13px 22px;
+  display:flex;align-items:center;gap:14px}
+.sitebar a{color:var(--mute);text-decoration:none;font-size:13px}
+.sitebar a:hover{color:var(--ink)}
+.home{display:flex;align-items:center;gap:9px;color:var(--ink)!important;
+  font-weight:700;letter-spacing:.16em;font-size:12.5px}
+.sp{flex:1}
+
+/* 68ch is the measure a long Persian paragraph reads at without the eye
+   losing the line on the way back. The list page is a grid and wide; this
+   one is a column and is not. */
+.wrap{max-width:760px;margin:0 auto;padding:38px 22px 90px}
+.eyebrow{font-size:11.5px;letter-spacing:.14em;color:var(--dim);margin:0 0 10px}
+h1{font-size:clamp(24px,4vw,34px);font-weight:700;margin:0 0 10px;line-height:1.55}
+.meta{color:var(--dim);font-size:12.5px;margin:0 0 22px}
+.cover{width:100%;border-radius:15px;display:block;margin:0 0 26px;border:1px solid var(--line)}
+.lede{color:var(--ink2);font-size:16px;line-height:2.1;margin:0 0 26px;
+  border-inline-start:2px solid var(--ember);padding-inline-start:15px}
+
+.body{font-size:15.5px;line-height:2.15;color:var(--ink2)}
+.body h2{font-size:20px;color:var(--ink);margin:34px 0 10px;line-height:1.65}
+.body h3{font-size:17px;color:var(--ink);margin:28px 0 8px;line-height:1.7}
+.body h4,.body h5{font-size:15.5px;color:var(--ink);margin:22px 0 6px}
+.body p{margin:0 0 17px}
+.body ul,.body ol{margin:0 0 17px;padding-inline-start:22px}
+.body li{margin:0 0 7px}
+.body a{color:var(--link);text-decoration:none;border-bottom:1px solid rgba(127,184,255,.3)}
+.body a:hover{border-bottom-color:var(--link)}
+.body img{max-width:100%;height:auto;border-radius:11px;display:block;margin:20px 0}
+.body code{font-family:'Inter',ui-monospace,monospace;font-size:13px;background:#0E1116;
+  border:1px solid var(--line);border-radius:5px;padding:1px 6px;direction:ltr;
+  unicode-bidi:isolate}
+.body blockquote{margin:0 0 17px;padding:2px 15px;border-inline-start:2px solid var(--line);
+  color:var(--mute)}
+.body strong{color:var(--ink);font-weight:700}
+
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:30px 0 0;
+  border-top:1px solid var(--line);padding-top:20px}
+.tag{font-size:11.5px;color:var(--mute);border:1px solid var(--line);
+  border-radius:6px;padding:2px 9px}
+
+.state{color:var(--dim);font-size:13.5px;line-height:2.1;
+  border:1px dashed var(--line);border-radius:14px;padding:26px 22px;margin:26px 0}
+.state b{color:var(--ink2);display:block;font-weight:700;margin-bottom:4px}
+.state a{color:var(--link);text-decoration:none}
+
+.back{display:inline-block;margin-top:34px;color:var(--link);text-decoration:none;
+  font-size:13.5px}
+
+@media (max-width:640px){.wrap{padding:26px 15px 70px}}
+</style>
+
+<script src="nvx-ui.js" defer></script>
+<script src="nvx-config.js" defer></script>
+<script src="nvx-auth.js" defer></script>
+<script src="nvx-content.js" defer></script>
+</head>
+<body>
+
+<header class="sitebar"><div class="row"><button type="button" id="themeToggle" aria-label="پوسته‌ی روشن/تاریک" title="پوسته‌ی روشن/تاریک"><svg class="i-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+  <a class="home" href="index.html"><img class="navmark" src="navidix-mark.png" alt="" width="24" height="24" /><span>NAVIDIX</span></a>
+  <span class="sp"></span>
+  <a href="articles.html">همه‌ی مقاله‌ها ←</a>
+</div></header>
+
+<main class="wrap" id="main">
+  <p class="state" id="state">در حال باز کردن…</p>
+</main>
+
+<script>
+/* =====================================================================
+   One article, by slug.
+
+   The row is fetched by its slug and the read policy decides whether
+   there is one: a draft, or something scheduled for next week, simply
+   does not come back — the same 200 with an empty array a reader gets
+   for a slug that was never used. Which is why "not published yet" and
+   "no such article" are one message here rather than two. Telling them
+   apart would mean the page could confirm the existence of a draft, and
+   that is exactly the thing a draft should not do.
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  function boot() {
+    var C = window.NVX_CONTENT;
+    var main = document.getElementById('main');
+    var state = document.getElementById('state');
+
+    if (!C) {
+      state.textContent = 'این صفحه بدون اتصال به پایگاه داده کار نمی‌کند.';
+      return;
+    }
+
+    var slug = new URLSearchParams(location.search).get('slug');
+    if (!slug) {
+      missing();
+      return;
+    }
+
+    function missing() {
+      main.textContent = '';
+      var s = document.createElement('div');
+      s.className = 'state';
+      var b = document.createElement('b');
+      b.textContent = 'این مقاله پیدا نشد.';
+      s.appendChild(b);
+      s.appendChild(document.createTextNode('ممکن است هنوز منتشر نشده باشد یا نشانی‌اش عوض شده باشد. '));
+      var a = document.createElement('a');
+      a.href = 'articles.html';
+      a.textContent = 'فهرست مقاله‌ها ←';
+      s.appendChild(a);
+      main.appendChild(s);
+    }
+
+    C.get('articles?select=*&slug=eq.' + encodeURIComponent(slug) + '&limit=1')
+      .then(function (rows) {
+        var r = rows[0];
+        if (!r) { missing(); return; }
+        draw(C, main, r);
+      }, function () {
+        main.textContent = '';
+        var s = document.createElement('p');
+        s.className = 'state';
+        s.textContent = 'باز کردن این مقاله ممکن نشد. اتصالت را بررسی کن و دوباره امتحان کن.';
+        main.appendChild(s);
+      });
+  }
+
+  function draw(C, main, r) {
+    main.textContent = '';
+
+    /* The tab, the description and the share card, filled from the row.
+       A crawler that does not run scripts never sees these — noted in
+       the head — but a person who shares the link from a browser does. */
+    document.title = (r.seo_title || r.title) + ' | Navidix';
+    var d = document.querySelector('meta[name="description"]');
+    if (d && (r.seo_description || r.excerpt)) {
+      d.setAttribute('content', r.seo_description || r.excerpt);
+    }
+    var ogt = document.querySelector('meta[property="og:title"]');
+    if (ogt) ogt.setAttribute('content', r.seo_title || r.title);
+    var ogd = document.querySelector('meta[property="og:description"]');
+    if (ogd && (r.seo_description || r.excerpt)) {
+      ogd.setAttribute('content', r.seo_description || r.excerpt);
+    }
+    var ogi = document.querySelector('meta[property="og:image"]');
+    if (ogi && r.cover_path) ogi.setAttribute('content', C.media(r.cover_path));
+
+    var eyebrow = document.createElement('p');
+    eyebrow.className = 'eyebrow lat';
+    eyebrow.textContent = 'NAVIDIX · ARTICLE';
+    main.appendChild(eyebrow);
+
+    var h1 = document.createElement('h1');
+    h1.textContent = r.title;
+    main.appendChild(h1);
+
+    var meta = document.createElement('p');
+    meta.className = 'meta';
+    meta.textContent = C.when(r.published_at);
+    main.appendChild(meta);
+
+    if (r.cover_path) {
+      var img = document.createElement('img');
+      img.className = 'cover';
+      img.src = C.media(r.cover_path);
+      img.alt = '';
+      main.appendChild(img);
+    }
+
+    if (r.excerpt) {
+      var lede = document.createElement('p');
+      lede.className = 'lede';
+      lede.textContent = r.excerpt;
+      main.appendChild(lede);
+    }
+
+    if (r.body) {
+      var body = document.createElement('div');
+      body.className = 'body';
+      /* The one innerHTML in the public layer. Everything it receives has
+         been through markdown(), which escapes before it formats and
+         refuses any href that is not http, https or same-site. */
+      body.innerHTML = C.markdown(r.body);
+      main.appendChild(body);
+    }
+
+    if (r.tags && r.tags.length) {
+      var tags = document.createElement('div');
+      tags.className = 'tags';
+      r.tags.forEach(function (t) {
+        var s = document.createElement('span');
+        s.className = 'tag';
+        s.textContent = t;
+        tags.appendChild(s);
+      });
+      main.appendChild(tags);
+    }
+
+    var back = document.createElement('a');
+    back.className = 'back';
+    back.href = 'articles.html';
+    back.textContent = '→ برگرد به فهرست مقاله‌ها';
+    main.appendChild(back);
+  }
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>
