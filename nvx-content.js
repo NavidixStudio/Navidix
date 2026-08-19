@@ -213,8 +213,48 @@
     return a;
   }
 
+  /* The homepage speaks its own dialect: .tile inside a .band__rail, a
+     meta line of dot-separated scraps, a heading, and nothing else. A
+     mount there asks for data-nvx-style="tile" and gets markup that is
+     indistinguishable from the hand-written rows beside it — which is the
+     point. Content that announces it came from a database looks bolted
+     on, and this one is not. */
+  function tile(opts) {
+    var a = el('a', 'tile');
+    a.href = opts.href;
+
+    var body = el('span', 'tile__body');
+    var meta = el('span', 'tile__meta');
+    meta.appendChild(el('span', 'no', opts.kind || 'مقاله'));
+    (opts.bits || []).forEach(function (bit) {
+      if (!bit) return;
+      meta.appendChild(el('span', 'dot'));
+      meta.appendChild(el('span', '', bit));
+    });
+    body.appendChild(meta);
+    body.appendChild(el('h3', 'tile__title', opts.title));
+
+    a.appendChild(body);
+    return a;
+  }
+
   var RENDER = {
-    articles: function (rows) {
+    articles: function (rows, style) {
+      if (style === 'tile') {
+        /* A fragment, not a wrapper: the mount node is already the rail,
+           and a div between it and its tiles would break the grid. */
+        var f = document.createDocumentFragment();
+        rows.forEach(function (r) {
+          f.appendChild(tile({
+            href: 'article.html?slug=' + encodeURIComponent(r.slug),
+            kind: 'مقاله',
+            bits: [when(r.published_at), (r.tags || [])[0]],
+            title: r.title
+          }));
+        });
+        return f;
+      }
+
       var g = el('div', 'nvxg');
       rows.forEach(function (r) {
         g.appendChild(card({
@@ -430,7 +470,7 @@
       }
 
       node.textContent = '';
-      node.appendChild(RENDER[kind](rows));
+      node.appendChild(RENDER[kind](rows, node.getAttribute('data-nvx-style')));
       node.dispatchEvent(new CustomEvent('nvx:content', { bubbles: true, detail: { rows: rows } }));
 
     }, function () {
