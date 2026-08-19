@@ -1432,27 +1432,6 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
       </div>
     </section>
 
-    <!-- ---------- what the studio writes ----------
-         The only band on this page whose contents are not typed here. The
-         rail is a mount point: nvx-content.js fills it from the newest
-         articles, whether they came from content/articles/ in the repo or
-         from the panel, and renders them as .tile so they are
-         indistinguishable from the rows above and below.
-
-         data-nvx-hide="section" is what makes this safe to leave in the
-         page forever: with nothing published, the mount removes the whole
-         band rather than leaving a heading over an empty grid. -->
-    <section class="band" aria-labelledby="band-read-t">
-      <header class="band__head">
-        <p class="band__eyebrow">نوشته‌های استودیو</p>
-        <h2 class="band__title" id="band-read-t">آنچه در عمل یاد گرفتیم</h2>
-        <p class="band__sub">یادداشت‌هایی درباره‌ی هوش مصنوعی، سینما و تولید محتوا — از کارِ واقعی این استودیو، با همان چیزی که جواب داد و همان چیزی که نداد.</p>
-        <a class="band__cta" href="articles.html"><span>همه‌ی مقاله‌ها</span><i aria-hidden="true">←</i></a>
-      </header>
-      <div class="band__rail band__rail--4"
-           data-nvx="articles" data-nvx-limit="4"
-           data-nvx-style="tile" data-nvx-hide="section"></div>
-    </section>
 
     <!-- ---------- what the studio teaches ---------- -->
     <section class="band" aria-labelledby="band-learn-t">
@@ -1687,6 +1666,28 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
           </span>
         </a>
       </div>
+    </section>
+
+    <!-- ---------- what the studio writes ----------
+         The only band on this page whose contents are not typed here. The
+         rail is a mount point: nvx-content.js fills it from the newest
+         articles, whether they came from content/articles/ in the repo or
+         from the panel, and renders them as .tile so they are
+         indistinguishable from the rows above and below.
+
+         data-nvx-hide="section" is what makes this safe to leave in the
+         page forever: with nothing published, the mount removes the whole
+         band rather than leaving a heading over an empty grid. -->
+    <section class="band" aria-labelledby="band-read-t">
+      <header class="band__head">
+        <p class="band__eyebrow">نوشته‌های استودیو</p>
+        <h2 class="band__title" id="band-read-t">آنچه در عمل یاد گرفتیم</h2>
+        <p class="band__sub">یادداشت‌هایی درباره‌ی هوش مصنوعی، سینما و تولید محتوا — از کارِ واقعی این استودیو، با همان چیزی که جواب داد و همان چیزی که نداد.</p>
+        <a class="band__cta" href="articles.html"><span>همه‌ی مقاله‌ها</span><i aria-hidden="true">←</i></a>
+      </header>
+      <div class="band__rail band__rail--4"
+           data-nvx="articles" data-nvx-limit="4"
+           data-nvx-style="tile" data-nvx-hide="section"></div>
     </section>
   </div>
 

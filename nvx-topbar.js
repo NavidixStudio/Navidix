@@ -32,10 +32,21 @@
   var EMBER      = '#FF6A5A';
   var EASE       = 'cubic-bezier(.16,1,.3,1)';
 
-  /* ---- theme state ---- */
+  /* ---- theme state ----
+     Dark is not a default the reader can change permanently, it is where
+     every visit begins. Day lasts for the session — so following a link
+     does not snap the page back and undo a deliberate choice mid-read —
+     and a new visit opens dark again.
+
+     sessionStorage rather than localStorage is the whole of that rule.
+     The old localStorage key is cleared on the way past, or anyone who
+     once tried day mode would still be arriving in it. */
   var KEY = 'nvx-day';
   var DAY = false;
-  try { DAY = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  try {
+    DAY = sessionStorage.getItem(KEY) === '1';
+    localStorage.removeItem(KEY);
+  } catch (e) {}
 
   /* ---- 1. the sheet ---- */
   var css = document.createElement('style');
@@ -43,13 +54,22 @@
     '.topbar{position:fixed;inset:0 0 auto;z-index:50;background:rgba(6,8,13,.85);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border-bottom:1px solid rgba(140,170,220,.11);transform:translateY(-101%);transition:transform .6s ' + EASE + '}',
     '.topbar.is-in{transform:none}',
     '.topbar[hidden]{display:none}',
-    '.topbar__row{max-width:1240px;margin:0 auto;padding:10px 18px;display:flex;',
-    'align-items:center;justify-content:space-between;gap:10px}',
-    '.topbar__home{display:inline-flex;align-items:center;justify-content:center;gap:9px;flex:1;',
-    'min-width:0;color:'+PAPER+';text-decoration:none;text-align:center;',
+    '.topbar__row{max-width:1240px;margin:0 auto;padding:9px 18px;display:flex;',
+    'align-items:center;gap:10px}',
+    /* The mark was never centred: one button on the start side, two on
+       the end, and space-between splits the leftover unevenly. Both
+       tails now claim the same share and push from opposite edges, so
+       the middle is the middle no matter how many buttons a side has. */
+    '.topbar__tail{flex:1 1 0;min-width:0}',
+    '.topbar__tail:first-child{justify-content:flex-start}',
+    '.topbar__tail:last-child{justify-content:flex-end}',
+    '.topbar__home{display:inline-flex;align-items:center;justify-content:center;gap:11px;',
+    'flex:0 0 auto;min-width:0;color:'+PAPER+';text-decoration:none;text-align:center;',
     'font-family:"Inter","SF Pro Text","Helvetica Neue",system-ui,sans-serif;',
-    'font-size:12.5px;letter-spacing:.22em}',
-    '.topbar__home img{display:block;width:30px;height:30px;object-fit:contain}',
+    'font-size:15px;font-weight:700;letter-spacing:.26em}',
+    '.topbar__home img{display:block;width:40px;height:40px;object-fit:contain;',
+    'transition:transform .35s '+EASE+'}',
+    '.topbar__home:hover img{transform:scale(1.06)}',
     '#topbar .topbar__links{display:flex;flex-direction:column;padding:0;margin:0 0 2px}',
     '#topbar .topbar__links .nvxa{appearance:none;border:0;background:none;color:'+PAPER_DIM+';',
     'font-family:"Estedad","IRANSansX","IRANSans","Segoe UI",Tahoma,sans-serif;font-size:14px;line-height:1.2;',
@@ -59,7 +79,7 @@
     '#topbar .topbar__links .nvxa:hover{color:'+PAPER+';background:rgba(140,170,220,.08)}',
     '#topbar .topbar__links .nvxa--in::before{content:"• ";color:'+EMBER+'}',
     '#topbar .topbar__links .nvxa--in{color:'+PAPER_DIM+'}',
-    '.topbar__tail{display:flex;align-items:center;gap:8px;flex:none}',
+    '.topbar__tail{display:flex;align-items:center;gap:8px}',
     '.topbar__circ{appearance:none;border:1px solid '+LINE+';background:rgba(140,170,220,.05);',
     'border-radius:999px;width:34px;height:34px;padding:0;flex:none;cursor:pointer;',
     'display:inline-flex;align-items:center;justify-content:center;color:'+PAPER_DIM+';',
@@ -102,21 +122,49 @@
     '.topbar__menu-cta{margin-top:6px;border:1px solid rgba(227,27,35,.5);background:rgba(227,27,35,.1);',
     'color:'+PAPER+';font-weight:600}',
     '.topbar__menu-cta:hover{border-color:rgba(255,120,110,.8);background:rgba(227,27,35,.18)}',
-    /* ---- day: the content frame inverts, images invert back to original ---- */
-    'html.nvx-day{background:#ece6da}',
-    'html.nvx-day main,html.nvx-day body > section,html.nvx-day .idx,html.nvx-day .lib,html.nvx-day .sd{',
-    'filter:invert(1) hue-rotate(180deg)}',
-    'html.nvx-day main img,html.nvx-day main video,html.nvx-day main canvas,',
-    'html.nvx-day main picture,html.nvx-day main iframe,html.nvx-day .idx img,html.nvx-day .lib img,html.nvx-day .sd img{',
-    'filter:invert(1) hue-rotate(180deg)}',
-    'html.nvx-day .topbar{background:rgba(248,246,240,.92);border-bottom-color:rgba(30,40,60,.12)}',
-    'html.nvx-day .topbar__home,html.nvx-day .topbar__circ{color:#2A2F38}',
-    'html.nvx-day .topbar__circ{border-color:rgba(30,40,60,.22)}',
-    'html.nvx-day .topbar__menu{background:rgba(252,250,245,.97);border-color:rgba(30,40,60,.14);box-shadow:none}',
-    'html.nvx-day .topbar__menu a,html.nvx-day .topbar__menu-trigger,html.nvx-day #topbar .topbar__links .nvxa{color:#3A4150}',
-    'html.nvx-day .topbar__menu a:hover,html.nvx-day .topbar__menu-trigger:hover,html.nvx-day #topbar .topbar__links .nvxa:hover{color:#11151C;background:rgba(30,40,60,.07)}',
-    'html.nvx-day .topbar__menu-trigger>i,html.nvx-day .topbar__panel{border-color:rgba(30,40,60,.2)}',
-    '@media (max-width:820px){.topbar__home span{display:none}}',
+    /* ---- day ----
+       Not a light theme. A brighter one.
+
+       This used to invert the content frame, and on a site with no shared
+       token system that is the only way to flip 230 hand-written pages at
+       once — but it flips only what it is applied to. The homepage paints
+       its own black ground outside that element, so light text inverted to
+       dark text and sat on a background that never moved. Unreadable, and
+       every page with a backdrop of its own had some version of the same
+       fault.
+
+       So nothing inverts now. The page is lifted: backgrounds a few stops
+       up, colour a touch stronger, and the relationship between text and
+       ground preserved exactly as designed. Nothing is blown to white,
+       because nothing crosses the middle.
+
+       Media is brought back down by the reciprocal — brightness(a) then
+       brightness(1/a) is the identity — so a photograph in day mode is the
+       same photograph, which is what "behind the pictures must not break"
+       asks for. */
+    'html.nvx-day{background:#0E1420}',
+    'html.nvx-day body{background:#101725}',
+    'html.nvx-day #stage,html.nvx-day main,html.nvx-day body > section,',
+    'html.nvx-day .idx,html.nvx-day .lib,html.nvx-day .sd{',
+    'filter:brightness(1.5) saturate(1.12)}',
+    'html.nvx-day img,html.nvx-day video,html.nvx-day canvas,',
+    'html.nvx-day picture,html.nvx-day iframe{',
+    'filter:brightness(.6667) saturate(.893)}',
+    /* The bar sits outside every filtered region, so it is lifted by hand
+       to land in the same place the rest of the page arrives at. */
+    'html.nvx-day .topbar{background:rgba(26,34,50,.88);border-bottom-color:rgba(160,190,235,.18)}',
+    'html.nvx-day .topbar__home,html.nvx-day .topbar__circ{color:#F4F8FF}',
+    'html.nvx-day .topbar__circ{border-color:rgba(160,190,235,.28);background:rgba(160,190,235,.10)}',
+    'html.nvx-day .topbar__menu{background:rgba(24,32,47,.96);border-color:rgba(160,190,235,.20)}',
+    'html.nvx-day .topbar__menu a,html.nvx-day .topbar__menu-trigger,html.nvx-day #topbar .topbar__links .nvxa{color:rgba(240,246,255,.72)}',
+    'html.nvx-day .topbar__menu a:hover,html.nvx-day .topbar__menu-trigger:hover,html.nvx-day #topbar .topbar__links .nvxa:hover{color:#FFF;background:rgba(160,190,235,.12)}',
+    'html.nvx-day .topbar__menu-trigger>i,html.nvx-day .topbar__panel{border-color:rgba(160,190,235,.24)}',
+    /* The wordmark used to vanish below 820px, which left a lone icon on
+       every phone. It stays; the tracking and the mark give back the
+       width instead. */
+    '@media (max-width:560px){.topbar__home{font-size:12.5px;letter-spacing:.18em;gap:8px}',
+    '.topbar__home img{width:34px;height:34px}}',
+    '@media (max-width:380px){.topbar__home span{display:none}}',
     '@media (max-width:560px){.topbar__row{padding:10px 14px}}',
     '@media (prefers-reduced-motion:reduce){.topbar__menu{transition:none}}'
   ].join('');
@@ -140,7 +188,7 @@
         '</button>' +
       '</div>' +
       '<a class="topbar__home" href="' + href('index.html') + '">' +
-        '<img src="' + href('navidix-mark.png') + '" alt="" width="30" height="30" decoding="async" /><span class="lat">NAVIDIX</span>' +
+        '<img src="' + href('navidix-mark.png') + '" alt="" width="40" height="40" decoding="async" /><span class="lat">NAVIDIX</span>' +
       '</a>' +
       '<div class="topbar__tail">' +
         '<button class="topbar__circ topbar__back" id="topback" type="button" aria-label="بازگشت">' + btnBackSvg() + '</button>' +
@@ -204,7 +252,7 @@
   if (themeBtn) {
     themeBtn.addEventListener('click', function () {
       DAY = !DAY;
-      try { localStorage.setItem(KEY, DAY ? '1' : '0'); } catch (e) {}
+      try { sessionStorage.setItem(KEY, DAY ? '1' : '0'); } catch (e) {}
       root.classList.toggle('nvx-day', DAY);
       themeBtn.setAttribute('aria-pressed', String(DAY));
     });
