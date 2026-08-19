@@ -957,6 +957,7 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
   display:flex; align-items:center; justify-content:space-between; gap:18px;
 }
 html[lang="en"] .topbar__row{ padding:11px calc(var(--gutter) + 92px) 11px var(--gutter); }
+.topbar__lead{ display:flex; align-items:center; gap:12px; flex:none; }
 .topbar__home{ display:inline-flex; align-items:center; gap:9px; flex:none; min-width:0; color:var(--paper); text-decoration:none; font-family:var(--f-ui); font-size:12.5px; letter-spacing:.2em; }
 .topbar__home img{ display:block; }
 /* The account control nvx-auth.js appends into .topbar__links, which now
@@ -1393,16 +1394,18 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
      the landing has been left behind. -->
 <header class="topbar" id="topbar" hidden>
   <nav class="topbar__row" aria-label="Sections">
-    <a class="topbar__home" href="#top">
-      <img src="navidix-mark.png" alt="" width="22" height="22" decoding="async" />
-      <span class="lat">NAVIDIX</span>
-    </a>
-    <button class="topbar__burger" id="topburger" type="button"
-            aria-expanded="false" aria-controls="topmenu" aria-label="بازکردن منو">
-      <span class="topbar__burger-line"></span>
-      <span class="topbar__burger-line"></span>
-      <span class="topbar__burger-line"></span>
-    </button>
+    <div class="topbar__lead">
+      <button class="topbar__burger" id="topburger" type="button"
+              aria-expanded="false" aria-controls="topmenu" aria-label="بازکردن منو">
+        <span class="topbar__burger-line"></span>
+        <span class="topbar__burger-line"></span>
+        <span class="topbar__burger-line"></span>
+      </button>
+      <a class="topbar__home" href="#top">
+        <img src="navidix-mark.png" alt="" width="22" height="22" decoding="async" />
+        <span class="lat">NAVIDIX</span>
+      </a>
+    </div>
   </nav>
   <div class="topbar__menu" id="topmenu" hidden>
     <div class="topbar__menu-blk">
