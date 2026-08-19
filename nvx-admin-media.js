@@ -303,6 +303,98 @@
     });
   }
 
+  /* ------------------------------------------------------------------
+     the picker
+
+     Used by every media field in every content form. It reads the same
+     table the section does but keeps its own copy: the browsing list may
+     be filtered to something the picker's caller never asked for, and a
+     picker that inherits someone else's search box is a picker that
+     appears empty for no visible reason.
+
+     Resolves the chosen row, or null if the reader backs out.
+     ------------------------------------------------------------------ */
+  function pick() {
+    return new Promise(function (resolve) {
+      var box = el('div');
+      var search = el('input', 'asearch');
+      search.type = 'search';
+      search.placeholder = 'جست‌وجو…';
+      search.style.maxWidth = '100%';
+      box.appendChild(search);
+
+      var grid = el('div', 'agrid');
+      grid.style.marginTop = '12px';
+      box.appendChild(grid);
+
+      var all = [], chosen = null, closer = null;
+
+      function paint() {
+        A.clear(grid);
+        var q = search.value.trim().toLowerCase();
+        var list = all.filter(function (r) {
+          return !q || (r.filename || '').toLowerCase().indexOf(q) !== -1;
+        }).slice(0, 60);
+
+        if (!list.length) {
+          grid.appendChild(A.empty(all.length ? 'چیزی پیدا نشد.' : 'کتابخانه خالی است.'));
+          return;
+        }
+
+        list.forEach(function (r) {
+          var c = el('div', 'acard');
+          c.style.cursor = 'pointer';
+          if (/^image\//.test(r.mime_type || '')) {
+            var img = el('img', 'acard__img');
+            img.src = A.storage.publicUrl(r.path, r.bucket);
+            img.alt = r.alt_text || r.filename;
+            img.loading = 'lazy';
+            c.appendChild(img);
+          } else {
+            c.appendChild(el('div', 'acard__none', r.mime_type || 'فایل'));
+          }
+          var b = el('div', 'acard__b');
+          b.appendChild(el('p', 'acard__n', r.filename));
+          c.appendChild(b);
+          c.addEventListener('click', function () {
+            chosen = r;
+            if (closer) closer();
+          });
+          grid.appendChild(c);
+        });
+      }
+
+      search.addEventListener('input', paint);
+
+      grid.appendChild(A.spinner());
+      A.db.select('media_assets?select=*&order=created_at.desc&limit=300').then(function (v) {
+        all = v || [];
+        paint();
+      }, function (e) {
+        A.clear(grid);
+        grid.appendChild(A.note(e));
+      });
+
+      var p = A.modal({
+        title: 'انتخاب از کتابخانه',
+        body: 'روی هر تصویر بزن تا انتخاب شود.',
+        node: box, confirm: 'بستن', cancel: 'انصراف'
+      });
+
+      /* The modal resolves on its own buttons; clicking a card has to
+         close it too, and A.modal has no handle for that — so the click
+         handler resolves through this shared flag and the modal is
+         dismissed by the Escape it would have listened for anyway. */
+      closer = function () {
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      };
+
+      p.then(function () { resolve(chosen); });
+    });
+  }
+
+  window.NVX_ADMIN_MEDIA = { pick: pick };
+
   A.register({
     id: 'media',
     title: 'رسانه',

@@ -24,6 +24,14 @@
      return yet is skipped rather than drawn as zero — a zero is a claim
      about the data, and "not built yet" is not a zero. */
   var CARDS = [
+    ['articles_total',  'مقاله‌ها',           fa],
+    ['prompts_total',   'پرامپت‌ها',          fa],
+    ['lessons_total',   'درس‌ها',             fa],
+    ['courses_total',   'دوره‌ها',            fa],
+    ['gallery_total',   'گالری',              fa],
+    ['videos_total',    'ویدیوها',            fa],
+    ['drafts_total',    'پیش‌نویس',           fa],
+    ['scheduled_total', 'زمان‌بندی‌شده',       fa],
     ['users_total',     'کل کاربران',        fa],
     ['users_active_7d', 'فعال ۷ روز اخیر',   fa],
     ['staff_total',     'اعضای تیم',          fa],
@@ -92,11 +100,22 @@
 
         host.appendChild(kpis(over));
 
-        host.appendChild(el('h2', '', 'محتوای سایت'));
-        host.appendChild(el('p', 'hint',
-          'شمارش مقاله‌ها، پرامپت‌ها، درس‌ها و گالری وقتی اضافه می‌شود که جدول‌هایشان ' +
-          'ساخته شوند. تا آن موقع محتوای سایت همان‌جایی است که همیشه بوده: در مخزن، ' +
-          'و با اسکریپت‌های tools/ ساخته می‌شود.'));
+        /* The counts above are of the database. The site's own pages are
+           still built from tools/ and still show what is in the repo —
+           so a published article here is not yet an article there, and
+           saying otherwise on the panel's front page would be the most
+           expensive place to be misunderstood. */
+        if (over.articles_total === undefined) {
+          host.appendChild(el('h2', '', 'محتوای سایت'));
+          host.appendChild(el('p', 'hint',
+            'شمارش محتوا وقتی اضافه می‌شود که جدول‌هایش ساخته شوند — فایل ' +
+            'supabase/cms-content.sql را اجرا کن.'));
+        } else {
+          host.appendChild(el('p', 'hint',
+            'این اعداد از پایگاه داده‌اند. صفحه‌های عمومی سایت هنوز از مخزن و ' +
+            'اسکریپت‌های tools/ ساخته می‌شوند، پس محتوایی که اینجا منتشر می‌کنی ' +
+            'تا اتصال فاز بعد روی سایت ظاهر نمی‌شود.'));
+        }
 
         if (!A.isOwner()) return;
 

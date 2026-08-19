@@ -174,6 +174,24 @@
     });
   }
 
+  /* A row that RLS refuses to update or delete is not an error over HTTP.
+     Postgres does not reject the statement — the policy simply removes
+     the row from what the statement can see, so PostgREST answers 200
+     with an empty array and the panel used to say "deleted" about a row
+     that is still there. Verified against a real Postgres: a writer
+     without content.delete gets exactly this, 0 rows and no complaint.
+
+     So both verbs ask for the affected rows back and treat none as a
+     failure. Two different causes land here — no permission, or the row
+     is already gone — and the message names both rather than guessing. */
+  function affected(v) {
+    if (Array.isArray(v) && v.length === 0) {
+      throw new Error('پایگاه داده این کار را نپذیرفت: یا دسترسی‌اش را نداری، ' +
+                      'یا آن ردیف دیگر وجود ندارد.');
+    }
+    return v;
+  }
+
   var db = {
     select: function (path) { return rest(path).then(function (v) { return v || []; }); },
     one: function (path) {
@@ -185,7 +203,7 @@
     update: function (table, filter, body) {
       return rest(table + '?' + filter, {
         method: 'PATCH', body: body, prefer: 'return=representation'
-      });
+      }).then(affected);
     },
     upsert: function (table, body) {
       return rest(table, {
@@ -194,7 +212,9 @@
       });
     },
     remove: function (table, filter) {
-      return rest(table + '?' + filter, { method: 'DELETE', prefer: 'return=minimal' });
+      return rest(table + '?' + filter, {
+        method: 'DELETE', prefer: 'return=representation'
+      }).then(affected);
     },
     rpc: function (name, body) {
       return rest('rpc/' + name, { method: 'POST', body: body || {} });
