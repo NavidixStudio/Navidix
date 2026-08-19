@@ -27,6 +27,14 @@
   var CFG = window.NVX_SUPABASE || {};
   var FN = (CFG.url || '').replace(/\/+$/, '') + '/functions/v1/ai-assistant';
 
+  /* Said in two places — a 404 with a body, and a fetch that never got a
+     body at all — so it is written once. */
+  var NOT_DEPLOYED =
+    'تابع ai-assistant هنوز روی Supabase مستقر نشده. در ترمینال دو دستور زیر را بزن:\n' +
+    'supabase secrets set ANTHROPIC_API_KEY=…\n' +
+    'supabase functions deploy ai-assistant\n' +
+    '(اگر مستقرش کرده‌ای، یعنی شبکه به آن نمی‌رسد — VPN را خاموش کن و دوباره امتحان کن.)';
+
   var EXAMPLES = [
     'یک مقاله درباره ۵ ابزار جدید AI برای طراحی سایت بنویس',
     'مقاله‌ای درباره‌ی تفاوت پرامپت‌نویسی برای تصویر و ویدیو',
@@ -53,17 +61,20 @@
           var d = null;
           try { d = txt ? JSON.parse(txt) : null; } catch (e) {}
           if (r.ok) return d;
-
-          /* 404 from the functions host means the function was never
-             deployed. That is the single most likely failure the first
-             time anyone opens this screen, so it gets its own sentence
-             rather than "HTTP 404". */
-          if (r.status === 404) {
-            throw new Error('تابع ai-assistant روی Supabase مستقر نشده. ' +
-              'در ترمینال: supabase functions deploy ai-assistant');
-          }
+          if (r.status === 404) throw new Error(NOT_DEPLOYED);
           throw new Error((d && d.error) || ('HTTP ' + r.status));
         });
+
+      }, function () {
+        /* The undeployed case never reaches the handler above. There is no
+           function to answer the CORS preflight, so the browser rejects
+           the fetch itself with a bare "Failed to fetch" and no status to
+           read — which is exactly what the first person to open this
+           screen saw. It is the most likely failure here by a wide margin,
+           so a network rejection is reported as the missing deployment it
+           almost always is, with the connection named as the alternative
+           rather than the other way round. */
+        throw new Error(NOT_DEPLOYED);
       });
     });
   }
@@ -385,7 +396,13 @@
         var n = el('div', 'aempty');
         n.appendChild(A.icon('warn'));
         n.appendChild(el('b', '', 'ساختن محتوا ممکن نشد'));
-        n.appendChild(document.createTextNode(e.message));
+        /* The deployment message is three lines and two of them are shell
+           commands. Collapsing that into one run-on paragraph is how a
+           message that names the fix stops looking like one. */
+        var msg = el('span', '', e.message);
+        msg.style.whiteSpace = 'pre-line';
+        msg.style.display = 'block';
+        n.appendChild(msg);
         out.appendChild(n);
       });
     });
