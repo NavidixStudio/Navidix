@@ -161,6 +161,7 @@
         '</div>' +
       '</div>' +
       '<span class="topbar__links"></span>' +
+      '<a href="' + href('articles.html') + '"><span>مقاله‌ها</span></a>' +
       '<a href="' + href('prompts.html') + '"><span>پرامپت‌ها</span></a>' +
       '<a href="' + href('gallery.html') + '"><span>گالری</span></a>' +
       '<a href="' + href('documentaries.html') + '"><span>مستندها</span></a>' +
