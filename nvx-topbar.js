@@ -135,17 +135,17 @@
   bar.innerHTML =
     '<nav class="topbar__row" aria-label="Sections">' +
       '<div class="topbar__tail">' +
-        '<button class="topbar__circ topbar__back" id="topback" type="button" aria-label="بازگشت">' + btnBackSvg() + '</button>' +
-        '<button class="topbar__circ topbar__theme" id="toptheme" type="button" aria-label="روز / شب" aria-pressed="' + DAY + '">' +
-           sunSvg + moonSvg +
+        '<button class="topbar__circ topbar__burger" id="topburger" type="button" aria-expanded="false" aria-controls="topmenu" aria-label="بازکردن منو">' +
+          '<span class="topbar__burger-line"></span><span class="topbar__burger-line"></span><span class="topbar__burger-line"></span>' +
         '</button>' +
       '</div>' +
       '<a class="topbar__home" href="' + href('index.html') + '">' +
         '<img src="' + href('navidix-mark.png') + '" alt="" width="30" height="30" decoding="async" /><span class="lat">NAVIDIX</span>' +
       '</a>' +
       '<div class="topbar__tail">' +
-        '<button class="topbar__circ topbar__burger" id="topburger" type="button" aria-expanded="false" aria-controls="topmenu" aria-label="بازکردن منو">' +
-          '<span class="topbar__burger-line"></span><span class="topbar__burger-line"></span><span class="topbar__burger-line"></span>' +
+        '<button class="topbar__circ topbar__back" id="topback" type="button" aria-label="بازگشت">' + btnBackSvg() + '</button>' +
+        '<button class="topbar__circ topbar__theme" id="toptheme" type="button" aria-label="روز / شب" aria-pressed="' + DAY + '">' +
+           sunSvg + moonSvg +
         '</button>' +
       '</div>' +
     '</nav>' +
@@ -211,8 +211,11 @@
 
   /* ---- 4. back ---- */
   var backBtn = document.getElementById('topback');
-  if (backBtn && history.length > 1) {
-    backBtn.addEventListener('click', function () { history.back(); });
+  if (backBtn) {
+    backBtn.addEventListener('click', function () {
+      if (history.length > 1) history.back();
+      else location.href = href('index.html');
+    });
   }
 
   /* ---- 5. behavior: burger + panels ---- */
