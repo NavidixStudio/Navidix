@@ -991,16 +991,25 @@ html[lang="en"] .topbar__row{ padding:11px calc(var(--gutter) + 92px) 11px var(-
 .topbar__burger[aria-expanded="true"] .topbar__burger-line:nth-child(1){ transform:translateY(5.5px) rotate(45deg); }
 .topbar__burger[aria-expanded="true"] .topbar__burger-line:nth-child(2){ opacity:0; }
 .topbar__burger[aria-expanded="true"] .topbar__burger-line:nth-child(3){ transform:translateY(-5.5px) rotate(-45deg); }
-/* ---- the dropdown the burger opens ---- */
+/* ---- the dropdown the burger opens ----
+   Anchored to the same top corner as the burger (right in Persian, left in
+   English), and given a soft scale+fade so it "grows" out of that corner
+   instead of toggling — like a proper app menu, not a page element. */
 .topbar__menu{
-  position:fixed; inset-inline-end:var(--gutter); top:54px; z-index:6;
+  position:fixed; inset-inline-start:var(--gutter); top:54px; z-index:6;
   width:min(320px, calc(100vw - 2*var(--gutter)));
   background:rgba(8,11,17,.92);
   -webkit-backdrop-filter:blur(16px) saturate(1.2); backdrop-filter:blur(16px) saturate(1.2);
   border:1px solid rgba(140,170,220,.13); border-radius:14px;
   padding:8px; box-shadow:0 24px 60px -22px rgba(0,0,0,.85);
+  opacity:0; transform:scale(.96) translateY(-8px);
+  transform-origin:top right;
+  pointer-events:none;
+  transition:opacity .28s var(--ease), transform .32s var(--ease);
 }
+.topbar__menu.is-in{ opacity:1; transform:scale(1) translateY(0); pointer-events:auto; }
 .topbar__menu[hidden]{ display:none; }
+html[lang="en"] .topbar__menu{ transform-origin:top left; }
 .topbar__menu a, .topbar__menu-trigger{
   display:flex; align-items:center; justify-content:space-between; gap:8px;
   width:100%; box-sizing:border-box; text-align:start;
@@ -3906,7 +3915,18 @@ setTimeout(function () {
 
   function closeMenu() {
     burger.setAttribute('aria-expanded', 'false');
-    menu.hidden = true;
+    menu.classList.remove('is-in');
+    /* let the fade/scale finish before display:none kicks in */
+    setTimeout(function () { if (!menu.classList.contains('is-in')) menu.hidden = true; }, 320);
+  }
+  function openMenu() {
+    menu.classList.remove('is-in');
+    menu.hidden = false;
+    /* one frame later, so the browser can paint the opened state first */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { menu.classList.add('is-in'); });
+    });
+    burger.setAttribute('aria-expanded', 'true');
   }
   function closePanels() {
     [].forEach.call(document.querySelectorAll('.topbar__menu-trigger'), function (t) {
@@ -3917,7 +3937,7 @@ setTimeout(function () {
 
   burger.addEventListener('click', function (e) {
     e.stopPropagation();
-    if (menu.hidden) { menu.hidden = false; burger.setAttribute('aria-expanded', 'true'); }
+    if (menu.hidden) openMenu();
     else closeMenu();
   });
 
