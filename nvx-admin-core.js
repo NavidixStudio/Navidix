@@ -19,6 +19,11 @@
    in that case takes the working analytics down with it. So a missing
    function is not an error here: it drops the panel into legacy mode,
    where the five old views still draw and a banner says which file to run.
+
+   The third is the shell itself. Fifteen destinations do not fit in a row
+   of chips, so they live in a grouped rail with a command palette over the
+   top — ⌘K reaches any screen, and any article, in two keystrokes and a
+   word. The rail becomes a drawer under 860px rather than a squeeze.
    ===================================================================== */
 (function () {
   'use strict';
@@ -31,6 +36,18 @@
   var legacy = false;    // true when the CMS schema is not in the database
   var drawn = {};        // section id -> true, for sections that render once
   var current = null;
+
+  /* Rail groups, in the order they appear. A section names its group; one
+     that names none lands in "کارگاه", which is also where a group that no
+     longer exists would land rather than vanishing. */
+  var GROUPS = [
+    ['content',  'محتوا'],
+    ['library',  'کتابخانه'],
+    ['ai',       'هوش مصنوعی'],
+    ['insight',  'سنجش'],
+    ['admin',    'مدیریت'],
+    ['workshop', 'کارگاه']
+  ];
 
 
   /* ===================================================================
@@ -46,7 +63,11 @@
     return e;
   }
 
-  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function clear(node) { while (node && node.firstChild) node.removeChild(node.firstChild); }
+
+  function icon(name) {
+    return window.NVX_ICON ? NVX_ICON(name) : el('span');
+  }
 
   var DATE = null;
   try { DATE = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'medium' }); } catch (e) {}
@@ -80,10 +101,63 @@
 
 
   /* ===================================================================
-     toast
+     page furniture
 
-     One node, reused. Two of these on screen at once would stack and
-     shift, and nothing here is important enough to be worth that.
+     Every section opens the same way, so it is one call rather than six
+     copies of the same three nodes that drift apart over time.
+     =================================================================== */
+  function page(host, opts) {
+    var head = el('div', 'apage');
+    var x = el('div', 'apage__x');
+    x.appendChild(el('h1', 'apage__t', opts.title));
+    if (opts.sub) x.appendChild(el('p', 'apage__s', opts.sub));
+    head.appendChild(x);
+
+    if (opts.actions && opts.actions.length) {
+      var a = el('div', 'apage__a');
+      opts.actions.forEach(function (n) { a.appendChild(n); });
+      head.appendChild(a);
+    }
+    host.appendChild(head);
+
+    var top = document.getElementById('atop-title');
+    if (top) top.textContent = opts.title;
+    return head;
+  }
+
+  function button(label, kind, iconName, onClick) {
+    var b = el('button', 'abtn' + (kind ? ' abtn--' + kind : ''));
+    b.type = 'button';
+    if (iconName) b.appendChild(icon(iconName));
+    if (label) b.appendChild(el('span', '', label));
+    if (onClick) b.addEventListener('click', onClick);
+    return b;
+  }
+
+  /* A shape the size of what is coming, rather than the word "loading". */
+  function skeleton(n, kind) {
+    var s = el('div', 'askel' + (kind ? ' askel--' + kind : ''));
+    for (var i = 0; i < (n || 5); i++) s.appendChild(el('i'));
+    return s;
+  }
+
+  function emptyState(title, text, action) {
+    var e = el('div', 'aempty');
+    e.appendChild(icon('info'));
+    e.appendChild(el('b', '', title));
+    if (text) e.appendChild(document.createTextNode(text));
+    if (action) {
+      var w = el('div');
+      w.style.marginTop = '16px';
+      w.appendChild(action);
+      e.appendChild(w);
+    }
+    return e;
+  }
+
+
+  /* ===================================================================
+     toast
      =================================================================== */
   var toastNode = null, toastTimer = null;
 
@@ -104,15 +178,16 @@
   /* ===================================================================
      modal
 
-     Used for confirmations and for the one or two forms that are too
-     small to deserve their own view. Resolves true/false; a dismissal —
-     Escape, the backdrop, cancel — is false, so a caller only ever has
-     to handle the two outcomes.
+     Resolves true/false; a dismissal — Escape, the backdrop, cancel — is
+     false, so a caller only ever has to handle the two outcomes. `close`
+     is handed back on the promise for the one caller that has to dismiss
+     it from inside its own body.
      =================================================================== */
   function modal(opts) {
-    return new Promise(function (resolve) {
+    var api = {};
+    var p = new Promise(function (resolve) {
       var back = el('div', 'amodal');
-      var box = el('div', 'amodal__box');
+      var box = el('div', 'amodal__box' + (opts.wide ? ' amodal__box--wide' : ''));
 
       box.appendChild(el('h2', 'amodal__t', opts.title));
       if (opts.body) box.appendChild(el('p', 'amodal__s', opts.body));
@@ -127,25 +202,29 @@
                    opts.confirm || 'تأیید');
       yes.type = 'button';
 
-      row.appendChild(no);
+      if (opts.cancel !== false) row.appendChild(no);
       row.appendChild(yes);
       box.appendChild(row);
       back.appendChild(box);
       document.body.appendChild(back);
 
       function done(v) {
-        document.removeEventListener('keydown', esc);
+        document.removeEventListener('keydown', esc, true);
         if (back.parentNode) back.parentNode.removeChild(back);
         resolve(v);
       }
-      function esc(e) { if (e.key === 'Escape') done(false); }
+      function esc(e) { if (e.key === 'Escape') { e.stopPropagation(); done(false); } }
 
       no.addEventListener('click', function () { done(false); });
       yes.addEventListener('click', function () { done(true); });
       back.addEventListener('click', function (e) { if (e.target === back) done(false); });
-      document.addEventListener('keydown', esc);
+      document.addEventListener('keydown', esc, true);
       yes.focus();
+
+      api.close = done;
     });
+    p.close = function (v) { api.close(v); };
+    return p;
   }
 
   function confirmBox(title, body, confirmLabel) {
@@ -155,18 +234,10 @@
 
   /* ===================================================================
      database
-
-     Thin named wrappers over NVX_AUTH.rest, which already carries the
-     token, refreshes it and throws on a non-2xx. Nothing here adds
-     privileges — every call goes out as the signed-in reader, exactly as
-     the analytics half has always done.
      =================================================================== */
   function rest(path, opts) {
     if (!window.NVX_AUTH) return Promise.reject(new Error('لایه‌ی حساب بالا نیامده'));
     return NVX_AUTH.rest(path, opts).then(function (v) {
-      /* rest() resolves null for a signed-out reader rather than throwing.
-         Here that is always a bug in the caller's ordering, so it is made
-         loud instead of arriving later as "cannot read property of null". */
       if (v === null && (!opts || (opts.method || 'GET') === 'GET')) {
         if (!NVX_AUTH.signedIn()) throw new Error('وارد نشده‌ای');
       }
@@ -179,11 +250,7 @@
      the row from what the statement can see, so PostgREST answers 200
      with an empty array and the panel used to say "deleted" about a row
      that is still there. Verified against a real Postgres: a writer
-     without content.delete gets exactly this, 0 rows and no complaint.
-
-     So both verbs ask for the affected rows back and treat none as a
-     failure. Two different causes land here — no permission, or the row
-     is already gone — and the message names both rather than guessing. */
+     without content.delete gets exactly this, 0 rows and no complaint. */
   function affected(v) {
     if (Array.isArray(v) && v.length === 0) {
       throw new Error('پایگاه داده این کار را نپذیرفت: یا دسترسی‌اش را نداری، ' +
@@ -224,12 +291,6 @@
 
   /* ===================================================================
      storage
-
-     Not reachable through rest(), which is hardwired to /rest/v1/. The
-     token comes from NVX_AUTH.token() rather than out of the session so
-     that an upload gets the same freshness guarantee every other request
-     has — a large file signed with a token that expires mid-flight fails
-     after the bytes have already gone up.
      =================================================================== */
   function readOrThrow(r) {
     return r.text().then(function (t) {
@@ -271,17 +332,18 @@
           headers: { 'apikey': CFG.key, 'Authorization': 'Bearer ' + t }
         }).then(readOrThrow);
       });
+    },
+
+    /* Used by the AI assistant, which produces bytes rather than picking
+       an existing file. Same bucket, same policies. */
+    uploadBlob: function (blob, path, type) {
+      return storage.upload(new File([blob], 'gen', { type: type || blob.type }), path);
     }
   };
 
 
   /* ===================================================================
      failure, said usefully
-
-     There are exactly two failures a reader of this panel can act on, and
-     they read nothing alike. One is "that table is not in the database
-     yet", which is a file waiting to be run and not a fault. The other is
-     everything else.
      =================================================================== */
   function missing(err) {
     return /Could not find the (function|table|relation)|schema cache|does not exist|PGRST202|PGRST205/i
@@ -289,29 +351,26 @@
   }
 
   function note(err, file) {
-    var p = el('p', 'empty');
+    var e = el('div', 'aempty');
+    e.appendChild(icon('warn'));
     if (missing(err)) {
-      p.textContent = 'این بخش هنوز در پایگاه داده ساخته نشده. در مخزن، فایل ' +
-        (file || 'supabase/cms-rbac.sql') + ' را باز کن، محتوایش را کپی کن و در ' +
-        'Supabase → SQL Editor بچسبان و Run بزن.';
+      e.appendChild(el('b', '', 'این بخش هنوز در پایگاه داده ساخته نشده'));
+      e.appendChild(document.createTextNode(
+        'محتوای فایل ' + (file || 'supabase/cms-rbac.sql') + ' را در ' +
+        'Supabase → SQL Editor بچسبان و Run بزن.'));
     } else {
-      p.textContent = 'خواندن این بخش ممکن نشد: ' + (err && err.message || 'خطای نامشخص');
+      e.appendChild(el('b', '', 'خواندن این بخش ممکن نشد'));
+      e.appendChild(document.createTextNode(err && err.message || 'خطای نامشخص'));
     }
-    return p;
+    return e;
   }
 
   function empty(text) { return el('p', 'empty', text); }
-  function spinner(text) { return el('p', 'aspin', text || 'در حال خواندن…'); }
+  function spinner(text) { return skeleton(5); }
 
 
   /* ===================================================================
      permissions
-
-     can() is the only thing a section should ask. It is deliberately
-     false for everything in legacy mode: without the roles tables there
-     is no honest answer, and a panel that guesses "probably yes" because
-     the reader used to be an admin is how a Writer ends up with a delete
-     button.
      =================================================================== */
   function can(key) {
     if (!ctx || !ctx.is_active) return false;
@@ -332,18 +391,17 @@
   };
 
   function roleBadge(role, active) {
-    var b = el('span', 'abadge abadge--' + role, ROLE_FA[role] || role);
-    if (active === false) b.className = 'abadge abadge--off';
-    return b;
+    if (active === false) return el('span', 'abadge abadge--off', 'غیرفعال');
+    return el('span', 'abadge abadge--' + role, ROLE_FA[role] || role);
+  }
+
+  function statusBadge(status, label) {
+    return el('span', 'abadge abadge--' + status, label);
   }
 
 
   /* ===================================================================
      registration and routing
-
-     A section is a plain object. `perm` is what decides whether it is
-     drawn at all: a string, an array meaning any-of, or nothing at all
-     for the sections every member of the team may open.
      =================================================================== */
   function register(spec) { sections.push(spec); }
 
@@ -366,25 +424,30 @@
 
     current = spec.id;
 
-    var nav = document.getElementById('anav');
-    if (nav) {
-      Array.prototype.forEach.call(nav.children, function (b) {
+    var rail = document.getElementById('arail-nav');
+    if (rail) {
+      Array.prototype.forEach.call(rail.querySelectorAll('.arail__item'), function (b) {
         b.setAttribute('aria-current', b.getAttribute('data-id') === spec.id ? 'true' : 'false');
       });
     }
+    var crumb = document.getElementById('atop-crumb');
+    if (crumb) {
+      var g = null;
+      GROUPS.forEach(function (x) { if (x[0] === (spec.group || 'workshop')) g = x[1]; });
+      crumb.textContent = g || '';
+    }
+    var title = document.getElementById('atop-title');
+    if (title) title.textContent = spec.title;
 
     list.forEach(function (s) {
       var host = document.getElementById('sec-' + s.id);
       if (host) host.hidden = s.id !== spec.id;
     });
+    closeRail();
 
     var host = document.getElementById('sec-' + spec.id);
     if (!host) return;
 
-    /* Analytics reads five views and is the one section worth not
-       re-reading on every visit; it carries its own refresh button.
-       Everything else is redrawn each time it is opened, which is the
-       cheaper way to never show a stale row. */
     if (spec.once && drawn[spec.id] && !force) return;
     drawn[spec.id] = true;
 
@@ -394,6 +457,7 @@
       clear(host);
       host.appendChild(note(e));
     }
+    window.scrollTo(0, 0);
   }
 
   function route() {
@@ -401,21 +465,41 @@
     show(id || null);
   }
 
-  function buildNav() {
+  function go(id) { location.hash = '#/' + id; }
+
+
+  /* ===================================================================
+     the rail
+     =================================================================== */
+  function buildRail() {
     var list = visible();
-    var nav = document.getElementById('anav');
+    var nav = document.getElementById('arail-nav');
     var host = document.getElementById('asections');
     if (!nav || !host) return;
 
     clear(nav);
 
-    list.forEach(function (s) {
-      var b = el('button', '', s.title);
-      b.type = 'button';
-      b.setAttribute('data-id', s.id);
-      b.addEventListener('click', function () { location.hash = '#/' + s.id; });
-      nav.appendChild(b);
+    GROUPS.forEach(function (g) {
+      var inGroup = list.filter(function (s) { return (s.group || 'workshop') === g[0]; });
+      if (!inGroup.length) return;
 
+      var box = el('div', 'arail__group');
+      box.appendChild(el('p', 'arail__label', g[1]));
+
+      inGroup.forEach(function (s) {
+        var b = el('button', 'arail__item');
+        b.type = 'button';
+        b.setAttribute('data-id', s.id);
+        b.appendChild(icon(s.icon || 'article'));
+        b.appendChild(el('span', '', s.title));
+        b.addEventListener('click', function () { go(s.id); });
+        box.appendChild(b);
+      });
+
+      nav.appendChild(box);
+    });
+
+    list.forEach(function (s) {
       if (!document.getElementById('sec-' + s.id)) {
         var sec = el('section', 'asec');
         sec.id = 'sec-' + s.id;
@@ -424,9 +508,138 @@
       }
     });
 
-    /* One destination is not a choice, and a row of one chip only takes
-       up space telling the reader they have none. */
-    nav.hidden = list.length < 2;
+    var who = document.getElementById('arail-who');
+    if (who && ctx) {
+      clear(who);
+      who.appendChild(el('span', 'arail__mail', ctx.email || ''));
+      who.appendChild(el('span', 'arail__role', ROLE_FA[ctx.role] || ctx.role || ''));
+    }
+  }
+
+  function openRail() {
+    var r = document.getElementById('arail');
+    var s = document.getElementById('ascrim');
+    if (r) r.setAttribute('data-open', 'true');
+    if (s) s.hidden = false;
+  }
+  function closeRail() {
+    var r = document.getElementById('arail');
+    var s = document.getElementById('ascrim');
+    if (r) r.removeAttribute('data-open');
+    if (s) s.hidden = true;
+  }
+
+
+  /* ===================================================================
+     command palette
+
+     Sections always; content when the query is long enough to be worth a
+     round trip. The database side of it is admin_search(), which is
+     gated on is_staff() and refuses anything under two characters — so
+     an empty box can never become an export of the whole site.
+     =================================================================== */
+  var pal = { open: false, items: [], cursor: 0, seq: 0 };
+
+  function palOpen() {
+    var box = document.getElementById('apal');
+    if (!box) return;
+    pal.open = true;
+    box.hidden = false;
+    var input = document.getElementById('apal-input');
+    input.value = '';
+    palRender('');
+    setTimeout(function () { input.focus(); }, 20);
+  }
+
+  function palClose() {
+    var box = document.getElementById('apal');
+    if (box) box.hidden = true;
+    pal.open = false;
+  }
+
+  function palRender(q) {
+    var list = document.getElementById('apal-list');
+    clear(list);
+    pal.items = [];
+    pal.cursor = 0;
+
+    var secs = visible().filter(function (s) {
+      return !q || s.title.indexOf(q) !== -1;
+    });
+
+    if (secs.length) {
+      list.appendChild(el('p', 'apal__sec', 'بخش‌ها'));
+      secs.forEach(function (s) {
+        var b = el('button', 'apal__i');
+        b.type = 'button';
+        b.appendChild(icon(s.icon || 'article'));
+        b.appendChild(el('span', '', s.title));
+        var g = null;
+        GROUPS.forEach(function (x) { if (x[0] === (s.group || 'workshop')) g = x[1]; });
+        if (g) b.appendChild(el('em', '', g));
+        b.addEventListener('click', function () { palClose(); go(s.id); });
+        list.appendChild(b);
+        pal.items.push(b);
+      });
+    }
+
+    if (!q || q.length < 2) { palCursor(0); return; }
+
+    var mine = ++pal.seq;
+    db.rpc('admin_search', { q: q }).then(function (rows) {
+      if (mine !== pal.seq || !pal.open) return;
+      if (!rows || !rows.length) {
+        if (!secs.length) list.appendChild(el('p', 'apal__none', 'چیزی پیدا نشد.'));
+        return;
+      }
+      list.appendChild(el('p', 'apal__sec', 'محتوا'));
+      var WHERE = {
+        articles: ['articles', 'مقاله'], prompts: ['prompts', 'پرامپت'],
+        courses: ['courses', 'دوره'], lessons: ['lessons', 'درس'],
+        gallery_items: ['gallery', 'گالری'], videos: ['videos', 'ویدیو']
+      };
+      rows.slice(0, 18).forEach(function (r) {
+        var w = WHERE[r.kind] || [null, r.kind];
+        var b = el('button', 'apal__i');
+        b.type = 'button';
+        b.appendChild(icon(r.kind === 'videos' ? 'video' : r.kind === 'gallery_items' ? 'gallery' : 'article'));
+        b.appendChild(el('span', '', r.label || '—'));
+        b.appendChild(el('em', '', w[1]));
+        b.addEventListener('click', function () { palClose(); if (w[0]) go(w[0]); });
+        list.appendChild(b);
+        pal.items.push(b);
+      });
+      palCursor(pal.cursor);
+    }, function () {});
+
+    palCursor(0);
+  }
+
+  function palCursor(i) {
+    if (!pal.items.length) return;
+    pal.cursor = Math.max(0, Math.min(i, pal.items.length - 1));
+    pal.items.forEach(function (b, n) {
+      b.setAttribute('data-on', n === pal.cursor ? 'true' : 'false');
+    });
+    var on = pal.items[pal.cursor];
+    if (on && on.scrollIntoView) on.scrollIntoView({ block: 'nearest' });
+  }
+
+  function palKeys(e) {
+    if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      pal.open ? palClose() : palOpen();
+      return;
+    }
+    if (!pal.open) return;
+    if (e.key === 'Escape') { e.preventDefault(); palClose(); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); palCursor(pal.cursor + 1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); palCursor(pal.cursor - 1); }
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      var on = pal.items[pal.cursor];
+      if (on) on.click();
+    }
   }
 
 
@@ -435,12 +648,12 @@
      =================================================================== */
   function gate(msg, offerSignIn) {
     var boot = document.getElementById('aboot');
-    var nav = document.getElementById('anav');
-    if (nav) nav.hidden = true;
+    var shell = document.getElementById('ashell');
+    if (shell) shell.hidden = true;
     if (!boot) return;
 
     clear(boot);
-    boot.className = '';
+    boot.hidden = false;
 
     var g = el('div', 'gate');
     g.appendChild(el('h2', '', 'دسترسی نداری'));
@@ -470,24 +683,25 @@
 
     if (legacy) {
       var b = el('div', 'abanner');
-      var t = el('b', '', 'بخش‌های CMS هنوز فعال نیستند. ');
-      b.appendChild(t);
-      b.appendChild(document.createTextNode(
+      b.appendChild(icon('warn'));
+      var t = el('div');
+      t.appendChild(el('b', '', 'بخش‌های CMS هنوز فعال نیستند. '));
+      t.appendChild(document.createTextNode(
         'پایگاه داده هنوز جدول‌های نقش و دسترسی را ندارد، پس فعلاً فقط آمار را می‌بینی. ' +
         'برای فعال‌شدن بقیه، محتوای فایل '));
-      b.appendChild(el('code', '', 'supabase/cms-rbac.sql'));
-      b.appendChild(document.createTextNode(
+      t.appendChild(el('code', '', 'supabase/cms-rbac.sql'));
+      t.appendChild(document.createTextNode(
         ' را در Supabase → SQL Editor اجرا کن و این صفحه را دوباره باز کن.'));
+      b.appendChild(t);
       host.appendChild(b);
       return;
     }
 
-    /* Signed in with a role but no permissions at all — a Viewer. Saying
-       so is kinder than a panel that simply has nothing in it. */
     if (ctx && isStaff() && !(ctx.permissions || []).length) {
       var v = el('div', 'abanner abanner--calm');
-      v.appendChild(document.createTextNode(
-        'نقش تو «' + (ROLE_FA[ctx.role] || ctx.role) + '» است: می‌توانی ببینی، ولی چیزی را تغییر نمی‌دهی.'));
+      v.appendChild(icon('info'));
+      v.appendChild(el('div', '', 'نقش تو «' + (ROLE_FA[ctx.role] || ctx.role) +
+        '» است: می‌توانی ببینی، ولی چیزی را تغییر نمی‌دهی.'));
       host.appendChild(v);
     }
   }
@@ -497,8 +711,6 @@
      boot
      =================================================================== */
   function start() {
-    var boot = document.getElementById('aboot');
-
     if (!window.NVX_SUPABASE || !window.NVX_AUTH) {
       gate('لایه‌ی حساب بالا نیامد. صفحه را دوباره بارگذاری کن.', false);
       return;
@@ -514,25 +726,12 @@
     db.rpc('my_admin_context').then(function (v) {
       ctx = v || null;
 
-      if (!ctx) {
-        gate('این حساب پروفایلی در پایگاه داده ندارد.', false);
-        return;
-      }
-      if (!ctx.is_active) {
-        gate('این حساب غیرفعال شده است.', false);
-        return;
-      }
-      if (ctx.role === 'reader') {
-        gate('این حساب دسترسی مدیر ندارد.', false);
-        return;
-      }
+      if (!ctx)            { gate('این حساب پروفایلی در پایگاه داده ندارد.', false); return; }
+      if (!ctx.is_active)  { gate('این حساب غیرفعال شده است.', false); return; }
+      if (ctx.role === 'reader') { gate('این حساب دسترسی مدیر ندارد.', false); return; }
       ready();
 
     }, function (e) {
-      /* The CMS schema is not there. That is the expected state of a
-         database that has only had schema.sql run against it, so the
-         panel does not treat it as a failure — it falls back to what
-         still works and says what would make the rest work. */
       if (!missing(e)) {
         gate('خواندن دسترسی ممکن نشد: ' + e.message +
              '. اگر VPN روشن است یا این صفحه را در مرورگر داخلی یک اپ باز کرده‌ای، ' +
@@ -542,24 +741,43 @@
       legacy = true;
       ready();
     });
-
-    if (boot) boot.textContent = 'در حال بررسی دسترسی…';
   }
 
   function ready() {
     banner();
-    buildNav();
+    buildRail();
 
-    /* Checked before #aboot is taken out of the page, not after: gate()
-       draws into that node, and removing it first turns "you have no
-       sections" into a blank screen. */
     if (!visible().length) {
       gate('این حساب به هیچ بخشی از پنل دسترسی ندارد.', false);
       return;
     }
 
     var boot = document.getElementById('aboot');
-    if (boot && boot.parentNode) boot.parentNode.removeChild(boot);
+    if (boot) boot.hidden = true;
+    var shell = document.getElementById('ashell');
+    if (shell) shell.hidden = false;
+
+    var burger = document.getElementById('aburger');
+    if (burger) burger.addEventListener('click', openRail);
+    var scrim = document.getElementById('ascrim');
+    if (scrim) scrim.addEventListener('click', closeRail);
+
+    var trigger = document.getElementById('apal-trigger');
+    if (trigger) trigger.addEventListener('click', palOpen);
+    var pinput = document.getElementById('apal-input');
+    if (pinput) {
+      var t = null;
+      pinput.addEventListener('input', function () {
+        clearTimeout(t);
+        var q = pinput.value.trim();
+        t = setTimeout(function () { palRender(q); }, 170);
+      });
+    }
+    var pback = document.getElementById('apal');
+    if (pback) pback.addEventListener('click', function (e) {
+      if (e.target === pback) palClose();
+    });
+    document.addEventListener('keydown', palKeys);
 
     addEventListener('hashchange', route);
     route();
@@ -571,19 +789,21 @@
     /* state */
     ctx: function () { return ctx; },
     can: can, isOwner: isOwner, isStaff: isStaff, isLegacy: function () { return legacy; },
-    roleBadge: roleBadge, ROLE_FA: ROLE_FA,
+    roleBadge: roleBadge, statusBadge: statusBadge, ROLE_FA: ROLE_FA,
 
     /* data */
     db: db, storage: storage,
 
     /* ui */
-    el: el, fa: fa, when: when, hours: hours, bytes: bytes, clear: clear,
+    el: el, fa: fa, when: when, hours: hours, bytes: bytes, clear: clear, icon: icon,
+    page: page, button: button, skeleton: skeleton, emptyState: emptyState,
     toast: toast, modal: modal, confirm: confirmBox,
     note: note, empty: empty, spinner: spinner,
 
     /* sections */
-    register: register,
-    refresh: function () { show(current, true); }
+    register: register, go: go,
+    refresh: function () { show(current, true); },
+    palette: palOpen
   };
 
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', start);

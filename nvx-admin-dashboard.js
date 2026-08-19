@@ -71,8 +71,11 @@
   }
 
   function head(host) {
-    host.appendChild(el('p', 'sub',
-      'نمای کلی. اعداد زنده‌اند و مستقیم از پایگاه داده خوانده می‌شوند.'));
+    A.page(host, {
+      title: 'داشبورد',
+      sub: 'نمای کلی. اعداد زنده‌اند و مستقیم از پایگاه داده خوانده می‌شوند.',
+      actions: [A.button('تازه‌سازی', null, null, function () { A.refresh(); })]
+    });
   }
 
   function panel(node) {
@@ -84,10 +87,12 @@
   A.register({
     id: 'dashboard',
     title: 'داشبورد',
+    group: 'insight',
+    icon: 'dashboard',
     render: function (host) {
       A.clear(host);
       head(host);
-      var load = A.spinner();
+      var load = A.skeleton(6, 'tile');
       host.appendChild(load);
 
       A.db.rpc('admin_cms_overview').then(function (over) {
@@ -112,9 +117,9 @@
             'supabase/cms-content.sql را اجرا کن.'));
         } else {
           host.appendChild(el('p', 'hint',
-            'این اعداد از پایگاه داده‌اند. صفحه‌های عمومی سایت هنوز از مخزن و ' +
-            'اسکریپت‌های tools/ ساخته می‌شوند، پس محتوایی که اینجا منتشر می‌کنی ' +
-            'تا اتصال فاز بعد روی سایت ظاهر نمی‌شود.'));
+            'مقاله‌ها به سایت وصل‌اند: هرچه منتشر کنی در articles.html می‌آید. ' +
+            'پرامپت‌ها، گالری و ویدیوها هنوز نه — صفحه‌هایشان از tools/ ساخته ' +
+            'می‌شوند و وصل‌کردنشان دو خط در قالب سازنده است (در CMS.md).'));
         }
 
         if (!A.isOwner()) return;

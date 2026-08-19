@@ -117,7 +117,7 @@
   function load(host) {
     var body = host.querySelector('[data-body]');
     A.clear(body);
-    body.appendChild(A.spinner());
+    body.appendChild(A.skeleton(8));
     A.db.select('audit_log?select=*&order=created_at.desc&limit=200').then(function (v) {
       rows = v || [];
       draw(host);
@@ -130,12 +130,16 @@
   A.register({
     id: 'audit',
     title: 'گزارش فعالیت',
+    group: 'admin',
+    icon: 'audit',
     owner: true,
     render: function (host) {
       A.clear(host);
-      host.appendChild(el('p', 'sub',
-        'چه کسی، چه زمانی، چه چیزی را عوض کرد. فقط مالک این بخش را می‌بیند، ' +
-        'و پایگاه داده هم برای هر کس دیگری صفر ردیف برمی‌گرداند. دویست مورد آخر.'));
+      A.page(host, {
+        title: 'گزارش فعالیت',
+        sub: 'چه کسی، چه زمانی، چه چیزی را عوض کرد. فقط مالک این بخش را می‌بیند، ' +
+             'و پایگاه داده هم برای هر کس دیگری صفر ردیف برمی‌گرداند. دویست مورد آخر.'
+      });
 
       var tools = el('div', 'arow');
       tools.style.margin = '0 0 16px';

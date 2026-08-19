@@ -155,7 +155,9 @@
       tr.appendChild(el('td', 'n', A.hours(r.seconds)));
 
       var tdAct = el('td', 'n');
-      tdAct.appendChild(activeButton(r, onDone));
+      var actWrap = el('div', 'arowacts');
+      actWrap.appendChild(activeButton(r, onDone));
+      tdAct.appendChild(actWrap);
       tr.appendChild(tdAct);
 
       tb.appendChild(tr);
@@ -189,14 +191,18 @@
   A.register({
     id: 'users',
     title: 'کاربران',
+    group: 'admin',
+    icon: 'users',
     perm: ['users.manage', 'admins.manage'],
     render: function (host) {
       A.clear(host);
 
-      host.appendChild(el('p', 'sub',
-        A.can('admins.manage')
+      A.page(host, {
+        title: 'کاربران و نقش‌ها',
+        sub: A.can('admins.manage')
           ? 'نقش هر کس را از همین‌جا عوض کن. تغییر نقش و غیرفعال‌کردن هر دو در گزارش فعالیت ثبت می‌شوند.'
-          : 'فهرست کاربران. برای تغییر نقش یا غیرفعال‌کردن، دسترسی admins.manage لازم است.'));
+          : 'فهرست کاربران. برای تغییر نقش یا غیرفعال‌کردن، دسترسی admins.manage لازم است.'
+      });
 
       var tools = el('div', 'arow');
       tools.style.margin = '0 0 16px';
@@ -217,7 +223,7 @@
 
       function load() {
         A.clear(body);
-        body.appendChild(A.spinner());
+        body.appendChild(A.skeleton(6));
         A.db.rpc('admin_user_list').then(function (v) {
           rows = v || [];
           draw(host);

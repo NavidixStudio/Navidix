@@ -228,7 +228,7 @@
   function load(host) {
     var body = host.querySelector('[data-body]');
     A.clear(body);
-    body.appendChild(A.spinner());
+    body.appendChild(A.skeleton(7));
     A.db.select('site_settings?select=key,value,updated_at&order=key').then(function (rows) {
       draw(host, rows);
     }, function (e) {
@@ -240,12 +240,16 @@
   A.register({
     id: 'settings',
     title: 'تنظیمات',
+    group: 'admin',
+    icon: 'settings',
     perm: 'settings.manage',
     render: function (host) {
       A.clear(host);
-      host.appendChild(el('p', 'sub',
-        'مقدارهای عمومی سایت. تغییرشان در گزارش فعالیت ثبت می‌شود. ' +
-        'صفحه‌های استاتیک سایت هنوز این مقدارها را نمی‌خوانند — آن اتصال فاز بعدی است.'));
+      A.page(host, {
+        title: 'تنظیمات سایت',
+        sub: 'مقدارهای عمومی سایت. تغییرشان در گزارش فعالیت ثبت می‌شود. هر صفحه‌ای که ' +
+             'nvx-content.js را لود کند این مقدارها را می‌خواند.'
+      });
 
       var body = el('div');
       body.setAttribute('data-body', '');

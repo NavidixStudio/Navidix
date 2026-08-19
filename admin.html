@@ -162,12 +162,15 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
 <!-- The shell first, then one file per section. Order matters twice:
      nvx-admin-core.js defines the register() the rest call at load time,
      and the nav is drawn in the order the sections register. -->
+<script src="nvx-admin-icons.js" defer></script>
 <script src="nvx-admin-core.js" defer></script>
 <script src="nvx-admin-resource.js" defer></script>
 <script src="nvx-admin-dashboard.js" defer></script>
 <script src="nvx-admin-content.js" defer></script>
 <script src="nvx-admin-media.js" defer></script>
 <script src="nvx-admin-search.js" defer></script>
+<script src="nvx-admin-ai.js" defer></script>
+<script src="nvx-admin-workflows.js" defer></script>
 <script src="nvx-admin-analytics.js" defer></script>
 <script src="nvx-admin-users.js" defer></script>
 <script src="nvx-admin-settings.js" defer></script>
@@ -175,36 +178,88 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
 </head>
 <body>
 
-<header class="bar"><div class="bar__row"><button type="button" id="themeToggle" aria-label="پوسته‌ی روشن/تاریک" title="پوسته‌ی روشن/تاریک"><svg class="i-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
-  <a class="bar__home lat" href="/"><img src="/navidix-mark.png" alt="" width="22" height="22" /><span>NAVIDIX</span></a>
-  <span class="bar__sp"></span>
-  <a href="/training.html">آموزش‌ها ←</a>
-</div></header>
 
-<main class="wrap" id="app">
-  <p class="eyebrow lat">NAVIDIX · ADMIN</p>
-  <h1>پنل مدیریت</h1>
+<!-- Everything before access is decided. Replaced by the gate on refusal,
+     hidden once the shell takes over. -->
+<div id="aboot"><p class="aspin" style="text-align:center;padding:16vh 0">در حال بررسی دسترسی…</p></div>
 
-  <!-- Said only when the database is missing the CMS tables, or when the
-       signed-in role has a seat but no permissions. Empty otherwise. -->
-  <div id="abanner"></div>
+<div class="ashell" id="ashell" hidden>
 
-  <nav class="anav" id="anav" hidden></nav>
+  <!-- ---- the rail ----
+       Groups and items are built at runtime from what the signed-in role
+       may actually open, so this is an empty frame in the markup. -->
+  <aside class="arail" id="arail">
+    <div class="arail__top">
+      <img class="arail__mark" src="/navidix-mark.png" alt="" width="24" height="24" />
+      <span class="arail__name lat">NAVIDIX</span>
+      <span class="arail__tag lat">CMS</span>
+    </div>
+    <nav class="arail__scroll" id="arail-nav"></nav>
+    <div class="arail__foot">
+      <div class="arail__who" id="arail-who"></div>
+      <a href="/" class="abtn abtn--ghost abtn--sm" title="بازگشت به سایت">←</a>
+    </div>
+  </aside>
+  <div class="ascrim" id="ascrim" hidden></div>
 
-  <!-- Every section but one is created here at runtime by the shell. The
-       analytics section is in the markup because the inline script at the
-       bottom of this file has always written into #sub and #body, and it
-       still does — moving those two nodes inside a section container is
-       the whole of what turned that page into a tab. -->
-  <div id="asections">
-    <section class="asec" id="sec-analytics" hidden>
-      <p class="sub" id="sub">در حال بررسی دسترسی…</p>
-      <div id="body"></div>
-    </section>
+  <div class="amain">
+    <header class="atop">
+      <button type="button" class="abtn abtn--ghost abtn--icon atop__burger" id="aburger"
+              aria-label="فهرست بخش‌ها">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div>
+        <p class="atop__crumb lat" id="atop-crumb"></p>
+        <h2 class="atop__t" id="atop-title">پنل مدیریت</h2>
+      </div>
+      <span class="atop__grow"></span>
+      <button type="button" class="atrigger" id="apal-trigger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zM20 20l-4-4"/></svg>
+        <span>جست‌وجو یا رفتن به…</span>
+        <kbd>⌘K</kbd>
+      </button>
+      <!-- Came across from the old page header. The pre-paint script at
+           the top of this file still binds it by id, so it keeps working
+           wherever it sits. -->
+      <button type="button" id="themeToggle" aria-label="پوسته‌ی روشن/تاریک" title="پوسته‌ی روشن/تاریک"><svg class="i-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+    </header>
+
+    <main class="abody">
+      <!-- Said only when the database is missing the CMS tables, or when
+           the signed-in role has a seat but no permissions. -->
+      <div id="abanner"></div>
+
+      <!-- Every section but one is created here at runtime by the shell.
+           The analytics section is in the markup because the inline script
+           at the bottom of this file has always written into #sub and
+           #body, and it still does — moving those two nodes inside a
+           section container is the whole of what turned that page into a
+           destination in the rail. -->
+      <div id="asections">
+        <section class="asec" id="sec-analytics" hidden>
+          <h1 class="apage__t">آمار</h1>
+          <p class="sub apage__s" id="sub">در حال خواندن…</p>
+          <div id="body"></div>
+        </section>
+      </div>
+    </main>
   </div>
+</div>
 
-  <p class="sub" id="aboot">در حال بررسی دسترسی…</p>
-</main>
+<!-- ---- command palette ---- -->
+<div class="apal" id="apal" hidden>
+  <div class="apal__box">
+    <div class="apal__in">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zM20 20l-4-4"/></svg>
+      <input id="apal-input" type="text" placeholder="بخش یا محتوا…"
+             autocomplete="off" spellcheck="false" />
+    </div>
+    <div class="apal__list" id="apal-list"></div>
+  </div>
+</div>
 
 <div class="tip" id="tip"></div>
 

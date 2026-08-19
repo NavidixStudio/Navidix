@@ -1,219 +1,644 @@
 /* =====================================================================
-   NAVIDIX — the CMS chrome.
+   NAVIDIX — the admin design system.
 
-   This file adds only what the panel needed once it stopped being a
-   dashboard: navigation between sections, forms, a modal, toasts, and the
-   media grid. Everything the analytics page already had — the palette,
-   .panel, .kpis, tables, .gate, .tip — stays in admin.html's own <style>
-   block and is used unchanged here. Nothing is redefined in both places,
-   so there is nothing to keep in step.
+   The first version of this panel was a page with chips on top of it. It
+   worked and it looked like a page with chips on top of it. This is the
+   rebuild: an application shell, a rail of grouped destinations, a sticky
+   header that always says where you are, and a command palette so the
+   fastest path between any two screens is the keyboard.
 
-   The palette variables (--pane, --line2, --ink, --mark, …) come from
-   that block. This file is not standalone by design: it is the second
-   half of one stylesheet, not a second stylesheet.
+   Three decisions carry the look:
 
-   Light theme needs nothing here. The site inverts the whole document
-   with a filter, so a colour that works dark works light.
+   1. Depth by surface, not by shadow. Four near-black planes, each a few
+      points lighter than the one behind it, separated by hairlines. Big
+      soft shadows on a dark UI turn into grey smudge; a 1px line at the
+      right lightness reads as an edge at any brightness.
+
+   2. Colour is information. The ember is the brand and appears on exactly
+      one thing at a time — the primary action. Blue is data. Green,
+      amber and red are states. Everything structural is greyscale, so
+      when something is coloured it means something.
+
+   3. RTL first. The rail sits on the right because that is where the eye
+      starts in Persian, and every inset is logical (inline-start /
+      inline-end) rather than left/right, so the whole shell mirrors
+      correctly without a second stylesheet.
+
+   This file also restyles the base classes that admin.html's own <style>
+   block defines — .panel, .kpi, table, .gate — because the analytics tab
+   still uses them and a panel where one tab looks older than the rest is
+   worse than one that never changed. It loads after that block, so it
+   wins without either file having to know about the other.
+
+   Light theme needs nothing: the site inverts the document with a filter.
    ===================================================================== */
 
+:root{
+  /* surfaces, deepest to nearest */
+  --a-bg:      #07080A;
+  --a-rail:    #0B0D11;
+  --a-s1:      #101419;
+  --a-s2:      #151A21;
+  --a-s3:      #1B2129;
 
-/* ---- section navigation ----
-   A chip row rather than a sidebar. At 360px a sidebar is either a burger
-   menu or a column that eats a third of the screen, and this panel has
-   six destinations, not sixty — they fit on one scrollable line, and the
-   line collapses to nothing on the pages that only have one. */
-.anav{
-  display:flex; gap:7px; flex-wrap:wrap; margin:0 0 26px;
-  padding:0 0 2px;
-}
-.anav button{
-  appearance:none; border:1px solid var(--line2); background:transparent;
-  color:var(--mute); font:inherit; font-size:13px; font-weight:600;
-  padding:8px 15px; border-radius:9px; cursor:pointer; white-space:nowrap;
-  transition:border-color .2s, color .2s, background .2s;
-}
-.anav button:hover{ color:var(--ink); border-color:rgba(150,196,255,.45) }
-.anav button[aria-current="true"]{
-  color:var(--ink); border-color:var(--mark); background:rgba(74,144,226,.10);
+  /* hairlines */
+  --a-line:    #1F252E;
+  --a-line2:   #2A313C;
+  --a-line3:   #38414E;
+
+  /* ink */
+  --a-ink:     #F2F6FC;
+  --a-ink2:    #B9C2CE;
+  --a-ink3:    #7E8792;
+  --a-ink4:    #565E68;
+
+  /* meaning */
+  --a-ember:   #E5202A;
+  --a-mark:    #4A90E2;
+  --a-good:    #3FB37F;
+  --a-warn:    #DFA83C;
+
+  --a-r1: 7px;  --a-r2: 10px;  --a-r3: 14px;  --a-r4: 18px;
+  --a-rail-w: 244px;
+
+  --a-shadow: 0 18px 40px -22px rgba(0,0,0,.85);
+  --a-pop:    0 28px 64px -26px rgba(0,0,0,.92);
 }
 
-.asec[hidden]{ display:none }
-.asec > h2:first-child{ margin-top:0 }
+body{ background:var(--a-bg); }
 
-/* ---- the banner that explains a half-built database ----
-   Shown when the panel can reach Supabase but cms-rbac.sql has not been
-   run there yet. It is not an error: the analytics half still works, and
-   this says exactly which file makes the other half appear. */
-.abanner{
-  border:1px solid rgba(229,32,42,.35); background:rgba(229,32,42,.07);
-  border-radius:12px; padding:14px 16px; margin:0 0 22px;
-  font-size:13px; line-height:2; color:var(--ink2);
-}
-.abanner b{ color:var(--ink); font-weight:700 }
-.abanner code{
-  font-family:'Inter',ui-monospace,monospace; font-size:12px; direction:ltr;
-  unicode-bidi:isolate; background:#0E1116; border:1px solid var(--line);
-  border-radius:6px; padding:1px 6px;
-}
-.abanner--calm{ border-color:var(--line2); background:rgba(74,144,226,.06) }
+/* =====================================================================
+   1 — the shell
+   ===================================================================== */
 
-/* ---- buttons ---- */
+.ashell{
+  display:grid;
+  grid-template-columns:var(--a-rail-w) 1fr;
+  min-height:100vh;
+  align-items:start;
+}
+
+/* ---- rail ---- */
+.arail{
+  position:sticky; top:0; height:100vh;
+  background:var(--a-rail);
+  border-inline-start:1px solid var(--a-line);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
+
+.arail__top{
+  padding:17px 18px 14px;
+  border-bottom:1px solid var(--a-line);
+  display:flex; align-items:center; gap:10px;
+}
+.arail__mark{ width:24px; height:24px; border-radius:6px; display:block }
+.arail__name{
+  font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+  font-size:12px; font-weight:700; letter-spacing:.17em; color:var(--a-ink);
+}
+.arail__tag{
+  font-size:9.5px; letter-spacing:.13em; color:var(--a-ink4);
+  border:1px solid var(--a-line2); border-radius:4px; padding:1px 5px;
+  font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+}
+
+.arail__scroll{ flex:1; overflow-y:auto; padding:12px 10px 8px; }
+.arail__scroll::-webkit-scrollbar{ width:8px }
+.arail__scroll::-webkit-scrollbar-thumb{ background:var(--a-line2); border-radius:4px }
+
+.arail__group{ margin:0 0 4px }
+.arail__label{
+  font-size:10px; letter-spacing:.15em; color:var(--a-ink4);
+  padding:12px 10px 6px; margin:0; font-weight:700;
+}
+
+.arail__item{
+  display:flex; align-items:center; gap:10px; width:100%;
+  appearance:none; border:0; background:transparent; cursor:pointer;
+  color:var(--a-ink3); font:inherit; font-size:13.5px; font-weight:500;
+  padding:8px 10px; border-radius:var(--a-r1); text-align:start;
+  transition:background .16s, color .16s;
+  position:relative;
+}
+.arail__item svg{ width:16px; height:16px; flex:none; opacity:.85 }
+.arail__item:hover{ background:var(--a-s1); color:var(--a-ink2) }
+.arail__item[aria-current="true"]{
+  background:var(--a-s2); color:var(--a-ink); font-weight:600;
+}
+/* The active marker is on the inline-start edge — the outer edge of the
+   rail in RTL, so it reads as a tab pulled out of the wall. */
+.arail__item[aria-current="true"]::before{
+  content:''; position:absolute; inset-inline-start:0; top:7px; bottom:7px;
+  width:2px; border-radius:2px; background:var(--a-ember);
+}
+.arail__item[aria-current="true"] svg{ opacity:1; color:var(--a-ink) }
+
+.arail__foot{
+  border-top:1px solid var(--a-line); padding:11px 12px;
+  display:flex; align-items:center; gap:9px;
+}
+.arail__who{ min-width:0; flex:1 }
+.arail__mail{
+  font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+  font-size:11.5px; color:var(--a-ink2); direction:ltr; text-align:start;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;
+}
+.arail__role{ font-size:10.5px; color:var(--a-ink4); display:block }
+
+/* ---- main column ---- */
+.amain{ min-width:0; display:flex; flex-direction:column; min-height:100vh }
+
+.atop{
+  position:sticky; top:0; z-index:30;
+  background:rgba(7,8,10,.82); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--a-line);
+  padding:0 26px; min-height:60px;
+  display:flex; align-items:center; gap:14px;
+}
+.atop__burger{ display:none }
+.atop__crumb{
+  font-size:11px; letter-spacing:.12em; color:var(--a-ink4);
+  font-family:'Inter',ui-sans-serif,system-ui,sans-serif; margin:0;
+}
+.atop__t{ margin:0; font-size:15px; font-weight:700; color:var(--a-ink); line-height:1.6 }
+.atop__grow{ flex:1 }
+
+/* The palette trigger is a fake input: it looks like search, it opens the
+   palette, and it carries its own shortcut so the shortcut is discovered
+   rather than documented. */
+.atrigger{
+  display:flex; align-items:center; gap:8px;
+  background:var(--a-s1); border:1px solid var(--a-line2);
+  border-radius:var(--a-r2); padding:7px 12px; cursor:pointer;
+  color:var(--a-ink4); font:inherit; font-size:12.5px; min-width:216px;
+  transition:border-color .18s, color .18s;
+}
+.atrigger:hover{ border-color:var(--a-line3); color:var(--a-ink3) }
+.atrigger svg{ width:14px; height:14px; flex:none }
+.atrigger kbd{
+  margin-inline-start:auto; font-family:'Inter',ui-monospace,monospace;
+  font-size:10.5px; border:1px solid var(--a-line2); border-radius:5px;
+  padding:1px 6px; color:var(--a-ink4); background:var(--a-bg);
+}
+
+.abody{ padding:28px 26px 90px; flex:1; max-width:1180px; width:100% }
+
+/* =====================================================================
+   2 — page furniture
+   ===================================================================== */
+
+.apage{ display:flex; align-items:flex-start; gap:16px; margin:0 0 24px; flex-wrap:wrap }
+.apage__x{ min-width:0; flex:1 }
+.apage__t{ margin:0 0 5px; font-size:24px; font-weight:700; color:var(--a-ink); line-height:1.5 }
+.apage__s{ margin:0; font-size:13.5px; line-height:2; color:var(--a-ink3); max-width:70ch }
+.apage__a{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+
+/* admin.html's own base classes, brought up to the new system */
+h1{ color:var(--a-ink) }
+h2{ font-size:16px; font-weight:700; color:var(--a-ink); margin:34px 0 4px; line-height:1.65 }
+.sub, .hint{ color:var(--a-ink3) }
+.eyebrow{ color:var(--a-ink4) }
+
+.panel{
+  background:var(--a-s1); border:1px solid var(--a-line2);
+  border-radius:var(--a-r3); padding:0; overflow:hidden;
+}
+.panel > *:not(.scroll):not(table){ padding:18px 20px }
+.panel .scroll{ padding:0 }
+
+.acount{ font-size:12px; color:var(--a-ink4); margin:0 0 11px }
+
+/* =====================================================================
+   3 — tables
+   ===================================================================== */
+
+.scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch }
+table{ width:100%; border-collapse:separate; border-spacing:0; font-size:13px }
+thead th{
+  position:sticky; top:0; z-index:1;
+  background:var(--a-s2); color:var(--a-ink4);
+  font-size:10.5px; font-weight:700; letter-spacing:.09em; text-align:start;
+  padding:10px 14px; border-bottom:1px solid var(--a-line2); white-space:nowrap;
+}
+tbody td{
+  padding:13px 14px; border-bottom:1px solid var(--a-line);
+  color:var(--a-ink2); vertical-align:middle;
+}
+tbody tr{ transition:background .14s }
+tbody tr:hover{ background:var(--a-s2) }
+tbody tr:last-child td{ border-bottom:0 }
+th.n, td.n{ text-align:end; width:1%; white-space:nowrap }
+td .path{ display:block; font-size:10.5px; color:var(--a-ink4); direction:ltr;
+  text-align:start; unicode-bidi:isolate; margin-top:2px; font-family:'Inter',monospace }
+
+/* Row actions stay out of the way until the row is under the cursor. On
+   touch there is no hover, so there they are simply always on. */
+.arowacts{ display:flex; gap:6px; justify-content:flex-end; opacity:.32; transition:opacity .16s }
+tbody tr:hover .arowacts, tbody tr:focus-within .arowacts{ opacity:1 }
+@media (hover:none){ .arowacts{ opacity:1 } }
+
+.tbar{ height:6px; border-radius:3px; background:var(--a-mark); min-width:3px; display:block }
+.tbar__w{ background:var(--a-bg); border-radius:3px; overflow:hidden; min-width:64px }
+.mail{ font-family:'Inter',ui-sans-serif,system-ui,sans-serif; font-size:12.5px;
+  direction:ltr; text-align:start; white-space:nowrap }
+.t--users td, .t--users th{ white-space:nowrap }
+
+/* =====================================================================
+   4 — stat tiles
+   ===================================================================== */
+
+.kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(152px,1fr)); gap:12px; margin:0 0 10px }
+.kpi{
+  background:var(--a-s1); border:1px solid var(--a-line2);
+  border-radius:var(--a-r3); padding:16px 17px; position:relative; overflow:hidden;
+  transition:border-color .18s;
+}
+.kpi:hover{ border-color:var(--a-line3) }
+/* A one-pixel gradient along the top edge. Enough to make a tile feel
+   made rather than drawn, not enough to become decoration. */
+.kpi::after{
+  content:''; position:absolute; inset-block-start:0; inset-inline:0; height:1px;
+  background:linear-gradient(to left, transparent, rgba(74,144,226,.5), transparent);
+}
+.kpi b{ display:block; font-size:25px; font-weight:700; line-height:1.5; color:var(--a-ink);
+  font-variant-numeric:tabular-nums }
+.kpi span{ display:block; font-size:11.5px; color:var(--a-ink4); margin-top:2px }
+
+/* =====================================================================
+   5 — controls
+   ===================================================================== */
+
 .abtn{
-  appearance:none; border:1px solid var(--line2); background:transparent;
-  color:var(--ink2); font:inherit; font-size:12.5px; font-weight:600;
-  padding:8px 15px; border-radius:9px; cursor:pointer; white-space:nowrap;
-  transition:border-color .2s, color .2s, opacity .2s;
+  display:inline-flex; align-items:center; gap:6px;
+  appearance:none; border:1px solid var(--a-line2); background:var(--a-s1);
+  color:var(--a-ink2); font:inherit; font-size:12.5px; font-weight:600;
+  padding:8px 14px; border-radius:var(--a-r1); cursor:pointer; white-space:nowrap;
+  transition:border-color .16s, color .16s, background .16s, opacity .16s;
 }
-.abtn:hover:not(:disabled){ border-color:rgba(150,196,255,.5); color:var(--ink) }
-.abtn:disabled{ opacity:.45; cursor:default }
-.abtn--primary{ background:var(--mark); border-color:var(--mark); color:#08090B }
-.abtn--primary:hover:not(:disabled){ color:#08090B; opacity:.88 }
-.abtn--danger{ border-color:rgba(229,32,42,.5); color:#FF8A80 }
-.abtn--danger:hover:not(:disabled){ border-color:var(--ember); color:#FF8A80 }
-.abtn--sm{ font-size:11.5px; padding:5px 10px; border-radius:7px }
+.abtn svg{ width:14px; height:14px }
+.abtn:hover:not(:disabled){ border-color:var(--a-line3); color:var(--a-ink); background:var(--a-s2) }
+.abtn:active:not(:disabled){ transform:translateY(.5px) }
+.abtn:disabled{ opacity:.4; cursor:default }
+.abtn--primary{
+  background:var(--a-ember); border-color:var(--a-ember); color:#fff;
+  box-shadow:0 6px 18px -8px rgba(229,32,42,.7);
+}
+.abtn--primary:hover:not(:disabled){ background:#F2333C; border-color:#F2333C; color:#fff }
+.abtn--danger{ color:#FF8F86; border-color:rgba(229,32,42,.36) }
+.abtn--danger:hover:not(:disabled){ border-color:var(--a-ember); color:#FF8F86;
+  background:rgba(229,32,42,.09) }
+.abtn--ghost{ background:transparent; border-color:transparent }
+.abtn--ghost:hover:not(:disabled){ background:var(--a-s2); border-color:transparent }
+.abtn--sm{ font-size:11.5px; padding:5px 9px; border-radius:6px }
+.abtn--icon{ padding:6px; width:28px; height:28px; justify-content:center }
 
 .arow{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
 .arow--end{ justify-content:flex-end }
-.arow--between{ justify-content:space-between }
 .aspacer{ flex:1 }
 
-/* ---- form controls ----
-   Inputs are LTR-agnostic on purpose: a URL, a slug and a Persian title
-   sit in the same form, so direction is set per field by the module that
-   builds it rather than globally here. */
-.afield{ margin:0 0 15px }
-.alabel{
-  display:block; font-size:12px; color:var(--mute); margin:0 0 6px; font-weight:600;
+/* ---- inputs ---- */
+.ainput, .atextarea, .aselect, .asearch{
+  width:100%; box-sizing:border-box; background:var(--a-bg); color:var(--a-ink);
+  border:1px solid var(--a-line2); border-radius:var(--a-r1);
+  padding:9px 12px; font:inherit; font-size:13.5px; line-height:1.8;
+  transition:border-color .16s, box-shadow .16s;
 }
-.ahelp{ font-size:11.5px; color:var(--dim); line-height:1.85; margin:5px 0 0 }
-.ainput, .atextarea, .aselect{
-  width:100%; box-sizing:border-box; background:#0E1116; color:var(--ink);
-  border:1px solid var(--line2); border-radius:9px; padding:10px 12px;
-  font:inherit; font-size:13.5px; line-height:1.8;
+.ainput::placeholder, .atextarea::placeholder, .asearch::placeholder{ color:var(--a-ink4) }
+.ainput:focus, .atextarea:focus, .aselect:focus, .asearch:focus{
+  outline:none; border-color:var(--a-mark); box-shadow:0 0 0 3px rgba(74,144,226,.14);
 }
-.ainput:focus, .atextarea:focus, .aselect:focus{
-  outline:none; border-color:rgba(74,144,226,.7);
-}
-.atextarea{ min-height:96px; resize:vertical }
-.atextarea--code{
-  font-family:'Inter',ui-monospace,monospace; font-size:12.5px;
-  direction:ltr; text-align:left; min-height:120px;
-}
-.aselect{ cursor:pointer }
-.ainput--ltr{ direction:ltr; text-align:left }
+.ainput:disabled, .atextarea:disabled, .aselect:disabled{ opacity:.55; cursor:not-allowed }
+.atextarea{ min-height:104px; resize:vertical }
+.atextarea--code{ font-family:'Inter',ui-monospace,monospace; font-size:12.5px;
+  direction:ltr; text-align:start; min-height:130px }
+.aselect{ cursor:pointer; appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--a-ink4) 50%),
+                   linear-gradient(135deg,var(--a-ink4) 50%,transparent 50%);
+  background-position:calc(0% + 14px) 55%, calc(0% + 19px) 55%;
+  background-size:5px 5px, 5px 5px; background-repeat:no-repeat;
+  padding-inline-start:32px }
+.ainput--ltr{ direction:ltr; text-align:start }
+.asearch{ max-width:300px }
 
-.aswitch{ display:flex; align-items:center; gap:9px; cursor:pointer; font-size:13px }
-.aswitch input{ width:16px; height:16px; accent-color:var(--mark); cursor:pointer }
+.afield{ margin:0 0 17px }
+.afield:last-child{ margin-bottom:0 }
+.alabel{ display:block; font-size:12px; color:var(--a-ink3); margin:0 0 6px; font-weight:600 }
+.ahelp{ font-size:11.5px; color:var(--a-ink4); line-height:1.9; margin:6px 0 0 }
 
-.asearch{
-  width:100%; max-width:320px; box-sizing:border-box; background:#0E1116;
-  color:var(--ink); border:1px solid var(--line2); border-radius:9px;
-  padding:9px 12px; font:inherit; font-size:13px;
+.aswitch{ display:flex; align-items:center; gap:9px; cursor:pointer; font-size:13px;
+  color:var(--a-ink2) }
+.aswitch input{ width:16px; height:16px; accent-color:var(--a-mark); cursor:pointer }
+
+/* =====================================================================
+   6 — the editor layout
+
+   Body on one side, everything about the body on the other. It is the
+   shape every serious editor converges on, for the reason that status
+   and tags are decisions about a thing rather than parts of it, and
+   putting them in the same column pretends otherwise.
+   ===================================================================== */
+
+.aform{ display:grid; grid-template-columns:1fr 316px; gap:18px; align-items:start }
+.aform__main, .aform__side{ display:flex; flex-direction:column; gap:14px }
+.acard{
+  background:var(--a-s1); border:1px solid var(--a-line2);
+  border-radius:var(--a-r3); padding:19px 20px;
 }
-.asearch:focus{ outline:none; border-color:rgba(74,144,226,.7) }
+.acard__h{
+  font-size:11px; letter-spacing:.11em; color:var(--a-ink4); font-weight:700;
+  margin:0 0 15px; padding-bottom:11px; border-bottom:1px solid var(--a-line);
+}
+.aform__side{ position:sticky; top:78px }
 
-/* ---- badges ----
-   Role colours climb with authority, and the two that can change other
-   people's access are the two that are not grey. */
+.abar{
+  position:sticky; bottom:0; z-index:20; margin-top:18px;
+  background:rgba(7,8,10,.9); backdrop-filter:blur(14px);
+  border-top:1px solid var(--a-line2); border-radius:var(--a-r3) var(--a-r3) 0 0;
+  padding:13px 18px; display:flex; gap:9px; align-items:center; flex-wrap:wrap;
+}
+
+/* =====================================================================
+   7 — badges, pills, states
+   ===================================================================== */
+
 .abadge{
-  display:inline-block; font-size:10.5px; font-weight:700; line-height:1.9;
-  border:1px solid var(--line2); border-radius:5px; padding:0 7px;
-  color:var(--mute); white-space:nowrap;
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:10.5px; font-weight:700; line-height:1.9;
+  border:1px solid var(--a-line2); border-radius:5px; padding:1px 8px;
+  color:var(--a-ink3); white-space:nowrap;
 }
-.abadge--owner{ color:#FFC46B; border-color:rgba(255,196,107,.45) }
-.abadge--admin{ color:var(--mark); border-color:rgba(74,144,226,.5) }
-.abadge--editor{ color:#8FD9A8; border-color:rgba(143,217,168,.4) }
-.abadge--writer{ color:#C8D0DA; border-color:var(--line2) }
-.abadge--off{ color:#FF8A80; border-color:rgba(229,32,42,.45) }
+.abadge::before{ content:''; width:5px; height:5px; border-radius:50%;
+  background:currentColor; flex:none; opacity:.85 }
+.abadge--none::before{ display:none }
+.abadge--owner { color:#FFC46B; border-color:rgba(255,196,107,.4) }
+.abadge--admin { color:var(--a-mark); border-color:rgba(74,144,226,.42) }
+.abadge--editor{ color:var(--a-good); border-color:rgba(63,179,127,.36) }
+.abadge--writer{ color:var(--a-ink2); border-color:var(--a-line2) }
+.abadge--viewer{ color:var(--a-ink4) }
+.abadge--off   { color:#FF8F86; border-color:rgba(229,32,42,.4) }
+.abadge--published{ color:var(--a-good); border-color:rgba(63,179,127,.36) }
+.abadge--scheduled{ color:var(--a-warn); border-color:rgba(223,168,60,.38) }
+.abadge--draft    { color:var(--a-ink4) }
 
-/* ---- modal ---- */
-.amodal{
-  position:fixed; inset:0; z-index:9000; display:grid; place-items:center;
-  background:rgba(4,6,10,.78); padding:20px;
+.astar{ color:var(--a-warn); font-size:14px }
+.astar--off{ color:var(--a-line3) }
+
+/* ---- empty state ---- */
+.empty, .aempty{
+  text-align:center; color:var(--a-ink4); font-size:13px; line-height:2.05;
+  padding:44px 24px; border:1px dashed var(--a-line2); border-radius:var(--a-r3);
+  background:var(--a-s1);
 }
+.aempty b{ display:block; color:var(--a-ink2); font-size:14.5px; font-weight:700; margin-bottom:5px }
+.aempty svg{ width:26px; height:26px; color:var(--a-line3); margin-bottom:12px }
+
+/* ---- skeleton ----
+   A shape the size of the thing that is coming, rather than the word
+   "loading". The eye settles on the layout before the data lands, so the
+   arrival is a fill rather than a jump. */
+.askel{ display:flex; flex-direction:column; gap:9px }
+.askel i{
+  display:block; height:14px; border-radius:6px;
+  background:linear-gradient(100deg,var(--a-s1) 30%,var(--a-s3) 50%,var(--a-s1) 70%);
+  background-size:220% 100%; animation:askel 1.25s ease-in-out infinite;
+}
+.askel i:nth-child(2n){ width:82% }
+.askel i:nth-child(3n){ width:64% }
+.askel--tile{ display:grid; grid-template-columns:repeat(auto-fit,minmax(152px,1fr)); gap:12px }
+.askel--tile i{ height:82px; border-radius:var(--a-r3); width:100%!important }
+@keyframes askel{ from{ background-position:0% 0 } to{ background-position:-200% 0 } }
+@media (prefers-reduced-motion:reduce){ .askel i{ animation:none } }
+
+.aspin{ color:var(--a-ink4); font-size:12.5px; padding:16px 2px }
+
+/* =====================================================================
+   8 — banner
+   ===================================================================== */
+
+.abanner{
+  display:flex; gap:12px; align-items:flex-start;
+  border:1px solid rgba(229,32,42,.3); background:rgba(229,32,42,.06);
+  border-radius:var(--a-r3); padding:15px 17px; margin:0 0 22px;
+  font-size:13px; line-height:2; color:var(--a-ink2);
+}
+.abanner svg{ width:17px; height:17px; color:var(--a-ember); flex:none; margin-top:5px }
+.abanner b{ color:var(--a-ink); font-weight:700 }
+.abanner code{
+  font-family:'Inter',ui-monospace,monospace; font-size:12px; direction:ltr;
+  unicode-bidi:isolate; background:var(--a-bg); border:1px solid var(--a-line2);
+  border-radius:5px; padding:1px 6px;
+}
+.abanner--calm{ border-color:var(--a-line2); background:var(--a-s1) }
+.abanner--calm svg{ color:var(--a-mark) }
+
+/* =====================================================================
+   9 — command palette
+
+   Everything the rail has, plus every piece of content in the database,
+   behind one keystroke. On a panel with fifteen destinations this is the
+   difference between navigation and hunting.
+   ===================================================================== */
+
+.apal{ position:fixed; inset:0; z-index:9200; background:rgba(4,5,7,.7);
+  backdrop-filter:blur(3px); display:flex; justify-content:center;
+  align-items:flex-start; padding:11vh 20px 20px }
+.apal[hidden]{ display:none }
+.apal__box{
+  width:100%; max-width:580px; background:var(--a-s2);
+  border:1px solid var(--a-line3); border-radius:var(--a-r4);
+  box-shadow:var(--a-pop); overflow:hidden; display:flex; flex-direction:column;
+  max-height:70vh;
+}
+.apal__in{
+  display:flex; align-items:center; gap:11px; padding:15px 18px;
+  border-bottom:1px solid var(--a-line);
+}
+.apal__in svg{ width:16px; height:16px; color:var(--a-ink4); flex:none }
+.apal__in input{
+  flex:1; background:none; border:0; outline:none; color:var(--a-ink);
+  font:inherit; font-size:15px;
+}
+.apal__in input::placeholder{ color:var(--a-ink4) }
+.apal__list{ overflow-y:auto; padding:7px }
+.apal__sec{ font-size:10px; letter-spacing:.14em; color:var(--a-ink4);
+  padding:11px 11px 5px; font-weight:700 }
+.apal__i{
+  display:flex; align-items:center; gap:10px; width:100%;
+  appearance:none; border:0; background:transparent; cursor:pointer;
+  color:var(--a-ink2); font:inherit; font-size:13.5px; text-align:start;
+  padding:9px 11px; border-radius:var(--a-r1);
+}
+.apal__i svg{ width:15px; height:15px; color:var(--a-ink4); flex:none }
+.apal__i[data-on="true"]{ background:var(--a-s3); color:var(--a-ink) }
+.apal__i[data-on="true"] svg{ color:var(--a-mark) }
+.apal__i em{ font-style:normal; color:var(--a-ink4); font-size:11.5px;
+  margin-inline-start:auto }
+.apal__none{ padding:26px; text-align:center; color:var(--a-ink4); font-size:13px }
+
+/* =====================================================================
+   10 — modal, toast, media
+   ===================================================================== */
+
+.amodal{ position:fixed; inset:0; z-index:9000; display:grid; place-items:center;
+  background:rgba(4,5,7,.74); backdrop-filter:blur(3px); padding:20px }
 .amodal[hidden]{ display:none }
 .amodal__box{
-  width:100%; max-width:440px; max-height:86vh; overflow-y:auto;
-  border-radius:16px; border:1px solid var(--line2); background:var(--pane);
-  padding:24px 24px 20px; box-shadow:0 30px 70px -30px rgba(0,0,0,.9);
+  width:100%; max-width:470px; max-height:86vh; overflow-y:auto;
+  border-radius:var(--a-r4); border:1px solid var(--a-line3); background:var(--a-s2);
+  padding:24px 24px 20px; box-shadow:var(--a-pop);
 }
-.amodal__t{ margin:0 0 8px; font-size:17px; font-weight:700; color:var(--ink); line-height:1.7 }
-.amodal__s{ margin:0 0 18px; font-size:13px; line-height:1.95; color:var(--mute) }
+.amodal__t{ margin:0 0 8px; font-size:17px; font-weight:700; color:var(--a-ink); line-height:1.7 }
+.amodal__s{ margin:0 0 18px; font-size:13px; line-height:2; color:var(--a-ink3) }
+.amodal__box--wide{ max-width:760px }
 
-/* ---- toast ----
-   Bottom centre, above everything, and it never asks to be dismissed:
-   a confirmation that needs a click is a second task, not a receipt. */
 .atoast{
-  position:fixed; z-index:9500; bottom:24px; left:50%; transform:translate(-50%,14px);
-  background:#11151B; border:1px solid var(--line2); border-radius:11px;
-  padding:11px 18px; font-size:13px; color:var(--ink); max-width:calc(100vw - 40px);
-  box-shadow:0 18px 40px -18px rgba(0,0,0,.95);
-  opacity:0; pointer-events:none; transition:opacity .18s, transform .18s;
+  position:fixed; z-index:9500; bottom:24px; inset-inline-start:50%;
+  transform:translate(50%,14px);
+  background:var(--a-s3); border:1px solid var(--a-line3); border-radius:var(--a-r2);
+  padding:12px 18px; font-size:13px; color:var(--a-ink);
+  max-width:calc(100vw - 40px); box-shadow:var(--a-pop);
+  opacity:0; pointer-events:none; transition:opacity .2s, transform .2s;
 }
-.atoast.on{ opacity:1; transform:translate(-50%,0) }
-.atoast--bad{ border-color:rgba(229,32,42,.55) }
-.atoast--good{ border-color:rgba(74,144,226,.55) }
+.atoast.on{ opacity:1; transform:translate(50%,0) }
+.atoast--bad { border-color:rgba(229,32,42,.55) }
+.atoast--good{ border-color:rgba(63,179,127,.5) }
 
-/* ---- media library ---- */
 .adrop{
-  border:1.5px dashed var(--line2); border-radius:13px; padding:26px 20px;
-  text-align:center; color:var(--mute); font-size:13px; line-height:2;
-  transition:border-color .2s, background .2s; cursor:pointer; margin:0 0 18px;
+  border:1.5px dashed var(--a-line2); border-radius:var(--a-r3); padding:30px 20px;
+  text-align:center; color:var(--a-ink3); font-size:13px; line-height:2;
+  transition:border-color .18s, background .18s; cursor:pointer; margin:0 0 18px;
+  background:var(--a-s1);
 }
-.adrop:hover, .adrop.over{ border-color:var(--mark); background:rgba(74,144,226,.06) }
-.adrop b{ color:var(--ink); font-weight:700; display:block; font-size:14px }
+.adrop:hover, .adrop.over{ border-color:var(--a-mark); background:rgba(74,144,226,.05) }
+.adrop b{ color:var(--a-ink); font-weight:700; display:block; font-size:14.5px }
+.adrop svg{ width:22px; height:22px; color:var(--a-ink4); margin-bottom:9px }
 
-.agrid{
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(148px,1fr));
-  gap:12px;
+.agrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(158px,1fr)); gap:12px }
+.amcard{
+  border:1px solid var(--a-line2); border-radius:var(--a-r2); overflow:hidden;
+  background:var(--a-s1); display:flex; flex-direction:column;
+  transition:border-color .16s, transform .16s;
 }
-.acard{
-  border:1px solid var(--line2); border-radius:11px; overflow:hidden;
-  background:#0E1116; display:flex; flex-direction:column;
-}
-.acard__img{
-  width:100%; aspect-ratio:4/3; object-fit:cover; display:block;
-  background:#11151B;
-}
-.acard__none{
-  width:100%; aspect-ratio:4/3; display:grid; place-items:center;
-  color:var(--dim); font-size:11px; background:#11151B;
-}
-.acard__b{ padding:9px 10px; display:flex; flex-direction:column; gap:5px; flex:1 }
-.acard__n{
-  font-size:11.5px; color:var(--ink2); direction:ltr; text-align:left;
-  word-break:break-all; line-height:1.6;
-}
-.acard__m{ font-size:10.5px; color:var(--dim); direction:ltr; text-align:left }
-.acard__a{ display:flex; gap:5px; margin-top:auto; padding-top:4px }
+.amcard:hover{ border-color:var(--a-line3); transform:translateY(-2px) }
+.amcard__img{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:var(--a-bg) }
+.amcard__none{ width:100%; aspect-ratio:4/3; display:grid; place-items:center;
+  color:var(--a-ink4); font-size:11px; background:var(--a-bg) }
+.amcard__b{ padding:9px 11px; display:flex; flex-direction:column; gap:5px; flex:1 }
+.amcard__n{ font-size:11.5px; color:var(--a-ink2); direction:ltr; text-align:start;
+  word-break:break-all; line-height:1.65 }
+.amcard__m{ font-size:10.5px; color:var(--a-ink4); direction:ltr; text-align:start }
+.amcard__a{ display:flex; gap:5px; margin-top:auto; padding-top:4px }
 
-.aprog{
-  height:4px; border-radius:3px; background:#11151B; overflow:hidden; margin:10px 0 0;
-}
-.aprog span{ display:block; height:100%; background:var(--mark); width:0; transition:width .2s }
+.aprog{ height:4px; border-radius:3px; background:var(--a-s3); overflow:hidden; margin:10px 0 0 }
+.aprog span{ display:block; height:100%; background:var(--a-mark); width:0; transition:width .22s }
 
-/* ---- audit log ---- */
+/* =====================================================================
+   11 — filter pills, log, gate
+   ===================================================================== */
+
+.apills{ display:inline-flex; gap:3px; background:var(--a-s1); padding:3px;
+  border:1px solid var(--a-line2); border-radius:9px; margin:0 0 16px }
+.apills button{
+  appearance:none; border:0; background:transparent; cursor:pointer;
+  color:var(--a-ink4); font:inherit; font-size:12.5px; font-weight:600;
+  padding:6px 13px; border-radius:6px; white-space:nowrap; transition:all .16s;
+}
+.apills button:hover{ color:var(--a-ink2) }
+.apills button[aria-current="true"]{ background:var(--a-s3); color:var(--a-ink) }
+
 .alog{ list-style:none; margin:0; padding:0 }
-.alog li{
-  border-bottom:1px solid var(--line); padding:12px 2px; font-size:13px;
-  line-height:1.95; color:var(--ink2);
-}
+.alog li{ border-bottom:1px solid var(--a-line); padding:14px 20px; font-size:13px;
+  line-height:1.95; color:var(--a-ink2) }
 .alog li:last-child{ border-bottom:0 }
-.alog__w{ font-size:11.5px; color:var(--dim); display:block; margin-top:2px }
+.alog__w{ font-size:11.5px; color:var(--a-ink4); display:block; margin-top:2px }
 .alog__j{
-  margin:8px 0 0; background:#0E1116; border:1px solid var(--line);
-  border-radius:8px; padding:10px; font-family:'Inter',ui-monospace,monospace;
-  font-size:11px; direction:ltr; text-align:left; white-space:pre-wrap;
-  word-break:break-word; max-height:230px; overflow:auto; color:var(--mute);
+  margin:9px 0 0; background:var(--a-bg); border:1px solid var(--a-line);
+  border-radius:var(--a-r1); padding:11px; font-family:'Inter',ui-monospace,monospace;
+  font-size:11px; direction:ltr; text-align:start; white-space:pre-wrap;
+  word-break:break-word; max-height:240px; overflow:auto; color:var(--a-ink3);
 }
 
-/* ---- misc ---- */
-.aspin{ color:var(--dim); font-size:12.5px; padding:18px 2px }
-.acount{ font-size:11.5px; color:var(--dim); margin:0 0 12px }
+.gate{
+  max-width:440px; margin:14vh auto; text-align:center;
+  background:var(--a-s1); border:1px solid var(--a-line2);
+  border-radius:var(--a-r4); padding:36px 32px; box-shadow:var(--a-shadow);
+}
+.gate h2{ margin:0 0 8px; font-size:18px }
+.gate p{ color:var(--a-ink3); font-size:13.5px; margin:0 0 18px; line-height:2 }
+.gate button{
+  appearance:none; border:0; border-radius:var(--a-r1); padding:11px 22px;
+  background:var(--a-ember); color:#fff; font:inherit; font-size:14px;
+  font-weight:700; cursor:pointer;
+}
+.gate button + button{ margin-top:9px }
+.diag{ margin:18px 0 0; font-size:11.5px; color:var(--a-ink4); line-height:1.9;
+  border-top:1px solid var(--a-line); padding-top:14px }
 
-@media (max-width:640px){
-  .anav{ margin-bottom:20px }
-  .anav button{ font-size:12.5px; padding:7px 12px }
-  .amodal__box{ padding:20px 18px 16px }
-  .agrid{ grid-template-columns:repeat(auto-fill,minmax(124px,1fr)); gap:9px }
+.tip{
+  position:fixed; z-index:60; pointer-events:none; opacity:0;
+  background:var(--a-s3); border:1px solid var(--a-line3); border-radius:var(--a-r1);
+  padding:7px 11px; font-size:12px; color:var(--a-ink); white-space:nowrap;
+  box-shadow:var(--a-shadow); transition:opacity .12s;
+}
+.tip.on{ opacity:1 }
+
+.tools{ display:flex; gap:8px; flex-wrap:wrap; margin:0 0 16px }
+.tools button{
+  appearance:none; border:1px solid var(--a-line2); background:var(--a-s1);
+  color:var(--a-ink2); font:inherit; font-size:12.5px; padding:8px 14px;
+  border-radius:var(--a-r1); cursor:pointer;
+}
+.tools button:hover{ border-color:var(--a-line3); color:var(--a-ink) }
+.tools button.done{ border-color:var(--a-mark); color:var(--a-mark) }
+.tag{ font-size:10.5px; border:1px solid var(--a-line2); border-radius:5px;
+  padding:1px 7px; color:var(--a-ink3); white-space:nowrap }
+.tag--a{ color:var(--a-mark); border-color:rgba(74,144,226,.45) }
+
+/* =====================================================================
+   12 — narrow
+
+   The rail becomes a drawer rather than a squeeze. A 244px column on a
+   360px screen leaves 116px for the work, which is not a layout.
+   ===================================================================== */
+
+@media (max-width:980px){
+  .aform{ grid-template-columns:1fr }
+  .aform__side{ position:static }
+}
+
+@media (max-width:860px){
+  .ashell{ grid-template-columns:1fr }
+  /* inset-inline-START, not end. In RTL the inline start is the right
+     edge — the same side the rail occupies in the desktop grid — and
+     pinning it to inline-end put the drawer against the left edge, where
+     translateX(100%) then slid it across the content instead of off the
+     screen. It covered the burger that was supposed to open it. */
+  .arail{
+    position:fixed; inset-block:0; inset-inline-start:0; width:min(286px,86vw);
+    z-index:60; transform:translateX(-100%); transition:transform .26s cubic-bezier(.16,1,.3,1);
+    box-shadow:var(--a-pop); border-inline-start:0; border-inline-end:1px solid var(--a-line);
+  }
+  /* translateX is physical in both directions, so the RTL drawer parks
+     off the right edge and the LTR one off the left. */
+  [dir="rtl"] .arail{ transform:translateX(100%) }
+  .arail[data-open="true"]{ transform:none!important }
+  .ascrim{ position:fixed; inset:0; z-index:55; background:rgba(4,5,7,.6);
+    backdrop-filter:blur(2px) }
+  .ascrim[hidden]{ display:none }
+  .atop{ padding:0 15px }
+  .atop__burger{ display:inline-flex }
+  .atrigger{ min-width:0; width:38px; padding:7px; justify-content:center }
+  .atrigger span, .atrigger kbd{ display:none }
+  .abody{ padding:22px 15px 80px }
+  .apage__t{ font-size:20px }
+}
+
+@media (max-width:560px){
+  thead th, tbody td{ padding:10px 9px }
+  table{ font-size:12px }
+  th.bar, td.bar{ display:none }
+  .kpi b{ font-size:21px }
+  .agrid{ grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:9px }
+  .apal{ padding:6vh 12px 12px }
 }

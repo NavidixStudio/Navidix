@@ -370,14 +370,29 @@
     A.clear(host);
     var isNew = !row.id;
 
-    host.appendChild(el('h2', '', (isNew ? 'ساختن ' : 'ویرایش ') + spec.singular));
+    A.page(host, {
+      title: (isNew ? 'ساختن ' : 'ویرایش ') + spec.singular,
+      sub: isNew ? null : (row[spec.labelField] || '')
+    });
 
-    var panel = el('div', 'panel');
+    /* Body on one side, everything *about* the body on the other. Status,
+       category, tags and the cover are decisions about a thing rather than
+       parts of it, and a single column pretends otherwise — which is how
+       a publish control ends up eleven fields below the title. */
+    var grid = el('div', 'aform');
+    var main = el('div', 'aform__main');
+    var side = el('div', 'aform__side');
+    grid.appendChild(main);
+    grid.appendChild(side);
+
     var built = [];
 
-    /* Category and reference options are loaded before the form is drawn
-       so a select never appears empty and then fills in under the
-       reader's cursor. */
+    /* Which fields belong beside the body rather than in it. */
+    var SIDE = { category_id: 1, tags: 1, cover_path: 1, thumbnail_path: 1,
+                 media_path: 1, alt_text: 1, level: 1, duration_minutes: 1,
+                 course_id: 1, chapter_id: 1, kind: 1, model: 1 };
+    var SEO  = { seo_title: 1, seo_description: 1, seo_keywords: 1 };
+
     var needs = spec.fields.filter(function (f) {
       return f.type === 'category' || f.type === 'ref';
     });
@@ -390,36 +405,48 @@
       var opts = {};
       needs.forEach(function (f, i) { opts[f.key] = loaded[i]; });
 
+      function card(title) {
+        var c = el('div', 'acard');
+        if (title) c.appendChild(el('p', 'acard__h', title));
+        return c;
+      }
+
+      var cMain = card(null);
+      var cSeo  = card('سئو و اشتراک‌گذاری');
+      var cMeta = card('دسته‌بندی و رسانه');
+      var cPub  = card('انتشار');
+
       spec.fields.forEach(function (f) {
         var b = field(f, row[f.key], opts);
         built.push(b);
-        panel.appendChild(b.wrap);
+        (SEO[f.key] ? cSeo : SIDE[f.key] ? cMeta : cMain).appendChild(b.wrap);
       });
 
       var st = spec.status ? statusControl(spec, row) : null;
-      if (st) panel.appendChild(st.wrap);
+      if (st) cPub.appendChild(st.wrap);
 
       if (spec.featured) {
         var fb = field({ key: 'featured', label: 'ویژه', type: 'bool',
                          on: 'در بخش ویژه نشان داده شود' }, row.featured);
         built.push(fb);
-        panel.appendChild(fb.wrap);
+        cPub.appendChild(fb.wrap);
       }
 
-      host.appendChild(panel);
+      if (cMain.children.length) main.appendChild(cMain);
+      if (cSeo.children.length > 1) main.appendChild(cSeo);
+      if (cPub.children.length > 1) side.appendChild(cPub);
+      if (cMeta.children.length > 1) side.appendChild(cMeta);
 
-      /* ---- actions ---- */
-      var bar = el('div', 'arow');
-      bar.style.marginTop = '16px';
+      host.appendChild(grid);
 
-      var save = el('button', 'abtn abtn--primary', isNew ? 'بساز' : 'ذخیره');
-      save.type = 'button';
-
-      var prev = el('button', 'abtn', 'پیش‌نمایش');
-      prev.type = 'button';
-
-      var cancel = el('button', 'abtn', 'برگرد');
-      cancel.type = 'button';
+      /* ---- actions ----
+         Pinned to the bottom of the viewport. On a long article the save
+         button was previously a scroll away from the paragraph you just
+         finished. */
+      var bar = el('div', 'abar');
+      var save = A.button(isNew ? 'بساز' : 'ذخیره', 'primary', 'check');
+      var prev = A.button('پیش‌نمایش', null, 'search');
+      var cancel = A.button('برگرد');
 
       bar.appendChild(save);
       bar.appendChild(prev);
@@ -431,9 +458,9 @@
         var payload = {};
         built.forEach(function (b) { payload[b.spec.key] = b.read(); });
         if (st) {
-          var s = st.read();
-          payload.status = s.status;
-          payload.scheduled_for = s.scheduled_for;
+          var s2 = st.read();
+          payload.status = s2.status;
+          payload.scheduled_for = s2.scheduled_for;
         }
         return payload;
       }
@@ -458,7 +485,6 @@
         }
 
         save.disabled = true;
-        save.textContent = 'یک لحظه…';
 
         var job;
         if (isNew) {
@@ -477,12 +503,10 @@
         }, function (e) {
           A.toast(e.message, 'bad');
           save.disabled = false;
-          save.textContent = isNew ? 'بساز' : 'ذخیره';
         });
       });
     });
   }
-
 
   /* ===================================================================
      the list
@@ -492,28 +516,23 @@
 
     var state = { rows: [], q: '', status: '', cats: [] };
 
-    host.appendChild(el('p', 'sub', spec.intro));
+    var acts = [];
+    if (A.can(spec.perms.create)) {
+      acts.push(A.button(spec.singular + ' تازه', 'primary', 'plus', function () {
+        form(host, spec, spec.blank ? spec.blank() : {}, function () { list(host, spec); });
+      }));
+    }
+    A.page(host, { title: spec.title, sub: spec.intro, actions: acts });
 
     var tools = el('div', 'arow');
     tools.style.margin = '0 0 12px';
-
-    if (A.can(spec.perms.create)) {
-      var add = el('button', 'abtn abtn--primary', '+ ' + spec.singular + ' تازه');
-      add.type = 'button';
-      add.addEventListener('click', function () {
-        form(host, spec, spec.blank ? spec.blank() : {}, function () { list(host, spec); });
-      });
-      tools.appendChild(add);
-    }
 
     var search = el('input', 'asearch');
     search.type = 'search';
     search.placeholder = 'جست‌وجو…';
     tools.appendChild(search);
 
-    var reload = el('button', 'abtn', '↻');
-    reload.type = 'button';
-    reload.title = 'تازه‌سازی';
+    var reload = A.button('تازه‌سازی');
     tools.appendChild(reload);
     host.appendChild(tools);
 
@@ -521,8 +540,7 @@
        chapters have none, and a row of chips that all mean the same
        thing is worse than no chips. */
     if (spec.status) {
-      var chips = el('div', 'anav');
-      chips.style.margin = '0 0 16px';
+      var chips = el('div', 'apills');
       [['', 'همه']].concat(STATUS).forEach(function (s) {
         var b = el('button', '', s[1]);
         b.type = 'button';
@@ -599,11 +617,7 @@
 
       if (spec.status) {
         var ts = el('td');
-        var badge = el('span', 'abadge' +
-          (r.status === 'published' ? ' abadge--editor'
-           : r.status === 'scheduled' ? ' abadge--admin' : ''),
-          STATUS_FA[r.status] || r.status);
-        ts.appendChild(badge);
+        ts.appendChild(A.statusBadge(r.status || 'draft', STATUS_FA[r.status] || r.status));
         if (r.status === 'scheduled' && r.scheduled_for) {
           ts.appendChild(el('span', 'path', A.when(r.scheduled_for, true)));
         }
@@ -611,11 +625,14 @@
       }
 
       if (spec.featured) {
-        tr.appendChild(el('td', 'n', r.featured ? '★' : '—'));
+        var tf = el('td', 'n');
+        tf.appendChild(el('span', 'astar' + (r.featured ? '' : ' astar--off'),
+                          r.featured ? '★' : '☆'));
+        tr.appendChild(tf);
       }
 
       var act = el('td', 'n');
-      var bar = el('div', 'arow');
+      var bar = el('div', 'arowacts');
 
       if (spec.ordering && A.can(spec.perms.edit)) {
         var up = el('button', 'abtn abtn--sm', '↑');
@@ -661,9 +678,15 @@
         (visibleRows.length !== state.rows.length ? ' از ' + fa(state.rows.length) : '')));
 
       if (!visibleRows.length) {
-        body.appendChild(A.empty(state.q || state.status
-          ? 'چیزی پیدا نشد.'
-          : 'هنوز چیزی ساخته نشده.'));
+        body.appendChild(state.q || state.status
+          ? A.emptyState('چیزی پیدا نشد', 'فیلتر یا عبارت جست‌وجو را عوض کن.')
+          : A.emptyState('هنوز چیزی ساخته نشده',
+              'اولین ' + spec.singular + ' را بساز — همین‌جا ظاهر می‌شود.',
+              A.can(spec.perms.create)
+                ? A.button(spec.singular + ' تازه', 'primary', 'plus', function () {
+                    form(host, spec, spec.blank ? spec.blank() : {}, function () { list(host, spec); });
+                  })
+                : null));
         return;
       }
 
@@ -692,7 +715,7 @@
 
     function load() {
       A.clear(body);
-      body.appendChild(A.spinner());
+      body.appendChild(A.skeleton(6));
 
       var jobs = [A.db.select(spec.table + '?select=' + (spec.select || '*') +
                               '&order=' + (spec.order || 'sort_order.asc,created_at.desc'))];
@@ -729,6 +752,8 @@
     A.register({
       id: spec.id,
       title: spec.title,
+      group: spec.group || 'content',
+      icon: spec.icon || 'article',
       perm: [spec.perms.create, spec.perms.edit, spec.perms.del].filter(Boolean),
       render: function (host) { list(host, spec); }
     });

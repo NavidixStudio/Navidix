@@ -230,24 +230,24 @@
   }
 
   function card(r, host) {
-    var c = el('div', 'acard');
+    var c = el('div', 'amcard');
 
     if (/^image\//.test(r.mime_type || '')) {
-      var img = el('img', 'acard__img');
+      var img = el('img', 'amcard__img');
       img.src = A.storage.publicUrl(r.path, r.bucket);
       img.alt = r.alt_text || r.filename;
       img.loading = 'lazy';
       c.appendChild(img);
     } else {
-      c.appendChild(el('div', 'acard__none', (r.mime_type || 'فایل')));
+      c.appendChild(el('div', 'amcard__none', (r.mime_type || 'فایل')));
     }
 
-    var b = el('div', 'acard__b');
-    b.appendChild(el('p', 'acard__n', r.filename));
-    b.appendChild(el('p', 'acard__m',
+    var b = el('div', 'amcard__b');
+    b.appendChild(el('p', 'amcard__n', r.filename));
+    b.appendChild(el('p', 'amcard__m',
       A.bytes(r.size_bytes) + (r.width ? ' · ' + r.width + '×' + r.height : '')));
 
-    var acts = el('div', 'acard__a');
+    var acts = el('div', 'amcard__a');
     var cp = el('button', 'abtn abtn--sm', 'نشانی');
     cp.type = 'button';
     cp.addEventListener('click', function () { copyUrl(r); });
@@ -293,7 +293,7 @@
   function load(host) {
     var body = host.querySelector('[data-body]');
     A.clear(body);
-    body.appendChild(A.spinner());
+    body.appendChild(A.skeleton(4));
     A.db.select('media_assets?select=*&order=created_at.desc&limit=300').then(function (v) {
       rows = v || [];
       draw(host);
@@ -342,19 +342,19 @@
         }
 
         list.forEach(function (r) {
-          var c = el('div', 'acard');
+          var c = el('div', 'amcard');
           c.style.cursor = 'pointer';
           if (/^image\//.test(r.mime_type || '')) {
-            var img = el('img', 'acard__img');
+            var img = el('img', 'amcard__img');
             img.src = A.storage.publicUrl(r.path, r.bucket);
             img.alt = r.alt_text || r.filename;
             img.loading = 'lazy';
             c.appendChild(img);
           } else {
-            c.appendChild(el('div', 'acard__none', r.mime_type || 'فایل'));
+            c.appendChild(el('div', 'amcard__none', r.mime_type || 'فایل'));
           }
-          var b = el('div', 'acard__b');
-          b.appendChild(el('p', 'acard__n', r.filename));
+          var b = el('div', 'amcard__b');
+          b.appendChild(el('p', 'amcard__n', r.filename));
           c.appendChild(b);
           c.addEventListener('click', function () {
             chosen = r;
@@ -366,7 +366,7 @@
 
       search.addEventListener('input', paint);
 
-      grid.appendChild(A.spinner());
+      grid.appendChild(A.skeleton(4));
       A.db.select('media_assets?select=*&order=created_at.desc&limit=300').then(function (v) {
         all = v || [];
         paint();
@@ -398,14 +398,19 @@
   A.register({
     id: 'media',
     title: 'رسانه',
+    group: 'library',
+    icon: 'media',
     render: function (host) {
       A.clear(host);
-      host.appendChild(el('p', 'sub',
-        'فایل‌ها در فضای ذخیره‌سازی Supabase می‌مانند و اینجا فقط اطلاعاتشان نگه داشته می‌شود. ' +
-        'آپلود فایل تکراری قبل از فرستاده‌شدن جلویش گرفته می‌شود.'));
+      A.page(host, {
+        title: 'کتابخانه‌ی رسانه',
+        sub: 'فایل‌ها در فضای ذخیره‌سازی Supabase می‌مانند و اینجا فقط اطلاعاتشان نگه ' +
+             'داشته می‌شود. آپلود فایل تکراری قبل از فرستاده‌شدن جلویش گرفته می‌شود.'
+      });
 
       if (A.can('media.manage')) {
         var drop = el('div', 'adrop');
+        drop.appendChild(A.icon('upload'));
         drop.appendChild(el('b', '', 'فایل را اینجا رها کن'));
         drop.appendChild(document.createTextNode('یا برای انتخاب کلیک کن'));
 

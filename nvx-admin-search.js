@@ -51,10 +51,7 @@
       tr.appendChild(el('td', '', w.label));
 
       var ts = el('td');
-      ts.appendChild(el('span', 'abadge' +
-        (r.status === 'published' ? ' abadge--editor'
-         : r.status === 'scheduled' ? ' abadge--admin' : ''),
-        STATUS_FA[r.status] || r.status || '—'));
+      ts.appendChild(A.statusBadge(r.status || 'draft', STATUS_FA[r.status] || r.status || '—'));
       tr.appendChild(ts);
 
       tr.appendChild(el('td', 'n', A.when(r.updated, true)));
@@ -77,11 +74,15 @@
   A.register({
     id: 'search',
     title: 'جست‌وجو',
+    group: 'library',
+    icon: 'search',
     render: function (host) {
       A.clear(host);
-      host.appendChild(el('p', 'sub',
-        'جست‌وجو در مقاله‌ها، پرامپت‌ها، دوره‌ها، درس‌ها، گالری و ویدیوها — با هم. ' +
-        'دست‌کم دو نویسه بنویس.'));
+      A.page(host, {
+        title: 'جست‌وجوی مرکزی',
+        sub: 'در مقاله‌ها، پرامپت‌ها، دوره‌ها، درس‌ها، گالری و ویدیوها — با هم. ' +
+             'همین جست‌وجو با ⌘K از هر جای پنل هم باز می‌شود.'
+      });
 
       var tools = el('div', 'arow');
       tools.style.margin = '0 0 16px';
@@ -113,7 +114,7 @@
         timer = setTimeout(function () {
           var mine = ++seq;
           A.clear(body);
-          body.appendChild(A.spinner());
+          body.appendChild(A.skeleton(5));
 
           A.db.rpc('admin_search', { q: term }).then(function (rows) {
             /* A slow answer to an old query must not overwrite a fast

@@ -33,6 +33,7 @@
      safe to do that. */
   R({
     id: 'articles',
+    icon: 'article',
     title: 'مقاله‌ها',
     singular: 'مقاله',
     table: 'articles',
@@ -43,8 +44,8 @@
     status: true,
     ordering: true,
     perms: { create: 'content.create', edit: 'content.edit', del: 'content.delete' },
-    intro: 'مقاله‌ها. متن به شکل Markdown ذخیره می‌شود. تا وقتی صفحه‌های عمومی سایت ' +
-           'از این جدول نخوانند، آنچه اینجا منتشر می‌کنی روی سایت ظاهر نمی‌شود — آن اتصال فاز بعدی است.',
+    intro: 'مقاله‌ها. متن به شکل Markdown ذخیره می‌شود. هرچه اینجا منتشر کنی همان لحظه ' +
+           'در articles.html سایت ظاهر می‌شود.',
     fields: [
       { key: 'title',   label: 'عنوان', type: 'text', required: true },
       { key: 'slug',    label: 'نشانی (slug)', type: 'text', ltr: true,
@@ -71,6 +72,7 @@
      prompt has to cut the text apart by hand every time. */
   R({
     id: 'prompts',
+    icon: 'prompt',
     title: 'پرامپت‌ها',
     singular: 'پرامپت',
     table: 'prompts',
@@ -108,6 +110,7 @@
      cms-content.sql looks at the course rather than at itself. */
   R({
     id: 'courses',
+    icon: 'course',
     title: 'دوره‌ها',
     singular: 'دوره',
     table: 'courses',
@@ -137,6 +140,7 @@
      without a publish control. */
   R({
     id: 'chapters',
+    icon: 'chapter',
     title: 'فصل‌ها',
     singular: 'فصل',
     table: 'chapters',
@@ -159,6 +163,7 @@
   /* ---- درس‌ها -------------------------------------------------------- */
   R({
     id: 'lessons',
+    icon: 'lesson',
     title: 'درس‌ها',
     singular: 'درس',
     table: 'lessons',
@@ -194,6 +199,7 @@
      storage domain lives. */
   R({
     id: 'gallery',
+    icon: 'gallery',
     title: 'گالری',
     singular: 'تصویر',
     table: 'gallery_items',
@@ -221,6 +227,7 @@
   /* ---- ویدیوها ------------------------------------------------------ */
   R({
     id: 'videos',
+    icon: 'video',
     title: 'ویدیوها',
     singular: 'ویدیو',
     table: 'videos',
@@ -251,6 +258,7 @@
      corner of each type's own screen. */
   R({
     id: 'categories',
+    icon: 'tag',
     title: 'دسته‌بندی',
     singular: 'دسته',
     table: 'categories',

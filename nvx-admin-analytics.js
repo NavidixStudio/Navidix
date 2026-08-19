@@ -27,6 +27,8 @@
   A.register({
     id: 'analytics',
     title: 'آمار',
+    group: 'insight',
+    icon: 'chart',
     legacy: true,
     once: true,
     render: function () {
