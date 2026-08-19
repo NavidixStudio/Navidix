@@ -45,7 +45,8 @@
     ordering: true,
     perms: { create: 'content.create', edit: 'content.edit', del: 'content.delete' },
     intro: 'مقاله‌ها. متن به شکل Markdown ذخیره می‌شود. هرچه اینجا منتشر کنی همان لحظه ' +
-           'در articles.html سایت ظاهر می‌شود.',
+           'در articles.html سایت ظاهر می‌شود. مقاله‌هایی که از مخزن منتشر شده‌اند ' +
+           '(content/articles/) اینجا نیستند ولی در همان فهرست سایت کنار این‌ها می‌آیند.',
     fields: [
       { key: 'title',   label: 'عنوان', type: 'text', required: true },
       { key: 'slug',    label: 'نشانی (slug)', type: 'text', ltr: true,

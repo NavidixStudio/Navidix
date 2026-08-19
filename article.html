@@ -160,9 +160,11 @@ h1{font-size:clamp(24px,4vw,34px);font-weight:700;margin:0 0 10px;line-height:1.
       main.appendChild(s);
     }
 
-    C.get('articles?select=*&slug=eq.' + encodeURIComponent(slug) + '&limit=1')
-      .then(function (rows) {
-        var r = rows[0];
+    /* One lookup across both publishers — the articles table and the
+       markdown files in content/articles/. Which one a piece came from is
+       not a reader's problem. */
+    C.article(slug)
+      .then(function (r) {
         if (!r) { missing(); return; }
         draw(C, main, r);
       }, function () {

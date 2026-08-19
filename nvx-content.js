@@ -287,6 +287,83 @@
     }
   };
 
+  /* ===================================================================
+     4.5 — two publishers, one list
+
+     Articles reach this site two ways and both are first-class:
+
+       the repo   content/articles/*.md → tools/build-content.py → JSON
+       the panel  the articles table    → PostgREST
+
+     The panel is for a person. The repo is for anything that can only
+     reach git — which includes every agent working on this project, and
+     is why "add an article" went from one step to a step that ended on
+     the owner's phone. Restoring the file path restores that.
+
+     Where a slug exists in both, the database wins: somebody edited that
+     one on purpose, and the file is just where it started.
+
+     A missing or unbuilt articles.json is not an error. It is a site
+     that publishes only from the panel, which is a legitimate way to run
+     this and must not put a message on a reader's screen.
+     =================================================================== */
+  function repoArticles() {
+    return fetch('/content/articles.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (rows) { return Array.isArray(rows) ? rows : []; })
+      .catch(function () { return []; });
+  }
+
+  function mergeArticles(dbRows, repoRows) {
+    var out = [], seen = {}, i;
+
+    for (i = 0; i < dbRows.length; i++) {
+      out.push(dbRows[i]);
+      seen[dbRows[i].slug] = true;
+    }
+    for (i = 0; i < repoRows.length; i++) {
+      if (!seen[repoRows[i].slug]) out.push(repoRows[i]);
+    }
+
+    /* Newest first across both sources. Undated rows sort last rather
+       than to the top, which is where a missing value would otherwise
+       land them. */
+    out.sort(function (a, b) {
+      var x = a.published_at || '', y = b.published_at || '';
+      if (!x) return 1;
+      if (!y) return -1;
+      return x < y ? 1 : x > y ? -1 : 0;
+    });
+    return out;
+  }
+
+  function articles() {
+    return Promise.all([
+      get(QUERY.articles).catch(function () { return []; }),
+      repoArticles()
+    ]).then(function (r) { return mergeArticles(r[0] || [], r[1] || []); });
+  }
+
+  /* Its own query rather than a scan of articles(): that list deliberately
+     leaves `body` behind so a page of titles does not drag every article
+     across the network, and this is the one caller that needs it. */
+  function article(slug) {
+    return Promise.all([
+      get('articles?select=*&slug=eq.' + encodeURIComponent(slug) + '&limit=1')
+        .catch(function () { return []; }),
+      repoArticles()
+    ]).then(function (r) {
+      var db = (r[0] || [])[0];
+      if (db) return db;
+      var repo = r[1] || [];
+      for (var i = 0; i < repo.length; i++) {
+        if (repo[i].slug === slug) return repo[i];
+      }
+      return null;
+    });
+  }
+
+
   /* Which columns each type needs, so a list page does not drag article
      bodies across the network to show titles. */
   var QUERY = {
@@ -321,13 +398,25 @@
 
     var limit = parseInt(node.getAttribute('data-nvx-limit'), 10);
     var featured = node.getAttribute('data-nvx-featured') === 'true';
-    var q = QUERY[kind];
-    if (featured) q += '&featured=is.true';
-    if (limit > 0) q += '&limit=' + limit;
+
+    /* Articles come from both publishers and are merged before anything
+       is counted, so a limit means "the newest N of everything" rather
+       than "the newest N the database happens to hold". */
+    var source;
+    if (kind === 'articles') {
+      source = articles().then(function (rows) {
+        return limit > 0 ? rows.slice(0, limit) : rows;
+      });
+    } else {
+      var q = QUERY[kind];
+      if (featured) q += '&featured=is.true';
+      if (limit > 0) q += '&limit=' + limit;
+      source = get(q);
+    }
 
     node.setAttribute('data-nvx-state', 'loading');
 
-    get(q).then(function (rows) {
+    source.then(function (rows) {
       node.setAttribute('data-nvx-state', rows.length ? 'ready' : 'empty');
 
       if (!rows.length) {
@@ -433,6 +522,7 @@
   else boot();
 
   window.NVX_CONTENT = {
-    get: get, media: media, markdown: markdown, when: when, card: card, el: el
+    get: get, media: media, markdown: markdown, when: when, card: card, el: el,
+    articles: articles, article: article
   };
 })();
