@@ -542,6 +542,144 @@ create policy media_bucket_delete on storage.objects
 
 
 -- =====================================================================
+-- ۱۰. آنچه پنل صدا می‌زند
+--
+-- سه تابع، و هر سه عمداً تابع‌اند نه نما: هر کدام باید چیزی را بشمارند یا
+-- بخوانند که سیاست‌های RLS برای بعضی نقش‌ها می‌بندند. یک نمای
+-- security_invoker اینجا جواب نمی‌داد — مثلاً «تعداد کل کاربران» برای یک
+-- Editor عدد ۱ برمی‌گشت، چون سیاست profiles فقط ردیف خودش را به او
+-- می‌دهد. تابع security definer شمارش را درست انجام می‌دهد و گیتِ دسترسی
+-- را خودش، یک‌جا، در سطر اول می‌گذارد.
+-- =====================================================================
+
+-- ---------------------------------------------------- من چه کسی هستم
+--
+-- اولین چیزی که پنل می‌پرسد. تا این جواب نیامده باشد هیچ بخشی رسم نمی‌شود،
+-- و آنچه رسم می‌شود از روی همین فهرست permissions تعیین می‌شود. برای یک
+-- reader هم جواب می‌دهد — با فهرست خالی، که همان «هیچ بخشی» است.
+
+create or replace function public.my_admin_context()
+returns jsonb
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select jsonb_build_object(
+    'user_id',      p.id,
+    'email',        u.email,
+    'display_name', p.display_name,
+    'role',         p.role,
+    'is_active',    p.is_active,
+    'permissions',  coalesce((
+      select jsonb_agg(rp.permission_key order by rp.permission_key)
+      from public.role_permissions rp
+      where rp.role_id = p.role and p.is_active
+    ), '[]'::jsonb)
+  )
+  from public.profiles p
+  join auth.users u on u.id = p.id
+  where p.id = (select auth.uid());
+$$;
+
+revoke all on function public.my_admin_context() from public, anon;
+grant execute on function public.my_admin_context() to authenticated;
+
+
+-- ------------------------------------------------- فهرست کاربران پنل
+--
+-- admin_users() قبلی سر جایش می‌ماند و دست‌نخورده است — پنل آماری هنوز
+-- همان را صدا می‌زند. این یکی جداست چون دو ستون تازه لازم داشت که آن یکی
+-- ندارد: id (برای صدا زدن set_user_role) و is_active. تغییر شکل خروجی یک
+-- تابع موجود در Postgres ممکن نیست، پس تابع تازه، نه جانشین.
+--
+-- ترتیب: اول اعضای تیم، بعد خواننده‌های عادی — چون در پنل مدیریت کاربران،
+-- کسی که نقش دارد آن چیزی است که دنبالش می‌گردی.
+
+create or replace function public.admin_user_list()
+returns table (
+  id           uuid,
+  email        text,
+  display_name text,
+  role         text,
+  is_active    boolean,
+  joined       timestamptz,
+  completed    bigint,
+  seconds      bigint,
+  last_active  date
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    p.id,
+    u.email::text,
+    p.display_name,
+    p.role,
+    p.is_active,
+    p.created_at,
+    coalesce(l.n, 0),
+    coalesce(d.s, 0),
+    d.last
+  from public.profiles p
+  join auth.users u on u.id = p.id
+  left join (
+    select user_id, count(*) filter (where done) as n
+    from public.lesson_progress group by user_id
+  ) l on l.user_id = p.id
+  left join (
+    select user_id, sum(seconds) as s, max(day) as last
+    from public.learning_days group by user_id
+  ) d on d.user_id = p.id
+  where public.has_permission('users.manage')
+     or public.has_permission('admins.manage')
+  order by (p.role <> 'reader') desc, p.created_at desc;
+$$;
+
+revoke all on function public.admin_user_list() from public, anon;
+grant execute on function public.admin_user_list() to authenticated;
+
+
+-- --------------------------------------------- اعداد بالای داشبورد
+--
+-- شمارش محتوا (مقاله، پرامپت، درس، گالری) عمداً اینجا نیست: آن جدول‌ها هنوز
+-- ساخته نشده‌اند و فاز بعدی‌اند. وقتی ساخته شدند، همین تابع با or replace
+-- کلیدهای تازه می‌گیرد و پنل بدون تغییر آن‌ها را نشان می‌دهد.
+--
+-- شمارش audit فقط برای Owner معنا دارد و برای بقیه null برمی‌گردد، نه صفر:
+-- صفر یعنی «چیزی ثبت نشده»، null یعنی «به تو مربوط نیست». پنل این دو را
+-- جور دیگری نشان می‌دهد.
+
+create or replace function public.admin_cms_overview()
+returns jsonb
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select case when public.is_staff() then jsonb_build_object(
+    'users_total',     (select count(*) from public.profiles),
+    'users_active_7d', (select count(distinct user_id) from public.learning_days
+                          where day > (current_date - 7)),
+    'staff_total',     (select count(*) from public.profiles
+                          where role <> 'reader' and is_active),
+    'media_total',     (select count(*) from public.media_assets),
+    'media_bytes',     (select coalesce(sum(size_bytes), 0) from public.media_assets),
+    'settings_total',  (select count(*) from public.site_settings),
+    'audit_7d',        case when public.is_owner()
+                         then (select count(*) from public.audit_log
+                                 where created_at > now() - interval '7 days')
+                         else null end
+  ) else null end;
+$$;
+
+revoke all on function public.admin_cms_overview() from public, anon;
+grant execute on function public.admin_cms_overview() to authenticated;
+
+
+-- =====================================================================
 -- آخرین قدم — خودت را Owner کن
 --
 -- تا اینجا اجرای این فایل هیچ Owner‌ای نساخته؛ حساب فعلی‌ات همچنان همان

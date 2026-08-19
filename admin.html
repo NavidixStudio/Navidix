@@ -150,9 +150,25 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
 }
 </style>
 
+<!-- The CMS chrome: navigation, forms, modal, toasts, media grid. It adds
+     to the block above rather than repeating any of it — the palette and
+     the table, panel and gate rules all still come from there. -->
+<link rel="stylesheet" href="/nvx-admin.css" />
+
 <script src="curriculum.js" defer></script>
 <script src="nvx-config.js" defer></script>
 <script src="nvx-auth.js" defer></script>
+
+<!-- The shell first, then one file per section. Order matters twice:
+     nvx-admin-core.js defines the register() the rest call at load time,
+     and the nav is drawn in the order the sections register. -->
+<script src="nvx-admin-core.js" defer></script>
+<script src="nvx-admin-dashboard.js" defer></script>
+<script src="nvx-admin-analytics.js" defer></script>
+<script src="nvx-admin-media.js" defer></script>
+<script src="nvx-admin-users.js" defer></script>
+<script src="nvx-admin-settings.js" defer></script>
+<script src="nvx-admin-audit.js" defer></script>
 </head>
 <body>
 
@@ -165,8 +181,26 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
 <main class="wrap" id="app">
   <p class="eyebrow lat">NAVIDIX · ADMIN</p>
   <h1>پنل مدیریت</h1>
-  <p class="sub" id="sub">در حال بررسی دسترسی…</p>
-  <div id="body"></div>
+
+  <!-- Said only when the database is missing the CMS tables, or when the
+       signed-in role has a seat but no permissions. Empty otherwise. -->
+  <div id="abanner"></div>
+
+  <nav class="anav" id="anav" hidden></nav>
+
+  <!-- Every section but one is created here at runtime by the shell. The
+       analytics section is in the markup because the inline script at the
+       bottom of this file has always written into #sub and #body, and it
+       still does — moving those two nodes inside a section container is
+       the whole of what turned that page into a tab. -->
+  <div id="asections">
+    <section class="asec" id="sec-analytics" hidden>
+      <p class="sub" id="sub">در حال بررسی دسترسی…</p>
+      <div id="body"></div>
+    </section>
+  </div>
+
+  <p class="sub" id="aboot">در حال بررسی دسترسی…</p>
 </main>
 
 <div class="tip" id="tip"></div>
@@ -769,8 +803,12 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     });
   }
 
-  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);
-  else boot();
+  /* The shell decides when this runs now. nvx-admin-analytics.js registers
+     it as one section of the panel and calls boot() the first time the
+     reader opens that tab — so the five views are read on demand rather
+     than on every load of a page that may well open on Media or Settings.
+     Nothing above this line changed when the panel became a CMS. */
+  window.NVX_ADMIN_ANALYTICS = { boot: boot };
 })();
 </script>
 </body>

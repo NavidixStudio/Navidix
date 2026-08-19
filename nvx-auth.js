@@ -492,8 +492,13 @@
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);
   else boot();
 
+  /* `token` is exported for one caller: the admin panel's uploader, which
+     talks to /storage/v1/ rather than /rest/v1/ and so cannot go through
+     rest(). It needs the same guarantee rest() gives — a token that is not
+     about to expire — and reading access_token straight out of the session
+     would not give it that. Nothing else should use it. */
   window.NVX_AUTH = {
     open: open, session: session, sync: sync, signedIn: signedIn, rest: rest,
-    signOut: signOut
+    signOut: signOut, token: token
   };
 })();
