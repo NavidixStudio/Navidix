@@ -51,7 +51,12 @@ body{background:var(--bg);color:var(--ink);
   font-weight:700;letter-spacing:.16em;font-size:12.5px}
 .sp{flex:1}
 
-.wrap{max-width:1080px;margin:0 auto;padding:38px 22px 90px}
+/* nvx-topbar.js replaces .sitebar with a position:fixed bar and adds no
+   top padding of its own, so 55px of every page sits under it. Pages
+   with a tall hero never notice; this one opens on a single small line
+   and lost it entirely. The bar's height plus the breathing room the
+   page wanted in the first place. */
+.wrap{max-width:1080px;margin:0 auto;padding:93px 22px 90px}
 .eyebrow{font-size:11.5px;letter-spacing:.2em;color:var(--dim);margin:0 0 10px}
 h1{font-size:clamp(24px,3.6vw,34px);font-weight:700;margin:0 0 8px;line-height:1.5}
 .sub{color:var(--mute);font-size:14px;margin:0 0 6px;line-height:2}
@@ -60,7 +65,7 @@ h1{font-size:clamp(24px,3.6vw,34px);font-weight:700;margin:0 0 8px;line-height:1
   border:1px dashed var(--line);border-radius:14px;padding:26px 22px;margin:26px 0}
 .empty b{color:var(--ink2);display:block;font-weight:700;margin-bottom:4px}
 
-@media (max-width:640px){.wrap{padding:26px 15px 70px}}
+@media (max-width:640px){.wrap{padding:81px 15px 70px}}
 </style>
 
 <script src="nvx-ui.js" defer></script>
