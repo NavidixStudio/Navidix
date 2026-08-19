@@ -3,8 +3,6 @@
 <head>
 <script>if(location.hostname==='navidixstudio.github.io'){location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}</script>
 <meta charset="utf-8" />
-<script>(function(){try{var t=localStorage.getItem('nvx-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('#themeToggle');if(!b)return;var L=document.documentElement.getAttribute('data-theme')==='light';if(L){document.documentElement.removeAttribute('data-theme');}else{document.documentElement.setAttribute('data-theme','light');}try{localStorage.setItem('nvx-theme',L?'dark':'light');}catch(e){}});})();</script>
-<style>html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture,html[data-theme="light"] canvas{filter:invert(1) hue-rotate(180deg)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:#E5202A}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>تدوین و صدا: جایی که کلیپ‌ها فیلم می‌شوند | تولید ویدیو با هوش مصنوعی — قسمت ۵</title>
 <meta name="description" content="قسمت پنجم تولید ویدیو: کجا برش بزنی، چرا کلیپ تولیدشده باید زودتر بریده شود، ریتم به‌عنوان یک عدد، سه لایه‌ی صدا و اینکه چرا صدای پیوسته ناپیوستگی تصویر را می‌پوشاند." />
@@ -344,6 +342,7 @@ body::before{
 <script src="curriculum.js" defer></script>
 <script src="nvx-config.js" defer></script>
 <script src="nvx-progress.js" defer></script>
+<script src="nvx-topbar.js" defer></script>
 <script src="nvx-auth.js" defer></script>
 <script src="nvx-diagrams.js" defer></script>
 <style>
@@ -396,7 +395,7 @@ body::before{
 </style>
 </head>
 <body>
-<header class="sitebar"><div class="row"><button type="button" id="themeToggle" aria-label="پوسته‌ی روشن/تاریک" title="پوسته‌ی روشن/تاریک"><svg class="i-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+<header class="sitebar"><div class="row">
   <a class="home" href="index.html"><img class="navmark" src="navidix-mark.png" alt="" width="24" height="24" /><span>NAVIDIX</span></a>
   <a href="training.html">همه‌ی آموزش‌ها ←</a>
 </div></header>

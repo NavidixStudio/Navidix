@@ -30,7 +30,10 @@
    worse than one that never changed. It loads after that block, so it
    wins without either file having to know about the other.
 
-   Light theme needs nothing: the site inverts the document with a filter.
+   No light-theme block: the panel is dark, full stop. The site-wide day
+   mode lives in nvx-topbar.js, which admin.html deliberately does not
+   load — the shell is the navigation here, and a second bar floating
+   over it would be two of them.
    ===================================================================== */
 
 :root{

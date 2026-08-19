@@ -3,8 +3,6 @@
 <head>
 <script>if(location.hostname==='navidixstudio.github.io'){location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}</script>
 <meta charset="utf-8" />
-<script>(function(){try{var t=localStorage.getItem('nvx-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('#themeToggle');if(!b)return;var L=document.documentElement.getAttribute('data-theme')==='light';if(L){document.documentElement.removeAttribute('data-theme');}else{document.documentElement.setAttribute('data-theme','light');}try{localStorage.setItem('nvx-theme',L?'dark':'light');}catch(e){}});})();</script>
-<style>html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}html[data-theme="light"] img,html[data-theme="light"] video,html[data-theme="light"] picture{filter:invert(1) hue-rotate(180deg)}#themeToggle{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;margin:0;background:none;border:0;color:#8C939B;cursor:pointer;line-height:0}#themeToggle:hover{color:#E5202A}#themeToggle svg{width:16px;height:16px}#themeToggle .i-sun{display:none}html[data-theme="light"] #themeToggle .i-moon{display:none}html[data-theme="light"] #themeToggle .i-sun{display:block}html[data-theme="light"] .grade{opacity:0;pointer-events:none}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>نویدیکس — رسانه مستقل علم و فناوری | Navidix</title>
 <meta name="description" content="رسانه مستقل علم و فناوری — استودیو نویدیکس، تلاقی پژوهش، سینما و هوش مصنوعی. مستندهای سینمایی کوتاه درباره‌ی علم، فناوری، تاریخ و فضا، و آموزش هوش مصنوعی کاربردی به فارسی." />
@@ -12,6 +10,9 @@
 <link rel="canonical" href="https://navidixstudio.com/" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="theme-color" content="#000000" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet" />
 
 <!-- browser tab / bookmark / home-screen icon, embedded so no extra file is needed -->
 <link rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAQAElEQVR4AcRaCZgdRbX+q7r7bnPXycxkMknINmQhIUAWEwMIBMX4XECeogjip6igPEBccEVQBPGJfoLwHqKAj0XZlH2HAELYA4QQCJBtQjJLMnNn5u5Ld9f7z51cmGRGP8AA96sz1V1dZ/vr1Kmq7tF4f38W1QdI71t5PwFopNeXKaUeYD2T9L6U9wOAJnp6ilbq8YWp2JdOm9t+wKwJ4x+xA4H/Zvs00nta3lMAHMfZD0o/EbKcC86eOXn6I0kf5/V24KHZY5q+sGT+95RSK+n9sSSZGqze/fJeACA6PgBl/U0ZPHXcuMZpj4yP4Su5ATwwaOGqYhgvr+rAbwc6cech+yUOnjPzSsuy/kHXP0N61/ODGEc971qJAfqnWukVe0ScI2/cd5L9v6qIsOvjrqyL5+wQzs3kcDWvb1rfi1kbO3BLKK9++emPLgkHQjfQqitJrSRFelfKuwVAWGt9soJ+pjFg/fSsaS328tYw5nX14XE3jNsLPh51grjNuMhHw1jhKFziAlcPAs9sGsSxLzyDRxZOwzGL5x9laWs1AMkPkjt4uXvL7gYgSPMOAtSKiLIuPDAZmX5ve4s6tdCPjUWNW8s27rYc3GkUum0HnZzpdjgMOxJEb9TBA8bDufkqbttWQLQnjYuyW9QdXz2yaVZb63ctW69m92MAMKr4dzeV3QnAJEBfYdnWbW2R4L6XzBiLm5ssBAeyWKkTeKhscH4+g2fppNEKnkUKWFC2BVtrBENhdAZtjEsl8Rdo/HrrIB7vKmPve+7HbZNiOPM/l7VGIg1XwMLNAJaQdkvZHQA005If2pb96piAc/TxLcnY0xPi6tDMIB7MWFjhhfGL9CDutxVak3FULI0qtRptAcYg7ivEmAuKBqjYAYTCDro4Jf4BD/c1NOBv/Qq5jT045ekVuO/ji5yDp05dGnDsR8h+GfXuSVKkd1z0O+YERPFXofVTStm/mB8PB+6eEMP5IRevpAu4G3GGcB6XlAsc2SA6vCq2FQwadbDGWKXDCc77iFLY6JbxgVgSY0IB9Jc9WKEI4rEgepknznXz+EFfAStyDpoeW4Wbmsr46wnH6lQ08WUHeBTaPgeATXpHRb8DLuHZn3x3KKUu3SMSmXzBlKRe3qiQdA1uGdC4ybfx855urBaIbAttTgAeudJWmWw+qhx5+B7awnF0uQwE9leFPNxqCbA0KBeadcC2EWxK4IV4GGdn8lieAza+lsNHbrkOj+8/V3128b4tkXD4h8qy1sKyDqfwAOltFf22egNjbDt0u6X1PVrpZV+fOkE9FnZxnDa4qaeCm3MezuM8vzaXQS5owQQ1trpFrDF5aIKjYZAtFTEu0YgCc4HHjYGvfPhsf6lcRFA5EGygaJUQQXAIYDIeQ7U5gT8rF6dkC3i6HEXpiedxWaELd3xiCaKh8DSl/OtUQK9EAG9rW/1WAZB5Lju1F3238rEDUrGG29ub1HnlQXQFw7i218XNTgDnDw6iU9vwHQcejXfpGJj14dlIaI29wg0oagsdxUGEuBIMVgpgxRBQSFsKfqUMl3D4REHay7ye7Rl8fvZswGY0pBLoTcVxUjaDPxd9PNldxbQVT6DrE/Pw04MWBeOhyBzH2Cu1rX+NINrxFn76LfQ5hH3WMCzPC2i79c+L98StVhmLTQC35jWeZmzfRueWZ6qoctT9gI+KrbEgmsQ5R38eHkNcKQs253yTHQWxQajoIad9dFYqMD6JjvKCzgPEAZ7vo1z1USoU0TaQx+kPrcA1S+YjkYwhGIvBaW7C3xMOTuofxH204cmbH8f3e9bhuUOnY9709ohR+juWh2c1u9B2i/RPy78AwD4I0NdD6XvC2mo+vm2sXjExikM7tmKlE8PPu9L4famEH2/vhxsKYXYygoBlYXawAVdE47ghk8GXr/47Tp2zN33zEeBI2uJiyYeKNaCjVIJnLLiuIkguPN9A03HPNTBMmKh6yJaYOAmSVS2j/YbbcHkkiqPHNCEYCCAeTMBvSuKcShHXBEO48fUK0o+9ivsnRnDB/OlqamtbzLHDF0ZjsQctyzqKCNSAYL1TGQ0AxR4XA+5ypdRnm4K284+503FhZQChQArPwMKP+gZwdamAV/xSbR2PagvtYyfg7ImTcNNgAYu29qCSLcInCKdt34a9WlpwYFsbSpU8GhgtXUx2hlGhjQ/b19AS71QqigEDCYiq52NDsYDWcAja45OKj8RTT+Lbq57HLUcdjpZIAE44ilhTEx5mn+ssGxt1GPesWIsv5rfjuYPbcdT+i3SlWDlQ2/raaCz0KFWESTuV0QCwoNQyktbU+5tp49Dm5nC3ncQvN3fhtO0ZvOJWUeQaVGW8lpTCPAv4Uud6fPSV9ciUK6hSRZ6OZFm7r67HDdEY8pEI/TKIKg2HjtNN9vDhk9enHpn3nrTzuspIqJA87gVe5TSoPQdx8QBdddH6q9/hxnwRp8+ZgaDjYAnlN49rwreLZfyakXbBuhx6lj+P07texJh4UDhVoVhewIsYaacyGgAAkxAB4H5MwSlUkW4bi4cHBnEnM3paG5TpvE8xDi3764SJ+FxnN8YN5pHzPJTZXiIVSXlSjoSVz+EkC2i1w6ihSkdBB8FoGgLCUOUQ+fIMChUCy9kAxeiiTxCZnD2g/5A9REPnFhx1x304vbkZk+Jx+JwmDUyQ2xpjuJ6J59WqgjIV6ICuyaiJFVt2Ib3L/Zu3NQ6aR6dMuYRIOIgFzeNQYVhwunIZpwIC0NPXB1X1UCRoFXJ7JHcHCRgCRIH3U559Acfv2Y5oIAibHtnsb2ioz/0ALxGl05rOgs88tmnq7eImyig15DxliDwBgrOBuQNQ7IvMAJ7ctgWbyGMrG0Gt4QQcSGQqgMB4qFarjDb6wvtdy6gAKKWgla6RUoqKPCTJn3N9tIWTHDwNQxSydPzUgQyej8UQwJCoKlCbAgKCRIncCwhZDt2U5Q/hiD3aILKZY9jTh88TYVR5GGs76KRDPgmCCJ9KlSVIIkvkCAASUQU+E7ClfSunXGcghB5Gk6t8ThqF1nAACQGTNoqdYpltKXKNLPJsRKuhZp8hajjChiOjjI+XuFPr44gEtI1piUYwwkBYUWK/H5TKqKZinOOgAXijFiOFBIA6LVj9Er60P88yBrCIUJvlIEIde9gakwM2SpaBouGyOII/Aw2RIc4K+Wwrk0SeRJvHEVfk175LvgpmMbmWaTdos6mBCWi2CZFtRBkVAHDUhXzxkIJUtUJ8DbpLOTgMNYsC92lIYGZDFHsGI3Bp/DeYgDJMSKJBDHN5IVTdUYvRQrn+fhz+6BM4sn06GrXifsVQto/nB7PIMVS7uOxFLAc5SyFi2diDGy0J+7ocke1TptRCLneUcu9yICYySWQ57+ckknDFbkPnbcC2LfAxuUYWPbKJLYwARWShKIGcihQzGg41rsv2Y2t/HzYXCuimsR9qn0jDPaznHuBah9oInhgsIyQOi+Fkq41ivU2nB3AS9w97T56CFOdrket+iic/yf4pJ4Ru3gfIlHLCCNFBXkLAHF7TMshPtth5xtxkbsg6yedxcHop34aqma+UuKgRDAaBaFRYdiJ5ulOD3CilINNA8UYZXlOB7O7i3IAkZUtKrgABagk6OD4YwNSmFIqcBn+ruHg0FoURfvJK6IrTeV5LLSTXedD8jg6cCmoI0TAVxECxhDgjaC3X/ga2j4+lAAN0M++I8xQht1LVaj6qXVtMlpNdF1lOgUncamuilHM07edjj7bLNAANZkFOMgjbhxVpHnY7dCnOD0mgADoDo9Ae5kzlaKRNFT1MXD1euRYFldVrce6+c9GgDLLcH5yVzWNVtIGQoZYPaA8kEoQkMgQAMUMo8txqnDZtJiwxkk6E6FWcoTuRx2CXjrmUkKdjdSBFhkSUhDy7Qq4bGa1bsznYXBqCloVNzFPrOFXlmawo4oe44HJjNeTdzn9HBWDnLgaKSalkKSSdCHdtmgQaDbSGwhCHBu9djt8t/gDauB6LsovKVawnYGK4kIygGCQRIPcChACQI6Bjlj+IM+bMgsV5aujsFG53S8Uil64KBng4CqshIIVPZNRrAUHALdGxsBWCZwErcxm4nAKG01URGC4KsEUu6AOjame/hu70ULXLX/GCAgQ9cCx9Jr41PI93cvu7dPwUAqLhc271MGwLfNZPqjz5NE6cNR0yCrJCXEqlJTvIMQTEcSExXsCQWpwRIEqMmmmrVuOTc/eFxQNQA5fDAs3JVaoocwm0aHiVsqS/RIDhM5Eh97yEz3778ri8wZRRoTcu54DFnMUsSE6Cx4jyaJ/0fes5QHoTBIJPDPjXU5jK/fZMLn8ru7diAkep0bERYlRk2U8ckXW+7bUNOHHfvajb4DVm9MsDFgw3PpRQS4LiuPQVR6QWUIRK2SwOX/MyPsqNUoagxsnTyNyScgJopPOyI5TRBn9S10df5MmKd3epD1FoTJJE5xv45KFZMJyWijBoriaG0faWcwCEmySKNEfa5kWMwl5niCmGlM/5GWSo+UZxhBXEGRm1TDqNyTwvLJ68B/agEy+Cr7ttDdfS7IdaLpCRE8OFBAghAaHYux0f6E1jbDIOnqgRZF5o5nIYZ7KVN0g+na/zSi06JRLyfhWGB4rxVhCLEIYlHX1D58kgaMHAY37xfNHItl0Kg2aXlh23irVSCoZrNTgd5KWlrLnb8nls4VTo4pudHIHQisrYV0JTHMn1bMfhNGDPyRPRy6VyFXeAK3gQMnRE+ogZ4oAYL7VQHYTSxk04NpHApLaxsKh3kPLTDGHhExLfpL/w1uWE6GQzGwa5Cr3MLftMHWSOMnDFdgCGOQKMCXCweDuijAqAKBPiANb4REg/Q6hAx+gvQEDGcd1uZpg6DD3aUBMsBlZgMLBuPZa6FcyIR5GnAZflC1jFhCmguuxZp7oT4lSNKFc/9zw+FuZIUnY/80MvhfqWhvBIH9ElfEISdUE6Ol7baLZD6KGeNAFfFEkhopk9DEB1tAhQjGSM8hsVAHEQHAF6WrtU9NriZJsSb4SmMSBXusQszXmeh6oZJwaKcUISCd6Gzfj23FkY3xCBRcXXVEroa0wKa206iAPCIyQRUCcJ7eiLa/C1hQswM9KATnLczHxj0R4BQJ7X+4qMAYb3Bp5St/M0GAjYSFgWtvK6KG5zFOtLumEk0YwRha6MaINmuGoqBJWLHM3wSfDaYijtmUihvhlyqMBSQ/y85FPUwBDDijSs79GnsKwxhTZOAdgB/IrrdTevBSQhDm5tLZf+4lTduVK5jNjd9+OwqVOR4Ry/navDk1xWNUdbtAlowiOAlBmVaTr3Osooahei12GeksgE7VZak8UALLwYUeTpiEZLa4gurTSfkZNKtnA+p4t5aCYnm2MaYAcW2JaB9GLHmvNinDgnxsm1nB22cnfXJxFAUP5CcSE6I/3FCSFxfjgJEAUugXtt2YyjD1gCh/ZcRFA2cFrYZPRJHFReFQAADTdJREFU9RKiEY3GQgtXqiynTIi7yc2lPHgL0G4jRJ31/rvWddt3ahcFhvPREFlFFH1eJ4mq7NU9JqYxkTDifA/YQGUgSNJfaEcw1GTVr3s5TQwhag2Qh3O1g+eHP/BhhWcAVrWo8ckhYAkJIHUq96axgMvj1InjOSAaF3LN30IQHPa3SFIUbWTGBAiS7WsYrvkVguf6vvjPe0BymE8gpP+uNCoA9LnWjzIpWFGCD8nIGRr/ciGLV/n6e0M2i26exY3SNSeGgywOCYlDjZyTU6IJGAqza4ApvMQzwwNcJrVl1SJzOK9c1yNIImGwZxuO4UvWJKdOhtPoPJ4NqhwMMVB0NFJ/H/cOW5h0t3NwXqB9nrLgQRF28Ce9uFJxEHkzoowKgM9Q9QVBommEUdBj7ZIsZTCWb2GbeTCK0hDNtrrRHsUTrppTci2qAzSwXM1Da4UKZUYIgqLWuzmllkdCkPO8ACVTpj4N5F74pZZoKPFF6Hdmz0RzNIJBpXAlgfOCQch0GKh4mMjomsFN0xRLYSpXg2kESrMfhGo2USHr0cqoT5S4QMeEoQYAPVSarrEsSrUiSSUhfr8LUql+QwnAxxj+EwAyXAY73BJfmSvENSUzdiWSBIw7cyVs5ekxRE5xtkpmqcVpqXlbG0UBvsyt9vemTYUcllYQyBtpY5i6w3Q6TJkC9PzEeGxyC9jAfCNRLAT6YXhh2Ffk7Up61wa519JZnGayM/RKU1nRaOwdbUTWL6CHJ64u7gqLfFHiK7s2ErShZqzwk5UuoXYv1xa9CXFUCsYgQjmgfDn62rbGZbkitvL0qMgoJP15SY3yl7OPlQAJhrdavRrHzNqTQNq4i8BeJ5HAKH2lkMNr3AQ9le8Rf9FoO7ScjNQHX6T6VDmqqzUb2XPnQtnUrOBL6ENBMumMWAh5KtvIQ1GFHaYlkijIVNGqJkQMFwJ/w1UF4GNGqrF2sMkSsAbHQtSyEeBGJUP+NF9i/B8TZYUvXclac1zkDCdpFypztze3uxfzmpvgKI1bHBvPcdM0NRLDZL48UQwhnxIOSCYRZJQoAUAYhYZfy/0O0jvqkZUwDIFHBzX4/hN9TDSyJ5BV4JV0H11TCGmJjyF26S6Gi1C5lqgYa9uIIoA0P35WtcE2Oit5IM3NyhAX8Hq5jKsItE1nhEfzgfCzom5QD5jUAAYSKr29OIkbniPnzUWGu757ufvr5YuOHkZBlHmhPRTD7TxXlClPbGFFSFAjkbcria5d29ibrAxTkIymKez1Gs8AhqhO4WFlM8O/Flnk1OzDHjVD2Q1yLSSO1Azm0vdyPo0sHdZaIcjEua3KvSKvlVJQSlEKsJaZ/FZeh/ncYYvwa9bytE71+8KGTTiqJ41oawoud2PZgEE/T1BrcmmUOXBzko3wGCEUTgmA0ppHePqEkT89smlHCwXRXyJnOAIGLXRkIvf/a/vSqDtPpChcYbjBNtktUoAUIvXyG2DBq8ClJkVGHxqKGxdLObA4h5VStFOxJ/AsX6Q8wT1GmO0iQ7NVyLAWkmvpmed9YPMm/L6pFSG+NAUfasr1tM8IK6HCKJPvDmIflYEzl5fsRL5di8jctW3oXjQpzigaaJgJmzh31/Wna4JsH5DH4C+iLAY4agT+pF2ESi0geAz7umpFIykOFCI2swaUkp5DdYUHrrs4z5/iMlsHlaogPUSmyKlgaCr0c3QmPL8aP5u9D+BZUMxXmnZWCOK6fIYqDNsUeTW0+CECyLtrGb1ZsRtJSRgxfEzAQZqvp9iECXwROpZ7AG0AYe5NJBHXVm0lkBEXp4NkFxInAhxNDgwNkmIQpcMOiTOAvYChc4eGUgoWFKA0rucrsfLYsZSpSaj9+ESe1shii+wTyrRtYHMHw92nLRpBvhkWnZQmYthLQZZx2ckqxdtRih6lbUcTmQk/C3QoiHbu3+czSc1gkmmkYrEkxSx88oZ1uC8RRzgaRYic4riAIEY28F4AsOmtKDLctvrcTUa4nRU4+LhWBARFx23Of83asRR+uH073GQUIk/kimMiU2oFhX5+jbqEW+SLswO8MwANtRlXLRyZfThVoxwoel+TT3TeuBxqePOv2PXm3dAVpaFPlPi2h8e5qRjfmcbhH16MrzXGMcfx0cs1d0GE21suh3kqvYYfO87jjqzU1ESDVW3UbMpSpIkMzWbOU0OpDhs2E4AsybBBlqlpsTgMX4ZqvssTIIIOXWTfMvn+h1l+PJ/XAbUoL8bou7OpEd+kXXf1dCMVjGN+rBGab6tneQbfjSVxamsc+8kBjPYWKxRGPpopqUPysty9QaMB4LHzB5nxTzSut/ry7gFzcMnDww89gQ+1xPDhMUlcQOT3JNIW5+FYwptimMt7+TP6B3FbIgqL7wxl9AUEEw4hz6QkGveLJ9HCM4Aij6ESi9rldTorgPdKKVhaczB1rUcH5/O3uPQqOh2njhI/g18VTeDazCAqPCYP8PRXzGUR4Cf070eSOHevWfhIKoK2YgU/5qv1j2zcZgaq5S4KPJPiJwBgEuPfYWVI97CGHZcyxf5Apnm+753zbLFkvtCfx2c39WDf3n58eEITFigf3x3figRDVnJCg9EIUNqD2RJ+Ui3jlcYxSHHlWM/QnN0yFg06APmQOSgOcbTFeTmx5Xi8BqPB5wrRxHeASgywOP2UArHAulIVt3Aj9RBH/Ts8jvdyOk6PJ2Epzc0OsA9z0w8bYvgEB2dexyu437Mx/fVe/L6nF0Xfu42yZwD4OSlHGlFo8oi24Q0SMmf4xt/PGO+qhzL56j7cCV69rgPHtUSxtKkBv502EUsdi6HvwdGahnmI0fjfDvTjTzzsvJbN4KmuTkzinBVlSiu8+fNpH0lpTOLIBrmFDZI3xKQKHrpCBISxjSco4y/pARwyrg0v9PZgLPstY5SdEozglJYEp4BBhnZ9OdaCr3d0mZIxyzmDllHPEaQs6Z8WsemfPhz2YBWvj/M8f/FW39v8rd68t/emPth9OXyomsXStjH46aTx2Mc2WBSJQsKVPuFm7s5C4pCyMMg5a8GIX3SaAc+ESJksBmOZYH14KJEcA2znqCoCVWWfqQ1xyPl+RiKJR7d1EmAXE/h98phIECe0JdHOc8n5oTgO7sma67d09numepSBOZSC7yFRGv/+i6L/xbPRHj1rPDPL96sndvpe10Gdffhutoy9SgUsYXL8r/ETcQijoZWcc5j4ohzsx5kgc3DhEAiL5vgEwdBRwGevoRJkW9QJwfBssLbQjwCB3D/VBJvWba8UMI4nz9f5ye0zDPWzGlL4ZiKGAy0Xd7LtsCrwizU8//nemQzXGZy7Nw5JfWt/qeKtdRzWS17G/sn4/tSM7/7x0nQxe8iWfrPO9bB/ph+H7dWGk9uacTTncRvzgqbTmvPbIRgONCOAFxTG5hoEivNfyHC7FmB/gaXK+F0zMIACV5syD1AhrhqnhQI4jKyfawohVS7ie3YUx2/Llp8eKN7rG3ccAT0bDB7S2yr6bfXeubO8sPmGMe4h3a5708c3dJsvZosobtyGhczQC2e241vJFD7JTZT8d0mAHjscec3RllIjytNcxX2CIAB5lo8JKgABrMoMHyMaxzckcXJDGB+PWTgkYuEiRtyBORdXbOx8xoX6NOB9imLSpHdU9DviepOJEYeVvP1s2fjL7iwUn/2P7rR3KTP3uI2b8JF9JuPYMXSAm6QZXN9Fma00JCoEAKkZKIwLQF6ybs7nMIUfWNvZd44TxJktLfgkQVkWAjqLLj6e9c1Pevo3bi6XTvbgHUDn76LuMukdF7HpHTMPY+RY4V46tSzjeaee0d23/Yh8CS+t34rZ1PCpBbPweb5EPbIhgBaGetQFgiSmDTquYVGQbHYOTTRiHT+vHc+d3I9SUXyKn7PmcdR/UvJxBD8aPj6Y+Q2nniS4i8nybzlO/lqhebV6d/3ZTkEXM6TnvVgoXXHE692DJw0UUH5mDT7YlsCBTF5nNDdhCU98SWqezq9F2vfRyOUuwXl/MKfDn5qbcRBPWwcQzfu53C1MFyt/6O2/Z7BaOZDz/HTK30jihOLf3VBoxm6QMlLEFobE1/lVd/Hf+wfvPLRQMn/c2of9sgUsmtyKL8WiuLClGc3cN4yj4w1MdsdyqVzoAPvnB4FgBIfkKjihu++lzcXSYfRW1vNnqIaX/Lsby7sFgJjIIMfaMsxnMq454azO3lWHFV3z8toOLG1txNRxzTi9tRmHca0/g4eehbqKScbFhbE4PrEtvfn5fO6XJeMfRCEPU5gkXFa7v7ybANStLTJh/dGHOfCxTOZbR/Zncidu3Y5UTw/mjkvhk9P3wEJuktZy67w0W3V/1tV3eXe5vNgHfkQBvaR3tbwXANQdkC3phSXf++D1velLl/bn+698aQPWbunGVwKR8tHrX799Q7HwsSq8r5Ghi/SelPcSgLpDL/LihPXF0qHf68++uqx3YODabb3HZd2KzPP7+YyDz7/vUXk/AKi79hyMPx/GTGfD9STZU7B6e+Xf7f3/AAAA//8E6SgFAAAABklEQVQDAMjqwVbxB+o/AAAAAElFTkSuQmCC" />
@@ -935,63 +936,9 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
 }
 
 /* ---------- the bar that arrives after the hero ----------
-   Hidden until the landing has been scrolled past, then it stays. Driven by
-   one IntersectionObserver on the landing itself: no scroll listener, no
-   measuring, nothing running while the reader is still in the hero. */
-.topbar{
-  position:fixed; inset:0 0 auto; z-index:5;
-  background:rgba(6,8,13,.82);
-  -webkit-backdrop-filter:blur(14px) saturate(1.2); backdrop-filter:blur(14px) saturate(1.2);
-  border-bottom:1px solid rgba(140,170,220,.11);
-  transform:translateY(-101%);
-  transition:transform .6s var(--ease);
-}
-.topbar[hidden]{ display:none; }
-.topbar.is-in{ transform:none; }
-.topbar__row{
-  max-width:1240px; margin:0 auto;
-  /* the language switch is fixed over the end of this bar, so the row stops
-     short of it rather than running underneath */
-  padding:11px var(--gutter) 11px calc(var(--gutter) + 92px);
-  display:flex; align-items:center; justify-content:space-between; gap:18px;
-}
-html[lang="en"] .topbar__row{ padding:11px calc(var(--gutter) + 92px) 11px var(--gutter); }
-.topbar__home{
-  display:inline-flex; align-items:center; gap:9px; flex:none;
-  color:var(--paper); text-decoration:none;
-  font-family:var(--f-ui); font-size:12.5px; letter-spacing:.2em;
-}
-.topbar__home img{ display:block; }
-.topbar__links{ display:flex; align-items:center; gap:clamp(12px,1.7vw,26px); min-width:0; }
-.topbar__links a{
-  color:var(--paper-dim); text-decoration:none; white-space:nowrap;
-  font-family:var(--f-fa); font-size:13px;
-  transition:color .35s var(--ease);
-}
-.topbar__links a:hover{ color:var(--paper); }
-.topbar__links a:focus-visible{ outline:1px solid var(--ion); outline-offset:4px; }
-.topbar__cta{
-  padding:7px 15px; border-radius:999px;
-  border:1px solid rgba(227,27,35,.5); background:rgba(227,27,35,.11);
-  color:var(--paper) !important;
-  transition:border-color .4s var(--ease), background .4s var(--ease);
-}
-.topbar__cta:hover{ border-color:rgba(255,120,110,.8); background:rgba(227,27,35,.2); }
-@media (max-width:820px){
-  /* the wordmark goes; the mark alone still says whose site this is, and the
-     four destinations matter more than repeating the name */
-  .topbar__home span{ display:none; }
-  .topbar__links{ gap:14px; }
-  .topbar__links a{ font-size:12.5px; }
-}
-@media (max-width:560px){
-  .topbar__row{ padding-inline:14px calc(14px + 86px); }
-  .topbar__cta{ display:none; }   /* it is the first thing in the hero anyway */
-  .topbar__links{ gap:13px; }
-}
-@media (prefers-reduced-motion:reduce){
-  .topbar{ transition:none; }
-}
+   No longer defined here: the bar (with its back button, day/night toggle
+   and burger menu) is injected by nvx-topbar.js on every page, so the
+   homepage carries the same navigation as the rest of the site. */
 
 /* =====================================================================
    CONTENT BANDS
@@ -1269,9 +1216,61 @@ picture{ display:contents; }
   .tile--shot .tile__cap{ transform:none; opacity:1; padding-top:20px; }
   .tile--shot .tile__pin{ display:none; }
 }
+
+/* ---- the index, rebuilt as doors ----
+   The hindex used to be a numbered masthead list. On a phone that read as
+   five thin grey lines — accurate, but it told the visitor nothing about
+   what waits behind each door. Each entry now carries an icon chip above
+   its number, and on narrow screens the whole index becomes a grid of
+   cards: two leads on top, the three archives beneath them, the film
+   door spanning the row because it is the marquee.
+   The ::before rule keeps its place as the "approach" — it now runs along
+   the card's foot instead of its top. Nothing else about the entry's
+   interaction changes: same focus outline, same hover fill, same eases. */
+.hindex__ico{
+  display:block; width:20px; height:20px;
+  color:rgba(237,242,250,.48);
+  transition:color .5s var(--ease), transform .5s var(--ease);
+  margin-inline-start:-1px;
+}
+.hindex a:hover .hindex__ico, .hindex a:focus-visible .hindex__ico{
+  color:var(--ember-soft); transform:translateY(-1px);
+}
+@media (max-width:720px){
+  .hindex{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; width:100%; }
+  .hindex a{
+    width:auto; flex:initial !important; flex-direction:row; align-items:center; gap:9px;
+    padding:9px 12px; border:1px solid rgba(150,180,225,.14); border-radius:14px;
+    background:linear-gradient(150deg, rgba(140,170,220,.07), rgba(140,170,220,.015) 70%);
+    transition:background .5s var(--ease), border-color .35s var(--ease), transform .35s var(--ease);
+  }
+  .hindex a::before{ top:auto; bottom:-1px; inset-inline:14px; height:1.5px; }
+  .hindex__lead{ border-color:rgba(227,27,35,.28); }
+  .hindex a:last-child{ grid-column:1 / -1; }
+  .hindex a i{ font-size:9.5px; margin-inline-end:0; }
+  .hindex a span{ font-size:13.5px; }
+  .hindex__lead span{ font-size:15px; }
+  .hindex__ico{ width:21px; height:21px; margin:0; }
+  .hindex a:hover, .hindex a:focus-visible{ border-color:rgba(227,27,35,.45); transform:translateY(-1px); }
+}
+@media (max-width:720px) and (prefers-reduced-motion:reduce){
+  .hindex a, .hindex a::before{ transition:none; }
+  .hindex a:hover, .hindex a:focus-visible{ transform:none; }
+}
+
+/* ---- Persian display type: Lalezar ----
+   The Persian headings of the homepage now sit in Lalezar, a display
+   face drawn from the lettering of Iranian film posters. Body text and
+   long-form tiles stay in Estedad so readability is untouched; Lalezar
+   is reserved for the short, loud lines: section titles, their
+   eyebrows, and the index doors. Loaded from Google Fonts (OFL). */
+html[lang="fa"] .band__title{ font-family:"Lalezar","Estedad",sans-serif; font-weight:400; letter-spacing:0; line-height:1.55; }
+html[lang="fa"] .band__eyebrow{ font-family:"Lalezar","Estedad",sans-serif; font-weight:400; letter-spacing:.08em; }
+html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font-weight:400; letter-spacing:0; }
 </style>
 <script src="nvx-ui.js" defer></script>
 <script src="nvx-config.js" defer></script>
+<script src="nvx-topbar.js" defer></script>
 <script src="nvx-auth.js" defer></script>
 </head>
 
@@ -1287,30 +1286,14 @@ picture{ display:contents; }
   <button type="button" data-lang="en">EN</button>
   <span class="sep" aria-hidden="true"></span>
   <button type="button" data-lang="fa" data-fa>فارسی</button>
-  <span class="sep" aria-hidden="true"></span>
-  <button type="button" id="themeToggle" aria-label="پوسته‌ی روشن/تاریک" title="پوسته‌ی روشن/تاریک"><svg class="i-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
 </div>
 
 <!-- Every other page on the site carries a sitebar; this was the only one
      without any persistent navigation, so once a reader scrolled past the
      hero they had nothing but the browser's back button. It stays out of the
      hero — that frame is the whole point of the homepage — and arrives once
-     the landing has been left behind. -->
-<header class="topbar" id="topbar" hidden>
-  <nav class="topbar__row" aria-label="Sections">
-    <a class="topbar__home" href="#top">
-      <img src="navidix-mark.png" alt="" width="22" height="22" decoding="async" />
-      <span class="lat">NAVIDIX</span>
-    </a>
-    <span class="topbar__links">
-      <a href="training.html">آموزش</a>
-      <a href="prompts.html">پرامپت‌ها</a>
-      <a href="gallery.html">گالری</a>
-      <a href="documentaries.html">مستندها</a>
-      <a class="topbar__cta" href="system.html">خدمات استودیو</a>
-    </span>
-  </nav>
-</header>
+     the landing has been left behind. The bar itself is injected by
+     nvx-topbar.js like on every page, so it is one thing site-wide. -->
 
 <main id="shell">
   <section class="landing">
@@ -1386,11 +1369,11 @@ picture{ display:contents; }
            a centred flex column there too, and the index is still the
            last thing in it at the same full width. -->
       <nav class="hindex" data-copy2-label="ixLabel" aria-label="بخش‌های سایت">
-        <a class="hindex__lead" href="explore/"><i>01</i><span data-copy2="ixScience">علمی تعاملی</span></a>
-        <a class="hindex__lead" href="training.html"><i>02</i><span data-copy2="ixLearn">آموزش</span></a>
-        <a href="prompts.html"><i>03</i><span data-copy2="ixPrompts">پرامپت‌ها</span></a>
-        <a href="gallery.html"><i>04</i><span data-copy2="ixGallery">گالری</span></a>
-        <a href="documentaries.html"><i>05</i><span data-copy2="ixFilms">مستندها</span></a>
+        <a class="hindex__lead" href="explore/"><svg class="hindex__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg><i>01</i><span data-copy2="ixScience">علمی تعاملی</span></a>
+        <a class="hindex__lead" href="training.html"><svg class="hindex__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="M6 10.5V17c0 1.7 2.7 3.5 6 3.5s6-1.8 6-3.5v-6.5"/><path d="M22 8v6"/></svg><i>02</i><span data-copy2="ixLearn">آموزش</span></a>
+        <a href="prompts.html"><svg class="hindex__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 6 5-6 5"/><path d="M12 18h8"/></svg><i>03</i><span data-copy2="ixPrompts">پرامپت‌ها</span></a>
+        <a href="gallery.html"><svg class="hindex__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m21 15-4.6-4.6a1 1 0 0 0-1.4 0L6 19"/></svg><i>04</i><span data-copy2="ixGallery">گالری</span></a>
+        <a href="documentaries.html"><svg class="hindex__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="m10 9.5 5 2.5-5 2.5v-5z" fill="currentColor" stroke="none"/></svg><i>05</i><span data-copy2="ixFilms">مستندها</span></a>
       </nav>
     </div>
     <div class="cue" id="cue" aria-hidden="true"><span></span></div>
@@ -3748,31 +3731,6 @@ setTimeout(function () {
   setTimeout(play, 4500);
 })();
 
-
-/* =====================================================================
-   THE BAR AFTER THE HERO
-   Deliberately outside everything above. The navigation must not depend on
-   three.js, on gsap, or on the galaxy having booted — those are the three
-   things most likely to be missing, and a reader who cannot reach the rest
-   of the site is worse off than one looking at a plain page.
-
-   One observer on the landing, no scroll listener. The bar is shown once the
-   landing has been left and then stays: a bar that hides itself again on the
-   way up is a bar you have to hunt for.
-   ===================================================================== */
-(function () {
-  var bar = document.getElementById('topbar'),
-      landing = document.querySelector('.landing');
-  if (!bar || !landing) return;
-  bar.hidden = false;
-
-  function show(on){ bar.classList.toggle('is-in', on); }
-
-  if (!('IntersectionObserver' in window)) { show(true); return; }
-  new IntersectionObserver(function (entries) {
-    show(!entries[0].isIntersecting);
-  }, { rootMargin: '-45% 0px 0px 0px' }).observe(landing);
-})();
 
 /* ---------------------------------------------------------------------
    THE LEARN BAND'S ROUTE STRIP
