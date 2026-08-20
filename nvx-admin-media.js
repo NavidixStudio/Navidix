@@ -317,6 +317,85 @@
   function pick() {
     return new Promise(function (resolve) {
       var box = el('div');
+
+      /* Until now this modal could only pick. Anyone writing their first
+         article met an empty library, a sentence saying so, and no way
+         forward except to abandon the half-written article, walk over to
+         the media section, upload, and come back. So the same upload lane
+         lives here too. It is the single-file upload() the section uses,
+         which means the duplicate check, the hashing and the cleanup of
+         orphaned bytes all behave identically in both places. */
+      if (A.can('media.manage')) {
+        var pbar = el('div', 'aprog');
+        pbar.hidden = true;
+        pbar.appendChild(el('span'));
+
+        var pinput = el('input');
+        pinput.type = 'file';
+        pinput.multiple = true;
+        pinput.hidden = true;
+
+        var pdrop = el('div', 'adrop');
+        pdrop.appendChild(A.icon('upload'));
+        pdrop.appendChild(el('b', '', 'فایل تازه را اینجا رها کن'));
+        pdrop.appendChild(document.createTextNode('یا برای انتخاب کلیک کن'));
+        pdrop.addEventListener('click', function () { pinput.click(); });
+
+        var take = function (files) {
+          var list = Array.prototype.slice.call(files);
+          if (!list.length) return;
+          var fill = pbar.firstChild, done = 0, dupes = 0, failed = 0;
+          pbar.hidden = false;
+
+          var step = function (i) {
+            if (i >= list.length) {
+              pbar.hidden = true;
+              fill.style.width = '0';
+              var msg = [];
+              if (done)   msg.push(fa(done) + ' فایل اضافه شد');
+              if (dupes)  msg.push(fa(dupes) + ' از قبل در کتابخانه بود');
+              if (failed) msg.push(fa(failed) + ' ناموفق');
+              A.toast(msg.join(' · ') || 'چیزی اضافه نشد', failed ? 'bad' : 'good');
+              /* Redraw rather than push onto `all`: the new rows come back
+                 in the same shape and order the grid already expects, and
+                 a duplicate adds nothing but still has to become visible
+                 so it can be picked. */
+              return fetchAll();
+            }
+            return upload(list[i], function (p) {
+              fill.style.width = Math.round(((i + p) / list.length) * 100) + '%';
+            }).then(function () { done++; }, function (e) {
+              if (e.duplicate) { dupes++; A.toast(e.message, 'bad'); }
+              else { failed++; A.toast(list[i].name + ': ' + e.message, 'bad'); }
+            }).then(function () { return step(i + 1); });
+          };
+
+          step(0);
+        };
+
+        pinput.addEventListener('change', function () {
+          take(pinput.files);
+          pinput.value = '';
+        });
+        ['dragenter', 'dragover'].forEach(function (n) {
+          pdrop.addEventListener(n, function (e) {
+            e.preventDefault(); pdrop.classList.add('over');
+          });
+        });
+        ['dragleave', 'drop'].forEach(function (n) {
+          pdrop.addEventListener(n, function (e) {
+            e.preventDefault(); pdrop.classList.remove('over');
+          });
+        });
+        pdrop.addEventListener('drop', function (e) {
+          if (e.dataTransfer && e.dataTransfer.files) take(e.dataTransfer.files);
+        });
+
+        box.appendChild(pdrop);
+        box.appendChild(pinput);
+        box.appendChild(pbar);
+      }
+
       var search = el('input', 'asearch');
       search.type = 'search';
       search.placeholder = 'جست‌وجو…';
@@ -329,6 +408,12 @@
 
       var all = [], chosen = null, closer = null;
 
+      function fetchAll() {
+        return A.db.select('media_assets?select=*&order=created_at.desc&limit=300')
+          .then(function (v) { all = v || []; paint(); },
+                function (e) { A.clear(grid); grid.appendChild(A.note(e)); });
+      }
+
       function paint() {
         A.clear(grid);
         var q = search.value.trim().toLowerCase();
@@ -337,7 +422,8 @@
         }).slice(0, 60);
 
         if (!list.length) {
-          grid.appendChild(A.empty(all.length ? 'چیزی پیدا نشد.' : 'کتابخانه خالی است.'));
+          grid.appendChild(A.empty(all.length ? 'چیزی پیدا نشد.'
+            : 'کتابخانه خالی است — از کادر بالا یک فایل آپلود کن.'));
           return;
         }
 
@@ -367,17 +453,11 @@
       search.addEventListener('input', paint);
 
       grid.appendChild(A.skeleton(4));
-      A.db.select('media_assets?select=*&order=created_at.desc&limit=300').then(function (v) {
-        all = v || [];
-        paint();
-      }, function (e) {
-        A.clear(grid);
-        grid.appendChild(A.note(e));
-      });
+      fetchAll();
 
       var p = A.modal({
         title: 'انتخاب از کتابخانه',
-        body: 'روی هر تصویر بزن تا انتخاب شود.',
+        body: 'روی هر تصویر بزن تا انتخاب شود. اگر فایلی که می‌خواهی اینجا نیست، از کادر بالا آپلودش کن.',
         node: box, confirm: 'بستن', cancel: 'انصراف'
       });
 
