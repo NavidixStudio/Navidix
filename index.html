@@ -287,9 +287,58 @@ html[lang="fa"] .pitch{ font-family:var(--f-fa); font-weight:300; letter-spacing
 .hcta svg{ flex:0 0 auto; display:block; width:17px; height:17px; }
 .hcta--tube svg{ width:20px; height:20px; }
 html[lang="fa"] .hcta{ font-family:var(--f-fa); font-size:13px; letter-spacing:0; text-transform:none; }
+/* ---- one button leads, the other follows ----
+   .hcta--main was written and then never put on anything, so both buttons
+   rendered as the same ghost pane and the row had no first move in it. The
+   subscribe button is the one this studio actually wants pressed, so it is
+   the one that is filled; the channel link keeps the glass and reads as the
+   quieter of the two.
+
+   Size comes up with it. At 13px/24px these were 44px tall and read as
+   chips beside type running to 23px; a primary action on a full-bleed hero
+   can afford to be the size of a decision. */
+.hcta{ min-height:52px; padding:15px 28px; }
 .hcta:hover{ border-color:rgba(180,215,255,.5); background:rgba(140,170,220,.13); }
-.hcta--main{ border-color:rgba(227,27,35,.55); background:rgba(227,27,35,.12); }
-.hcta--main:hover{ border-color:rgba(255,120,110,.8); background:rgba(227,27,35,.22); box-shadow:0 0 40px -10px rgba(227,27,35,.7); }
+.hcta:active{ transform:translateY(1px); }
+
+.hcta--main{
+  border-color:rgba(227,27,35,.62);
+  background:linear-gradient(180deg, rgba(233,44,50,.96), rgba(178,16,22,.96));
+  color:#FFF;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 14px 34px -18px rgba(227,27,35,.85);
+}
+.hcta--main:hover{
+  border-color:rgba(255,120,110,.9);
+  background:linear-gradient(180deg, rgba(243,60,66,.99), rgba(196,20,26,.99));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 18px 46px -16px rgba(227,27,35,.9);
+}
+/* The filled face is painted, so the blur behind it is doing nothing but
+   costing a compositor layer. */
+.hcta--main{ -webkit-backdrop-filter:none; backdrop-filter:none; }
+.hcta--ghost{ color:rgba(237,242,250,.88); }
+
+/* ---- the stack a phone actually gets ----
+   Side by side the primary sits first because it is first to the eye. Once
+   the row wraps to a column it was landing underneath the quieter button,
+   which puts the studio's main action second on the one screen where
+   everything is read top to bottom. `order` moves the box without moving
+   it in the document, so a keyboard and a screen reader still meet them in
+   the order they are written.
+
+   Both go full width at that point. Two buttons of different widths
+   stacked on a phone read as two unrelated things; the same width reads as
+   a choice. */
+@media (max-width:560px){
+  .cta-row{ flex-direction:column; align-items:stretch; gap:10px; }
+  .hcta{ width:100%; justify-content:center; }
+  .hcta--main{ order:-1; }
+}
+
+/* The fifth cell had a row of its own with an empty half beside it. Given
+   the whole width it reads as the end of the list rather than as a mistake. */
+@media (max-width:899.98px){
+  .hindex a:last-child{ grid-column:1 / -1; }
+}
 .hcta:focus-visible{ outline:1px solid var(--ion); outline-offset:3px; }
 .hairline{
   margin-top:clamp(16px,2.8vh,30px);
@@ -396,7 +445,13 @@ html[lang="en"] .hindex a::before{
 }
 html[lang="fa"] .hindex a span{ font-family:var(--f-fa); font-size:14.5px; }
 .hindex a:hover::before, .hindex a:focus-visible::before{ transform:scaleX(1); }
-.hindex a:hover, .hindex a:focus-visible{ background:rgba(140,170,220,.055); }
+/* The cell answers the cursor by rising, which is the same gesture every
+   card on the site makes - the strip had nothing but a faint wash, so it
+   read as text rather than as five things you can press. */
+.hindex a{ transition:background .5s var(--ease), transform .45s var(--ease); }
+.hindex a:hover, .hindex a:focus-visible{
+  background:rgba(140,170,220,.055); transform:translateY(-2px);
+}
 .hindex a:hover i, .hindex a:focus-visible i{ color:var(--ember-soft); }
 .hindex a:hover span, .hindex a:focus-visible span{ color:var(--paper); }
 .hindex a:focus-visible{ outline:1px solid var(--ion); outline-offset:-1px; }
@@ -411,12 +466,32 @@ html[lang="fa"] .hindex a span{ font-family:var(--f-fa); font-size:14.5px; }
    index is set, and the remaining three share the row beneath at the size
    the whole list used to be. Same component, same rules, same hover — the
    hierarchy is carried entirely by size and by which row you are on. */
-.hindex__lead{ flex:0 0 50% !important; }
-.hindex a:not(.hindex__lead){ flex:1 1 33.333%; }
+/* ---- one strip of five, not two rows of unequal weight ----
+   The two-then-three split was a real idea - the first two are where the
+   work went - but on a wide screen it reads as a row that ran out of room
+   rather than as a decision, and the leads at nearly twice the type size
+   made the whole block bottom-heavy under an already tall hero.
+
+   Five equal columns instead, and the hierarchy moves from size to colour:
+   the two leads keep the brand's rule along their top edge while the three
+   archives keep the structural hairline. Same information, same order, one
+   line, and every cell now the same size to hit.
+
+   Below 900px it folds to two columns, and below 560px the number sits
+   beside the label again - that compaction is the phone's height budget and
+   is explained further down. */
+@media (min-width:900px){
+  .hindex{ display:grid; grid-template-columns:repeat(5,1fr); }
+  .hindex a{ flex:none; }
+}
+@media (min-width:560px) and (max-width:899.98px){
+  .hindex{ display:grid; grid-template-columns:repeat(2,1fr); }
+  .hindex a{ flex:none; }
+}
 .hindex__lead{ padding:18px 16px 16px; gap:9px; }
 .hindex__lead i{ font-size:11px; color:rgba(237,242,250,.46); }
-.hindex__lead span{ font-size:19px; font-weight:500; color:var(--paper); }
-html[lang="fa"] .hindex__lead span{ font-size:21px; }
+.hindex__lead span{ font-size:15px; font-weight:500; color:var(--paper); }
+html[lang="fa"] .hindex__lead span{ font-size:16px; }
 /* the lead rule is the brand's, at rest — the archives' stays structural
    and only fills on approach */
 .hindex__lead{ border-top-color:rgba(227,27,35,.42); }
@@ -1316,7 +1391,7 @@ picture{ display:contents; }
    the card's foot instead of its top. Nothing else about the entry's
    interaction changes: same focus outline, same hover fill, same eases. */
 .hindex__ico{
-  display:block; width:20px; height:20px;
+  display:block; width:22px; height:22px;
   color:rgba(237,242,250,.48);
   transition:color .5s var(--ease), transform .5s var(--ease);
   margin-inline-start:-1px;
@@ -1433,12 +1508,12 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
              through everything else arrives at it. The row keeps the two
              channels, which is also what lets them share one line on a
              phone instead of wrapping. -->
-        <a class="hcta" href="https://t.me/NavidixMedia" target="_blank" rel="noopener" data-copy2="ctaTalk">عضویت در کانال</a>
+        <a class="hcta hcta--ghost" href="https://t.me/NavidixMedia" target="_blank" rel="noopener" data-copy2="ctaTalk">عضویت در کانال</a>
         <!-- The channel that matters most, so it sits beside the other one
              rather than waiting in the panel below. Label in a span for the
              same reason as the main button: Lang writes copy with
              textContent and would erase the glyph otherwise. -->
-        <a class="hcta hcta--tube" href="https://youtube.com/@navidix" target="_blank" rel="noopener" data-copy2-label="ctaTube">
+        <a class="hcta hcta--tube hcta--main" href="https://youtube.com/@navidix" target="_blank" rel="noopener" data-copy2-label="ctaTube">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6z"/></svg>
           <span data-copy2="ctaTube">سابسکرایب یوتیوب</span>
         </a>
