@@ -82,7 +82,14 @@ python3 tools/build-lesson-image-sound.py # قسمت ۳
 python3 tools/build-lesson-systems.py     # قسمت ۴
 node    tools/build-lesson-plate.mjs      # پلیت و کاور درس نور (npm i playwright)
 python3 tools/normalise-share.py          # تگ‌های اشتراک‌گذاری را یکدست می‌کند
+python3 tools/build-site-stats.py         # content/site-stats.json — آخر از همه
 ```
+
+`build-site-stats.py` باید **آخر** اجرا شود، چون صفحه‌های ساخته‌شده را
+می‌شمارد نه داده‌ی سازنده‌ها را. خروجی‌اش `content/site-stats.json` است و
+داشبورد پنل آن را کنار شمارش پایگاه داده می‌گذارد، تا وقتی سایت دویست
+پرامپت دارد پنل صفر نشان ندهد. اگر این فایل نباشد داشبورد فقط عددِ پایگاه
+داده را می‌گوید و خطایی نمی‌دهد.
 
 `build-lesson-plate.mjs` سه فایل می‌سازد و هر سه از یک ترکیب‌بندی واحد در
 می‌آیند: `lessons/light-composition.jpg`، نسخه‌ی `webp` همان، و
