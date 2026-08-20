@@ -398,6 +398,21 @@
 
   function signOut() { keep(null); paint(); }
 
+  /* Where the reader was when they left for their own page.
+
+     me.html had no way back of its own — its only link was the wordmark,
+     which lands on the homepage — so someone halfway through an article
+     who tapped their name lost the article. The origin travels in the URL
+     rather than in storage so that it survives a reload and a shared link
+     behaves the same as a tapped one. me.html follows it only after
+     checking it is a path on this site, so the parameter cannot be used
+     to bounce a reader somewhere else. */
+  function accountHref() {
+    if (/(^|\/)me\.html$/.test(location.pathname)) return 'me.html';
+    return 'me.html?from=' +
+      encodeURIComponent(location.pathname + location.search + location.hash);
+  }
+
   /* Three header shapes across the site: the sitebar every ordinary page
      carries, the xbar in explore/, and the homepage's topbar — which is
      deliberately absent over the hero and arrives once the reader has
@@ -412,7 +427,7 @@
        was also the only thing an account visibly did — the name is a door
        into somewhere now, and leaving is a deliberate act taken there. */
     btn.addEventListener('click', function () {
-      if (signedIn()) location.href = 'me.html';
+      if (signedIn()) location.href = accountHref();
       else open('up');
     });
     row.appendChild(btn);
@@ -432,7 +447,7 @@
       : 'پیشرفتت روی همین مرورگر ذخیره می‌شود و ثبت‌نام نمی‌خواهد. ';
 
     var a = document.createElement('a');
-    a.href = 'me.html';
+    a.href = accountHref();
     a.style.cssText = 'color:#7FB8FF;font-weight:600;text-decoration:none';
     a.textContent = signedIn()
       ? 'صفحه‌ی پیشرفت و نشان‌هایت ←'
