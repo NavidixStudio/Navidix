@@ -91,6 +91,9 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
      در حالی که بقیه‌ی سایت عوض شده بود. حالت روز داخل همین فایل است، پس
      نبودنش یعنی نبودن روز روی این صفحه‌ها. -->
 <script src="{depth}nvx-topbar.js" defer></script>
+<!-- خواننده‌ی عمومی. لینک شبکه‌های اجتماعی را با آنچه در پنل ثبت شده
+     هم‌خط می‌کند، پس عوض‌کردن یک آیدی همه‌جای سایت را عوض می‌کند. -->
+<script src="{depth}nvx-content.js" defer></script>
 <script type="application/ld+json">
 {ld}
 </script>

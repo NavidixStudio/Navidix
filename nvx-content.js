@@ -291,6 +291,80 @@
     return a;
   }
 
+  /* ---- the studio's services ---------------------------------------
+     The page keeps whatever it says today until the table has rows, so
+     an empty panel never empties a page. */
+  function serviceCard(r) {
+    var box = el('article', 'nvxsvc');
+    if (r.title_en) box.appendChild(el('p', 'nvxsvc__en lat', r.title_en));
+    box.appendChild(el('h3', 'nvxsvc__t', r.title));
+    if (r.summary) box.appendChild(el('p', 'nvxsvc__s', r.summary));
+    if (r.body) {
+      var body = el('div', 'nvxsvc__b');
+      body.innerHTML = markdown(r.body);
+      box.appendChild(body);
+    }
+    if (r.price_note) box.appendChild(el('p', 'nvxsvc__p', r.price_note));
+    var href = safeUrl(r.cta_url);
+    if (href && r.cta_label) {
+      var a = el('a', 'nvxsvc__go', r.cta_label);
+      a.href = href;
+      box.appendChild(a);
+    }
+    return box;
+  }
+
+  /* ---- the social accounts -----------------------------------------
+     The icon is chosen from the platform name and falls back to a
+     generic link mark, so a network added in the panel today appears
+     correctly today without a change to this file. */
+  var SOCIAL_ICON = {
+    youtube:   'M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6z',
+    telegram:  'M21.9 4.3 2.9 11.6c-1.1.4-1.1 1.1-.2 1.4l4.8 1.5 1.8 5.6c.2.6.4.8 1 .8.5 0 .7-.2 1-.5l2.4-2.3 5 3.7c.9.5 1.6.2 1.8-.9l3.3-15.5c.3-1.3-.5-1.9-1.9-1.1zM8.6 14.4l10.4-6.6c.5-.3.9-.1.6.2l-8.9 8-.3 3.7z',
+    instagram: 'M12 2.2c3.2 0 3.6 0 4.9.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.9c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.9.1s-3.6 0-4.9-.1c-3.2-.1-4.8-1.7-4.9-4.9-.1-1.3-.1-1.6-.1-4.9s0-3.5.1-4.8c.1-3.2 1.7-4.8 4.9-4.9 1.3-.1 1.7-.1 4.9-.1zm0 3.8a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 9.9a3.9 3.9 0 1 1 0-7.8 3.9 3.9 0 0 1 0 7.8zm6.2-10.1a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z',
+    linkedin:  'M20.4 20.4h-3.6v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9v5.7H9.2V9h3.4v1.6h.1a3.8 3.8 0 0 1 3.4-1.9c3.6 0 4.3 2.4 4.3 5.5v6.2zM5.1 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM6.9 20.4H3.3V9h3.6v11.4z',
+    x:         'M18.9 2.3h3.4l-7.5 8.5 8.8 11.6h-6.9l-5.4-7-6.2 7H1.7l8-9.1L1.3 2.3h7.1l4.9 6.4 5.6-6.4zm-1.2 18h1.9L6.4 4.2H4.3l13.4 16.1z',
+    github:    'M12 1.5a10.5 10.5 0 0 0-3.3 20.5c.5.1.7-.2.7-.5v-1.9c-2.9.6-3.5-1.4-3.5-1.4-.5-1.2-1.2-1.5-1.2-1.5-.9-.7.1-.6.1-.6 1 .1 1.6 1.1 1.6 1.1.9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.7-1.4-2.3-.3-4.8-1.2-4.8-5.2 0-1.2.4-2.1 1.1-2.9-.1-.3-.5-1.4.1-2.9 0 0 .9-.3 2.9 1.1a10 10 0 0 1 5.3 0c2-1.4 2.9-1.1 2.9-1.1.6 1.5.2 2.6.1 2.9.7.8 1.1 1.7 1.1 2.9 0 4-2.5 4.9-4.8 5.2.4.3.7 1 .7 2v3c0 .3.2.6.7.5A10.5 10.5 0 0 0 12 1.5z',
+    tiktok:    'M16.5 2h-3v13.2a2.7 2.7 0 1 1-2.3-2.7v-3a5.7 5.7 0 1 0 5.3 5.7V8.7a7 7 0 0 0 4 1.3V7a4 4 0 0 1-4-4z',
+    discord:   'M19.5 5.3A16 16 0 0 0 15.5 4l-.3.6a14 14 0 0 1 3.4 1.4 13 13 0 0 0-9.8-.5A13 13 0 0 0 8.8 4.6L8.5 4a16 16 0 0 0-4 1.3C2 9 1.3 12.6 1.6 16.1a16 16 0 0 0 4.9 2.5l.9-1.4a10 10 0 0 1-1.6-.8l.4-.3a11 11 0 0 0 9.6 0l.4.3c-.5.3-1 .6-1.6.8l.9 1.4a16 16 0 0 0 4.9-2.5c.4-4-.7-7.6-2.9-10.8zM8.5 14.1c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.8.9 1.7 1.9c0 1-.8 1.9-1.7 1.9zm7 0c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.8.9 1.7 1.9c0 1-.8 1.9-1.7 1.9z',
+    whatsapp:  'M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1a14 14 0 0 1-6-5.3c-.4-.7-.9-1.6-.9-2.5s.5-1.4.7-1.6c.2-.2.4-.3.6-.3h.5c.2 0 .4 0 .6.4l.8 1.9c.1.2 0 .4-.1.5l-.4.5c-.1.2-.3.3-.1.6a9 9 0 0 0 4 3.5c.3.1.5.1.6-.1l.8-1c.2-.2.3-.2.6-.1l1.8.9c.3.1.4.2.5.3z',
+    threads:   'M16.4 11.3c-.1-.1-.3-.1-.4-.2-.2-3.7-2.2-5.8-5.6-5.8-2 0-3.7.9-4.8 2.5l1.9 1.3c.8-1.2 2-1.5 2.9-1.5 1.1 0 1.9.3 2.4 1 .4.5.6 1.1.7 2a12 12 0 0 0-2.6-.2c-2.6 0-4.6 1.5-4.5 3.7 0 1.1.6 2 1.5 2.6.8.5 1.8.8 2.9.7 1.4-.1 2.6-.7 3.3-1.7.6-.8.9-1.8 1-3 .6.4 1 .9 1.3 1.5.4.9.4 2.4-.8 3.6l1.7 1.5c.8-.8 1.4-1.8 1.6-3 .3-1.5 0-3.2-1.5-4.5zm-5.6 4.6c-1.2.1-2.4-.4-2.5-1.5 0-.8.6-1.7 2.5-1.7.7 0 1.4.1 2 .2-.2 2.2-1.2 2.9-2 3z'
+  };
+  var SOCIAL_FALLBACK = 'M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.7-1.7';
+
+  function socialCard(r) {
+    var href = safeUrl(r.url);
+    var a = el(href ? 'a' : 'div', 'chan edge');
+    if (href) { a.href = href; a.target = '_blank'; a.rel = 'noopener'; }
+    if (r.platform) a.className += ' chan--' + String(r.platform).toLowerCase().slice(0, 2);
+
+    var key = String(r.platform || '').toLowerCase();
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    if (SOCIAL_ICON[key]) {
+      svg.setAttribute('fill', 'currentColor');
+      path.setAttribute('d', SOCIAL_ICON[key]);
+    } else {
+      /* An unknown network still gets a mark rather than a hole. */
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('stroke', 'currentColor');
+      svg.setAttribute('stroke-width', '1.7');
+      svg.setAttribute('stroke-linecap', 'round');
+      path.setAttribute('d', SOCIAL_FALLBACK);
+    }
+    svg.appendChild(path);
+    a.appendChild(svg);
+
+    var body = el('span');
+    body.appendChild(el('b', '', r.label));
+    if (r.handle) body.appendChild(el('span', 'at lat', r.handle));
+    if (r.description) body.appendChild(el('p', '', r.description));
+    a.appendChild(body);
+    return a;
+  }
+
   var RENDER = {
     articles: function (rows, style) {
       if (style === 'tile') {
@@ -349,6 +423,18 @@
         }));
       });
       return g;
+    },
+
+    services: function (rows) {
+      var g = el('div', 'nvxsvcs');
+      rows.forEach(function (r) { g.appendChild(serviceCard(r)); });
+      return g;
+    },
+
+    social: function (rows) {
+      var f = document.createDocumentFragment();
+      rows.forEach(function (r) { f.appendChild(socialCard(r)); });
+      return f;
     },
 
     videos: function (rows, style) {
@@ -477,6 +563,8 @@
               '&order=sort_order.asc,created_at.desc',
     gallery:  'gallery_items?select=title,description,media_path,alt_text,tags,featured' +
               '&order=sort_order.asc,created_at.desc',
+    services: 'services?select=*&order=sort_order.asc,created_at.asc',
+    social:   'social_links?select=*&order=sort_order.asc,created_at.asc',
     videos:   'videos?select=title,description,thumbnail_path,youtube_url,tags,featured' +
               '&order=sort_order.asc,created_at.desc',
     lessons:  'lessons?select=slug,title,description,thumbnail_path,video_url,' +
@@ -533,6 +621,27 @@
         return;
       }
 
+      /* Some pages already carry a hand-written version of the same
+         list. When the panel has rows they are the truth, so the
+         hand-written ones are removed rather than shown twice — but only
+         once the rows have actually arrived, so a page whose database is
+         unreachable keeps what it had. */
+      /* A section that starts hidden - so it never flashes empty on a
+         page whose database is slow or gone - has to be revealed once
+         there is something to show. */
+      var hideSel = node.getAttribute('data-nvx-hide');
+      if (hideSel) {
+        var reveal = node.closest(hideSel);
+        if (reveal) reveal.hidden = false;
+      }
+      node.hidden = false;
+
+      var replaces = node.getAttribute('data-nvx-replaces');
+      if (replaces && node.parentNode) {
+        Array.prototype.forEach.call(node.parentNode.querySelectorAll(replaces),
+          function (old) { if (old !== node && !node.contains(old)) old.remove(); });
+      }
+
       node.textContent = '';
       node.appendChild(RENDER[kind](rows, node.getAttribute('data-nvx-style')));
       node.dispatchEvent(new CustomEvent('nvx:content', { bubbles: true, detail: { rows: rows } }));
@@ -544,6 +653,85 @@
       node.setAttribute('data-nvx-state', 'error');
       node.hidden = true;
     });
+  }
+
+
+  /* ===================================================================
+     5b — the introduction, and keeping social links in step
+
+     Two jobs that are not rendering a list.
+
+     The first fills any element carrying data-nvx-profile with a field
+     from the single row in site_profile, so the About page can be edited
+     from the panel without its markup moving.
+
+     The second is the one that matters when a handle changes. The social
+     links are written into the HTML of a dozen pages, and rebuilding all
+     of them is not something the owner of an Instagram account should
+     have to do. So every anchor already on the page whose host matches a
+     row in social_links is repointed at whatever the panel now says.
+
+     It only ever rewrites a link that already pointed at that same
+     network — the host of the old href has to match the host of the new
+     one — so this cannot turn a link to somewhere else into a link to a
+     social account, and cannot introduce a link the page did not have.
+     =================================================================== */
+  function host(u) {
+    try { return new URL(u, location.href).host.replace(/^www\./, ''); }
+    catch (e) { return null; }
+  }
+
+  function fillProfile(row) {
+    document.querySelectorAll('[data-nvx-profile]').forEach(function (node) {
+      var key = node.getAttribute('data-nvx-profile');
+      var value = row[key];
+      if (value == null || value === '') return;
+
+      if (key === 'photo_path') {
+        var url = media(value);
+        if (!url) return;
+        if (node.tagName === 'IMG') node.src = url;
+        else node.style.backgroundImage = 'url(' + JSON.stringify(url) + ')';
+        return;
+      }
+      if (key === 'bio' && node.hasAttribute('data-nvx-markdown')) {
+        node.innerHTML = markdown(value);
+        return;
+      }
+      node.textContent = value;
+    });
+  }
+
+  function syncSocialLinks(rows) {
+    var byHost = {};
+    rows.forEach(function (r) {
+      var h = host(r.url);
+      if (h && safeUrl(r.url)) byHost[h] = r;
+    });
+    if (!Object.keys(byHost).length) return;
+
+    document.querySelectorAll('a[href]').forEach(function (a) {
+      var row = byHost[host(a.getAttribute('href'))];
+      if (!row) return;
+      a.href = row.url;
+      /* Where the page shows the handle as its own scrap of text, that
+         moves too — otherwise the link would be right and the label
+         beside it would be a lie. */
+      var at = a.querySelector('.at');
+      if (at && row.handle) at.textContent = row.handle;
+    });
+  }
+
+  function siteExtras() {
+    if (document.querySelector('[data-nvx-profile]')) {
+      get('site_profile?select=*&limit=1').then(function (rows) {
+        if (rows && rows[0]) fillProfile(rows[0]);
+      }, function () {});
+    }
+
+    get(QUERY.social).then(function (rows) {
+      if (rows && rows.length) syncSocialLinks(rows);
+    }, function () {});
   }
 
 
@@ -620,6 +808,7 @@
     styles();
     Array.prototype.forEach.call(document.querySelectorAll('[data-nvx]'), mount);
     settings();
+    siteExtras();
   }
 
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);

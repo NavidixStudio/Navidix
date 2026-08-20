@@ -25,6 +25,11 @@
     gallery:   'M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5M9 9h.01',
     video:     'M3 6h13v12H3zM16 10l5-3v10l-5-3',
     tag:       'M3 12l8-8h6a2 2 0 012 2v6l-8 8zM16 8h.01',
+    /* a chain link, for the social accounts */
+    link:      'M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.7-1.7',
+    /* one person, as against `users` which is the whole team */
+    user:      'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1',
+    briefcase: 'M3 8h18v12H3zM9 8V5a1 1 0 011-1h4a1 1 0 011 1v3M3 13h18',
     media:     'M4 5h16v14H4zM4 14l5-5 4 4 3-2 4 4M9 9h.01',
     search:    'M11 4a7 7 0 100 14 7 7 0 000-14zM20 20l-4-4',
     chart:     'M4 20V10M10 20V4M16 20v-7M22 20H2',

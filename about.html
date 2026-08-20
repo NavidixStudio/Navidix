@@ -599,6 +599,7 @@ body::before{
 <script src="nvx-config.js" defer></script>
 <script src="nvx-topbar.js" defer></script>
 <script src="nvx-auth.js" defer></script>
+<script src="nvx-content.js" defer></script>
 </head>
 <body>
 <header class="sitebar"><div class="row">
@@ -626,15 +627,18 @@ body::before{
 
         <h1 class="ah__name">
           <span class="ah__ghost" aria-hidden="true">NAVIDI</span>
-          <span class="ah__fa">محمد نویدی</span>
+          <span class="ah__fa" data-nvx-profile="display_name">محمد نویدی</span>
         </h1>
 
         <p class="ah__id" dir="ltr">
           <b>MOHAMMAD NAVIDI</b>
-          <span>Creative Technologist · AI Creator · Founder</span>
+          <span data-nvx-profile="role_en">Creative Technologist · AI Creator · Founder</span>
         </p>
 
-        <p class="ah__lede">سازنده و بنیان‌گذار <b>Navidix</b> — رسانه و استودیوی مستقل در تقاطع علم، فناوری، هوش مصنوعی و سینما.</p>
+        <!-- این خط از بخش «معرفی» در پنل خوانده می‌شود. تا وقتی آنجا خالی باشد،
+     همین متن می‌ماند — پس اگر پایگاه داده دور از دسترس هم باشد صفحه
+     چیزی کم ندارد. -->
+        <p class="ah__lede" data-nvx-profile="role_fa">سازنده و بنیان‌گذار <b>Navidix</b> — رسانه و استودیوی مستقل در تقاطع علم، فناوری، هوش مصنوعی و سینما.</p>
 
         <div class="ah__cta">
           <a class="ah__btn ah__btn--main" href="https://t.me/NavidixStudio" target="_blank" rel="noopener">همکاری با استودیو</a>
@@ -704,7 +708,8 @@ body::before{
   <div class="wrap">
     <div class="slate"><span class="clap"></span><span class="slate-num">۰۲ · استودیو</span></div>
     <h2>Navidix چیست؟</h2>
-    <p class="intro">Navidix یک رسانه و استودیوی مستقل در تقاطع علم، فناوری، هوش مصنوعی، سینما و خلاقیت است. در اینجا روی چند مسیر به‌صورت هم‌زمان کار می‌کنم:</p>
+    <!-- متن معرفی. اگر در پنل چیزی نوشته باشی، جای همین پاراگراف را می‌گیرد. -->
+    <div data-nvx-profile="bio" data-nvx-markdown><p class="intro">Navidix یک رسانه و استودیوی مستقل در تقاطع علم، فناوری، هوش مصنوعی، سینما و خلاقیت است. در اینجا روی چند مسیر به‌صورت هم‌زمان کار می‌کنم:</p></div>
     <div class="branches branches--tracks">
       <div class="branch edge">
         <h3>آموزش</h3>

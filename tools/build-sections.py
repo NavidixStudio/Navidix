@@ -336,6 +336,10 @@ chan_body = '''<section class="sect">
 </section>
 
 <div class="grid">
+  <!-- شبکه‌هایی که از پنل اضافه یا ویرایش می‌شوند. اگر جدول چیزی داشته باشد،
+       کارت‌های پایین برداشته می‌شوند و اینجا جایشان را می‌گیرد؛ اگر خالی یا
+       دور از دسترس باشد، همان‌ها که در همین فایل نوشته شده‌اند می‌مانند. -->
+  <div class="nvxflow" data-nvx="social" data-nvx-replaces=".chan"></div>
 ''' + '\n'.join(
     '''  <a class="chan edge chan--%s" href="%s" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">%s</svg>
