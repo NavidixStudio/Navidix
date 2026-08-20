@@ -51,6 +51,10 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
     return f'''<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+<!-- بازدیدکننده‌ای که از دامنه‌ی github.io می‌آید به دامنه‌ی اصلی فرستاده
+     می‌شود. این خط در همه‌ی صفحه‌های سایت هست ولی در این قالب نبود، پس هر
+     بار ساختن دوباره، آن را از دویست‌ویک صفحه پاک می‌کرد. -->
+<script>if(location.hostname==='navidixstudio.github.io'){{location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}}</script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>{title}</title>
@@ -82,6 +86,11 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
 <script src="{depth}nvx-training.js" defer></script>
 <script src="{depth}nvx-config.js" defer></script>
 <script src="{depth}nvx-auth.js" defer></script>
+<!-- نوار مشترک سایت. تا پیش از این در این قالب نبود، پس دویست صفحه‌ی سبک
+     نه دکمه‌ی برگشت داشتند، نه حالت روز، و هدر قدیمی خودشان را نگه می‌داشتند
+     در حالی که بقیه‌ی سایت عوض شده بود. حالت روز داخل همین فایل است، پس
+     نبودنش یعنی نبودن روز روی این صفحه‌ها. -->
+<script src="{depth}nvx-topbar.js" defer></script>
 <script type="application/ld+json">
 {ld}
 </script>

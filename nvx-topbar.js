@@ -275,32 +275,43 @@
 
   /* ---- 4. back ----
 
-     history.back() is the right answer whenever there is a history to go
-     back to, and it was the only answer here. That fails in the one place
-     it matters most: a reader who opens their own page, reloads it, or
-     arrives from a link has a history whose previous entry is not where
-     they were reading. So a page may state where the reader came from in
-     ?from=, and that wins over the guess.
+     Back means pop the history, not navigate somewhere. Navigating -
+     which is what an earlier version of this did, following a ?from=
+     parameter with location.href - pushes a new entry, so the reader
+     bounced between the page and the one they had just left, forever.
+     history.back() removes an entry instead, which is the only thing
+     that cannot loop.
 
-     The parameter is followed only when it is a path on this site — one
-     leading slash, no second slash, no backslash, no colon — because a
-     link carrying ?from= is something anyone can send, and an unchecked
-     one would let the sender decide where the reader lands next. */
-  function cameFrom() {
-    var v = null;
-    try { v = new URLSearchParams(location.search).get('from'); } catch (e) { return null; }
-    if (!v || v.charAt(0) !== '/' || v.charAt(1) === '/') return null;
-    if (v.indexOf('\\') !== -1 || v.indexOf(':') !== -1) return null;
-    return v;
+     There is no ?from= fallback any more either. It was added to survive
+     a reload of the account page, and that turned out to be a problem
+     that does not exist: reloading replaces the current entry rather than
+     adding one, so the entry underneath is still the page the reader came
+     from and history.back() reaches it. The only case it could ever have
+     answered - a shared link opened in a fresh tab - carries no history
+     to come back to and no parameter either.
+
+     With nothing to pop, home is the honest destination, and replace()
+     keeps even that from leaving a step behind. */
+  /* One more condition than "is there history": the entry underneath has
+     to be a page of this site. A reader who arrived from a search result
+     or a Telegram link has a history whose previous entry is that other
+     place, and a control drawn in this site's own bar should not be the
+     thing that carries them out of it. The referrer is what this
+     navigation came from, so a same-origin referrer means the step back
+     lands here. */
+  function cameFromThisSite() {
+    if (history.length < 2) return false;
+    if (!document.referrer) return false;
+    try {
+      return new URL(document.referrer).origin === location.origin;
+    } catch (e) { return false; }
   }
 
   var backBtn = document.getElementById('topback');
   if (backBtn) {
     backBtn.addEventListener('click', function () {
-      var from = cameFrom();
-      if (from) location.href = from;
-      else if (history.length > 1) history.back();
-      else location.href = href('index.html');
+      if (cameFromThisSite()) history.back();
+      else location.replace(href('index.html'));
     });
   }
 

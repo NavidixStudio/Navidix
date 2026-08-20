@@ -398,6 +398,32 @@
 
   function signOut() { keep(null); paint(); }
 
+  /* The account page, addressed from the root rather than relatively.
+
+     'me.html' resolves against the current directory, so the control in
+     the bar of any page under style/ - all two hundred of them - pointed
+     at /style/me.html, which does not exist. */
+  function accountHref() { return '/me.html'; }
+
+  /* ---- the control in the site bar ---- */
+  var btn = null;
+
+  function paint() {
+    if (!btn) return;
+    var s = session();
+    if (s && s.user) {
+      btn.textContent = (s.user.email || '').split('@')[0];
+      btn.className = 'nvxa nvxa--in';
+      btn.title = s.user.email || '';
+    } else {
+      btn.textContent = 'ورود / ثبت‌نام';
+      btn.className = 'nvxa';
+      btn.title = 'پیشرفتت را نگه دار';
+    }
+  }
+
+  function signOut() { keep(null); paint(); }
+
   /* Where the reader was when they left for their own page.
 
      me.html had no way back of its own — its only link was the wordmark,
