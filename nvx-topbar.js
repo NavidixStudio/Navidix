@@ -216,6 +216,7 @@
         '<button class="topbar__menu-trigger" type="button" data-panel="p-learn" aria-expanded="false"><span>آموزش و یادگیری</span><i aria-hidden="true"></i></button>' +
         '<div class="topbar__panel" id="p-learn" hidden>' +
           '<a href="' + href('training.html') + '">همه‌ی آموزش‌ها</a>' +
+          '<a href="' + href('journey.html') + '">مسیر یادگیری من</a>' +
           '<a href="' + href('ai-start.html') + '">شروع از صفر</a>' +
           '<a href="' + href('ai-prompting.html') + '">ویدیو و پرامپت‌نویسی</a>' +
           '<a href="' + href('brand-content.html') + '">برند و محتوا</a>' +
@@ -272,11 +273,33 @@
     });
   }
 
-  /* ---- 4. back ---- */
+  /* ---- 4. back ----
+
+     history.back() is the right answer whenever there is a history to go
+     back to, and it was the only answer here. That fails in the one place
+     it matters most: a reader who opens their own page, reloads it, or
+     arrives from a link has a history whose previous entry is not where
+     they were reading. So a page may state where the reader came from in
+     ?from=, and that wins over the guess.
+
+     The parameter is followed only when it is a path on this site — one
+     leading slash, no second slash, no backslash, no colon — because a
+     link carrying ?from= is something anyone can send, and an unchecked
+     one would let the sender decide where the reader lands next. */
+  function cameFrom() {
+    var v = null;
+    try { v = new URLSearchParams(location.search).get('from'); } catch (e) { return null; }
+    if (!v || v.charAt(0) !== '/' || v.charAt(1) === '/') return null;
+    if (v.indexOf('\\') !== -1 || v.indexOf(':') !== -1) return null;
+    return v;
+  }
+
   var backBtn = document.getElementById('topback');
   if (backBtn) {
     backBtn.addEventListener('click', function () {
-      if (history.length > 1) history.back();
+      var from = cameFrom();
+      if (from) location.href = from;
+      else if (history.length > 1) history.back();
       else location.href = href('index.html');
     });
   }

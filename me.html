@@ -40,15 +40,12 @@ body{background:var(--bg); color:var(--ink); font-size:15px; line-height:1.9;
 .bar__home{display:flex; align-items:center; gap:9px; color:var(--ink)!important;
   font-weight:700; letter-spacing:.16em; font-size:12.5px}
 .bar__sp{flex:1}
-/* The way back, first in the row so it reads as the way out rather than
-   as one more destination. */
-.bar__back{display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
-  border:1px solid var(--line2); border-radius:8px; padding:5px 10px;
-  transition:border-color .18s, color .18s}
-.bar__back:hover{border-color:rgba(150,196,255,.5)}
-.bar__back[hidden]{display:none}
 
-.wrap{max-width:860px; margin:0 auto; padding:34px 22px 90px}
+/* The top padding clears the site bar, which is fixed rather than in the
+   flow: 59px of bar on a wide screen, 55px on a phone. Measured, because
+   the old 34px was written when this page carried its own sticky header
+   and it swallowed the eyebrow the moment the shared bar arrived. */
+.wrap{max-width:860px; margin:0 auto; padding:93px 22px 90px}
 .eyebrow{font-size:11.5px; letter-spacing:.2em; color:var(--dim); margin:0 0 10px}
 h1{font-size:clamp(24px,4vw,34px); font-weight:700; margin:0 0 6px; line-height:1.45}
 .sub{color:var(--mute); font-size:13.5px; margin:0 0 28px; line-height:2}
@@ -116,90 +113,27 @@ h2 + .hint{margin:0 0 16px}
   color:var(--mute); font:inherit; font-size:12.5px; padding:8px 16px; cursor:pointer}
 .out button:hover{border-color:rgba(229,32,42,.5); color:#FF8A80}
 .out p{margin:10px 0 0; font-size:11.5px; color:var(--dim)}
-@media (max-width:640px){ .wrap{padding:24px 14px 70px} }
+@media (max-width:640px){ .wrap{padding:81px 14px 70px} }
 </style>
 
 <script src="curriculum.js" defer></script>
 <script src="nvx-config.js" defer></script>
 <script src="nvx-progress.js" defer></script>
 <script src="nvx-auth.js" defer></script>
+<!-- The site bar, with the same back control every other page carries.
+     This page used to be the one exception: its header is a .bar rather
+     than the .sitebar that nvx-topbar.js swaps out, so the reader lost
+     the back button at exactly the moment they had travelled furthest
+     from what they were reading. The class below marks it for the swap. -->
+<script src="nvx-topbar.js" defer></script>
 </head>
 <body>
 
-<header class="bar"><div class="bar__row">
-  <a class="bar__back" id="back" href="/" hidden>→ <span id="backwhat">بازگشت</span></a>
+<header class="bar sitebar"><div class="row bar__row">
   <a class="bar__home lat" href="/"><img src="/navidix-mark.png" alt="" width="22" height="22" /><span>NAVIDIX</span></a>
   <span class="bar__sp"></span>
   <a href="/journey.html">مسیر یادگیری ←</a>
 </div></header>
-
-<script>
-/* The way back.
-
-   This page used to be a one-way door: the only link out was the wordmark,
-   which goes to the homepage, so a reader who tapped their name halfway
-   through an article came back to the top of the site instead of to the
-   article. nvx-auth.js now hands over where they were as ?from=.
-
-   The parameter is followed only when it is a path on this site — one
-   leading slash and no scheme — because a link to me.html is something
-   anyone can send, and an unchecked ?from= would let that link decide
-   where the reader lands next. Anything else falls back to the history
-   entry the browser already has, and if there is none the control simply
-   stays hidden rather than pretending to go somewhere. */
-(function () {
-  'use strict';
-
-  var link = document.getElementById('back');
-  var what = document.getElementById('backwhat');
-  if (!link) return;
-
-  /* Named so the reader knows what they are returning to, since the page
-     they came from is no longer on screen. Anything unlisted keeps the
-     plain word. */
-  var NAMES = {
-    'article.html':       'به مقاله',
-    'articles.html':      'به مقاله‌ها',
-    'prompts.html':       'به پرامپت‌ها',
-    'gallery.html':       'به گالری',
-    'documentaries.html': 'به مستندها',
-    'collections.html':   'به مجموعه‌ها',
-    'training.html':      'به آموزش‌ها',
-    'journey.html':       'به مسیر یادگیری',
-    'index.html':         'به صفحه‌ی اصلی'
-  };
-
-  var from = null;
-  try {
-    from = new URLSearchParams(location.search).get('from');
-  } catch (e) {}
-
-  /* One leading slash, and nothing that could carry a scheme or an
-     authority: no second slash, no backslash, no colon. */
-  var safe = from && from.charAt(0) === '/' && from.charAt(1) !== '/' &&
-             from.indexOf('\\') === -1 && from.indexOf(':') === -1;
-
-  if (safe) {
-    link.href = from;
-    var file = from.split('?')[0].split('#')[0].split('/').pop() || 'index.html';
-    if (NAMES[file]) what.textContent = 'بازگشت ' + NAMES[file];
-    link.hidden = false;
-    return;
-  }
-
-  /* No usable parameter — someone arrived here directly, or from a page
-     that predates this. The browser's own history is the next best
-     answer, and no history at all means there is nothing to go back to. */
-  if (history.length > 1) {
-    link.href = '#';
-    link.addEventListener('click', function (e) {
-      e.preventDefault();
-      history.back();
-    });
-    link.hidden = false;
-  }
-}());
-</script>
 
 <main class="wrap">
   <p class="eyebrow lat">NAVIDIX · PROGRESS</p>
