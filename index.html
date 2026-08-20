@@ -230,6 +230,16 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
   /* a contact shadow so it sits on the black, and nothing that glows */
   filter:drop-shadow(0 1px 0 rgba(255,255,255,.16)) drop-shadow(9px 15px 20px rgba(0,0,0,.82));
 }
+/* Day mode lifts every frame and hands each picture the exact reciprocal, so
+   pictures come out unchanged. This one cannot take the reciprocal from there:
+   filter is a single property, and the shadows above would win the cascade and
+   drop it — leaving the logotype the one thing on the page rendered 1.5x too
+   bright. So the shadows are repeated here with the reciprocal appended. Keep
+   the two lists in step if the shadows ever change. */
+html.nvx-day .wordmark{
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.16)) drop-shadow(9px 15px 20px rgba(0,0,0,.82))
+         brightness(.6667) saturate(.893);
+}
 .tagline{
   margin:clamp(14px,2.2vh,22px) 0 0;
   font-family:var(--f-ui);

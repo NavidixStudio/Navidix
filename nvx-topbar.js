@@ -144,11 +144,25 @@
        asks for. */
     'html.nvx-day{background:#0E1420}',
     'html.nvx-day body{background:#101725}',
-    'html.nvx-day #stage,html.nvx-day main,html.nvx-day body > section,',
-    'html.nvx-day .idx,html.nvx-day .lib,html.nvx-day .sd{',
-    'filter:brightness(1.5) saturate(1.12)}',
-    'html.nvx-day img,html.nvx-day video,html.nvx-day canvas,',
-    'html.nvx-day picture,html.nvx-day iframe{',
+    /* Every direct child of body except the bar, rather than a list of
+       container names. The list was the bug: pages here wrap themselves in
+       .lesson, .gx, .idx, main, .sd or nothing at all, so naming them
+       missed whole page types — and the media rule below, which was not
+       scoped to the same set, then darkened pictures on exactly the pages
+       whose frame had never been lifted. One rule cannot fall out of step
+       with itself. */
+    'html.nvx-day body > *:not(.topbar){filter:brightness(1.5) saturate(1.12)}',
+    /* The exact reciprocal, and only inside a frame that was lifted:
+       brightness(a) then brightness(1/a) is the identity, and saturate
+       composes the same way, so a photograph in day mode is byte-for-byte
+       the photograph in night mode.
+
+       <picture> is deliberately absent from this list. It draws nothing of
+       its own — the <img> inside it does — so listing both applied the
+       reciprocal twice and left every responsive image at .667 of its true
+       brightness. That was the bug behind the murky pictures: a photograph
+       came out darker in day mode than at night. */
+    'html.nvx-day body > *:not(.topbar) :is(img,video,canvas,iframe){',
     'filter:brightness(.6667) saturate(.893)}',
     /* The bar sits outside every filtered region, so it is lifted by hand
        to land in the same place the rest of the page arrives at. */
