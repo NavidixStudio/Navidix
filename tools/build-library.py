@@ -535,9 +535,19 @@ INDEX_JS = r'''
       tally=document.getElementById('tally'), emptyQ=document.getElementById('emptyQ2'),
       chips=[].slice.call(document.querySelectorAll('#chips .chip')),
       groups=[].slice.call(document.querySelectorAll('.grp2')),
-      items=[].slice.call(document.querySelectorAll('.pc')).map(function(el){
-        return { el:el, grp:el.closest('.grp2'), cat:el.dataset.cat,
-                 hay:norm(el.textContent+' '+(el.dataset.tags||'')) }; });
+      items=[];
+  /* Built as a function rather than once, because prompts published from
+     the panel arrive after this runs. Without re-indexing they would sit
+     in the page unfiltered — and worse, their group would be hidden the
+     moment a search matched nothing among the cards that were here at
+     load. */
+  function index(){
+    groups=[].slice.call(document.querySelectorAll('.grp2'));
+    items=[].slice.call(document.querySelectorAll('.pc')).map(function(el){
+      return { el:el, grp:el.closest('.grp2'), cat:el.dataset.cat,
+               hay:norm(el.textContent+' '+(el.dataset.tags||'')) }; });
+  }
+  index();
   var cat='all';
   function apply(){
     var raw=input.value.trim(), q=norm(raw), hits=0;
@@ -588,6 +598,7 @@ INDEX_JS = r'''
   }
 
   input.addEventListener('input', apply);   /* never moves the page mid-keystroke */
+  document.addEventListener('nvx:content', function(){ index(); apply(); });
   input.addEventListener('keydown', function(e){ if(e.key==='Escape'){ input.value=''; apply(); } });
   clear.addEventListener('click', function(){ input.value=''; input.focus(); apply(); });
   chips.forEach(function(c){ c.addEventListener('click', function(){
@@ -661,6 +672,14 @@ index_body = f'''
       </div>
     </div>
   </div>
+  <!-- پرامپت‌هایی که از پنل منتشر می‌شوند. تا وقتی جدول خالی است این بخش
+       اصلاً دیده نمی‌شود؛ به‌محض اینکه چیزی داشته باشد، همین‌جا بالای
+       دویست سبکِ ساخته‌شده می‌نشیند و در جست‌وجو و فیلتر هم شرکت می‌کند. -->
+  <section class="grp2" id="nvx-prompts" data-cat="new" hidden>
+    <div class="grp2__head"><span class="grp2__n">۰۰</span><h2>پرامپت‌های تازه</h2></div>
+    <p class="grp2__sub">آنچه از پنل اضافه شده — تازه‌ترین‌ها اول.</p>
+    <div class="cards2" data-nvx="prompts" data-nvx-style="pc" data-nvx-hide="#nvx-prompts"></div>
+  </section>
 {groups}
   <div class="empty2" id="empty2">
     چیزی با <b id="emptyQ2"></b> پیدا نشد.<br>

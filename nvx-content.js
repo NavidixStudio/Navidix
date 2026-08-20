@@ -397,7 +397,47 @@
       return g;
     },
 
-    prompts: function (rows) {
+    prompts: function (rows, style) {
+      /* The library page has its own card, its own search index and its
+         own category chips. A prompt from the panel wears that card and
+         carries the same data-cat and data-tags, so it is filtered and
+         searched by the machinery already on the page rather than sitting
+         outside it. */
+      if (style === 'pc') {
+        var f = document.createDocumentFragment();
+        rows.forEach(function (r) {
+          var a = el('a', 'pc');
+          a.href = 'prompts.html#' + encodeURIComponent(r.slug || '');
+          a.setAttribute('data-cat', 'new');
+          a.setAttribute('data-tags',
+            [r.title_fa, r.title_en].concat(r.tags || []).filter(Boolean).join(' '));
+
+          var sw = el('span', 'pc__sw');
+          var cover = media(r.cover_path);
+          if (cover) {
+            var img = el('img');
+            img.src = cover; img.alt = r.title_fa || '';
+            img.loading = 'lazy'; img.decoding = 'async';
+            img.width = 800; img.height = 500;
+            sw.appendChild(img);
+          }
+          if (r.title_en) sw.appendChild(el('span', 'pc__tag', r.title_en));
+          a.appendChild(sw);
+
+          var body = el('span', 'pc__body');
+          var h = el('h3', 'pc__title', r.title_fa);
+          if (r.title_en) h.appendChild(el('span', 'pc__en', r.title_en));
+          body.appendChild(h);
+          if (r.recipe) body.appendChild(el('p', 'pc__hint', r.recipe));
+          var go = el('span', 'pc__go');
+          go.appendChild(el('span', '', 'باز کردن سبک'));
+          body.appendChild(go);
+          a.appendChild(body);
+          f.appendChild(a);
+        });
+        return f;
+      }
+
       var g = el('div', 'nvxg');
       rows.forEach(function (r) {
         g.appendChild(card({
