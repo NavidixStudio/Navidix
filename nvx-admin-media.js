@@ -51,6 +51,91 @@
     });
   }
 
+  /* ------------------------------------------------------------------
+     shrinking, before anything leaves the browser
+
+     Until now the original bytes went up untouched: a photograph straight
+     off a phone is several megabytes and four thousand pixels wide, and
+     nothing on this site displays an image wider than about sixteen
+     hundred. The storage bill and the reader's data both paid for pixels
+     nobody could see.
+
+     The re-encode happens here rather than on a server because there is no
+     server: this is a static site, and the browser already has a decoder
+     and an encoder for exactly this.
+     ------------------------------------------------------------------ */
+  var MAX_EDGE = 1600;
+  var QUALITY  = 0.82;
+  /* below this, and already within MAX_EDGE, an image is left alone */
+  var SMALL_ENOUGH = 200 * 1024;
+
+  /* GIF is excluded because re-encoding it would flatten an animation to
+     its first frame, and SVG because it is text that is already small and
+     would be turned into pixels. Everything else - JPEG, PNG, WebP, HEIC
+     where the browser can decode it - goes through. */
+  function shrinkable(file) {
+    return /^image\//.test(file.type) && !/svg|gif/.test(file.type);
+  }
+
+  function shrink(file) {
+    if (!shrinkable(file) || !document.createElement('canvas').toBlob) {
+      return Promise.resolve(file);
+    }
+    return new Promise(function (resolve) {
+      var url = URL.createObjectURL(file), img = new Image();
+
+      img.onerror = function () { URL.revokeObjectURL(url); resolve(file); };
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var w = img.naturalWidth, h = img.naturalHeight;
+        if (!w || !h) return resolve(file);
+
+        /* An image that is already small in both senses is left exactly as
+           it is. There is nothing worth saving on a 40KB icon, and a lossy
+           re-encode of flat colour - a logo, a diagram, a screenshot of
+           text - puts rings around every edge to save a few kilobytes.
+           The point of this is large photographs, and only those. */
+        if (Math.max(w, h) <= MAX_EDGE && file.size <= SMALL_ENOUGH) {
+          return resolve(file);
+        }
+
+        var scale = Math.min(1, MAX_EDGE / Math.max(w, h));
+        var cw = Math.max(1, Math.round(w * scale));
+        var ch = Math.max(1, Math.round(h * scale));
+
+        var c = document.createElement('canvas');
+        c.width = cw; c.height = ch;
+        var ctx = c.getContext('2d');
+        if (!ctx) return resolve(file);
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, cw, ch);
+
+        c.toBlob(function (blob) {
+          /* Keep whichever is smaller. Re-encoding a small PNG of flat
+             colour, or a JPEG already compressed harder than this, can
+             come out bigger - and an upload that grew is worse than no
+             optimisation at all. */
+          if (!blob || blob.size >= file.size) return resolve(file);
+
+          var name = file.name.replace(/\.[^.]+$/, '') + '.webp';
+          var out;
+          try {
+            out = new File([blob], name, { type: 'image/webp', lastModified: Date.now() });
+          } catch (e) {
+            /* Older Safari has no File constructor; the Blob carries the
+               bytes and the name is passed alongside it. */
+            out = blob;
+            out.name = name;
+          }
+          out.originalSize = file.size;
+          resolve(out);
+        }, 'image/webp', QUALITY);
+      };
+
+      img.src = url;
+    });
+  }
+
   /* A Persian filename reduces to nothing under this, which is fine —
      the hash prefix already makes the path unique, and the original name
      is kept in the filename column where it is still searchable. */
@@ -72,17 +157,26 @@
   /* ------------------------------------------------------------------
      one upload
      ------------------------------------------------------------------ */
-  function upload(file, onProgress) {
-    var meta = {};
+  function upload(original, onProgress) {
+    var meta = {}, file = original;
 
-    return sha256(file).then(function (hash) {
+    /* Shrink first, then hash. The fingerprint has to be of the bytes that
+       actually get stored, or the duplicate check would compare a file
+       against something that was never uploaded. */
+    return shrink(original).then(function (smaller) {
+      file = smaller;
+      meta.saved = (original.size || 0) - (file.size || 0);
+      onProgress(0.15);
+      return sha256(file);
+
+    }).then(function (hash) {
       meta.hash = hash;
       onProgress(0.25);
       return A.db.select('media_assets?select=id,filename,path&sha256=eq.' + hash + '&limit=1');
 
     }).then(function (found) {
       if (found.length) {
-        var e = new Error('«' + file.name + '» قبلاً آپلود شده — همان فایل با نام ' +
+        var e = new Error('«' + original.name + '» قبلاً آپلود شده — همان فایل با نام ' +
                           found[0].filename + ' در کتابخانه هست.');
         e.duplicate = true;
         throw e;
@@ -101,7 +195,7 @@
       return A.db.insert('media_assets', {
         bucket: 'media',
         path: meta.path,
-        filename: file.name,
+        filename: original.name,
         mime_type: file.type || null,
         size_bytes: file.size,
         width: meta.dims.w,
@@ -118,7 +212,9 @@
 
     }).then(function (made) {
       onProgress(1);
-      return (made || [])[0];
+      var row = (made || [])[0] || {};
+      row.savedBytes = meta.saved > 0 ? meta.saved : 0;
+      return row;
     });
   }
 
@@ -130,7 +226,7 @@
     var fill = bar.firstChild;
     bar.hidden = false;
 
-    var done = 0, failed = 0, dupes = 0;
+    var done = 0, failed = 0, dupes = 0, saved = 0;
 
     function step(i) {
       if (i >= list.length) {
@@ -138,6 +234,7 @@
         fill.style.width = '0';
         var msg = [];
         if (done) msg.push(fa(done) + ' فایل اضافه شد');
+        if (saved > 0) msg.push(A.bytes(saved) + ' صرفه‌جویی شد');
         if (dupes) msg.push(fa(dupes) + ' تکراری بود');
         if (failed) msg.push(fa(failed) + ' ناموفق');
         A.toast(msg.join(' · ') || 'چیزی اضافه نشد', failed ? 'bad' : 'good');
@@ -146,8 +243,9 @@
 
       return upload(list[i], function (p) {
         fill.style.width = Math.round(((i + p) / list.length) * 100) + '%';
-      }).then(function () {
+      }).then(function (row) {
         done++;
+        saved += (row && row.savedBytes) || 0;
       }, function (e) {
         if (e.duplicate) { dupes++; A.toast(e.message, 'bad'); }
         else { failed++; A.toast(list[i].name + ': ' + e.message, 'bad'); }
@@ -344,7 +442,7 @@
         var take = function (files) {
           var list = Array.prototype.slice.call(files);
           if (!list.length) return;
-          var fill = pbar.firstChild, done = 0, dupes = 0, failed = 0;
+          var fill = pbar.firstChild, done = 0, dupes = 0, failed = 0, saved = 0;
           pbar.hidden = false;
 
           var step = function (i) {
@@ -353,6 +451,7 @@
               fill.style.width = '0';
               var msg = [];
               if (done)   msg.push(fa(done) + ' فایل اضافه شد');
+              if (saved > 0) msg.push(A.bytes(saved) + ' صرفه‌جویی شد');
               if (dupes)  msg.push(fa(dupes) + ' از قبل در کتابخانه بود');
               if (failed) msg.push(fa(failed) + ' ناموفق');
               A.toast(msg.join(' · ') || 'چیزی اضافه نشد', failed ? 'bad' : 'good');
@@ -364,7 +463,10 @@
             }
             return upload(list[i], function (p) {
               fill.style.width = Math.round(((i + p) / list.length) * 100) + '%';
-            }).then(function () { done++; }, function (e) {
+            }).then(function (row) {
+              done++;
+              saved += (row && row.savedBytes) || 0;
+            }, function (e) {
               if (e.duplicate) { dupes++; A.toast(e.message, 'bad'); }
               else { failed++; A.toast(list[i].name + ': ' + e.message, 'bad'); }
             }).then(function () { return step(i + 1); });
@@ -485,7 +587,9 @@
       A.page(host, {
         title: 'کتابخانه‌ی رسانه',
         sub: 'فایل‌ها در فضای ذخیره‌سازی Supabase می‌مانند و اینجا فقط اطلاعاتشان نگه ' +
-             'داشته می‌شود. آپلود فایل تکراری قبل از فرستاده‌شدن جلویش گرفته می‌شود.'
+             'داشته می‌شود. آپلود فایل تکراری قبل از فرستاده‌شدن جلویش گرفته می‌شود. ' +
+             'عکس‌ها هم پیش از رفتن، در همین مرورگر تا ۱۶۰۰ پیکسل کوچک و به WebP ' +
+             'تبدیل می‌شوند — گیف و SVG دست‌نخورده می‌مانند.'
       });
 
       if (A.can('media.manage')) {

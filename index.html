@@ -1129,12 +1129,12 @@ html[lang="fa"] .band__path .path__stat{ font-family:var(--f-fa); font-size:12.5
    capped in height reads as a detail on the card rather than as the card.
    A tile with no cover simply has no strip. */
 .tile__thumb{ display:block; position:relative; overflow:hidden; flex:none;
-  aspect-ratio:16/9; max-height:104px; background:rgba(120,160,220,.06);
+  aspect-ratio:16/9; max-height:148px; background:rgba(120,160,220,.06);
   border-bottom:1px solid var(--glass-edge); }
 .tile__thumb img{ width:100%; height:100%; object-fit:cover; display:block;
   transition:transform .7s var(--ease); }
 .tile:hover .tile__thumb img{ transform:scale(1.035); }
-@media (max-width:720px){ .tile__thumb{ max-height:132px; } }
+@media (max-width:720px){ .tile__thumb{ max-height:180px; } }
 .tile__body{ padding:clamp(14px,1.4vw,19px); display:flex; flex-direction:column; gap:7px; flex:1; }
 .tile__meta{
   display:flex; align-items:center; gap:8px; flex-wrap:wrap;
@@ -1407,48 +1407,53 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
        they have to survive a failed WebGL boot, be readable by a crawler, and
        paint without waiting on anything. -->
   <div id="sections">
-
-    <!-- ---------- what the reader can do, not read ----------
-         First band on the page, above the training rail, because it is the
-         one section where the visitor operates something instead of reading
-         it. Same shape as the rail below it deliberately: the reader has
-         already learned how this row behaves by the time they reach it. -->
-    <section class="band" aria-labelledby="band-x-t">
+    <!-- ---------- what the studio makes ----------
+         Every plate here is the real output of the prompt printed on its own
+         page in the library — same model, same wording, the studio's own
+         sample subject. Nothing on this row is a stock image or a mock-up. -->
+    <section class="band" aria-labelledby="band-see-t">
       <header class="band__head">
-        <p class="band__eyebrow" data-copy2="xEyebrow">پلتفرم علمی تعاملی</p>
-        <h2 class="band__title" id="band-x-t" data-copy2="xTitle">علم را بخوان، یا خودت اجرایش کن</h2>
-        <p class="band__sub" data-copy2="xSub">پنج آزمایش زنده در مرورگر. کنترل را جابه‌جا کن و ببین جواب واقعی چه می‌شود — نه انیمیشنِ از پیش‌ساخته، محاسبه‌ی همان لحظه.</p>
-        <a class="band__cta" href="explore/"><span data-copy2="xCta">همه‌ی تجربه‌ها</span><i aria-hidden="true">←</i></a>
+        <p class="band__eyebrow" data-copy2="seeEyebrow">گالری پرامپت‌های هنری</p>
+        <h2 class="band__title" id="band-see-t" data-copy2="seeTitle">هر قاب، همان پرامپتِ زیرش است</h2>
+        <p class="band__sub" data-copy2="seeSub">هر قاب، خروجی واقعی همان پرامپتی است که در صفحه‌اش نوشته شده — آماده‌ی کپی، رایگان.</p>
+        <a class="band__cta" href="prompts.html"><span data-copy2="seeCta">کاوش کتابخانه</span><i aria-hidden="true">←</i></a>
       </header>
-      <div class="band__rail band__rail--5">
-        <a class="tile" href="explore/space-time/">
-          <span class="tile__body">
-            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>نسبیت عام</span><span class="dot"></span><span>۵ فصل</span></span>
-            <h3 class="tile__title">فضا-زمان: چرا جرم، زمان را کند می‌کند</h3>
+      <div class="band__rail band__rail--gal">
+        <!-- the plate that carries the row: darkest, most cinematic, closest
+             to what the studio's own films look like -->
+        <a class="tile tile--shot" href="style/neon.html">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/neon.webp" type="image/webp" /><img src="prompts/neon.jpg" alt="نورپردازی نئون شبانه — خروجی واقعی پرامپت" width="800" height="500" decoding="async" /></picture>
+            <span class="tile__pin">Neon</span>
+            <span class="tile__cap"><b>نئون شبانه</b><small>seedream v4.5</small></span>
           </span>
         </a>
-        <a class="tile" href="explore/hidden-network/">
-          <span class="tile__body">
-            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>علم شبکه</span><span class="dot"></span><span>۶ فصل</span></span>
-            <h3 class="tile__title">شبکه‌ی پنهان: چرا اینترنت هم مقاوم است هم شکننده</h3>
+        <a class="tile tile--shot" href="style/qajar.html">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/qajar.webp" type="image/webp" /><img src="prompts/qajar.jpg" alt="نقاشی قاجاری — خروجی واقعی پرامپت" width="800" height="500" loading="lazy" decoding="async" /></picture>
+            <span class="tile__pin">Qajar</span>
+            <span class="tile__cap"><b>نقاشی قاجاری</b><small>seedream v4.5</small></span>
           </span>
         </a>
-        <a class="tile" href="explore/atoms-and-molecules/">
-          <span class="tile__body">
-            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>کوانتوم</span><span class="dot"></span><span>۵ فصل</span></span>
-            <h3 class="tile__title">دنیای اتم‌ها: شکل واقعی ابر الکترون</h3>
+        <a class="tile tile--shot" href="style/film35.html">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/film35.webp" type="image/webp" /><img src="prompts/film35.jpg" alt="نمای سینمایی ۳۵ میلی‌متری — خروجی واقعی پرامپت" width="800" height="500" loading="lazy" decoding="async" /></picture>
+            <span class="tile__pin">35mm</span>
+            <span class="tile__cap"><b>سینمایی ۳۵ میلی‌متری</b><small>seedream v4.5</small></span>
           </span>
         </a>
-        <a class="tile" href="explore/evolution-of-life/">
-          <span class="tile__body">
-            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>زیست‌شناسی</span><span class="dot"></span><span>۵ فصل</span></span>
-            <h3 class="tile__title">تکامل حیات: همه‌ی زندگانِ امروز هم‌سن‌اند</h3>
+        <a class="tile tile--shot" href="style/ukiyoe.html">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/ukiyoe.webp" type="image/webp" /><img src="prompts/ukiyoe.jpg" alt="چاپ چوبی اوکیه‌ئه — خروجی واقعی پرامپت" width="800" height="500" loading="lazy" decoding="async" /></picture>
+            <span class="tile__pin">Ukiyo-e</span>
+            <span class="tile__cap"><b>اوکیه‌ئه</b><small>seedream v4.5</small></span>
           </span>
         </a>
-        <a class="tile" href="explore/human-to-machine/">
-          <span class="tile__body">
-            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>فناوری</span><span class="dot"></span><span>۵ فصل</span></span>
-            <h3 class="tile__title">از انسان تا ماشین: دو سرعتِ ناهم‌خوان</h3>
+        <a class="tile tile--shot" href="style/oil.html">
+          <span class="tile__frame">
+            <picture><source srcset="prompts/oil.webp" type="image/webp" /><img src="prompts/oil.jpg" alt="رنگ روغن کلاسیک — خروجی واقعی پرامپت" width="800" height="500" loading="lazy" decoding="async" /></picture>
+            <span class="tile__pin">Oil</span>
+            <span class="tile__cap"><b>رنگ روغن کلاسیک</b><small>seedream v4.5</small></span>
           </span>
         </a>
       </div>
@@ -1552,7 +1557,7 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
          scrolling past sees ten different frames and not five twice. -->
     <section class="band" aria-labelledby="band-gal-t">
       <header class="band__head">
-        <p class="band__eyebrow" data-copy2="galEyebrow">گالری سبک‌ها</p>
+        <p class="band__eyebrow" data-copy2="galEyebrow">جهان سبک‌های هنری</p>
         <h2 class="band__title" id="band-gal-t" data-copy2="galTitle">هر سبک، از کجا آمده</h2>
         <p class="band__sub" data-copy2="galSub">خط زمانِ زبان‌های تصویری — چه سالی، در کدام کشور، کارِ چه کسانی. هر کدام با دو نمونه از یک پرامپت، تا ببینی چه چیزی سبک بود و چه چیزی سوژه.</p>
         <a class="band__cta" href="gallery.html"><span data-copy2="galCta">ورود به گالری</span><i aria-hidden="true">←</i></a>
@@ -1591,58 +1596,6 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
             <picture><source srcset="prompts/gouache-b.webp" type="image/webp" /><img src="prompts/gouache-b.jpg" alt="گواش و پوستر رترو — پوستر راه‌آهن کوهستانی، خروجی واقعی پرامپت این سبک" width="800" height="520" loading="lazy" decoding="async" /></picture>
             <span class="tile__pin">Gouache</span>
             <span class="tile__cap"><b>پوستر گواش · ۱۹۳۰</b><small>recraft v4.1</small></span>
-          </span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ---------- what the studio makes ----------
-         Every plate here is the real output of the prompt printed on its own
-         page in the library — same model, same wording, the studio's own
-         sample subject. Nothing on this row is a stock image or a mock-up. -->
-    <section class="band" aria-labelledby="band-see-t">
-      <header class="band__head">
-        <p class="band__eyebrow" data-copy2="seeEyebrow">تصویرهای هوش مصنوعی</p>
-        <h2 class="band__title" id="band-see-t" data-copy2="seeTitle">هر قاب، همان پرامپتِ زیرش است</h2>
-        <p class="band__sub" data-copy2="seeSub">هر قاب، خروجی واقعی همان پرامپتی است که در صفحه‌اش نوشته شده — آماده‌ی کپی، رایگان.</p>
-        <a class="band__cta" href="prompts.html"><span data-copy2="seeCta">کاوش کتابخانه</span><i aria-hidden="true">←</i></a>
-      </header>
-      <div class="band__rail band__rail--gal">
-        <!-- the plate that carries the row: darkest, most cinematic, closest
-             to what the studio's own films look like -->
-        <a class="tile tile--shot" href="style/neon.html">
-          <span class="tile__frame">
-            <picture><source srcset="prompts/neon.webp" type="image/webp" /><img src="prompts/neon.jpg" alt="نورپردازی نئون شبانه — خروجی واقعی پرامپت" width="800" height="500" decoding="async" /></picture>
-            <span class="tile__pin">Neon</span>
-            <span class="tile__cap"><b>نئون شبانه</b><small>seedream v4.5</small></span>
-          </span>
-        </a>
-        <a class="tile tile--shot" href="style/qajar.html">
-          <span class="tile__frame">
-            <picture><source srcset="prompts/qajar.webp" type="image/webp" /><img src="prompts/qajar.jpg" alt="نقاشی قاجاری — خروجی واقعی پرامپت" width="800" height="500" loading="lazy" decoding="async" /></picture>
-            <span class="tile__pin">Qajar</span>
-            <span class="tile__cap"><b>نقاشی قاجاری</b><small>seedream v4.5</small></span>
-          </span>
-        </a>
-        <a class="tile tile--shot" href="style/film35.html">
-          <span class="tile__frame">
-            <picture><source srcset="prompts/film35.webp" type="image/webp" /><img src="prompts/film35.jpg" alt="نمای سینمایی ۳۵ میلی‌متری — خروجی واقعی پرامپت" width="800" height="500" loading="lazy" decoding="async" /></picture>
-            <span class="tile__pin">35mm</span>
-            <span class="tile__cap"><b>سینمایی ۳۵ میلی‌متری</b><small>seedream v4.5</small></span>
-          </span>
-        </a>
-        <a class="tile tile--shot" href="style/ukiyoe.html">
-          <span class="tile__frame">
-            <picture><source srcset="prompts/ukiyoe.webp" type="image/webp" /><img src="prompts/ukiyoe.jpg" alt="چاپ چوبی اوکیه‌ئه — خروجی واقعی پرامپت" width="800" height="500" loading="lazy" decoding="async" /></picture>
-            <span class="tile__pin">Ukiyo-e</span>
-            <span class="tile__cap"><b>اوکیه‌ئه</b><small>seedream v4.5</small></span>
-          </span>
-        </a>
-        <a class="tile tile--shot" href="style/oil.html">
-          <span class="tile__frame">
-            <picture><source srcset="prompts/oil.webp" type="image/webp" /><img src="prompts/oil.jpg" alt="رنگ روغن کلاسیک — خروجی واقعی پرامپت" width="800" height="500" loading="lazy" decoding="async" /></picture>
-            <span class="tile__pin">Oil</span>
-            <span class="tile__cap"><b>رنگ روغن کلاسیک</b><small>seedream v4.5</small></span>
           </span>
         </a>
       </div>
@@ -1711,6 +1664,55 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
            data-nvx="articles" data-nvx-limit="4"
            data-nvx-style="tile" data-nvx-hide="section"></div>
     </section>
+
+    <!-- ---------- what the reader can do, not read ----------
+         Last band on the page. It used to open the deck, on the reasoning
+         that a section where the visitor operates something rather than
+         reads it earns the first position. The studio's own work now opens
+         instead, and this closes: a reader who has been through the styles,
+         the lessons, the films and the writing is the one most likely to
+         want to run something themselves. -->
+    <section class="band" aria-labelledby="band-x-t">
+      <header class="band__head">
+        <p class="band__eyebrow" data-copy2="xEyebrow">پلتفرم علمی تعاملی</p>
+        <h2 class="band__title" id="band-x-t" data-copy2="xTitle">علم را بخوان، یا خودت اجرایش کن</h2>
+        <p class="band__sub" data-copy2="xSub">پنج آزمایش زنده در مرورگر. کنترل را جابه‌جا کن و ببین جواب واقعی چه می‌شود — نه انیمیشنِ از پیش‌ساخته، محاسبه‌ی همان لحظه.</p>
+        <a class="band__cta" href="explore/"><span data-copy2="xCta">همه‌ی تجربه‌ها</span><i aria-hidden="true">←</i></a>
+      </header>
+      <div class="band__rail band__rail--5">
+        <a class="tile" href="explore/space-time/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>نسبیت عام</span><span class="dot"></span><span>۵ فصل</span></span>
+            <h3 class="tile__title">فضا-زمان: چرا جرم، زمان را کند می‌کند</h3>
+          </span>
+        </a>
+        <a class="tile" href="explore/hidden-network/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>علم شبکه</span><span class="dot"></span><span>۶ فصل</span></span>
+            <h3 class="tile__title">شبکه‌ی پنهان: چرا اینترنت هم مقاوم است هم شکننده</h3>
+          </span>
+        </a>
+        <a class="tile" href="explore/atoms-and-molecules/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>کوانتوم</span><span class="dot"></span><span>۵ فصل</span></span>
+            <h3 class="tile__title">دنیای اتم‌ها: شکل واقعی ابر الکترون</h3>
+          </span>
+        </a>
+        <a class="tile" href="explore/evolution-of-life/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>زیست‌شناسی</span><span class="dot"></span><span>۵ فصل</span></span>
+            <h3 class="tile__title">تکامل حیات: همه‌ی زندگانِ امروز هم‌سن‌اند</h3>
+          </span>
+        </a>
+        <a class="tile" href="explore/human-to-machine/">
+          <span class="tile__body">
+            <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>فناوری</span><span class="dot"></span><span>۵ فصل</span></span>
+            <h3 class="tile__title">از انسان تا ماشین: دو سرعتِ ناهم‌خوان</h3>
+          </span>
+        </a>
+      </div>
+    </section>
+
   </div>
 
   <section class="portals">
@@ -1754,10 +1756,10 @@ const NAVIDIX = (() => {
             learnEyebrow:'Applied AI training', learnTitle:'From a first prompt to a finished film',
             learnSub:'All free, no prerequisites — protocols proven on real production work, not theory.',
             learnCta:'All training', learnCountLessons:'lessons', learnCountHours:'hours',
-            galEyebrow:'The gallery of styles', galTitle:'Where each style came from',
+            galEyebrow:'The world of art styles', galTitle:'Where each style came from',
             galSub:'A timeline of visual languages — what year, which country, whose work. Each with two samples from one prompt, so you can see which part was the style and which was the subject.',
             galCta:'Enter the gallery',
-            seeEyebrow:'AI visuals', seeTitle:'Every frame is the prompt beneath it',
+            seeEyebrow:'The gallery of art prompts', seeTitle:'Every frame is the prompt beneath it',
             seeSub:'Every frame is the real output of the prompt printed on its page — free to copy.',
             seeCta:'Explore the library',
             filmEyebrow:'Documentaries', filmTitle:'Long-form, research-led films',
@@ -1776,10 +1778,10 @@ const NAVIDIX = (() => {
             learnEyebrow:'آموزش هوش مصنوعی کاربردی', learnTitle:'از اولین پرامپت تا اولین فیلم',
             learnSub:'همه رایگان و بدون پیش‌نیاز — پروتکل‌هایی که در تولیدهای واقعی جواب داده‌اند، نه تئوری.',
             learnCta:'همه‌ی آموزش‌ها', learnCountLessons:'درس', learnCountHours:'ساعت',
-            galEyebrow:'گالری سبک‌ها', galTitle:'هر سبک، از کجا آمده',
+            galEyebrow:'جهان سبک‌های هنری', galTitle:'هر سبک، از کجا آمده',
             galSub:'خط زمانِ زبان‌های تصویری — چه سالی، در کدام کشور، کارِ چه کسانی. هر کدام با دو نمونه از یک پرامپت، تا ببینی چه چیزی سبک بود و چه چیزی سوژه.',
             galCta:'ورود به گالری',
-            seeEyebrow:'تصویرهای هوش مصنوعی', seeTitle:'هر قاب، همان پرامپتِ زیرش است',
+            seeEyebrow:'گالری پرامپت‌های هنری', seeTitle:'هر قاب، همان پرامپتِ زیرش است',
             seeSub:'هر قاب، خروجی واقعی همان پرامپتی است که در صفحه‌اش نوشته شده — آماده‌ی کپی، رایگان.',
             seeCta:'کاوش کتابخانه',
             filmEyebrow:'مستندها', filmTitle:'فیلم‌های بلندِ پژوهش‌محور',
