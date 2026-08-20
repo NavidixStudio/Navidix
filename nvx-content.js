@@ -223,6 +223,22 @@
     var a = el('a', 'tile');
     a.href = opts.href;
 
+    /* A slim strip rather than a picture the card is built around: the
+       homepage rail is four cards wide, and a tall image there would
+       crowd out the one thing a reader is scanning for, which is the
+       title. Cards without a cover simply have no strip - the title moves
+       up, and the row still lines up because the rail stretches them. */
+    if (opts.image) {
+      var fig = el('span', 'tile__thumb');
+      var img = el('img');
+      img.src = opts.image;
+      img.alt = '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      fig.appendChild(img);
+      a.appendChild(fig);
+    }
+
     var body = el('span', 'tile__body');
     var meta = el('span', 'tile__meta');
     meta.appendChild(el('span', 'no', opts.kind || 'مقاله'));
@@ -248,6 +264,7 @@
           f.appendChild(tile({
             href: 'article.html?slug=' + encodeURIComponent(r.slug),
             kind: 'مقاله',
+            image: media(r.cover_path),
             bits: [when(r.published_at), (r.tags || [])[0]],
             title: r.title
           }));
