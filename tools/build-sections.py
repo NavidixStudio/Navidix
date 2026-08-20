@@ -176,6 +176,10 @@ def page(slug, title, desc, img, alt, ld, body, back=('index.html', 'صفحه‌
     return f'''<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+<!-- بازدیدکننده‌ای که از دامنه‌ی github.io می‌آید به دامنه‌ی اصلی می‌رود. این
+     خط در صفحه‌های ساخته‌شده هست ولی در این قالب نبود، پس هر بار ساختن دوباره
+     پاکش می‌کرد. -->
+<script>if(location.hostname==='navidixstudio.github.io'){{location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}}</script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>{title}</title>
@@ -205,10 +209,16 @@ def page(slug, title, desc, img, alt, ld, body, back=('index.html', 'صفحه‌
 <script type="application/ld+json">{ld}</script>
 {style}
 {EXTRA_CSS}
+.nvxflow{{ display:contents }}
 </style>
 <script src="nvx-ui.js" defer></script>
 <script src="nvx-config.js" defer></script>
 <script src="nvx-auth.js" defer></script>
+<!-- نوار مشترک سایت (دکمه‌ی برگشت و حالت روز داخل همین است) و خواننده‌ی
+     عمومی که محتوای منتشرشده‌ی پنل را کنار محتوای مخزن می‌گذارد. هر دو در
+     صفحه‌های ساخته‌شده اضافه شده بودند ولی در قالب نبودند. -->
+<script src="nvx-topbar.js" defer></script>
+<script src="nvx-content.js" defer></script>
 </head>
 <body>
 
@@ -253,6 +263,11 @@ films_body = '''<section class="sect">
 </section>
 
 <div class="grid">
+  <!-- ویدیوهایی که از پنل منتشر می‌شوند، در همین شبکه و با همان کارت.
+       display:contents یعنی این پوشش خودش خانه‌ی شبکه نمی‌گیرد و کارت‌های
+       داخلش مستقیم کنار چهارتای پایین می‌نشینند. اگر پایگاه داده خالی یا
+       دور از دسترس باشد، این عنصر پنهان می‌شود و صفحه همان است که بود. -->
+  <div class="nvxflow" data-nvx="videos" data-nvx-style="vcard"></div>
 ''' + '\n'.join(film_card(*f) for f in FILMS) + '''
 </div>'''
 
@@ -336,11 +351,11 @@ PAGES = [
     ('documentaries.html',
      'مستندهای برگزیده | مستند فارسی علم، فناوری و فضا — استودیو نویدیکس',
      'مستندهای فارسی پژوهش‌محور درباره‌ی فرگشت، صنعت نیمه‌رسانا، هوش مصنوعی در جنگ مدرن و ناوهای هسته‌ای. نوشته، تولید و روایت‌شده در استودیو نویدیکس.',
-     'og-home.png', 'مستندهای برگزیده — Navidix', LD_FILMS, films_body),
+     'og-documentaries.png', 'مستندهای برگزیده — Navidix', LD_FILMS, films_body),
     ('collections.html',
      'کالکشن‌های ویژه | موزیک ویدیوهای حماسی با هوش مصنوعی — نویدیکس',
      'مجموعه‌های موضوعی برگزیده از آرشیو نویدیکس: شاهنامه اگر فیلم می‌شد، گلادیاتور ایرانی و امپراتوری خورشید — ساخته‌شده با هوش مصنوعی.',
-     'og-home.png', 'کالکشن‌های ویژه — Navidix', LD_COLL, coll_body),
+     'og-collections.png', 'کالکشن‌های ویژه — Navidix', LD_COLL, coll_body),
     ('gallery.html',
      'گالری هوش مصنوعی | کانسپت‌آرت و پوستر سینمایی — استودیو نویدیکس',
      'آثار سینمایی هوش مصنوعی، کانسپت‌آرت و پوسترهای استودیو نویدیکس، به‌همراه کتابخانه‌ی ۲۷ سبک تصویری برای ساختن نمونه‌های مشابه.',
@@ -348,14 +363,25 @@ PAGES = [
     ('channels.html',
      'کانال‌های رسمی نویدیکس | یوتیوب، تلگرام و اینستاگرام',
      'همه‌ی کانال‌های رسمی استودیو نویدیکس یک‌جا: یوتیوب برای مستند و فیلم کوتاه علمی، تلگرام برای ابزار و پرامپت روزانه، اینستاگرام برای تصویر.',
-     'og-home.png', 'کانال‌های رسمی — Navidix', LD_CHAN, chan_body),
+     'og-channels.png', 'کانال‌های رسمی — Navidix', LD_CHAN, chan_body),
 ]
 
 # channels.html is the one page the follow prompt has nothing to add to — it is
 # already a list of every channel, with the same links, further up the page.
 NO_FOLLOWUP = {'channels.html'}
 
+# gallery.html is deliberately not rebuilt here any more. The page on disk
+# was rewritten by hand afterwards - it carries a .gx hero, .gs__shot plates
+# and two hundred captions that this file knows nothing about - so running
+# this generator over it would replace a live page with an older design.
+# Whoever wants to generate it again has to bring gal_body up to date first
+# and delete this line.
+SKIP = {'gallery.html'}
+
 for slug, title, desc, img, alt, ld, body in PAGES:
+    if slug in SKIP:
+        print('skipped ' + slug + ' (see SKIP above)')
+        continue
     open(OUT + slug, 'w', encoding='utf-8').write(
         page(slug, title, desc, img, alt, ld, body,
              followup=slug not in NO_FOLLOWUP))

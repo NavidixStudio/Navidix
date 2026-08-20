@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+<!-- بازدیدکننده‌ای که از دامنه‌ی github.io می‌آید به دامنه‌ی اصلی می‌رود. این
+     خط در صفحه‌های ساخته‌شده هست ولی در این قالب نبود، پس هر بار ساختن دوباره
+     پاکش می‌کرد. -->
 <script>if(location.hostname==='navidixstudio.github.io'){location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}</script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -534,11 +537,16 @@ body::before{
    cannot use it. */
 
 
+.nvxflow{ display:contents }
 </style>
 <script src="nvx-ui.js" defer></script>
 <script src="nvx-config.js" defer></script>
-<script src="nvx-topbar.js" defer></script>
 <script src="nvx-auth.js" defer></script>
+<!-- نوار مشترک سایت (دکمه‌ی برگشت و حالت روز داخل همین است) و خواننده‌ی
+     عمومی که محتوای منتشرشده‌ی پنل را کنار محتوای مخزن می‌گذارد. هر دو در
+     صفحه‌های ساخته‌شده اضافه شده بودند ولی در قالب نبودند. -->
+<script src="nvx-topbar.js" defer></script>
+<script src="nvx-content.js" defer></script>
 </head>
 <body>
 

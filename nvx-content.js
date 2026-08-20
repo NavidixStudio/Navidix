@@ -254,6 +254,43 @@
     return a;
   }
 
+  /* Only the eleven-character id, and only from a YouTube address. The
+     still is fetched from img.youtube.com by id, so a URL that is not
+     YouTube's must not get to decide what that request asks for. */
+  function youtubeId(url) {
+    var m = /(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/
+      .exec(String(url || ''));
+    return m ? m[1] : null;
+  }
+
+  function vcard(r) {
+    var href = safeUrl(r.youtube_url);
+    var a = el(href ? 'a' : 'div', 'vcard edge');
+    if (href) { a.href = href; a.target = '_blank'; a.rel = 'noopener'; }
+
+    var cover = el('span', 'vcard__cover');
+    var id = youtubeId(r.youtube_url);
+    var src = media(r.thumbnail_path) ||
+              (id ? 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg' : null);
+    if (src) {
+      var img = el('img');
+      img.src = src;
+      img.alt = r.title || '';
+      img.loading = 'lazy';
+      img.width = 480;
+      img.height = 270;
+      cover.appendChild(img);
+    }
+    a.appendChild(cover);
+
+    var body = el('span', 'vcard__body');
+    body.appendChild(el('h2', '', r.title));
+    if (r.description) body.appendChild(el('p', '', r.description));
+    body.appendChild(el('span', 'vcard__go', 'تماشا در یوتیوب ←'));
+    a.appendChild(body);
+    return a;
+  }
+
   var RENDER = {
     articles: function (rows, style) {
       if (style === 'tile') {
@@ -314,7 +351,17 @@
       return g;
     },
 
-    videos: function (rows) {
+    videos: function (rows, style) {
+      /* The documentaries page draws its own card and takes the still
+         from the YouTube id, so a video published from the panel needs
+         nothing but a link to sit beside the four already on that page
+         and look like one of them. Anything else gets the generic card. */
+      if (style === 'vcard') {
+        var f = document.createDocumentFragment();
+        rows.forEach(function (r) { f.appendChild(vcard(r)); });
+        return f;
+      }
+
       var g = el('div', 'nvxg');
       rows.forEach(function (r) {
         g.appendChild(card({
