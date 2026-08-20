@@ -187,14 +187,21 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
   z-index:6; display:flex; align-items:center; gap:12px;
   opacity:0;
 }
+/* These were 23x18 and 33x22 - the two smallest targets on the site, and
+   the ones a thumb reaches for first. The padding grows the hit area to
+   the 44px guideline without moving the type: the negative margin pulls
+   the box back so the row still sits where it was drawn. */
 .lang button{
-  appearance:none; background:none; border:0; padding:2px 1px; cursor:pointer;
+  appearance:none; background:none; border:0; cursor:pointer;
+  padding:13px 12px; margin:-13px -12px;
+  min-height:44px; min-width:44px; display:inline-flex;
+  align-items:center; justify-content:center;
   color:var(--paper-ghost);
-  font-family:var(--f-ui); font-size:11px; font-weight:500;
+  font-family:var(--f-ui); font-size:12px; font-weight:500;
   letter-spacing:.26em; text-transform:uppercase;
   transition:color .45s var(--ease);
 }
-.lang button[data-fa]{ font-family:var(--f-fa); letter-spacing:.06em; font-size:12px; }
+.lang button[data-fa]{ font-family:var(--f-fa); letter-spacing:.06em; font-size:13px; }
 .lang button:hover{ color:var(--paper-dim); }
 .lang button[aria-current="true"]{ color:var(--paper); }
 .lang .sep{ width:1px; height:11px; background:var(--paper-ghost); }
@@ -225,6 +232,7 @@ html[lang="fa"] body{ font-family:var(--f-fa); }
    rectangle reads as a box behind the logotype rather than as light, so the
    plate is gone and the type sits on the dark. */
 .plate::before{ content:none; }
+.plate{ font-size:0; line-height:0; margin:0; font-weight:inherit; }
 .wordmark{
   position:relative; display:block; width:min(402px,62vw); height:auto; opacity:0;
   /* a contact shadow so it sits on the black, and nothing that glows */
@@ -243,7 +251,7 @@ html.nvx-day .wordmark{
 .tagline{
   margin:clamp(14px,2.2vh,22px) 0 0;
   font-family:var(--f-ui);
-  font-size:9.5px; font-weight:500; letter-spacing:.42em; text-transform:uppercase;
+  font-size:11px; font-weight:500; letter-spacing:.38em; text-transform:uppercase;
   color:var(--paper-dim); opacity:0;
 }
 html[lang="fa"] .tagline{
@@ -353,8 +361,9 @@ html[lang="fa"] .hcta--main:hover .hcta__arrow{ transform:scaleX(-1) translateX(
 }
 .hindex a{
   position:relative; flex:1 1 96px; min-width:0;
-  display:flex; flex-direction:column; gap:6px;
-  padding:13px 14px 12px;
+  display:flex; flex-direction:column; justify-content:center; gap:6px;
+  /* these are the first thing a thumb reaches for on a phone */
+  min-height:48px; padding:14px 14px 13px;
   border-top:1px solid rgba(150,180,225,.17);
   text-decoration:none; color:var(--paper-dim);
   opacity:0;                        /* the opening timeline brings these in */
@@ -576,6 +585,16 @@ body.is-grabbing, body.is-grabbing *{ cursor:grabbing !important; user-select:no
   animation:auraTurn 34s linear infinite; pointer-events:none;
 }
 @keyframes auraTurn{ to{ transform:rotate(360deg); } }
+/* Two loops that ran forever regardless of the reader's preference. The
+   note further down explains why the mark's own turn is deliberately not
+   gated - it is the brand's signature and the studio's call - but that
+   same note says everything which actually provokes vestibular trouble
+   stays honoured, and continuous background rotation is precisely that.
+   These are decoration, so they simply stop; nothing is lost but motion. */
+@media (prefers-reduced-motion:reduce){
+  .panel__aura{ animation:none; }
+  .cue span{ animation:none; opacity:.55; transform:none; }
+}
 .panel__sheen{
   position:absolute; inset:-40% -60%; z-index:0;
   background:linear-gradient(105deg, transparent 38%, rgba(190,225,255,.15) 48%, rgba(227,27,35,.07) 55%, transparent 63%);
@@ -712,8 +731,10 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
   .panel__desc{ max-width:none; }
 }
 @media (max-width:520px){
-  .tagline{ font-size:9px; letter-spacing:.24em; }
-  html[lang="fa"] .tagline{ font-size:11px; }
+  /* 9px and 11px were below what is comfortable to read at arm's length;
+     the tracking comes down instead so the line still fits one row. */
+  .tagline{ font-size:10.5px; letter-spacing:.2em; }
+  html[lang="fa"] .tagline{ font-size:12.5px; }
   .pitch{ font-size:14.5px; }
   .hcta{ padding:11px 18px; }
   .panel__title{ font-size:16px; }
@@ -730,6 +751,20 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
 .no, .cards .no, .dna dt, .lang button[data-fa]{ letter-spacing:normal; }
 .lat{ letter-spacing:.24em; }
 /* the line every site owes its reader — quiet, and the last thing there is */
+/* The closing logotype. It is given room rather than crammed against the
+   colophon: the scroll ends on the brand, then one quiet line of credit.
+   Capped at 620px so it stays a signature on a 2560px screen instead of
+   becoming a billboard, and never wider than 74% of a phone. */
+.endmark{
+  display:flex; justify-content:center; align-items:center;
+  padding:clamp(56px,9vh,110px) 22px clamp(26px,4vh,44px);
+}
+.endmark__logo{
+  display:block; width:min(620px,74vw); height:auto; opacity:.9;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.10)) drop-shadow(0 18px 34px rgba(0,0,0,.85));
+}
+@media (max-width:560px){ .endmark{ padding-top:clamp(40px,7vh,70px) } }
+
 .colophon{
   position:relative; z-index:2;
   padding:clamp(30px,5vh,52px) var(--gutter) clamp(34px,5vh,56px);
@@ -1004,8 +1039,10 @@ html[lang="fa"] .band__sub{ font-family:var(--f-fa); font-size:13.5px; line-heig
   /* anchored to the foot of the header, level with the standfirst, so it
      reads as the end of the sentence rather than floating beside the title */
   grid-area:cta; align-self:end;
-  display:inline-flex; align-items:center; gap:9px; white-space:nowrap;
-  padding:10px 18px; border-radius:999px; text-decoration:none;
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  white-space:nowrap;
+  /* measured at 41px tall, three short of a comfortable thumb target */
+  min-height:46px; padding:11px 22px; border-radius:999px; text-decoration:none;
   border:1px solid var(--glass-edge); color:var(--paper);
   background:linear-gradient(180deg, rgba(190,214,244,.09), rgba(150,176,210,.03));
   font-family:var(--f-ui); font-size:10.5px; font-weight:500;
@@ -1090,7 +1127,7 @@ html[lang="fa"] .band__path .path__stat{ font-family:var(--f-fa); font-size:12.5
 .band__rail--gal > :first-child{ grid-column:span 2; grid-row:span 2; }
 .band__rail--gal > :first-child .tile__frame{ aspect-ratio:auto; height:100%; }
 .band__rail--gal > :first-child .tile__cap b{ font-size:15px; }
-.band__rail--gal > :first-child .tile__pin{ font-size:10px; padding:4px 9px; }
+.band__rail--gal > :first-child .tile__pin{ font-size:12px; padding:4px 10px; }
 
 /* ---- a tile ----
    Same glass as the portals, quieter. Nothing here animates on its own. */
@@ -1142,10 +1179,10 @@ html[lang="fa"] .band__path .path__stat{ font-family:var(--f-fa); font-size:12.5
 .tile__body{ padding:clamp(14px,1.4vw,19px); display:flex; flex-direction:column; gap:7px; flex:1; }
 .tile__meta{
   display:flex; align-items:center; gap:8px; flex-wrap:wrap;
-  font-family:var(--f-ui); font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+  font-family:var(--f-ui); font-size:11px; letter-spacing:.13em; text-transform:uppercase;
   color:var(--paper-ghost);
 }
-html[lang="fa"] .tile__meta{ font-family:var(--f-fa); font-size:11.5px; letter-spacing:0; text-transform:none; }
+html[lang="fa"] .tile__meta{ font-family:var(--f-fa); font-size:12.5px; letter-spacing:0; text-transform:none; }
 .tile__meta .no{ color:var(--ember); }
 .tile__meta .dot{ width:2px; height:2px; border-radius:50%; background:currentColor; opacity:.5; }
 .tile__title{
@@ -1189,8 +1226,10 @@ picture{ display:contents; }
 /* a permanent, quiet name so a tile still says something at rest */
 .tile--shot .tile__pin{
   position:absolute; z-index:2; inset-inline-start:10px; top:10px;
-  font-family:ui-monospace,Menlo,monospace; font-size:9px; letter-spacing:.08em;
-  padding:3px 7px; border-radius:3px; color:rgba(237,242,250,.82);
+  /* 9px was below what is legible over a photograph; the tracking gives
+     back the width the extra size takes. */
+  font-family:ui-monospace,Menlo,monospace; font-size:12px; letter-spacing:.03em;
+  padding:3px 8px; border-radius:3px; color:rgba(237,242,250,.86);
   background:rgba(3,5,10,.6); border:1px solid rgba(255,255,255,.1);
   -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
   transition:opacity .5s var(--ease);
@@ -1353,7 +1392,13 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
 
     <div class="hero">
      <div class="hero__col">
-      <div class="plate"><img id="wordmark" class="wordmark" alt="NAVIDIX" /></div>
+      <!-- The page had no h1 at any width. The logotype is the heading in
+         every visual sense, so it becomes one: the design is untouched,
+         and a search engine or a screen reader finally gets the page's
+         subject. Width and height are declared because this image loads
+         from script and was shifting the hero as it arrived. -->
+      <h1 class="plate"><img id="wordmark" class="wordmark" alt="NAVIDIX"
+           width="900" height="139" decoding="async" /></h1>
       <p class="tagline" id="tagline">رسانه مستقل علم و فناوری</p>
       <div class="hairline" id="hairline"></div>
       <p class="pitch" data-copy2="pitch">استودیو نویدیکس — تلاقی پژوهش، سینما و هوش مصنوعی.</p>
@@ -1735,6 +1780,16 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
 
 
 </main>
+
+<!-- The logotype, once, at full size, as the last thing on the page. A
+     brand mark at the foot of a long scroll is a signature rather than
+     navigation, so it is decorative to assistive technology and the name
+     is already in the colophon beneath it. Width and height are declared
+     so it reserves its space before it loads. -->
+<footer class="endmark">
+  <img class="endmark__logo" src="navidix-wordmark.webp" alt="" width="900" height="139"
+       loading="lazy" decoding="async" aria-hidden="true" />
+</footer>
 
 <div class="colophon">
   <p><span class="mk">©</span> ۱۴۰۵ <b>استودیو نویدیکس</b> — ساخته‌ی <a href="about.html"><b>محمد نویدی</b></a>. تمام حقوق محفوظ است.<br />هر فیلم، هر درس و هر خط از این سایت اینجا نوشته شده؛ بردنش با نام ما آزاد، بی‌نام نه.</p>

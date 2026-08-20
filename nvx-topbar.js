@@ -67,9 +67,17 @@
     'flex:0 0 auto;min-width:0;color:'+PAPER+';text-decoration:none;text-align:center;',
     'font-family:"Inter","SF Pro Text","Helvetica Neue",system-ui,sans-serif;',
     'font-size:15px;font-weight:700;letter-spacing:.26em}',
-    '.topbar__home img{display:block;width:40px;height:40px;object-fit:contain;',
+    '.topbar__home .topbar__mark{display:block;width:40px;height:40px;object-fit:contain;',
     'transition:transform .35s '+EASE+'}',
-    '.topbar__home:hover img{transform:scale(1.06)}',
+    /* The logotype itself, not type set to look like it. The silver
+       wordmark is the brand's own artwork; a font can approximate its
+       letterforms but not its bevel, and the two side by side read as two
+       different brands. Height rather than width, so it lines up with the
+       emblem beside it whatever the file's aspect ratio is. */
+    '.topbar__home .topbar__word{display:block;height:17px;width:auto;',
+    'object-fit:contain;transition:opacity .35s '+EASE+'}',
+    '.topbar__home:hover .topbar__mark{transform:scale(1.06)}',
+    '.topbar__home:hover .topbar__word{opacity:.86}',
     '#topbar .topbar__links{display:flex;flex-direction:column;padding:0;margin:0 0 2px}',
     '#topbar .topbar__links .nvxa{appearance:none;border:0;background:none;color:'+PAPER_DIM+';',
     'font-family:"Estedad","IRANSansX","IRANSans","Segoe UI",Tahoma,sans-serif;font-size:14px;line-height:1.2;',
@@ -176,9 +184,12 @@
     /* The wordmark used to vanish below 820px, which left a lone icon on
        every phone. It stays; the tracking and the mark give back the
        width instead. */
-    '@media (max-width:560px){.topbar__home{font-size:12.5px;letter-spacing:.18em;gap:8px}',
-    '.topbar__home img{width:34px;height:34px}}',
-    '@media (max-width:380px){.topbar__home span{display:none}}',
+    '@media (max-width:560px){.topbar__home{gap:8px}',
+    '.topbar__home .topbar__mark{width:34px;height:34px}',
+    '.topbar__home .topbar__word{height:14px}}',
+    /* Below 380px the emblem carries the brand on its own — the logotype
+       is the part that would have to shrink past legibility. */
+    '@media (max-width:380px){.topbar__home .topbar__word{display:none}}',
     '@media (max-width:560px){.topbar__row{padding:10px 14px}}',
     '@media (prefers-reduced-motion:reduce){.topbar__menu{transition:none}}'
   ].join('');
@@ -201,8 +212,9 @@
           '<span class="topbar__burger-line"></span><span class="topbar__burger-line"></span><span class="topbar__burger-line"></span>' +
         '</button>' +
       '</div>' +
-      '<a class="topbar__home" href="' + href('index.html') + '">' +
-        '<img src="' + href('navidix-mark.png') + '" alt="" width="40" height="40" decoding="async" /><span class="lat">NAVIDIX</span>' +
+      '<a class="topbar__home" href="' + href('index.html') + '" aria-label="NAVIDIX — صفحه‌ی اصلی">' +
+        '<img class="topbar__mark" src="' + href('navidix-mark.png') + '" alt="" width="40" height="40" decoding="async" />' +
+        '<img class="topbar__word" src="' + href('navidix-wordmark.webp') + '" alt="" width="900" height="139" decoding="async" />' +
       '</a>' +
       '<div class="topbar__tail">' +
         '<button class="topbar__circ topbar__back" id="topback" type="button" aria-label="بازگشت">' + btnBackSvg() + '</button>' +
