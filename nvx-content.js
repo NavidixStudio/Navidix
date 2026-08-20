@@ -54,6 +54,12 @@
     if (!path) return null;
     /* Already a full URL — a thumbnail that came from somewhere else. */
     if (/^https?:\/\//i.test(path)) return path;
+    /* A path rooted at the site is a file in the repository, put there by
+       whoever wrote the article. Articles have two publishers and only one
+       of them uploads to Storage; the other commits its pictures beside its
+       markdown, and had no way to point at them until now. Rejects '//',
+       which is a different site wearing a relative path. */
+    if (path.charAt(0) === '/' && path.charAt(1) !== '/') return path;
     return URL_ + '/storage/v1/object/public/media/' + path;
   }
 

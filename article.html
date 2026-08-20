@@ -194,7 +194,13 @@ h1{font-size:clamp(24px,4vw,34px);font-weight:700;margin:0 0 10px;line-height:1.
       ogd.setAttribute('content', r.seo_description || r.excerpt);
     }
     var ogi = document.querySelector('meta[property="og:image"]');
-    if (ogi && r.cover_path) ogi.setAttribute('content', C.media(r.cover_path));
+    if (ogi && r.cover_path) {
+      /* Open Graph is read by a crawler that has no page to resolve a
+         relative path against, so a share card built from '/content/...'
+         would come back with no picture. A cover kept in the repository
+         gives exactly that kind of path, so it is made absolute here. */
+      ogi.setAttribute('content', new URL(C.media(r.cover_path), location.href).href);
+    }
 
     var eyebrow = document.createElement('p');
     eyebrow.className = 'eyebrow lat';
