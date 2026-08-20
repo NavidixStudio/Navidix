@@ -1131,9 +1131,13 @@ html[lang="fa"] .band__path .path__stat{ font-family:var(--f-fa); font-size:12.5
 .tile__thumb{ display:block; position:relative; overflow:hidden; flex:none;
   aspect-ratio:16/9; max-height:148px; background:rgba(120,160,220,.06);
   border-bottom:1px solid var(--glass-edge); }
-.tile__thumb img{ width:100%; height:100%; object-fit:cover; display:block;
-  transition:transform .7s var(--ease); }
+.tile__thumb img, .tile__thumb canvas{ width:100%; height:100%; display:block; }
+.tile__thumb img{ object-fit:cover; transition:transform .7s var(--ease); }
 .tile:hover .tile__thumb img{ transform:scale(1.035); }
+/* The interactive cards draw their own sketch rather than carrying a
+   photograph, so there is nothing to zoom on hover - the drawing is
+   already moving. */
+.tile__thumb canvas{ background:rgba(6,9,15,.55); }
 @media (max-width:720px){ .tile__thumb{ max-height:180px; } }
 .tile__body{ padding:clamp(14px,1.4vw,19px); display:flex; flex-direction:column; gap:7px; flex:1; }
 .tile__meta{
@@ -1295,6 +1299,11 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
 <script src="nvx-topbar.js" defer></script>
 <script src="nvx-auth.js" defer></script>
 <script src="nvx-content.js" defer></script>
+<!-- The five sketches on the interactive cards. Same file /explore/ uses,
+     mounted on any [data-preview] canvas, so the card on this page and the
+     card on that one cannot drift apart. Canvas 2D, no WebGL, and nothing
+     draws while it is off screen or the tab is hidden. -->
+<script src="explore/nvx-preview.js" defer></script>
 </head>
 
 <body>
@@ -1681,30 +1690,35 @@ html[lang="fa"] .hindex a span{ font-family:"Lalezar","Estedad",sans-serif; font
       </header>
       <div class="band__rail band__rail--5">
         <a class="tile" href="explore/space-time/">
+          <span class="tile__thumb"><canvas data-preview="space-time" aria-hidden="true"></canvas></span>
           <span class="tile__body">
             <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>نسبیت عام</span><span class="dot"></span><span>۵ فصل</span></span>
             <h3 class="tile__title">فضا-زمان: چرا جرم، زمان را کند می‌کند</h3>
           </span>
         </a>
         <a class="tile" href="explore/hidden-network/">
+          <span class="tile__thumb"><canvas data-preview="network" aria-hidden="true"></canvas></span>
           <span class="tile__body">
             <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>علم شبکه</span><span class="dot"></span><span>۶ فصل</span></span>
             <h3 class="tile__title">شبکه‌ی پنهان: چرا اینترنت هم مقاوم است هم شکننده</h3>
           </span>
         </a>
         <a class="tile" href="explore/atoms-and-molecules/">
+          <span class="tile__thumb"><canvas data-preview="atoms" aria-hidden="true"></canvas></span>
           <span class="tile__body">
             <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>کوانتوم</span><span class="dot"></span><span>۵ فصل</span></span>
             <h3 class="tile__title">دنیای اتم‌ها: شکل واقعی ابر الکترون</h3>
           </span>
         </a>
         <a class="tile" href="explore/evolution-of-life/">
+          <span class="tile__thumb"><canvas data-preview="evolution" aria-hidden="true"></canvas></span>
           <span class="tile__body">
             <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>زیست‌شناسی</span><span class="dot"></span><span>۵ فصل</span></span>
             <h3 class="tile__title">تکامل حیات: همه‌ی زندگانِ امروز هم‌سن‌اند</h3>
           </span>
         </a>
         <a class="tile" href="explore/human-to-machine/">
+          <span class="tile__thumb"><canvas data-preview="human-to-machine" aria-hidden="true"></canvas></span>
           <span class="tile__body">
             <span class="tile__meta"><span class="no">تجربه</span><span class="dot"></span><span>فناوری</span><span class="dot"></span><span>۵ فصل</span></span>
             <h3 class="tile__title">از انسان تا ماشین: دو سرعتِ ناهم‌خوان</h3>
