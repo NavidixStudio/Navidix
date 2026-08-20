@@ -755,6 +755,29 @@ html[lang="fa"] .panel__desc{ font-family:var(--f-fa); font-size:clamp(12px,.92v
    colophon: the scroll ends on the brand, then one quiet line of credit.
    Capped at 620px so it stays a signature on a 2560px screen instead of
    becoming a billboard, and never wider than 74% of a phone. */
+/* ---- day mode and the hero ----
+   Day mode lifts every top-level frame by 1.5 and nudges saturation, which
+   is right for a page of text on a neutral near-black ground: the greys
+   come up and nothing gains a colour it did not have.
+
+   This hero is not that. Its ground is a tinted cinematic field - navy at
+   one corner, ember at the other - and multiplying a tint that is almost
+   black is exactly how you make it visible. Lifted, the top-left went
+   teal and the bottom-right went muddy red: hues that were always in the
+   file but never meant to be seen, brought up by the very operation that
+   helps everywhere else.
+
+   The stage and the four .grade layers above it are that grade: ambient,
+   deep, vignette and grain, each a full-viewport wash. They are the
+   page's colour treatment, so multiplying them is multiplying the very
+   thing that decides what colour the page is.
+
+   They keep themselves in both modes. Everything above them - the
+   logotype, the type, the buttons, the index, and every band down the
+   page - still lifts, which is what a reader in daylight actually needs. */
+html.nvx-day #stage,
+html.nvx-day .grade{ filter:none; }
+
 .endmark{
   display:flex; justify-content:center; align-items:center;
   padding:clamp(56px,9vh,110px) 22px clamp(26px,4vh,44px);

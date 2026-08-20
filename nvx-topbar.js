@@ -257,15 +257,37 @@
   /* ---- reveal ---- */
   var landing = document.querySelector('.landing');
   if (landing) {
-    /* The homepage hero stays untouched: a reader meets the bar once
-       they scroll past the landing, then it stays. Same observer the
-       homepage's own copy used to carry. */
+    /* The homepage hero stays untouched: the reader meets the bar once
+       they scroll past the landing, and it goes away again when they come
+       back to it.
+
+       It used to only ever appear. Scroll down once and the bar was
+       permanent, so returning to the top left it sitting across the
+       logotype — the one frame on the site that is supposed to be
+       uninterrupted. */
     bar.hidden = true;
-    function showBar(){ bar.hidden = false; bar.classList.add('is-in'); }
+    function showBar() {
+      bar.hidden = false;
+      /* one frame with the element in the flow, so the transition runs
+         instead of the bar simply appearing */
+      requestAnimationFrame(function () { bar.classList.add('is-in'); });
+    }
+    function hideBar() {
+      bar.classList.remove('is-in');
+      /* closeMenu is declared further down and reads variables assigned
+         further down still. This only ever runs from the observer, which
+         is after all of that, but the guard costs nothing and means the
+         order of this file can change without a silent break. */
+      if (typeof closeMenu === 'function' && document.getElementById('topmenu')) closeMenu();
+      setTimeout(function () {
+        if (!bar.classList.contains('is-in')) bar.hidden = true;
+      }, 340);
+    }
     if (!('IntersectionObserver' in window)) { showBar(); }
     else {
       new IntersectionObserver(function (entries) {
-        if (!entries[0].isIntersecting) showBar();
+        if (entries[0].isIntersecting) hideBar();
+        else showBar();
       }, { rootMargin: '-45% 0px 0px 0px' }).observe(landing);
     }
   } else {
