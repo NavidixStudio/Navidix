@@ -94,6 +94,9 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
 <!-- خواننده‌ی عمومی. لینک شبکه‌های اجتماعی را با آنچه در پنل ثبت شده
      هم‌خط می‌کند، پس عوض‌کردن یک آیدی همه‌جای سایت را عوض می‌کند. -->
 <script src="{depth}nvx-content.js" defer></script>
+<!-- فهرست کناری. صفحه‌های سبک کوتاه‌اند و معمولاً واجد شرایطش نمی‌شوند،
+     ولی هزینه‌اش صفر است و روی صفحه‌ی بلند خودش ظاهر می‌شود. -->
+<script src="{depth}nvx-outline.js" defer></script>
 <script type="application/ld+json">
 {ld}
 </script>

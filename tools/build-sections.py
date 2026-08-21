@@ -219,6 +219,7 @@ def page(slug, title, desc, img, alt, ld, body, back=('index.html', 'صفحه‌
      صفحه‌های ساخته‌شده اضافه شده بودند ولی در قالب نبودند. -->
 <script src="nvx-topbar.js" defer></script>
 <script src="nvx-content.js" defer></script>
+<script src="nvx-outline.js" defer></script>
 </head>
 <body>
 
