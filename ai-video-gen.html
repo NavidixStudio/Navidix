@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<script>if(location.hostname==='navidixstudio.github.io'){location.replace('https://navidixstudio.com'+location.pathname.replace(/^\/Navidix/i,'')+location.search+location.hash);}</script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ویدیوهای هوش مصنوعی چطور ساخته می‌شوند؟ | مقاله | استودیو نویدیکس</title>
+<meta name="description" content="هیچ‌چیز در ویدیوهای هوش مصنوعی فیلمبرداری نمی‌شود؛ همه‌چیز محاسبه می‌شود. از نویز تا فریم: دیفیوژن، فضای فشرده، مکعب‌های فضا-زمان، پیوستگی در زمان و صوتی که با تصویر متولد می‌شود." />
+<meta name="author" content="محمد نویدی" />
+<link rel="canonical" href="https://navidixstudio.com/ai-video-gen.html" />
+<meta name="theme-color" content="#0B0E14" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta property="og:site_name" content="Navidix" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="fa_IR" />
+<meta property="og:title" content="ویدیوهای هوش مصنوعی چطور ساخته می‌شوند؟" />
+<meta property="og:description" content="هیچ‌چیز در ویدیوهای هوش مصنوعی فیلمبرداری نمی‌شود؛ همه‌چیز محاسبه می‌شود. از نویز تا شیمی: دیفیوژن، فضای فشرده، مکعب‌های فضا-زمان و صدایی که با تصویر متولد می‌شود." />
+<meta property="og:url" content="https://navidixstudio.com/ai-video-gen.html" />
+<meta property="og:image" content="https://navidixstudio.com/og-video-genai.png" />
+<meta property="og:image:secure_url" content="https://navidixstudio.com/og-video-genai.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="نقاشی رنگ‌روغن کلاسیک؛ یک سه‌پایه در استودیوی شمع‌سوخته که از بومش تصویری نورانی در حال حرکت بیرون می‌زند" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="ویدیوهای هوش مصنوعی چطور ساخته می‌شوند؟" />
+<meta name="twitter:description" content="از نویز تا فریم: دیفیوژن، فضای فشرده، مکعب‌های فضا-زمان و صدایی که با تصویر متولد می‌شود." />
+<meta name="twitter:image" content="https://navidixstudio.com/og-video-genai.png" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"ویدیوهای هوش مصنوعی چطور ساخته می‌شوند؟","description":"از نویز تا فریم: دیفیوژن، فضای فشرده، مکعب‌های فضا-زمان و صدایی که با تصویر متولد می‌شود.","inLanguage":"fa-IR","datePublished":"2026-08-21","author":{"@type":"Person","name":"محمد نویدی","jobTitle":"متخصص هوش مصنوعی کاربردی"},"publisher":{"@type":"Organization","name":"Navidix","url":"https://navidixstudio.com/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://navidixstudio.com/ai-video-gen.html"}}
+</script>
+<style>
+@font-face{font-family:'Estedad';src:url('/assets/estedad-var.woff2')format('woff2');font-weight:100 900;font-display:swap;font-style:normal}
+html{background:#0B0E14;}
+body{margin:0;font-family:"Estedad","IRANSans",Tahoma,sans-serif;color:#E4E7EA;line-height:2;}
+body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(124% 70% at 10% -8%,rgba(48,112,255,.12),transparent 66%),
+  radial-gradient(104% 62% at 94% 12%,rgba(122,172,255,.06),transparent 64%),
+  radial-gradient(136% 62% at 50% 108%,rgba(227,27,35,.05),transparent 68%);}
+.sitebar{position:sticky;top:0;z-index:30;background:rgba(11,14,20,.92);border-bottom:1px solid #262A31;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.sitebar .row{max-width:860px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;
+  justify-content:space-between;gap:14px;}
+.sitebar a{color:#8C939B;text-decoration:none;font-size:13px;transition:color .3s ease;}
+.sitebar a:hover{color:#E5202A;}
+.sitebar .home{display:flex;align-items:center;gap:9px;color:#E4E7EA;font-size:14px;letter-spacing:.04em;}
+.sitebar .home img{width:24px;height:24px;}
+main{max-width:860px;margin:0 auto;padding:clamp(40px,7vh,80px) 22px 40px;}
+.eyebrow{font-family:ui-monospace,Menlo,Estedad,monospace;font-size:11.5px;letter-spacing:.24em;color:#B9C0C8;
+  text-transform:uppercase;margin-bottom:18px;}
+h1{font-size:clamp(26px,4.6vw,42px);line-height:1.45;margin:0 0 18px;font-weight:800;letter-spacing:-.01em;}
+.lede{color:#9AA2AC;font-size:clamp(14.5px,2vw,17px);line-height:2;max-width:60ch;margin:0 0 30px;}
+figure{margin:0 0 44px;}
+figure img{width:100%;height:auto;display:block;border-radius:6px;border:1px solid #262A31;
+  box-shadow:inset 0 1px 0 rgba(196,216,244,.055),0 24px 60px -30px rgba(0,0,0,.9);}
+figcaption{color:#6E7680;font-size:12px;line-height:1.8;margin-top:10px;text-align:center;}
+section{margin-bottom:40px;}
+h2{font-size:clamp(20px,3vw,27px);line-height:1.55;margin:0 0 14px;font-weight:700;}
+.intro{color:#C6CBD2;font-size:15px;line-height:2;margin:0 0 14px;font-weight:500;}
+p{margin:0 0 14px;}
+.rule{border:1px solid #2A2F38;border-top:1px solid rgba(229,32,42,.65);border-radius:4px;
+  background:#10131A;padding:16px 20px;margin:22px 0;box-shadow:inset 0 1px 0 rgba(196,216,244,.05);}
+.rule .tag{display:inline-block;font-size:11px;letter-spacing:.2em;color:#E5202A;font-family:ui-monospace,Menlo,Estedad,monospace;margin-bottom:6px;}
+.rule p{margin:0;font-size:14.5px;color:#D7DBE0;}
+.hr{border:none;border-top:1px solid #22262E;margin:36px 0;}
+ul,ol{margin:0 0 16px;padding-right:1.4em;}
+li{margin-bottom:8px;}
+li b{color:#E4E7EA;}
+.srcs{border:1px solid #262A31;border-radius:4px;background:#10131A;padding:20px 24px;margin:36px 0;}
+.srcs h3{margin:0 0 10px;font-size:16px;}
+.srcs p{margin:0 0 8px;font-size:13.5px;color:#9AA2AC;line-height:2;}
+footer{border-top:1px solid #262A31;margin-top:60px;background:#0d1016;}
+footer .wrap{max-width:860px;margin:0 auto;padding:28px 22px 40px;font-size:13px;color:#8C939B;line-height:2;}
+footer .sig{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;color:#D7DCE2;}
+footer .brand{display:flex;align-items:center;gap:8px;font-family:'Sora','Estedad',sans-serif;letter-spacing:.1em;font-size:14px;}
+footer .brand img{width:26px;height:26px;}
+.legal{margin:0;font-size:12px;}
+.num{font-variant-numeric:tabular-nums;}
+/* day theme (gentle, matches site-wide toggle) */
+html[data-theme="day"]{background:#F5F4F0;}
+html[data-theme="day"] body{color:#1E2228;}
+html[data-theme="day"] .sitebar{background:rgba(245,244,240,.92);border-color:#E2E0D8;}
+html[data-theme="day"] .sitebar a{color:#5C636C;}
+html[data-theme="day"] .lede{color:#585E66;}
+html[data-theme="day"] .rule{background:#fff;border-color:#E2E0D8;border-top-color:#E5202A;}
+html[data-theme="day"] .srcs{background:#fff;border-color:#E2E0D8;}
+html[data-theme="day"] footer{background:#F0EFEA;border-color:#E5E0D8;}
+html[data-theme="day"] figure img{border-color:#E2E0D8;}
+</style>
+</head>
+<body>
+
+<header class="sitebar"><div class="row">
+  <a class="home" href="index.html"><img src="navidix-mark.png" alt="" /><span>NAVIDIX</span></a>
+  <a href="index.html">صفحه‌ی اصلی ←</a>
+</div></header>
+
+<main>
+  <div class="eyebrow">مقاله · هوش مصنوعی ویدیو</div>
+  <h1>ویدیوهای هوش مصنوعی چطور ساخته می‌شوند؟</h1>
+  <p class="lede">همان کلیپ‌هایی که هر روز می‌بینی — تابلویی که جان می‌گیرد یا موجی که می‌شکند — هیچ‌کدام «فیلم‌برداری» نشده‌اند؛ همه «محاسبه» شده‌اند. فهمیدنِ اینکه این اتفاق چطور می‌افتد، فرق بین جنگیدن با ابزار و هدایت کردنش است.</p>
+
+  <figure>
+    <img src="og-video-genai.png" alt="نقاشی رنگ‌نگون کلاسیک؛ یک سه‌پای در استودیوی شمع‌سوخ، و از بانه‌اش تصویری نورانی در حال حرکت بیرون می‌زند" width="2720" height="1536" decoding="async" />
+    <figcaption>کاور تولیدشده با Seedream — استودیوی نقاش که در آن از بوم، تصویری زنده بیرون می‌زند.</figcaption>
+  </figure>
+
+  <section>
+    <h2>از نویز تا فریم</h2>
+    <p>هر تولید ویدیو با <b>نویز خالص</b> شروع می‌شود — همان برفکِ تلویزیون قدیمی. مدل، قدم‌به‌قدم و در ده‌ها مرحله، این نویز را تمیز می‌کند تا به فریمی برسد که با توصیف تو جور دربیاید. به این زنجیره «دیفیوژن» می‌گویند: در آموزش، مدل می‌بیند که یک ویدیوی واقعی چطور قدم‌به‌قدم خراب می‌شود، و یاد می‌گیرد همان مسیر را برعکس طی کند.</p>
+    <p>گام‌های اول شکل و رنگ را می‌سازند؛ گام‌های پایانی جزئیات را تیز می‌کنند. به همین دلیل است که هیچ‌چیز در خروجی «از جایی» نمی‌آید — همه‌چیز از دل نویز بیرون کشیده می‌شود.</p>
+    <div class="rule"><span class="tag">نکته</span><p>اگر فکر می‌کنی مدل «اتفاقی» چیزی می‌سازد، این را یادت باشد: هیچ تصادفی در کار نیست؛ یک فرآیندِ بسیار دقیقِ تدریجی پشت هر فریم است.</p></div>
+  </section>
+
+  <section>
+    <h2>چرا هیچ‌کس روی پیکسل کار نمی‌کند</h2>
+    <p>کار کردن روی پیکسل‌های خامِ یک ویدیوی چندثانیه‌ای آن‌قدر سنگین است که هیچ مدلی این کار را نمی‌کند. ویدیو اول به یک <b>فضای فشرده</b> (latent space) ترجمه می‌شود — نسخه‌ی فشرده‌ای که فقط ویژگی‌های اصلی را نگه می‌دارد — و کل محاسبه‌ها همان‌جا انجام می‌شود. در پایان، یک «دیکودر» نتیجه را دوباره به پیکسل‌های واقعی برمی‌گرداند.</p>
+    <p>در برخی مدل‌ها این فشرده‌سازی به نسبت چشمگیر <b>۱ به ۱۹۲</b> می‌رسد: یک بلوک ۳۲×۳۲×۸ پیکسلی (عرض، ارتفاع و چند فریم از زمان) در یک تک‌تکه‌ی فشرده خلاصه می‌شود. بدون این ترفند، تولید هیچ کلیپی مقرون‌به‌صرفه نبود.</p>
+  </section>
+
+  <section>
+    <h2>ترفند مکعب‌های فضا-زمان</h2>
+    <p>مدل‌های جدید مثل سورا، ویدیو را تکه‌تکه می‌کنند — مثل اینکه کوهی از فریم‌ها را برداری و از آن مکعب‌های ریز برش بزنی — و بعد به هر تکه اجازه می‌دهند به همه‌ی تکه‌های دیگر «توجه» کند. همین سازوکار است که باعث می‌شود چهره بین فریم‌ها آب نشود و چیزی ناگهان ظاهر یا ناپدید نگردد.</p>
+    <p class="intro">این تکه‌تکه‌کردن یک مزیت جانبی هم دارد: چون بصیرتِ تکه‌ها به اندازه و جهت فریم بستگی ندارد، یک مدل می‌تواند با همان معماری، ویدیوی عمودی موبایل یا فیلم سینمایی پهن تولید کند.</p>
+  </section>
+
+  <section>
+    <h2>سخت‌ترین بخش: پیوستگی در زمان</h2>
+    <p>ساختِ یک فریمِ زیبا آسان است؛ سخت، وادار کردنِ صد و بیست فریم است به اینکه با هم حرف بزنند: همان آدم، همان لباس، همان نور، بارها و بارها. به این «پیوستگی زمانی» می‌گویند، و بدجنس‌ترین بخشِ فنی صنعت است. در معماری‌های جدید، هر فریم هنگام تولید «می‌بند» فریم‌های قبل را هم می‌بیند تا اتفاق‌ها پیوسته باشند.</p>
+  </section>
+
+  <section>
+    <h2>هنوز کجا می‌لنگد؟</h2>
+    <p>خودِ سازنده‌ها صادقانه‌تر از بقیه این محدودیت‌ها را گفته‌اند:</p>
+    <ul>
+      <li><b>فیزیک</b> — OpenAI نوشته که مدل «فیزیک دقیق بسیاری از تعامل‌های ساده، مثل شکستن شیشه را شبیه‌سازی نمی‌کند» و غذا خوردن هم «همیشه به همین تغییرهای درست در جسم ختم نمی‌شود».</li>
+      <li><b>کلام طبیعی</b> — گوگل اعلام کرده که تولید صدای طبیعی و پایدار، به‌خصوص در بخش‌های کوتاه، «هنوز حوزه‌ای فعال در توسعه است».</li>
+      <li><b>متن روی تصویر</b> — برچسب‌ها، کد، نمودار و تیتر، دقیقاً چیزی است که این مدل‌ها کم‌توان‌ترندش را دارند.</li>
+      <li><b>طول</b> — کلیپ‌های بلند امروز در عمل نه «ساخته» که «تکه‌تکه تولید و کنارِ هم چیده» می‌شوم؛ واحد عملیِ تولید هنوز چند ثانیه است.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>تازه‌ترین اتفاق: صدا و تصویر با هم متولد می‌شوند</h2>
+    <p>سال‌ها ویدیوهای هوش مصنوعی <b>صامت</b> بودند؛ صدای ساخته‌شده را بعداً روی آن می‌چسبانیدند و زمان‌بندی هیچ‌وقت دقیق نمی‌شد. در Veo 3 گوگل این عوض شد: دیالوگ، صدای محیط و افکت در همان مسیرِ تولیدِ تصویر ساخته می‌شوند، روی یک زمان‌بندی مشترک — تا قدم‌ها روی زمین بیفتند و لب‌ها با حرف‌ها جور باشند. به‌قول دمیس حسابیس: «در حال خروج از عصر صامتِ تولید ویدیو هستیم.»</p>
+  </section>
+
+  <section>
+    <h2>پس چه به دردت می‌خورد؟</h2>
+    <p>وقتی بدانی مدل از کجا آمده و کجا می‌ایستد، دعوا کردن با ابزار عوض می‌شود با کارِ درست با ابزار: پرامپت‌های طولانی‌تر و دقیق‌تر — سوژه، حرکت، نور، دوربین — به مدل «لنگر» می‌دهد که همین لنگرهاست که پیوستگی را نگه می‌دارد. و وقتی خروجی خراب شد، دیگر به ماشین فحش نمی‌دهی؛ می‌دانی که کدام محدودیت تویِ راه است.</p>
+    <div class="rule"><span class="tag cool">جمع‌بندی</span><p>ویدیوی هوش مصنوعی چیزی مانند ظهور یک فیلم از کسری است: جای «ضبط»، «محاسبه» است، و نصیب تو از این فهم، پرامپتِ بهتر و انتظارِ واقع‌بینانه‌تر است.</p></div>
+  </section>
+
+  <section class="srcs">
+    <h3>برای مطالعه‌ی بیشتر</h3>
+    <p>این مقاله بر پایه‌ی گزارش MIT Technology Review درباره‌ی مدل‌های مولد ویدیو نوشته شده، به‌همراه مستندات رسمی OpenAI و Google DeepMind.</p>
+    <p>منبع اصلی: <a href="https://www.technologyreview.com/2025/09/12/1123562/how-do-ai-models-generate-videos/" rel="noopener" style="color:#E5202A">How do AI models generate videos? — MIT Technology Review</a></p>
+    <p>تاریخ نگارش: ۳۰ مرداد ۱۴۰۵. ساختار این مطالب کهنه نمی‌شود؛ نام مدل‌ها ممکن است عوض شود.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="sig">
+      <div>نوشته‌ی <b>استودیو نویدیکس</b> — هوش مصنوعی کاربردی</div>
+      <div class="brand"><img src="navidix-mark.png" alt="Navidix" width="26" height="26" /><span>NAVIDIX</span></div>
+    </div>
+    <p class="legal">© ۱۴۰۵ <b>استودیو نویدیکس</b> — تمام حقوق محفوظ است. بازنشر با ذکر منبع آزاد است، فروشش نه.</p>
+  </div>
+</footer>
+
+</body>
+</html>
