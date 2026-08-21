@@ -575,7 +575,12 @@
       var x = a.published_at || '', y = b.published_at || '';
       if (!x) return 1;
       if (!y) return -1;
-      return x < y ? 1 : x > y ? -1 : 0;
+      if (x !== y) return x < y ? 1 : -1;
+      /* Two rows published at the same instant would otherwise land in
+         whatever order they arrived, which differs between the two
+         publishers and between page loads. The slug is arbitrary but it
+         is the same every time, which is the point. */
+      return (a.slug || '') < (b.slug || '') ? 1 : -1;
     });
     return out;
   }

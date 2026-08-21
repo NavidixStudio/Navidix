@@ -67,3 +67,17 @@ seo_keywords: ویدیو هوش مصنوعی, پیوستگی, تدوین, تول
 و این تفاوت، دقیقاً همان چیزی است که کار یک فیلم‌ساز را از کار یک تولیدکننده‌ی تصویر جدا می‌کند. تا روزی که مدل‌ها یاد بگیرند جهانی را به خاطر بسپارند و نه فقط قابی را بسازند، آن تفاوت سر جایش می‌ماند.
 
 نوشته‌های دیگر استودیو در [فهرست مقاله‌ها](articles.html) هست.
+
+---
+
+اگر می‌خواهی همین پیوستگی را در کار خودت به دست بیاوری، دو درس دقیقاً دربارهٔ آن‌اند: [پرامپت‌نویسی ویدیو: از قاب ثابت تا حرکت کنترل‌شده](video-motion.html) که زنجیره‌کردن نماها را باز می‌کند، و [تدوین و صدا](edit-sound.html) که نشان می‌دهد چطور صدای پیوسته، ناپیوستگی تصویر را می‌پوشاند. [نور و ترکیب‌بندی](light-composition.html) هم دربارهٔ همان تصمیمی است که مدل جایش را نمی‌گیرد.
+
+## منابع
+
+- «Image-to-Video Diffusion: From Foundations to Open Frontiers»، arXiv:2605.17248 — [arxiv.org](https://arxiv.org/pdf/2605.17248)
+- «Video Consistency Distance: Enhancing Temporal Consistency for Image-to-Video Generation via Reward-Based Fine-Tuning»، arXiv:2510.19193 — [arxiv.org](https://arxiv.org/html/2510.19193v2)
+- «TokenFlow: Consistent Diffusion Features for Consistent Video Editing»، arXiv:2307.10373 — [arxiv.org](https://arxiv.org/pdf/2307.10373)
+- «Making Time Editable in Video Diffusion Transformers»، arXiv:2606.10183 — [arxiv.org](https://arxiv.org/pdf/2606.10183)
+- «Enhancing Temporal Consistency in Video Editing by Reconstructing Videos with 3D Gaussian Splatting»، arXiv:2406.02541 — [arxiv.org](https://arxiv.org/html/2406.02541)
+
+*محمد نویدی — استودیو نویدیکس*

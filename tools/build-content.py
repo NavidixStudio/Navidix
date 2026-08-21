@@ -74,8 +74,14 @@ def parse(path: pathlib.Path) -> dict:
     if not re.fullmatch(r'[a-z0-9][a-z0-9-]*', meta['slug']):
         raise ValueError('slug فقط حروف کوچک انگلیسی، عدد و خط تیره: ' + meta['slug'])
 
-    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', meta['date']):
-        raise ValueError('date باید YYYY-MM-DD باشد: ' + meta['date'])
+    # ساعت اختیاری است، ولی وقتی دو مقاله در یک روز منتشر شوند تنها چیزی
+    # است که ترتیبشان را معنادار می‌کند. بدون آن، مرتب‌سازی روی تاریخِ تنها
+    # مساوی می‌شود و ترتیب نهایی به نام فایل می‌افتد — که هیچ ربطی به
+    # «تازه‌ترین» ندارد.
+    m = re.fullmatch(r'(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}):(\d{2}))?', meta['date'])
+    if not m:
+        raise ValueError('date باید YYYY-MM-DD یا YYYY-MM-DD HH:MM باشد: ' + meta['date'])
+    day, hh, mm = m.group(1), m.group(2) or '00', m.group(3) or '00'
 
     return {
         'slug':            meta['slug'],
@@ -89,7 +95,7 @@ def parse(path: pathlib.Path) -> dict:
         'seo_keywords':    meta.get('seo_keywords', []),
         # همان شکلی که ستون published_at در پایگاه داده دارد، تا سایت
         # مجبور نباشد دو جور تاریخ را از هم تشخیص بدهد
-        'published_at':    meta['date'] + 'T00:00:00Z',
+        'published_at':    '%sT%s:%s:00Z' % (day, hh, mm),
         'source':          'repo',
     }
 
@@ -119,7 +125,9 @@ def main() -> int:
         seen[r['slug']] = True
 
     # تازه‌ترین اول، همان ترتیبی که سایت می‌خواهد
-    rows.sort(key=lambda r: r['published_at'], reverse=True)
+    # تازه‌ترین اول. slug به‌عنوان شکنندهٔ تساوی می‌آید تا اگر دو مقاله
+    # دقیقاً یک زمان داشتند، ترتیب بین دو بار ساختن عوض نشود.
+    rows.sort(key=lambda r: (r['published_at'], r['slug']), reverse=True)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + '\n',
