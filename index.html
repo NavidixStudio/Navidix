@@ -1915,7 +1915,12 @@ const NAVIDIX = (() => {
          exist. The heading says what the row is, in either language, and the
          row itself stays honest about what the reader is about to open. */
       en: { tagline:'Independent science & technology media',
-            pitch:'Navidix Studio — where research, cinema and artificial intelligence meet.',
+            /* The English line is written in English rather than translated
+               from the Persian. A translation of "where research, cinema and
+               artificial intelligence meet" reads like a caption; this reads
+               like a studio's own strapline, which is what a reader who has
+               switched to EN came for. The Persian keeps its own sentence. */
+            pitch:'Navidix — AI × Creative Technology × Visual Systems',
             ctaMain:'Studio services', ctaTalk:'Start a conversation', ctaTube:'Subscribe on YouTube',
             xEyebrow:'Interactive science platform', xTitle:'Read the science, or run it yourself',
             xSub:'Five live experiments in the browser. Move a control and see the real answer — computed on the spot, not a pre-rendered animation.',
