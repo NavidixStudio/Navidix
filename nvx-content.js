@@ -131,7 +131,14 @@
       var h = /^(#{1,4})\s+(.*)$/.exec(line);
       if (h) {
         flushPara(); flushList();
-        var lvl = Math.min(h[1].length + 1, 5);
+        /* '##' is a section heading and becomes an h2, not an h3. The +1
+           that used to be here was reserving h1 for the article's title,
+           which is right - but it also meant every article ran h1 then h3
+           and skipped a level, which a screen reader announces as a
+           missing section and a search engine reads as a broken outline.
+           The floor of 2 keeps a stray '#' in a body from opening a
+           second h1 on the page. */
+        var lvl = Math.max(2, Math.min(h[1].length, 4));
         html.push('<h' + lvl + '>' + inline(h[2]) + '</h' + lvl + '>');
         return;
       }
