@@ -217,11 +217,31 @@
   function styles() {
     var css = document.createElement('style');
     css.textContent = [
-      '.nvxp{margin:44px 0 8px;padding:20px 22px;border-radius:14px;',
+      /* The panel is a sibling of the .wrap blocks the lesson text lives
+         in, not a child of one - it has to be, because the element it
+         anchors to differs from page to page. So it gets the reading
+         column's measure explicitly instead of inheriting it. Without
+         this it ran the full width of the viewport - 1400px against a
+         980px column - on every lesson whose footer sits outside .wrap.
+         The 44px is that column's own two 22px gutters, so the panel's
+         edge lines up with the text rather than overhanging it. */
+      '.nvxp{margin:44px auto 8px;max-width:calc(var(--maxw,980px) - 44px);',
+      '  padding:20px 22px;border-radius:14px;',
       '  border:1px solid #313947;background:linear-gradient(158deg,#1C2430,#141A23);',
       '  box-shadow:inset 0 1px 0 rgba(226,238,255,.07);}',
       '.nvxp__q{margin:0 0 14px;font-size:15px;line-height:1.9;color:#EDF2FA;font-weight:600;}',
-      '.nvxp__row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}',
+      /* The button and the tally used to sit next to each other at the
+         start edge, which left most of a 938px panel empty and made the
+         whole block read as broken rather than roomy. Pushed apart, the
+         width is being used on purpose: the action at one end, the count
+         at the other, the progress bar joining them underneath. */
+      '.nvxp__row{display:flex;align-items:center;justify-content:space-between;',
+      '  gap:14px;flex-wrap:wrap;}',
+      /* On a phone there is no width to push anything across, so they
+         stack and the button takes the full row - a 44px target rather
+         than a chip floating beside text. */
+      '@media (max-width:560px){.nvxp__row{justify-content:flex-start;}',
+      '  .nvxp__btn{flex:1 1 100%;}}',
       '.nvxp__btn{appearance:none;border:1px solid #3A4250;background:#12161C;color:#EDF2FA;',
       '  font:inherit;font-size:13.5px;font-weight:600;padding:11px 20px;border-radius:10px;',
       '  cursor:pointer;transition:border-color .25s,background .25s,transform .2s;}',

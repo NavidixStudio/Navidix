@@ -155,14 +155,18 @@ code.ph{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:.92em; colo
    actually reserving the full height anyway. Docking it right below the
    header fixes that and the padding below is trimmed on top of it, so the
    space it keeps is space it earns. */
-.bar{ position:sticky; top:52px; z-index:20; margin:clamp(18px,3vh,26px) -22px clamp(22px,3vh,30px);
-  padding:9px 22px; background:rgba(8,9,11,.94);
+/* نوار فیلتر چسبان است، پس هر پیکسل ارتفاعش را از فضای خواندن کم می‌کند.
+   اندازه‌گیری‌شده: ۱۳۵ پیکسل روی دسکتاپ و ۲۰۲ روی گوشی، برای یک کادر
+   جست‌وجو و چند تراشه. سه ردیف به دو ردیف تبدیل شد — شمارنده و کلید
+   چگالی کنار تراشه‌ها نشستند — و ارتفاع خود کنترل‌ها هم کم شد. */
+.bar{ position:sticky; top:52px; z-index:20; margin:clamp(14px,2.4vh,20px) -22px clamp(16px,2.4vh,22px);
+  padding:7px 22px; background:rgba(8,9,11,.94);
   -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border-bottom:1px solid #1b1e24; }
 .bar__box{ position:relative; display:block; }
 .bar__box > svg{ position:absolute; inset-inline-start:14px; top:50%; transform:translateY(-50%);
   width:15px; height:15px; color:#6B7280; pointer-events:none; }
-.q{ width:100%; box-sizing:border-box; padding:9px 42px; background:#0C0F13; border:1px solid #262A31;
-  border-radius:4px; color:#E9EDF2; font-family:inherit; font-size:14px; line-height:1.6;
+.q{ width:100%; box-sizing:border-box; padding:7px 40px; background:#0C0F13; border:1px solid #262A31;
+  border-radius:4px; color:#E9EDF2; font-family:inherit; font-size:13.5px; line-height:1.55;
   transition:border-color .25s ease, background .25s ease; }
 .q::placeholder{ color:#6B7280; }
 .q:focus{ outline:none; border-color:rgba(229,32,42,.55); background:#12151a; }
@@ -171,14 +175,35 @@ code.ph{ font-family:ui-monospace,Menlo,Estedad,monospace; font-size:.92em; colo
   line-height:1; display:none; place-items:center; padding:0; }
 .qx:hover{ background:#E5202A; color:#fff; }
 .bar.has-q .qx{ display:grid; }
-.chips{ display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
-.chip{ font-family:inherit; font-size:12.5px; line-height:1; cursor:pointer; padding:6px 13px;
+.chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+/* روی گوشی، هفت تراشه در چند ردیف می‌پیچیدند و نوار چسبان را به ۱۷۹
+   پیکسل می‌رساندند — یعنی یک‌پنجم صفحه، همیشه. یک ردیف که افقی اسکرول
+   می‌شود همان انتخاب‌ها را می‌دهد بدون اینکه ارتفاع بگیرد. لبه‌ی محو
+   سمت چپ نشان می‌دهد که ادامه دارد. */
+@media (max-width:699.98px){
+  .chips{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none;
+    -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity;
+    margin-inline:-22px; padding-inline:22px;
+    -webkit-mask-image:linear-gradient(to left, #000 88%, transparent);
+    mask-image:linear-gradient(to left, #000 88%, transparent); }
+  .chips::-webkit-scrollbar{ display:none; }
+  .chip{ flex:0 0 auto; scroll-snap-align:start; }
+}
+.chip{ font-family:inherit; font-size:12px; line-height:1; cursor:pointer; padding:5px 11px;
   border-radius:100px; color:#B9C0C8; background:transparent; border:1px solid #262A31;
   transition:border-color .2s ease, color .2s ease, background .2s ease; }
 .chip:hover{ border-color:#3a4049; color:#E9EDF2; }
 .chip[aria-pressed="true"]{ background:rgba(229,32,42,.14); border-color:rgba(229,32,42,.6); color:#fff; }
 .chip:focus-visible{ outline:1px solid #5BD6C0; outline-offset:2px; }
-.bar__foot{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:7px; }
+/* روی صفحه‌های عریض، شمارنده و کلید چگالی به همان ردیف تراشه‌ها می‌روند
+   و یک ردیف کامل از ارتفاع نوار حذف می‌شود. زیر ۷۰۰ پیکسل جا نیست، پس
+   همان‌جا ردیف خودش را می‌گیرد. */
+.bar__foot{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:5px; }
+@media (min-width:700px){
+  .bar__row2{ display:flex; align-items:center; gap:14px; margin-top:6px; }
+  .bar__row2 .chips{ margin-top:0; flex:1 1 auto; }
+  .bar__row2 .bar__foot{ margin-top:0; flex:0 0 auto; gap:14px; }
+}
 .tally{ margin:0; font-size:13px; color:#6B7280; }
 /* ---- grid density (S/M/L) ----
    --pc-min drives .cards2's auto-fill minmax; a class on <body> picks the
@@ -277,7 +302,12 @@ picture{ display:contents; }
 '''
 
 DETAIL_CSS = '''
-.sd{ max-width:920px; margin:0 auto; padding:clamp(40px,7vh,80px) 22px 80px; color:#D7DEE7; }
+/* بالای صفحه باید از زیر نوار ثابت رد شود. اندازه‌گیری شد: نوار روی
+   دسکتاپ ۵۹ و روی گوشی ۵۵ پیکسل است. مقدار قبلی ۶۳ پیکسل بود، یعنی فقط
+   چهار پیکسل فاصله — که عملاً یعنی خط اول به لبه‌ی نوار چسبیده بود و با
+   یک پیکسل اسکرول زیرش می‌رفت. */
+.sd{ max-width:920px; margin:0 auto; padding:clamp(88px,7vh,104px) 22px 80px; color:#D7DEE7; }
+@media (max-width:560px){ .sd{ padding-top:84px; } }
 .sd__crumb{ font-size:12.5px; color:#7C848D; margin-bottom:16px; }
 .sd__crumb a{ color:#8C939B; text-decoration:none; } .sd__crumb a:hover{ color:#E5202A; }
 .sd h1{ font-size:clamp(26px,4.6vw,42px); line-height:1.38; margin:0 0 8px; font-weight:800; letter-spacing:-.01em; color:#F2F6FB; }
@@ -659,6 +689,7 @@ index_body = f'''
              aria-label="جست‌وجو در کتابخانه" aria-describedby="tally">
       <button class="qx" id="qx" type="button" aria-label="پاک کردن جست‌وجو">×</button>
     </label>
+    <div class="bar__row2">
     <div class="chips" id="chips" role="group" aria-label="دسته‌بندی">
       <button class="chip" type="button" data-cat="all" aria-pressed="true">همه</button>
 {chips}
@@ -670,6 +701,7 @@ index_body = f'''
         <button class="density__btn" type="button" data-size="m" aria-pressed="true" aria-label="نمایش متوسط — پیش‌فرض">M</button>
         <button class="density__btn" type="button" data-size="l" aria-pressed="false" aria-label="نمایش بزرگ — کارت‌های درشت‌تر">L</button>
       </div>
+    </div>
     </div>
   </div>
   <!-- پرامپت‌هایی که از پنل منتشر می‌شوند. تا وقتی جدول خالی است این بخش
