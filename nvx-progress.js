@@ -218,39 +218,47 @@
     var css = document.createElement('style');
     css.textContent = [
       /* The panel is a sibling of the .wrap blocks the lesson text lives
-         in, not a child of one - it has to be, because the element it
-         anchors to differs from page to page. So it gets the reading
-         column's measure explicitly instead of inheriting it. Without
-         this it ran the full width of the viewport - 1400px against a
-         980px column - on every lesson whose footer sits outside .wrap.
-         The 44px is that column's own two 22px gutters, so the panel's
-         edge lines up with the text rather than overhanging it. */
-      '.nvxp{margin:44px auto 8px;max-width:calc(var(--maxw,980px) - 44px);',
-      '  padding:20px 22px;border-radius:14px;',
-      '  border:1px solid #313947;background:linear-gradient(158deg,#1C2430,#141A23);',
-      '  box-shadow:inset 0 1px 0 rgba(226,238,255,.07);}',
-      '.nvxp__q{margin:0 0 14px;font-size:15px;line-height:1.9;color:#EDF2FA;font-weight:600;}',
-      /* The button and the tally used to sit next to each other at the
-         start edge, which left most of a 938px panel empty and made the
-         whole block read as broken rather than roomy. Pushed apart, the
-         width is being used on purpose: the action at one end, the count
-         at the other, the progress bar joining them underneath. */
-      '.nvxp__row{display:flex;align-items:center;justify-content:space-between;',
-      '  gap:14px;flex-wrap:wrap;}',
-      /* On a phone there is no width to push anything across, so they
-         stack and the button takes the full row - a 44px target rather
-         than a chip floating beside text. */
-      '@media (max-width:560px){.nvxp__row{justify-content:flex-start;}',
-      '  .nvxp__btn{flex:1 1 100%;}}',
+         in, not a child of one, so it cannot inherit the reading measure -
+         it has to state its own. It used to state the full 980px column
+         and fill it with a bordered, gradient-backed card, which at the
+         end of a lesson landed like a second article rather than like a
+         full stop. It is one question with one answer. So: a hairline, a
+         narrow centred stack, and nothing else. No box, no fill, no
+         shadow - the rule above it is the whole frame it needs. */
+      /* Qualified by its tag on purpose. Lesson pages carry
+         `.lesson section{padding:48px 0}`, which is one class and one
+         type - more specific than a bare `.nvxp`, so the padding written
+         here was being thrown away and the panel kept a 48px band of
+         empty above and below it. `section.nvxp` matches that weight, and
+         this sheet is appended after the page's own, so it wins. */
+      'section.nvxp{margin:50px auto 6px;max-width:390px;padding:26px 18px 0;',
+      '  text-align:center;border-top:1px solid rgba(226,238,255,.09);}',
+      /* Lesson pages style `.lesson p` by type as well, for the same
+         reason. */
+      'p.nvxp__q{margin:0 0 15px;font-size:13px;line-height:1.85;color:#98A0AA;',
+      '  font-weight:500;text-align:center;}',
+      /* Centred and stacked at every width. The old row pushed the button
+         and the tally to opposite ends of a 938px panel, which is a
+         layout for a toolbar, not for one question. */
+      '.nvxp__row{display:flex;flex-direction:column;align-items:center;gap:11px;}',
       '.nvxp__btn{appearance:none;border:1px solid #3A4250;background:#12161C;color:#EDF2FA;',
-      '  font:inherit;font-size:13.5px;font-weight:600;padding:11px 20px;border-radius:10px;',
+      '  font:inherit;font-size:13px;font-weight:600;padding:9px 24px;border-radius:99px;',
       '  cursor:pointer;transition:border-color .25s,background .25s,transform .2s;}',
       '.nvxp__btn:hover{border-color:rgba(150,196,255,.55);transform:translateY(-1px);}',
       '.nvxp.is-done .nvxp__btn{background:#7FB8FF;border-color:#7FB8FF;color:#08090B;}',
-      '.nvxp__meta{font-size:12.5px;color:#8C939B;line-height:1.9;}',
-      '.nvxp__next{font-size:13px;color:#7FB8FF;font-weight:600;text-decoration:none;}',
-      '.nvxp__next:hover{color:#A9CEFF;}',
-      '.nvxp__bar{height:5px;border-radius:99px;background:#181C23;overflow:hidden;margin:14px 0 0;}',
+      '.nvxp__meta{font-size:11.5px;color:#818892;line-height:1.9;}',
+      /* Lesson pages underline every link with a border, which under a
+         centred one-line call to action reads as a stray rule across the
+         panel rather than as a link. The colour and the arrow already say
+         it is one. */
+      'a.nvxp__next{display:inline-block;margin-top:14px;border:0;',
+      '  font-size:12.5px;color:#7FB8FF;font-weight:600;text-decoration:none;}',
+      'a.nvxp__next:hover{color:#A9CEFF;border:0;}',
+      /* A hairline, not a bar. It is a footnote to the count above it -
+         at five pixels across the whole panel it was the loudest thing
+         in the block. */
+      '.nvxp__bar{height:2px;width:150px;border-radius:99px;background:#20252E;',
+      '  overflow:hidden;margin:15px auto 0;}',
       '.nvxp__bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#E5202A,#7FB8FF);',
       '  transition:width .8s cubic-bezier(.16,1,.3,1);}',
       /* the strip on training.html */

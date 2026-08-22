@@ -65,22 +65,44 @@
       '  opacity:0;transition:opacity .5s cubic-bezier(.16,1,.3,1);pointer-events:none}',
       '.nvxo::-webkit-scrollbar{display:none}',
       '.nvxo.is-in{opacity:1;pointer-events:auto}',
-      '.nvxo__a{display:block;position:relative;padding:6px 0 6px 12px;',
-      '  font-family:inherit;font-size:12px;line-height:1.65;text-decoration:none;',
-      '  color:rgba(200,208,218,.34);',
-      '  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;',
+      /* Named, not inherited. The rail hangs off <body>, and no page on
+         this site sets a font on <body> - the faces are declared on the
+         reading containers instead. So font-family:inherit resolved to
+         the browser default, and every label came out in Times New Roman:
+         a face with no Persian design, stroke weights all over the place,
+         which is exactly what "the fonts look patchy" describes. */
+      '.nvxo__a{display:block;position:relative;',
+      '  padding-block:5px;padding-inline:14px 0;',
+      '  font-family:"Estedad","IRANSansX","IRANSans","Segoe UI",Tahoma,sans-serif;',
+      '  font-size:12.5px;line-height:1.75;text-decoration:none;',
+      /* 34% of the paper colour on this ground is about 1.6:1 - below the
+         threshold where small Persian type is legible at all, and it read
+         as half-erased rather than as quiet. 52% is the site's own dim
+         paper, used on every other secondary line, and it clears AA. */
+      '  color:rgba(237,242,250,.52);',
+      /* Two lines, then clip. Persian section names run long, and one
+         line plus an ellipsis cut the title mid-word on three of eight
+         entries - a table of contents whose entries you cannot read is
+         not one. */
+      '  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;',
+      '  overflow:hidden;',
       '  transition:color .3s ease}',
       /* The tick is the whole indicator: a hairline that grows and takes
          the brand colour on the section you are in. No box, no fill -
          anything heavier competes with the text it is meant to serve. */
-      '.nvxo__a::before{content:"";position:absolute;inset-block:9px auto;height:11px;',
-      '  inset-inline-start:0;width:1px;background:rgba(150,180,225,.3);',
+      /* The tick used to sit at inset-inline-start:0 against a physical
+         padding-left, so on a right-to-left page the padding opened a gap
+         on the far side and the hairline was drawn straight over the
+         first letter of every label. Both are logical now, so the tick
+         keeps its own 14px on the side the text actually begins. */
+      '.nvxo__a::before{content:"";position:absolute;inset-block-start:8px;height:11px;',
+      '  inset-inline-start:0;width:1px;background:rgba(150,180,225,.34);',
       '  transition:background .3s ease,height .3s ease,inset-block-start .3s ease}',
-      '.nvxo__a:hover{color:rgba(237,242,250,.9)}',
+      '.nvxo__a:hover{color:rgba(237,242,250,.92)}',
       '.nvxo__a:hover::before{background:rgba(150,180,225,.7)}',
       '.nvxo__a:focus-visible{outline:1px solid #7FB8FF;outline-offset:2px;border-radius:3px}',
       '.nvxo__a.is-here{color:#EDF2FA}',
-      '.nvxo__a.is-here::before{background:#E5202A;height:19px;inset-block-start:5px}',
+      '.nvxo__a.is-here::before{background:#E5202A;height:22px;inset-block-start:5px}',
       '@media (prefers-reduced-motion:reduce){',
       '  .nvxo,.nvxo__a,.nvxo__a::before{transition:none}}'
     ].join('');
