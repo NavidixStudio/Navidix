@@ -172,6 +172,22 @@
        came out darker in day mode than at night. */
     'html.nvx-day body > *:not(.topbar) :is(img,video,canvas,iframe){',
     'filter:brightness(.6667) saturate(.893)}',
+    /* Same reciprocal, for the one kind of element whose colour IS the
+       content rather than a surface it is painted on: a palette swatch.
+       Lifting a photograph by 1.5 is fine — the eye reads it as the same
+       photograph in a brighter room. Lifting #D9A441 is not: it came out
+       #FFF751, because 217 x 1.5 is 325 and the red channel clipped flat
+       at 255. A style page that tells the reader "this is the palette"
+       was showing them a different palette in day mode.
+
+       Applying the reciprocal on the child means the child is filtered
+       first and the lifted result is what the parent then multiplies, so
+       nothing ever reaches the clamp: 217 x .6667 x 1.5 is 217 again.
+
+       [data-nvx-truecolor] is the same escape hatch for anything added
+       later that has to show an exact colour. */
+    'html.nvx-day body > *:not(.topbar) :is(.pal span,[data-nvx-truecolor]){',
+    'filter:brightness(.6667) saturate(.893)}',
     /* The bar sits outside every filtered region, so it is lifted by hand
        to land in the same place the rest of the page arrives at. */
     'html.nvx-day .topbar{background:rgba(26,34,50,.88);border-bottom-color:rgba(160,190,235,.18)}',
