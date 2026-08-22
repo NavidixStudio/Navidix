@@ -3,7 +3,7 @@
  "aspect_ratio": "3:2",
  "quality": "basic",
  "suffix": ". No text, lettering, signature or watermark.",
- "generated": "2026-08-16",
+ "generated": "2026-08-22",
  "plates": [
   {
    "id": "headshot",
@@ -312,6 +312,98 @@
   {
    "id": "bioluminescent",
    "job": "5791e046-4ca3-45b4-b73f-1eacd491e76e"
+  },
+  {
+   "id": "historypaint",
+   "job": "637f610b-748d-492c-b518-944ed36ec60e"
+  },
+  {
+   "id": "classiclandscape",
+   "job": "97424d89-1491-460f-b5cc-519fc45fbaa2"
+  },
+  {
+   "id": "marinepaint",
+   "job": "60d18440-bd85-4d46-8922-29ebfb5036d3"
+  },
+  {
+   "id": "synthwave",
+   "job": "a80be7fe-4a5d-4136-8574-3c25a7fd0ab0"
+  },
+  {
+   "id": "glitch",
+   "job": "c2063836-1d8f-4345-86da-f3f6e87441a4"
+  },
+  {
+   "id": "lowpoly",
+   "job": "f34f4e4f-9cea-43ca-8c32-e6652460059f"
+  },
+  {
+   "id": "memphis",
+   "job": "8e072546-16f2-435d-835c-827d4fe4f099"
+  },
+  {
+   "id": "brutalism",
+   "job": "87b494d7-d277-462d-bd56-fb2862dc28f4"
+  },
+  {
+   "id": "isometric",
+   "job": "aa1cf366-cdfb-4d3a-94e3-0b2d5b61da9f"
+  },
+  {
+   "id": "psychedelic",
+   "job": "787c5e6b-b90d-4de4-aeb1-6a77a7b15f43"
+  },
+  {
+   "id": "ottoman",
+   "job": "056810c1-2722-4d9f-8af7-15740bae5ff0"
+  },
+  {
+   "id": "gongbi",
+   "job": "ecd0788b-cd2e-44aa-9d7a-0bdeba6b0bce"
+  },
+  {
+   "id": "dunhuang",
+   "job": "445d2ca7-cde5-4d5d-bb27-5e889694009b"
+  },
+  {
+   "id": "africanmask",
+   "job": "ff49ebe6-6bb9-4c83-b3c3-b4790cc8f5e9"
+  },
+  {
+   "id": "mexicanfolk",
+   "job": "6e8a27ae-eaf8-43cd-8563-d56fa6c441d5"
+  },
+  {
+   "id": "arabiccalligraphy",
+   "job": "a6ce2ef9-4ee9-4327-ac4f-ba4b15cc07c9"
+  },
+  {
+   "id": "nastaliq",
+   "job": "a74b496a-36bf-4e17-ac08-e4450be7ae1d"
+  },
+  {
+   "id": "rajput",
+   "job": "cfef1681-3a39-4469-a1d0-946223a4c0a5"
+  },
+  {
+   "id": "birdflower",
+   "job": "b34cc51c-98a6-4982-bee9-6be0a23eb8bf"
+  },
+  {
+   "id": "dongho",
+   "job": "a6bcc659-9b35-476f-831a-ce3d6fc93c45"
+  },
+  {
+   "id": "mandala",
+   "job": "02c8cc42-6e8e-4509-a165-3383cf24f628"
+  },
+  {
+   "id": "sogdian",
+   "job": "0d69bd49-63bf-419b-b430-743552c4fcc5"
+  },
+  {
+   "id": "pichwai",
+   "job": "3d5aab2d-64bf-4779-8d1c-c55d238a118b"
   }
  ]
 }
