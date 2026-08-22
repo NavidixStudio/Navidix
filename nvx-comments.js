@@ -32,8 +32,25 @@
 (function () {
   'use strict';
 
+  /* This file is now loaded two ways: by the pages that name it directly,
+     and by nvx-topbar.js on every other page. Whichever arrives second
+     does nothing. */
+  if (window.NVX_COMMENTS) return;
+
   var CFG = window.NVX_SUPABASE;
   if (!CFG || !CFG.url || !CFG.key) return;
+
+  /* Pages that are a way in rather than a thing to talk about. A comment
+     box under a list of articles asks the reader to discuss the list.
+     Everything not named here gets a thread, which is the point: a page
+     added next month is covered without anybody remembering to do it.
+
+     Any page can decide for itself with data-nvx-comments="off". */
+  var NO_THREAD = {
+    index: 1, admin: 1, me: 1,
+    articles: 1, training: 1, journey: 1,
+    gallery: 1, channels: 1, collections: 1, documentaries: 1
+  };
 
   var URL_ = CFG.url.replace(/\/+$/, '');
   var MAX  = 2000;
@@ -63,9 +80,10 @@
   }
 
   function target() {
-    /* An explicit answer always wins. */
+    /* An explicit answer always wins — including "no". */
     var host = document.querySelector('[data-nvx-comments]');
     var said = host && host.getAttribute('data-nvx-comments');
+    if (said === 'off') return null;
     if (said && said.indexOf(':') > 0) {
       var p = said.split(':');
       return { type: p[0], slug: p.slice(1).join(':') };
@@ -87,6 +105,7 @@
     if (knownLesson(slug)) return { type: 'lesson', slug: slug };
     if (slug === 'prompts') return { type: 'prompt', slug: 'prompts' };
 
+    if (NO_THREAD[slug] && !host) return null;
     return { type: 'page', slug: slug };
   }
 

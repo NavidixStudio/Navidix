@@ -76,6 +76,22 @@ h2 + .hint{margin:0 0 16px}
 .kpi{background:var(--pane); border:1px solid var(--line2); border-radius:13px; padding:16px 17px}
 .kpi b{display:block; font-size:26px; font-weight:700; line-height:1.45; color:var(--ink)}
 .kpi span{display:block; font-size:11.5px; color:var(--mute); margin-top:1px}
+/* The headline block. Bigger numerals than the account KPIs beneath it,
+   because this is the one a person opens the page to read; the ember rule
+   along the top edge is the same one the site uses to mark a lead item. */
+.kpis--hero{grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:13px; margin-bottom:14px}
+.kpi--hero{position:relative; overflow:hidden; padding:19px 19px 17px}
+.kpi--hero::before{content:''; position:absolute; inset-block-start:0; inset-inline:0; height:2px;
+  background:linear-gradient(90deg,#E5202A,rgba(229,32,42,0))}
+.kpi--hero b{font-size:33px; letter-spacing:-.01em; font-variant-numeric:tabular-nums}
+.kpi--hero span{font-size:12.5px; color:var(--ink)}
+.kpi__sub{font-size:11px !important; color:var(--mute) !important; margin-top:5px !important}
+/* where the traffic came from — three lines, not a table */
+.srcbar{display:flex; flex-direction:column; gap:9px; padding:2px 0 10px}
+.srcbar__r{display:flex; align-items:center; gap:9px; font-size:12.5px}
+.srcbar__d{width:8px; height:8px; border-radius:50%; flex:none}
+.srcbar__n{color:var(--mute)}
+.srcbar__v{margin-inline-start:auto; color:var(--ink); font-variant-numeric:tabular-nums}
 
 .panel{background:var(--pane); border:1px solid var(--line2); border-radius:14px; padding:19px 20px}
 
@@ -140,6 +156,7 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
   .panel{padding:15px 13px}
   .kpi{padding:13px 14px}
   .kpi b{font-size:22px}
+  .kpi--hero b{font-size:27px}
 }
 @media (max-width:560px){
   table{font-size:12px}
@@ -647,12 +664,29 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
 
   /* Fills the last N days so a quiet day is a gap in the line, not a
      missing column that silently compresses the axis. */
+  /* The same calendar the database writes with. en-CA because it is the
+     one locale Intl guarantees as YYYY-MM-DD, which is the shape `day`
+     comes back in. */
+  var DAYFMT = null;
+  try { DAYFMT = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }); } catch (e) {}
+
+  function tehranDay(dt) {
+    if (DAYFMT) { try { return DAYFMT.format(dt); } catch (e) {} }
+    return new Date(dt.getTime() + 12600000).toISOString().slice(0, 10);   // +03:30
+  }
+
   function series(rows, key, days) {
     var out = [], by = {}, i;
     rows.forEach(function (r) { by[r.day] = (by[r.day] || 0) + Number(r[key] || 0); });
+    /* Tehran, not UTC. Every `day` in the database is written as
+       (now() at time zone 'Asia/Tehran')::date, and toISOString() is UTC —
+       so for the three hours between 00:00 and 03:30 Tehran time the key
+       built here named yesterday while the row said today, and every
+       chart was silently shifted by a day. Three hours out of twenty-four,
+       which is why it looked intermittent rather than broken. */
     var d = new Date();
     for (i = 0; i < days; i++) {
-      var k = new Date(d.getTime() - i * 864e5).toISOString().slice(0, 10);
+      var k = tehranDay(new Date(d.getTime() - i * 864e5));
       out.push({ k: k, v: by[k] || 0 });
     }
     return out;                                   // newest first
@@ -751,7 +785,146 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     document.getElementById('sub').textContent = '';
   }
 
-  function draw(over, daily, lessons, signups, traffic, users, refs) {
+  /* One number, big, at the top.
+
+     Everything under it was already true and none of it answered "how is
+     the site doing" — five KPIs about accounts and study minutes, then
+     six charts. This is the block you look at first and often leave at:
+     how many times the site has been opened, how many times something on
+     it was pressed, and how much of that came from a search engine.
+
+     A word about Google. What this can say is how many visits arrived
+     with google as the referrer. How many times the site was *shown* in
+     results, and at what position, is Search Console's data — a different
+     service with its own login, not something this database has ever
+     seen. The card says which of the two it is showing, because a number
+     labelled "Google" that quietly means something narrower is worse than
+     no number. */
+  function bigNumbers(t) {
+    var f = document.createDocumentFragment();
+
+    f.appendChild(el('h2', '', 'نمای کلی سایت'));
+    f.appendChild(el('p', 'hint',
+      'همه‌ی صفحه‌ها روی هم، از اولین روز' +
+      (t.since_day ? ' (' + t.since_day + ')' : '') +
+      ' تا همین حالا. بازدیدهای خودِ پنل و صفحه‌ی حسابت در این اعداد نیست.'));
+
+    var k = el('div', 'kpis kpis--hero');
+    [['کل بازدید صفحه‌ها', faBig(t.views_total), faBig(t.views_today) + ' امروز · ' + faBig(t.views_7d) + ' این هفته'],
+     ['کل کلیک‌ها',        faBig(t.clicks_total), faBig(t.clicks_out) + ' کلیک به بیرون از سایت'],
+     ['از گوگل آمده‌اند',   faBig(t.from_google), pct(t.from_google, t.views_total) + ' از کل بازدیدها'],
+     ['صفحه‌های بازدیدشده', faBig(t.pages_seen), 'صفحه‌ی متفاوت باز شده']
+    ].forEach(function (p) {
+      var c = el('div', 'kpi kpi--hero');
+      c.appendChild(el('b', 'num', p[1]));
+      c.appendChild(el('span', '', p[0]));
+      if (p[2]) c.appendChild(el('span', 'kpi__sub', p[2]));
+      k.appendChild(c);
+    });
+    f.appendChild(k);
+
+    /* Where the traffic came from, as one line rather than a table —
+       four numbers that add up to roughly the total and say, at a glance,
+       whether the site is being found or being sent. */
+    var src = el('div', 'srcbar');
+    [['جست‌وجو', t.from_search, '#7FB8FF'],
+     ['شبکه‌های اجتماعی', t.from_social, '#E5202A'],
+     ['مستقیم', t.from_direct, '#5BD6C0']
+    ].forEach(function (p) {
+      if (!p[1]) return;
+      var row = el('div', 'srcbar__r');
+      var dot = el('i', 'srcbar__d'); dot.style.background = p[2];
+      row.appendChild(dot);
+      row.appendChild(el('span', 'srcbar__n', p[0]));
+      row.appendChild(el('b', 'srcbar__v', faBig(p[1]) + ' — ' + pct(p[1], t.views_total)));
+      src.appendChild(row);
+    });
+    if (src.children.length) {
+      var panel = el('div', 'panel');
+      panel.appendChild(src);
+      panel.appendChild(el('p', 'hint',
+        'گوگل فقط می‌گوید کسی از نتایج جست‌وجو آمده. اینکه سایت چند بار در ' +
+        'نتایج «نشان داده» شده و در چه رتبه‌ای بوده، داده‌ی Google Search Console ' +
+        'است و در این پایگاه داده وجود ندارد — برای آن باید search.google.com/search-console ' +
+        'را باز کنی.'));
+      f.appendChild(panel);
+    }
+    return f;
+  }
+
+  /* ۱۸۴۳۲ is a number you have to count the digits of. ۱۸٬۴۳۲ is one you
+     read. U+066C is the Persian thousands separator, not a comma. */
+  function faBig(n) {
+    return fa(String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '\u066C'));
+  }
+
+  function pct(n, of) {
+    if (!of) return '۰٪';
+    return fa(Math.round((n || 0) / of * 100)) + '٪';
+  }
+
+  /* path + views + clicks, straight from admin_pages, which already
+     aggregated and capped server-side. The old table summed thousands of
+     (day, path) rows in the browser and was quietly losing whatever fell
+     past PostgREST's default limit of 1000. */
+  function pagesTable(rows) {
+    var list = rows.slice(0, 20);
+    var max = list.length ? (list[0].views || 1) : 1;
+    var t = el('table'), thead = el('thead'), hd = el('tr');
+    ['صفحه', '', 'بازدید', 'کلیک'].forEach(function (h, i) {
+      var th = el('th', i === 1 ? 'bar' : (i >= 2 ? 'n' : ''), h);
+      if (i === 1) th.style.width = '32%';
+      hd.appendChild(th);
+    });
+    thead.appendChild(hd); t.appendChild(thead);
+    var tb = el('tbody');
+    list.forEach(function (r) {
+      var tr = el('tr');
+      tr.appendChild(pageCell(r.path));
+      var td = el('td', 'bar');
+      var w = el('span', 'tbar__w'); w.style.display = 'block';
+      var b = el('span', 'tbar'); b.style.width = Math.round(r.views / max * 100) + '%';
+      w.appendChild(b); td.appendChild(w);
+      hover(td, r.path + ' — ' + fa(r.views) + ' بازدید');
+      tr.appendChild(td);
+      tr.appendChild(el('td', 'n num', fa(r.views)));
+      tr.appendChild(el('td', 'n num', fa(r.clicks || 0)));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    return t;
+  }
+
+  var CLICK_KIND = { out: 'به بیرون', 'in': 'داخل سایت', btn: 'دکمه' };
+
+  function clicksTable(rows) {
+    var list = rows.slice(0, 20);
+    var max = list.length ? (list[0].clicks || 1) : 1;
+    var t = el('table'), thead = el('thead'), hd = el('tr');
+    ['روی چه چیزی', 'نوع', '', 'کلیک'].forEach(function (h, i) {
+      var th = el('th', i === 2 ? 'bar' : (i === 3 ? 'n' : ''), h);
+      if (i === 2) th.style.width = '30%';
+      hd.appendChild(th);
+    });
+    thead.appendChild(hd); t.appendChild(thead);
+    var tb = el('tbody');
+    list.forEach(function (r) {
+      var tr = el('tr');
+      tr.appendChild(el('td', r.kind === 'out' ? 'lat' : '', r.label));
+      tr.appendChild(el('td', '', CLICK_KIND[r.kind] || r.kind));
+      var td = el('td', 'bar');
+      var w = el('span', 'tbar__w'); w.style.display = 'block';
+      var b = el('span', 'tbar'); b.style.width = Math.round(r.clicks / max * 100) + '%';
+      w.appendChild(b); td.appendChild(w);
+      tr.appendChild(td);
+      tr.appendChild(el('td', 'n num', fa(r.clicks)));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    return t;
+  }
+
+  function draw(over, daily, lessons, signups, traffic, users, refs, totals, pages, vdaily, clicks) {
     var b = document.getElementById('body');
     b.textContent = '';
     document.getElementById('sub').textContent =
@@ -767,6 +940,16 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
     refresh.appendChild(rb);
     b.appendChild(refresh);
 
+    /* First thing on the screen. If the totals view has not been created
+       yet the rest of the page is unaffected — it simply starts at the
+       account numbers, as it did before. */
+    if (totals.ok && totals.v.length) b.appendChild(bigNumbers(totals.v[0]));
+    else if (!totals.ok) {
+      b.appendChild(el('h2', '', 'نمای کلی سایت'));
+      b.appendChild(note(totals.e));
+    }
+
+    b.appendChild(el('h2', '', 'کاربران و یادگیری'));
     var k = el('div', 'kpis');
     [['کل کاربران', fa(over.users_total || 0)],
      ['فعال ۷ روز اخیر', fa(over.users_active_7d || 0)],
@@ -805,8 +988,24 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
       'بر اساس تعداد کاربرانی که درس را باز کرده‌اند. «نرخ تکمیل» نسبت کسانی است که تمامش کردند.',
       part(lessons, lessonTable, 'هنوز کسی درسی را باز نکرده.')));
 
-    b.appendChild(section('پربازدیدترین صفحه‌ها', 'شامل مهمان‌های بدون حساب. بدون کوکی و بدون شناسه‌ی فردی.',
-      part(traffic, trafficTable, 'هنوز بازدیدی ثبت نشده. چند ساعت بعد از انتشار پر می‌شود.')));
+    b.appendChild(section('بازدید روزانه‌ی سایت', 'کل صفحه‌های باز‌شده در هر روز، شامل مهمان‌های بدون حساب.',
+      part(vdaily, function (v) {
+        return columns(series(v, 'views', 30), function (n) { return fa(n) + ' بازدید'; });
+      }, 'هنوز بازدیدی ثبت نشده.')));
+
+    b.appendChild(section('پربازدیدترین صفحه‌ها',
+      'شامل مهمان‌های بدون حساب. بدون کوکی و بدون شناسه‌ی فردی. ستون کلیک یعنی ' +
+      'روی آن صفحه چند بار چیزی فشرده شده.',
+      part(pages.ok && pages.v.length ? pages : traffic,
+           pages.ok && pages.v.length ? pagesTable : trafficTable,
+           'هنوز بازدیدی ثبت نشده. چند ساعت بعد از انتشار پر می‌شود.')));
+
+    b.appendChild(section('بیشترین کلیک‌ها',
+      'روی چه چیزهایی فشرده می‌شود. «به بیرون» یعنی لینکی که از سایت خارج ' +
+      'می‌کند — یوتیوب، تلگرام، اینستاگرام.',
+      part(clicks, clicksTable,
+           'هنوز کلیکی ثبت نشده. ثبت کلیک تازه راه افتاده، پس این جدول از ' +
+           'حالا به بعد پر می‌شود و گذشته را ندارد.')));
 
     b.appendChild(section('از کجا آمده‌اند',
       'دامنه‌ای که بازدیدکننده از آن وارد شده. «مستقیم» یعنی آدرس را خودش زده، ' +
@@ -839,7 +1038,14 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
       soft(NVX_AUTH.rest('admin_signups?select=*')),
       soft(NVX_AUTH.rest('admin_traffic?select=*')),
       soft(NVX_AUTH.rest('rpc/admin_users', { method: 'POST', body: {} })),
-      soft(NVX_AUTH.rest('admin_refs?select=*'))
+      soft(NVX_AUTH.rest('admin_refs?select=*')),
+      /* The four from cms-insights.sql. Each is wrapped in soft(), so a
+         database that has not had that file run yet loses these blocks
+         and keeps everything else. */
+      soft(NVX_AUTH.rest('admin_totals?select=*')),
+      soft(NVX_AUTH.rest('admin_pages?select=*')),
+      soft(NVX_AUTH.rest('admin_views_daily?select=*')),
+      soft(NVX_AUTH.rest('admin_clicks?select=*'))
     ]), 15000, 'خواندن آمار').then(function (r) {
       if (!r[0].ok) throw r[0].e;
       var over = (r[0].v || [])[0];
@@ -849,7 +1055,7 @@ th.n,td.n{text-align:left; width:1%; white-space:nowrap}
         gate('این حساب دسترسی مدیر ندارد.', false);
         return;
       }
-      draw(over, r[1], r[2], r[3], r[4], r[5], r[6]);
+      draw(over, r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10]);
     }).catch(function (e) {
       gate('خواندن داده‌ها ممکن نشد. ' + e.message +
            '. اگر VPN روشن است یا این صفحه را در مرورگر داخلی یک اپ باز کرده‌ای، ' +

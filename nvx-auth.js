@@ -493,9 +493,20 @@
      swallowed. A reader whose network drops this loses nothing, which is
      the right trade for a number only the owner ever reads.
      =================================================================== */
+  /* The panel and the account page are the owner's own workbench, not the
+     site. Every visit to admin.html was being counted as a page view, so
+     the busiest page on the site was the one measuring it. The views in
+     cms-insights.sql filter these out on the way in as well, which fixes
+     the numbers already recorded; this stops adding to them. */
+  function ownPage() {
+    return /^\/?(admin|me)\.html?$/i.test(location.pathname) ||
+           /^\/(admin|me)(\/|$)/i.test(location.pathname);
+  }
+
   function ping() {
     if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
     if (/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname)) return;
+    if (ownPage()) return;
 
     var ref = null;
     try {
@@ -516,6 +527,79 @@
     } catch (e) {}
   }
 
+  /* ===================================================================
+     clicks
+
+     page_views answers "how many times was this opened". It cannot answer
+     "did anyone press anything", which is the difference between a page
+     being loaded and a page working. One delegated listener, three kinds:
+
+       out — a link that leaves the site (YouTube, Telegram, Instagram)
+       in  — a link to another page here
+       btn — a button that goes nowhere (copy the prompt, mark the lesson
+             done, switch to day mode)
+
+     The label is a domain for `out` and a short name for the rest. Full
+     button text is not stored: it is long, it changes with translation,
+     and the name is enough to group by.
+
+     Same privacy rule as page_views — nothing here identifies anybody,
+     and nothing is stored that could be joined back to a person.
+     =================================================================== */
+  function label(a, kind) {
+    /* A page can name a control explicitly, which survives its wording
+       changing. Everything below is a fallback. */
+    var said = a.getAttribute && a.getAttribute('data-track');
+    if (said) return said.slice(0, 60);
+
+    if (kind === 'out') {
+      try { return new URL(a.href).hostname.replace(/^www\./, ''); } catch (e) { return 'external'; }
+    }
+    if (kind === 'in') {
+      try {
+        var u = new URL(a.href, location.href);
+        var m = /([^\/]+)\.html?$/i.exec(u.pathname);
+        return (m ? m[1] : u.pathname).slice(0, 60);
+      } catch (e) { return 'internal'; }
+    }
+    var t = (a.textContent || '').replace(/\s+/g, ' ').trim();
+    return (t || a.className || 'button').slice(0, 60);
+  }
+
+  function clicks() {
+    if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+    if (/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname)) return;
+    if (ownPage()) return;
+
+    document.addEventListener('click', function (ev) {
+      var a = ev.target && ev.target.closest &&
+              ev.target.closest('a[href], button, [role="button"]');
+      if (!a) return;
+
+      var kind = 'btn';
+      if (a.tagName === 'A' && a.getAttribute('href')) {
+        var href = a.getAttribute('href');
+        /* An in-page anchor is not navigation. */
+        if (href.charAt(0) === '#') return;
+        try {
+          kind = (new URL(a.href, location.href).host === location.host) ? 'in' : 'out';
+        } catch (e) { kind = 'in'; }
+      }
+
+      try {
+        fetch(URL_ + '/rest/v1/page_events', {
+          method: 'POST',
+          headers: { 'apikey': CFG.key, 'Content-Type': 'application/json',
+                     'Prefer': 'return=minimal' },
+          body: JSON.stringify({ path: location.pathname, kind: kind, label: label(a, kind) }),
+          /* keepalive, because half of these are the last thing the page
+             does before the browser navigates away from it. */
+          keepalive: true
+        }).catch(function () {});
+      } catch (e) {}
+    }, { passive: true, capture: true });
+  }
+
   function boot() {
     /* The progress layer is optional here. Most of the site — the gallery,
        the style pages, the homepage — has no lesson to track, but a reader
@@ -527,6 +611,7 @@
     mount();
     invite();
     ping();
+    clicks();
     if (P && signedIn()) sync();
   }
 

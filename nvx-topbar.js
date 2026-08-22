@@ -224,7 +224,7 @@
   bar.innerHTML =
     '<nav class="topbar__row" aria-label="Sections">' +
       '<div class="topbar__tail">' +
-        '<button class="topbar__circ topbar__burger" id="topburger" type="button" aria-expanded="false" aria-controls="topmenu" aria-label="بازکردن منو">' +
+        '<button class="topbar__circ topbar__burger" id="topburger" type="button" data-track="menu" aria-expanded="false" aria-controls="topmenu" aria-label="بازکردن منو">' +
           '<span class="topbar__burger-line"></span><span class="topbar__burger-line"></span><span class="topbar__burger-line"></span>' +
         '</button>' +
       '</div>' +
@@ -233,8 +233,8 @@
         '<img class="topbar__word" src="' + href('navidix-wordmark.webp') + '" alt="" width="900" height="139" decoding="async" />' +
       '</a>' +
       '<div class="topbar__tail">' +
-        '<button class="topbar__circ topbar__back" id="topback" type="button" aria-label="بازگشت">' + btnBackSvg() + '</button>' +
-        '<button class="topbar__circ topbar__theme" id="toptheme" type="button" aria-label="روز / شب" aria-pressed="' + DAY + '">' +
+        '<button class="topbar__circ topbar__back" id="topback" type="button" data-track="back" aria-label="بازگشت">' + btnBackSvg() + '</button>' +
+        '<button class="topbar__circ topbar__theme" id="toptheme" type="button" data-track="day-night" aria-label="روز / شب" aria-pressed="' + DAY + '">' +
            sunSvg + moonSvg +
         '</button>' +
       '</div>' +
@@ -413,4 +413,23 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { closePanels(); closeMenu(); }
   });
+
+
+  /* ---- the comment layer, on every page that has this bar ----
+
+     Comments were wired in page by page, which meant a page written next
+     month would silently have none until somebody remembered the script
+     tag. This bar is already on every page in the site, generated or
+     hand-written, so it is the one place that cannot be forgotten.
+
+     nvx-comments.js decides for itself whether the page it landed on
+     should have a thread — hubs and list pages opt out there, and any
+     page can override with data-nvx-comments="off". Loading it twice is
+     harmless: it returns immediately if it has already run. */
+  if (!document.querySelector('script[src*="nvx-comments.js"]')) {
+    var cm = document.createElement('script');
+    cm.src = href('nvx-comments.js');
+    cm.defer = true;
+    document.head.appendChild(cm);
+  }
 })();
