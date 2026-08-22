@@ -97,6 +97,10 @@ def head(title, desc, url, img, extra_css='', kind='WebPage', jsonld=None, depth
 <!-- فهرست کناری. صفحه‌های سبک کوتاه‌اند و معمولاً واجد شرایطش نمی‌شوند،
      ولی هزینه‌اش صفر است و روی صفحه‌ی بلند خودش ظاهر می‌شود. -->
 <script src="{depth}nvx-outline.js" defer></script>
+<!-- دیدگاه‌ها. مقصدش را از روی آدرس صفحه خودش پیدا می‌کند، پس این دویست
+     صفحه هیچ نشانه‌گذاری تازه‌ای لازم ندارند. اگر پایگاه داده در دسترس
+     نباشد هیچ چیزی روی صفحه نمی‌آید — نه خطا، نه بخش خالی. -->
+<script src="{depth}nvx-comments.js" defer></script>
 <script type="application/ld+json">
 {ld}
 </script>

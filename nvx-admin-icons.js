@@ -30,6 +30,9 @@
     /* one person, as against `users` which is the whole team */
     user:      'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1',
     briefcase: 'M3 8h18v12H3zM9 8V5a1 1 0 011-1h4a1 1 0 011 1v3M3 13h18',
+    /* a speech bubble with its tail on the start edge, so it reads the
+       same direction as the Persian beside it */
+    comment:   'M21 12a8 7 0 01-8 7H9l-5 3v-4.2A7 7 0 013 12a8 7 0 018-7h2a8 7 0 018 7z',
     media:     'M4 5h16v14H4zM4 14l5-5 4 4 3-2 4 4M9 9h.01',
     search:    'M11 4a7 7 0 100 14 7 7 0 000-14zM20 20l-4-4',
     chart:     'M4 20V10M10 20V4M16 20v-7M22 20H2',

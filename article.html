@@ -105,6 +105,7 @@ h1{font-size:clamp(24px,4vw,34px);font-weight:700;margin:0 0 10px;line-height:1.
 <!-- فهرست کناری صفحه. فقط روی صفحه‌ی بلند و نمایشگر عریض ظاهر می‌شود
      و روی گوشی اصلاً ساخته نمی‌شود. -->
 <script src="nvx-outline.js" defer></script>
+<script src="nvx-comments.js" defer></script>
 </head>
 <body>
 
@@ -116,6 +117,15 @@ h1{font-size:clamp(24px,4vw,34px);font-weight:700;margin:0 0 10px;line-height:1.
 <main class="wrap" id="main">
   <p class="state" id="state">در حال باز کردن…</p>
 </main>
+
+<!-- دیدگاه‌ها، بیرون از <main> و نه داخلش.
+     این صفحه محتوایش را از شبکه می‌گیرد و بعد main را با
+     `main.textContent = ''` از نو می‌سازد — پس هر چیزی که داخل main نشسته
+     باشد، لحظه‌ی رسیدن مقاله پاک می‌شود. nvx-comments.js همین‌جا می‌نشیند
+     و همان‌جا می‌ماند.
+     hidden است تا وقتی مقاله‌ای واقعاً پیدا شود: زیر پیام «این مقاله پیدا
+     نشد» فرم دیدگاه گذاشتن یعنی دعوت به نوشتن زیر چیزی که وجود ندارد. -->
+<div id="cmts" data-nvx-comments hidden></div>
 
 <script>
 /* =====================================================================
@@ -181,6 +191,11 @@ h1{font-size:clamp(24px,4vw,34px);font-weight:700;margin:0 0 10px;line-height:1.
 
   function draw(C, main, r) {
     main.textContent = '';
+
+    /* The thread was drawn into a hidden box while this request was in
+       flight. There is an article, so it can be seen. */
+    var cmts = document.getElementById('cmts');
+    if (cmts) cmts.hidden = false;
 
     /* The tab, the description and the share card, filled from the row.
        A crawler that does not run scripts never sees these — noted in
