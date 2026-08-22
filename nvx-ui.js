@@ -5,14 +5,41 @@
    something is pressed, a short haptic tick where the device offers one,
    and a fade between pages so a link does not cut to the next screen.
 
-   Self-contained on purpose. It injects its own styles, binds nothing that
-   needs markup changes, and does nothing at all when the reader has asked
-   for reduced motion.
+   Self-contained on purpose. It injects its own styles and binds nothing
+   that needs markup changes.
+
+   On "reduce motion" it does less, not nothing. That distinction is the
+   whole of this file's accessibility story and it is worth stating.
+
+   The preference is a request to stop things *moving* — parallax, drift,
+   anything that travels across the screen or scales up under the finger.
+   It is not a request for a dead page. A cross-fade carries no motion:
+   nothing changes position, nothing changes size, and there is no
+   direction for the eye to follow. So under the preference the ring
+   stops, the page stops lifting as it arrives and the scroll-linked
+   gradient stops moving — while the fade between pages and the fade-in
+   on arrival stay, because they are opacity and nothing else.
+
+   Before this, one boolean turned all four off together, and a Mac with
+   Reduce Motion switched on got a site with exactly zero animations
+   running. Measured, in the same browser, changing only the preference:
+   nine running became none.
    ===================================================================== */
 (function () {
   'use strict';
 
-  var REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var mq = matchMedia('(prefers-reduced-motion: reduce)');
+  var REDUCED = mq.matches;
+
+  /* Read once at load was a small bug of its own: somebody who turns the
+     setting off in System Settings had to reload every open tab before the
+     site noticed. Both spellings, because Safari only learned addEventListener
+     on MediaQueryList in 14. */
+  function watch(fn) {
+    if (mq.addEventListener) mq.addEventListener('change', fn);
+    else if (mq.addListener) mq.addListener(fn);
+  }
+  watch(function (e) { REDUCED = e.matches; });
 
   /* ---- styles, so no page has to carry them ---- */
   var css = document.createElement('style');
@@ -32,7 +59,14 @@
     '.nvx-enter-lift{animation:nvxRise .62s cubic-bezier(.16,1,.3,1) both}',
     '@keyframes nvxFade{from{opacity:0}to{opacity:1}}',
     '@keyframes nvxRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}',
-    '@media (prefers-reduced-motion:reduce){.nvx-ring,.nvx-veil,.nvx-enter,.nvx-enter-lift{animation:none;transition:none}}'
+    /* The ring scales from .4 to 7.5 — that one is motion, and it goes.
+       The lift travels ten pixels, so it degrades to the plain fade rather
+       than disappearing. nvxFade and the veil are opacity alone and are
+       left running. */
+    '@media (prefers-reduced-motion:reduce){',
+    '  .nvx-ring{animation:none;display:none}',
+    '  .nvx-enter-lift{animation:nvxFade .5s ease both}',
+    '}'
   ].join('');
   document.head.appendChild(css);
 
@@ -64,13 +98,11 @@
      to the page instead of the viewport. The homepage keeps its portals in
      a fixed overlay inside <main>, so that container fades and does not
      move; containers known to hold nothing fixed get the small lift too. */
-  if (!REDUCED) {
-    var lift = document.querySelector('.lesson__main, .lib, .sd');
-    if (lift) lift.classList.add('nvx-enter-lift');
-    else {
-      var main = document.querySelector('#shell, main');
-      if (main) main.classList.add('nvx-enter');
-    }
+  var lift = document.querySelector('.lesson__main, .lib, .sd');
+  if (lift) lift.classList.add('nvx-enter-lift');
+  else {
+    var main = document.querySelector('#shell, main');
+    if (main) main.classList.add('nvx-enter');
   }
 
   /* ---- 3. and leaves instead of cutting ----
@@ -81,7 +113,10 @@
   document.body.appendChild(veil);
 
   addEventListener('click', function (e) {
-    if (REDUCED || e.defaultPrevented || e.button) return;
+    /* No REDUCED test here on purpose: the veil is one element going from
+       opacity 0 to 1. It does not move, and without it a reader with the
+       preference on gets a hard cut between every page on the site. */
+    if (e.defaultPrevented || e.button) return;
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
     var a = e.target.closest && e.target.closest('a[href]');
